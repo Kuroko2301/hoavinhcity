@@ -2870,6 +2870,22 @@ if(!S.me)S.accts=[];
  render();
  sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT'&&S.me){S.me=null;S.accts=[];render()}});
 })();
+/* ---- ĐTK qua "trạm chung" (Edge Function dtk-tim-nha): 1 tài khoản ĐTK của Phòng, anh em khỏi đăng nhập ĐTK.
+   Chưa cài trạm/Secrets → tự quay về cách mỗi người tự đăng nhập ĐTK như cũ. ---- */
+const DTK_TRAM='tram-chung-phong';
+(function(){try{if(sb&&!dtkTok()&&sessionStorage.getItem('hoavinh-dtk-khong-tram')!=='1'){dtkSetTok(DTK_TRAM);dtkSetUsr({username:'Tài khoản chung của Phòng'})}}catch(e){}})();
+const _dtkFetch=dtkFetch;
+dtkFetch=async(path,body)=>{
+ if(dtkTok()!==DTK_TRAM)return _dtkFetch(path,body);
+ if(path!=='/bi-kip-tong/search')return {success:true};
+ const {data,error}=await sb.functions.invoke('dtk-tim-nha',{body:body||{}});
+ if(error||!data||data.loi){let j=data;try{if(!j&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}
+  const chuaCai=!!(j&&j.chua_cai)||(error&&error.context&&error.context.status===404);
+  if(chuaCai){try{sessionStorage.setItem('hoavinh-dtk-khong-tram','1')}catch(e){}dtkSetTok('');dtkSetUsr(null);const e=new Error('Phòng chưa cài tài khoản ĐTK chung, bạn đăng nhập ĐTK của mình nha');e.status=401;throw e}
+  throw new Error((j&&j.loi)||errVi(error))}
+ return data};
+const _dtkLogout=A.dtkLogout;
+A.dtkLogout=()=>{if(dtkTok()===DTK_TRAM){try{sessionStorage.setItem('hoavinh-dtk-khong-tram','1')}catch(e){}}_dtkLogout()};
 /* ===================== HẾT PHẦN NỐI SUPABASE ===================== */
 
 render();
