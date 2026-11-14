@@ -2285,7 +2285,7 @@ function dtkTok(){try{return sessionStorage.getItem('hoavinh-dtk-token')||''}cat
 function dtkSetTok(t){try{t?sessionStorage.setItem('hoavinh-dtk-token',t):sessionStorage.removeItem('hoavinh-dtk-token')}catch(e){}}
 function dtkUsr(){try{return JSON.parse(sessionStorage.getItem('hoavinh-dtk-user')||'null')}catch(e){return null}}
 function dtkSetUsr(u){try{u?sessionStorage.setItem('hoavinh-dtk-user',JSON.stringify(u)):sessionStorage.removeItem('hoavinh-dtk-user')}catch(e){}}
-async function dtkFetch(path,body){const h={'Content-Type':'application/json','x-api-version':DTKAPI.ver};const tk=dtkTok();if(tk)h['Authorization']='Bearer '+tk;
+async function dtkFetch(path,body){const h={'Content-Type':'application/json'};const tk=dtkTok();if(tk)h['Authorization']='Bearer '+tk;
  const r=await fetch(DTKAPI.base+path,{method:'POST',headers:h,body:JSON.stringify(body||{})});let j=null;try{j=await r.json()}catch(e){}
  if(!r.ok){const e=new Error((j&&(j.message||j.error))||('Lỗi máy chủ ĐTK ('+r.status+')'));e.status=r.status;throw e}return j}
 function dtkField(v){if(v==null)return '';if(typeof v==='object')return v.value!=null?(v.value+(v.unit?' '+v.unit:'')):(v.name||v.title||v.text||'');return ''+v}
