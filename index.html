@@ -2304,23 +2304,29 @@ A.dtkDoLogin=async()=>{const u=val('dtku'),p=val('dtkp');if(!u||!p){toast('Nhậ
   dtkSetTok(tk);dtkSetUsr(d.user||d||{username:u});toast('Đã đăng nhập Đại Thế Kỷ 🎉');A.dtkTongOpen()}
  catch(e){toast(e.message||'Đăng nhập thất bại')}};
 A.dtkLogout=()=>{dtkSetTok('');dtkSetUsr(null);U.sheet=null;render();toast('Đã đăng xuất Đại Thế Kỷ')};
-A.dtkTongOpen=async(kw,seg)=>{if(!dtkTok()){A.dtkLoginOpen();return}const q=kw!=null?kw:((U.dtkTong&&U.dtkTong.q)||'');const sg=seg!=null?seg:((U.dtkTong&&U.dtkTong.seg)!=null?U.dtkTong.seg:-1);U.dtkTong={loading:true,list:[],q,seg:sg};A.sheet('dtkTong');
- try{const j=await dtkFetch('/bi-kip-tong/search',{size:sg>=0?40:20,offset:0,keyword:q});
+function dtkTxt(it){return ((dtkField(it.title)||'')+' '+(dtkField(it.address)||'')+' '+(dtkField(it.district)||'')+' '+(dtkField(it.ward)||'')).toLowerCase()}
+A.dtkTongOpen=async(kw,opt)=>{if(!dtkTok()){A.dtkLoginOpen();return}const prev=U.dtkTong||{};const q=kw!=null?kw:(prev.q||'');
+ const o=opt||prev.filt||{};const seg=o.seg==null?-1:o.seg;const areas=o.areas||[];const loai=o.loai||'';const filt={seg,areas,loai};
+ U.dtkTong={loading:true,list:[],q,filt};A.sheet('dtkTong');
+ try{const big=(seg>=0||areas.length||loai)?60:20;const j=await dtkFetch('/bi-kip-tong/search',{size:big,offset:0,keyword:q});
   if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');
   const d=(j&&j.detail)||{};let list=d.data||(j&&(j.data||j.items||j.content))||(Array.isArray(j)?j:[]);if(!Array.isArray(list))list=[];
   const total=d.total!=null?d.total:(j&&j.total);
-  if(sg>=0)list=list.filter(it=>{const v=it.price&&typeof it.price==='object'?+it.price.value:0;return v>0&&tierIdx(v)===sg});
-  U.dtkTong={loading:false,list,total,seg:sg,q};render()}
- catch(e){if(e.status===401){dtkSetTok('');U.sheet=null;toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen();return}U.dtkTong={loading:false,list:[],err:e.message,q,seg:sg};render()}};
-A.dtkTongSearch=()=>{A.dtkTongOpen(val('dtkq'),(U.dtkTong&&U.dtkTong.seg))};
-A.kfDtk=()=>{const f=U.kf||{};const parts=[];if(f.q&&f.q.length)parts.push(f.q.join(' '));if(f.loai)parts.push(f.loai);if(f.kw)parts.push(f.kw);A.dtkTongOpen(parts.join(' ').trim(),f.seg==null?-1:f.seg)};
+  if(areas.length){const al=areas.map(a=>a.toLowerCase());list=list.filter(it=>{const t=dtkTxt(it);return al.some(a=>t.includes(a))})}
+  if(seg>=0)list=list.filter(it=>{const v=it.price&&typeof it.price==='object'?+it.price.value:0;return v>0&&tierIdx(v)===seg});
+  U.dtkTong={loading:false,list,total,q,filt};render()}
+ catch(e){if(e.status===401){dtkSetTok('');U.sheet=null;toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen();return}U.dtkTong={loading:false,list:[],err:e.message,q,filt};render()}};
+A.dtkTongSearch=()=>{A.dtkTongOpen(val('dtkq'),(U.dtkTong&&U.dtkTong.filt))};
+A.kfDtk=()=>{const f=U.kf||{};const parts=[];if(f.q&&f.q.length)parts.push(f.q.join(' '));if(f.loai)parts.push(f.loai);if(f.kw)parts.push(f.kw);A.dtkTongOpen(parts.join(' ').trim(),{seg:f.seg==null?-1:f.seg,areas:(f.q||[]).slice(),loai:f.loai||''})};
 SH.dtkTong=()=>{const d=U.dtkTong||{};
+ const f=d.filt||{};
+ const fl=[f.areas&&f.areas.length?f.areas.join(', '):'',(f.seg!=null&&f.seg>=0&&typeof TIERS!=='undefined'&&TIERS[f.seg])?TIERS[f.seg][1]:''].filter(Boolean).join(' · ');
  const bar=`<div class="row wrap" style="gap:6px;margin-bottom:10px"><input class="in grow" id="dtkq" placeholder="Tìm theo từ khoá (vd: Tân Phú, 5 tỷ)" value="${esc(d.q||'')}" style="flex:1 1 150px"><button class="btn gold sm" data-a="dtkTongSearch">Tìm</button></div>`;
  let h='';
  if(d.loading)h=`<p class="sub">Đang lấy tin từ Đại Thế Kỷ…</p>`;
  else if(d.err)h=`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongSearch">Thử lại</button>`;
- else if(!d.list.length)h=`<p class="sub">Không có tin nào khớp${d.q?' với "'+esc(d.q)+'"':''}. Thử từ khoá khác, hoặc để trống rồi bấm Tìm để xem tin mới nhất.</p>`;
- else h=`<p class="sub" style="margin-top:0">${d.list.length} tin${d.seg>=0?' trong khoảng '+TIERS[d.seg][1]:''}${d.total?' · ĐTK có '+d.total+' tin':''}. Bấm ➕ để thêm vào Kho nhà.</p>`+d.list.map((it,i)=>{const img=dtkImg(it);const meta=[dtkField(it.price)&&('💰 '+dtkField(it.price)),dtkField(it.area)&&('📐 '+dtkField(it.area)),dtkField(it.district)||dtkField(it.ward)].filter(Boolean).join(' · ');return `<div class="li" style="align-items:flex-start;gap:8px">${img?`<img src="${esc(img)}" alt="" style="width:54px;height:54px;border-radius:10px;object-fit:cover;flex-shrink:0">`:''}<div class="grow"><b>${esc(dtkField(it.title)||dtkField(it.address)||'Tin nhà')}</b>${meta?`<div class="sub">${esc(meta)}</div>`:''}${it.address?`<div class="sub">📍 ${esc(dtkField(it.address))}</div>`:''}<button class="btn ghost sm" style="margin-top:6px" data-a="dtkTongAdd" data-v="${i}">➕ Thêm vào Kho</button></div></div>`}).join('');
+ else if(!d.list.length)h=`<p class="sub">Không tìm thấy tin${fl?' khớp '+fl:''}. Đại Thế Kỷ tìm theo từ khoá nên có khi ít kết quả — thử bỏ bớt bộ lọc hoặc gõ rõ hơn ở ô trên nha.</p>`;
+ else h=`<p class="sub" style="margin-top:0">${d.list.length} tin${fl?' · '+fl:''}${d.total?' · ĐTK có '+d.total+' tin'+(f.areas&&f.areas.length?' (gồm nhiều quận)':''):''}. Bấm ➕ để thêm vào Kho nhà.</p>`+d.list.map((it,i)=>{const img=dtkImg(it);const meta=[dtkField(it.price)&&('💰 '+dtkField(it.price)),dtkField(it.area)&&('📐 '+dtkField(it.area)),dtkField(it.district)||dtkField(it.ward)].filter(Boolean).join(' · ');return `<div class="li" style="align-items:flex-start;gap:8px">${img?`<img src="${esc(img)}" alt="" style="width:54px;height:54px;border-radius:10px;object-fit:cover;flex-shrink:0">`:''}<div class="grow"><b>${esc(dtkField(it.title)||dtkField(it.address)||'Tin nhà')}</b>${meta?`<div class="sub">${esc(meta)}</div>`:''}${it.address?`<div class="sub">📍 ${esc(dtkField(it.address))}</div>`:''}<button class="btn ghost sm" style="margin-top:6px" data-a="dtkTongAdd" data-v="${i}">➕ Thêm vào Kho</button></div></div>`}).join('');
  return{t:'📘 Bí kíp tổng · Đại Thế Kỷ',h:bar+h}};
 A.dtkTongAdd=v=>{const d=U.dtkTong||{};const it=d.list[+v];if(!it)return;const price=(it.price&&typeof it.price==='object'&&+it.price.value)||0;const o={addr:dtkField(it.title)||dtkField(it.address),q:dtkField(it.district)||dtkField(it.ward),type:'Nhà phố hẻm',p:price,dg:price,dt:dtkField(it.area),hem:'',dir:'',tang:0,pn:0,link:''};const house=dtkHouse(o);house.anh=Array.isArray(it.images)?it.images.length:3;S.kho.unshift(house);save();toast('Đã thêm vào Kho nhà, xem lại trong Kho để chỉnh thêm nha')};
 A.kfMine=()=>{const a=me();const f=U.kf||{};a.g.myKf={q:(f.q||[]).slice(),seg:f.seg==null?-1:f.seg};save();render();toast('Đã lưu: '+myKfTxt(a.g.myKf)+'. Lần sau mở Kho sẽ lọc sẵn cho bạn')};
