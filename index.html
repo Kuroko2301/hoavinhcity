@@ -2302,16 +2302,21 @@ A.dtkDoLogin=async()=>{const u=val('dtku'),p=val('dtkp');if(!u||!p){toast('Nhậ
   dtkSetTok(tk);dtkSetUsr(d.user||d||{username:u});toast('Đã đăng nhập Đại Thế Kỷ 🎉');A.dtkTongOpen()}
  catch(e){toast(e.message||'Đăng nhập thất bại')}};
 A.dtkLogout=()=>{dtkSetTok('');dtkSetUsr(null);U.sheet=null;render();toast('Đã đăng xuất Đại Thế Kỷ')};
-A.dtkTongOpen=async()=>{if(!dtkTok()){A.dtkLoginOpen();return}U.dtkTong={loading:true,list:[]};A.sheet('dtkTong');
- try{const j=await dtkFetch('/bi-kip-tong/search',{limit:20,offset:0,query:''});const list=(j&&(j.data||j.items||j.content||j.records))||(Array.isArray(j)?j:[]);
-  U.dtkTong={loading:false,list:Array.isArray(list)?list:[],total:j&&j.total};render()}
- catch(e){if(e.status===401){dtkSetTok('');U.sheet=null;toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen();return}U.dtkTong={loading:false,list:[],err:e.message};render()}};
-SH.dtkTong=()=>{const d=U.dtkTong||{};let h='';
+A.dtkTongOpen=async(kw)=>{if(!dtkTok()){A.dtkLoginOpen();return}const q=kw!=null?kw:((U.dtkTong&&U.dtkTong.q)||'');U.dtkTong={loading:true,list:[],q};A.sheet('dtkTong');
+ try{const j=await dtkFetch('/bi-kip-tong/search',{size:20,offset:0,keyword:q});
+  if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');
+  const d=(j&&j.detail)||{};const list=d.data||(j&&(j.data||j.items||j.content))||(Array.isArray(j)?j:[]);
+  U.dtkTong={loading:false,list:Array.isArray(list)?list:[],total:d.total!=null?d.total:(j&&j.total),q};render()}
+ catch(e){if(e.status===401){dtkSetTok('');U.sheet=null;toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen();return}U.dtkTong={loading:false,list:[],err:e.message,q};render()}};
+A.dtkTongSearch=()=>{A.dtkTongOpen(val('dtkq'))};
+SH.dtkTong=()=>{const d=U.dtkTong||{};
+ const bar=`<div class="row wrap" style="gap:6px;margin-bottom:10px"><input class="in grow" id="dtkq" placeholder="Tìm theo từ khoá (vd: Tân Phú, 5 tỷ)" value="${esc(d.q||'')}" style="flex:1 1 150px"><button class="btn gold sm" data-a="dtkTongSearch">Tìm</button></div>`;
+ let h='';
  if(d.loading)h=`<p class="sub">Đang lấy tin từ Đại Thế Kỷ…</p>`;
- else if(d.err)h=`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongOpen">Thử lại</button>`;
- else if(!d.list.length)h=`<p class="sub">Chưa có tin nào.</p><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongOpen">Tải lại</button>`;
+ else if(d.err)h=`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongSearch">Thử lại</button>`;
+ else if(!d.list.length)h=`<p class="sub">Không có tin nào khớp${d.q?' với "'+esc(d.q)+'"':''}. Thử từ khoá khác, hoặc để trống rồi bấm Tìm để xem tin mới nhất.</p>`;
  else h=`<p class="sub" style="margin-top:0">${d.list.length} tin Bí kíp tổng${d.total?' · tổng '+d.total:''}. Bấm ➕ để thêm vào Kho nhà.</p>`+d.list.map((it,i)=>{const img=dtkImg(it);const meta=[dtkField(it.price)&&('💰 '+dtkField(it.price)),dtkField(it.area)&&('📐 '+dtkField(it.area)),dtkField(it.district)||dtkField(it.ward)].filter(Boolean).join(' · ');return `<div class="li" style="align-items:flex-start;gap:8px">${img?`<img src="${esc(img)}" alt="" style="width:54px;height:54px;border-radius:10px;object-fit:cover;flex-shrink:0">`:''}<div class="grow"><b>${esc(dtkField(it.title)||dtkField(it.address)||'Tin nhà')}</b>${meta?`<div class="sub">${esc(meta)}</div>`:''}${it.address?`<div class="sub">📍 ${esc(dtkField(it.address))}</div>`:''}<button class="btn ghost sm" style="margin-top:6px" data-a="dtkTongAdd" data-v="${i}">➕ Thêm vào Kho</button></div></div>`}).join('');
- return{t:'📘 Bí kíp tổng · Đại Thế Kỷ',h}};
+ return{t:'📘 Bí kíp tổng · Đại Thế Kỷ',h:bar+h}};
 A.dtkTongAdd=v=>{const d=U.dtkTong||{};const it=d.list[+v];if(!it)return;const price=(it.price&&typeof it.price==='object'&&+it.price.value)||0;const o={addr:dtkField(it.title)||dtkField(it.address),q:dtkField(it.district)||dtkField(it.ward),type:'Nhà phố hẻm',p:price,dg:price,dt:dtkField(it.area),hem:'',dir:'',tang:0,pn:0,link:''};const house=dtkHouse(o);house.anh=Array.isArray(it.images)?it.images.length:3;S.kho.unshift(house);save();toast('Đã thêm vào Kho nhà, xem lại trong Kho để chỉnh thêm nha')};
 A.kfMine=()=>{const a=me();const f=U.kf||{};a.g.myKf={q:(f.q||[]).slice(),seg:f.seg==null?-1:f.seg};save();render();toast('Đã lưu: '+myKfTxt(a.g.myKf)+'. Lần sau mở Kho sẽ lọc sẵn cho bạn')};
 (function migGc(){if(S.gcSeed)return;S.gcSeed=1;const set=(id,from,ago)=>{const h=(S.kho||[]).find(x=>x.id===id);if(h&&!h.gc)h.gc={from,d:dAgo(ago)}};set('k8',8.5,0);set('k10',6.9,2);set('k6',4.6,5);
