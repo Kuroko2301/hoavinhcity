@@ -748,7 +748,7 @@ TAB.home=a=>{
   let h=noticeCard()+(sale?greetCard(a)+todayCard(a)+zoomCard(a)+chalCard(a):'')+memoryCard(a)+tetCard()+motiveCard(a);
   if(hasCtv(a)){
     if(a.role==='cg'){const n=campToday(a);h+=`<div class="card"><div class="between"><div><div class="h3">Cổng trại hôm nay</div><div class="sub">Quảng bá 3 căn mỗi ngày</div></div><span class="pill ${n>=3?'ok':'warn'}">${n}/3 căn</span></div><div class="bar" style="margin-top:10px"><i style="width:${Math.min(100,n/3*100)}%"></i></div></div>`}
-    h+=checkinCard(a)+tasksCard(a)+remindersCard(a);
+    h+=checkinCard(a)+tasksCard(a)+remindersCard(a)+driveCard(a);
   }
   if(a.role==='tl')h+=tlHome(a)+tlAwardCard(a);
   if(a.role==='sep')h=sepAwardNotice(a)+h+sepHome(a);
@@ -881,7 +881,7 @@ TAB.ae=a=>{
     h+=`<div class="card"><h2 class="h2">Lịch của anh em</h2><p class="sub">Lịch dẫn khách anh em nhập trong Hồ sơ dẫn khách tự về đây. Đề xuất lịch quan trọng lên Sếp.</p>${cal.map(x=>{const sent=S.calPush.some(p=>p.email===x.email&&p.i===x.i);return `<div class="li"><span class="pill gold num">${esc(x.c.time)}</span><div class="grow"><b>${esc(x.who)}</b> dẫn ${esc(x.c.name)}<div class="sub">${fmtD(x.c.date)} · ${esc(x.c.need)}</div></div>${sent?'<span class="pill ok">Đã đề xuất</span>':`<button class="btn ghost sm" data-a="pushCal" data-v="${esc(x.email)}|${x.i}">Đề xuất Sếp</button>`}</div>`}).join('')||'<p class="sub">Chưa có lịch.</p>'}</div>`;
   }
   const roster=allPeople().filter(p=>p.email&&p.email!==a.email);const canRole=isSep||a.role==='tl';
-  h+=`<div class="card"><h2 class="h2">Danh sách anh em</h2>${roster.sort((x,y)=>y.act-x.act).map(p=>`<div class="li"><div class="grow"><div class="between"><b class="${hsGreen(p)?'hs-name hs-g':''}">${esc(p.name)}${hsGreen(p)?' ✓':''}</b><span class="num ${p.act<50?'':'muted'}" style="${p.act<50?'color:var(--bad);font-weight:800':''}">${p.act}%</span></div><div class="sub">${ROLES[p.role]} · ${p.khach} khách · ${p.tin} tin · ${p.vu} vụ</div><div class="bar ${p.act<50?'r':''}" style="margin-top:5px"><i style="width:${p.act}%"></i></div>${isSep?`<a class="link" style="display:inline-block;margin-top:4px;font-size:12px" href="https://drive.google.com/" target="_blank" rel="noopener">Mở thư mục Drive</a>`:''}${canRole&&!(a.role==='tl'&&p.role==='sep')?`<button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="doivai:${esc(p.email)}">Đổi vai trò</button>`:''}</div></div>`).join('')}</div>`;
+  h+=`<div class="card"><h2 class="h2">Danh sách anh em</h2>${roster.sort((x,y)=>y.act-x.act).map(p=>`<div class="li"><div class="grow"><div class="between"><b class="${hsGreen(p)?'hs-name hs-g':''}">${esc(p.name)}${hsGreen(p)?' ✓':''}</b><span class="num ${p.act<50?'':'muted'}" style="${p.act<50?'color:var(--bad);font-weight:800':''}">${p.act}%</span></div><div class="sub">${ROLES[p.role]} · ${p.khach} khách · ${p.tin} tin · ${p.vu} vụ</div><div class="bar ${p.act<50?'r':''}" style="margin-top:5px"><i style="width:${p.act}%"></i></div>${canRole?(isDrive(p.drive)?`<a class="link" style="display:inline-block;margin-top:4px;font-size:12px" href="${esc(p.drive)}" target="_blank" rel="noopener">📁 Mở Drive của ${esc(p.name)}</a>`:`<span class="sub" style="display:inline-block;margin-top:4px;font-size:12px">📁 Chưa có link Drive</span>`):''}${canRole&&!(a.role==='tl'&&p.role==='sep')?`<button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="doivai:${esc(p.email)}">Đổi vai trò</button>`:''}</div></div>`).join('')}</div>`;
   return h;
 };
 TAB.ts=a=>{
@@ -1514,6 +1514,31 @@ A.closeBg=(v,el,e)=>{if(e.target===el){U.sheet=null;render()}};
 const ROLE_OPTS=[['ctv','Cộng tác viên'],['cg','Đầu chủ - Chuyên gia'],['tl','Trợ lý'],['sep','Trưởng phòng'],['hv','Học viên']];
 SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}`}};
 A.doiVai=v=>{const [email,role]=v.split('|');const p=acct(email);if(!p)return;if(p.role===role){U.sheet=null;render();return}p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};U.sheet=null;save();render();toast('Đã đổi '+p.name+' thành '+ROLES[role])};
+/* ===== Kho Drive Hoa Vinh ===== */
+const DRIVE={
+  root:'https://drive.google.com/drive/folders/1wvxElZcNHtjlG47ddMUa9DzBd-HxljiY',
+  folders:[
+    ['🏠','Khảo sát nhà','https://drive.google.com/drive/folders/1AhwZx3zP8Bc_VZaEy6pgD404TIAZjmRf',false],
+    ['🎬','Media (ảnh &amp; video đăng bài)','https://drive.google.com/drive/folders/1KcCiTelYAN0a6ebGFZhGt5Gf6tCndU_b',false],
+    ['🎓','Học viện','https://drive.google.com/drive/folders/1wTEv6gx2UJzWGiFskId-xV6hps2Wcwxy',false],
+    ['📊','Báo cáo tuần','https://drive.google.com/drive/folders/1O0dDQbqnVv5oLw64LenXAzSPVkrrrEVi',false],
+    ['🏆','Kỷ niệm &amp; Nhà Truyền Thống','https://drive.google.com/drive/folders/1iuQ6M_b4V4RfBXkGJbbpN8r4VXWXZlMB',false],
+    ['🔒','Hồ sơ anh em','https://drive.google.com/drive/folders/1yK8vooyVMzgZbWjfcJjJvo8zNc1GoCPy',true],
+    ['🔒','Số nhà đã ký','https://drive.google.com/drive/folders/1rbSPHDaOWipmzq61L3bIlHDhueohG9jn',true]
+  ]
+};
+const isDrive=s=>/^https:\/\/(drive|docs)\.google\.com\//.test(s||'');
+function driveCard(a){
+  const mgr=a.role==='sep'||a.role==='tl';
+  const fs=DRIVE.folders.filter(f=>!f[3]||mgr);
+  const myd=isDrive(a.drive);
+  return `<div class="card"><div class="between"><h2 class="h2" style="margin:0">📁 Kho Drive Hoa Vinh</h2><a class="link" href="${DRIVE.root}" target="_blank" rel="noopener">Thư mục gốc</a></div>
+  <p class="sub">Thư mục chung của phòng trên Google Drive. Bấm để mở.${mgr?'':' Thư mục có 🔒 chỉ Trưởng phòng và Trợ lý mở được.'}</p>
+  <div class="list" style="margin-top:6px">${fs.map(f=>`<a class="li" style="text-decoration:none" href="${f[2]}" target="_blank" rel="noopener"><span style="width:26px">${f[0]}</span><div class="grow"><b>${f[1]}</b></div><span class="sub">Mở ›</span></a>`).join('')}</div>
+  <hr class="s"><div><b>Link Drive cá nhân của tôi</b><p class="sub">Dán link thư mục Drive riêng của bạn. Trưởng phòng và Trợ lý sẽ mở xem được.</p>
+  <div class="row wrap" style="margin-top:6px"><input class="in grow" id="mydrive" placeholder="https://drive.google.com/drive/folders/..." value="${esc(a.drive||'')}" style="flex:1 1 160px"><button class="btn sm" data-a="saveMyDrive">Lưu</button>${myd?`<a class="btn ghost sm" style="display:inline-flex;align-items:center;text-decoration:none" href="${esc(a.drive)}" target="_blank" rel="noopener">Mở</a>`:''}</div></div></div>`;
+}
+A.saveMyDrive=()=>{const el=document.getElementById('mydrive');const v=(el?el.value:'').trim();if(v&&!isDrive(v)){toast('Link phải là link Google Drive hoặc Google Docs');return}const a=me();a.drive=v;save();render();toast(v?'Đã lưu link Drive của bạn':'Đã xoá link Drive')};
 A.seg=v=>{const [k,s]=v.split(':');U.seg[k]=s;render()};
 /* auth */
 A.authMode=v=>{U.auth.mode=v;U.auth.err='';render()};
@@ -2758,6 +2783,11 @@ A.doiVai=async v=>{const i=v.indexOf('|');const email=v.slice(0,i),role=v.slice(
   p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};
   await syncNow();toast('Đã đổi '+p.name+' thành '+ROLES[role])}
  catch(err){toast(/Chỉ Sếp|Chỉ Trưởng phòng|Trợ lý không|ít nhất 1|không có quyền|không hợp lệ/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);U.sheet=null;render()}};
+
+/* ---- Link Drive cá nhân: lưu lên cột link_drive của chính mình ---- */
+A.saveMyDrive=async()=>{const el=document.getElementById('mydrive');const v=(el?el.value:'').trim();if(v&&!isDrive(v)){toast('Link phải là link Google Drive hoặc Google Docs');return}const m=me();if(!m||!m.id||LIVE.busy)return;busy(true,'Đang lưu link Drive…');
+ try{const {error}=await sb.from('nguoi_dung').update({link_drive:v}).eq('id',m.id);if(error)throw error;m.drive=v;toast(v?'Đã lưu link Drive của bạn':'Đã xoá link Drive')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
 
 /* ---- Hồ sơ nhân sự: chỉ đọc/ghi trên Supabase, không lưu trên máy ---- */
 try{localStorage.removeItem(HS_KEY)}catch(e){}
