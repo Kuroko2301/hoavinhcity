@@ -2291,14 +2291,15 @@ async function dtkFetch(path,body){const h={'Content-Type':'application/json'};c
 function dtkField(v){if(v==null)return '';if(typeof v==='object')return v.value!=null?(v.value+(v.unit?' '+v.unit:'')):(v.name||v.title||v.text||'');return ''+v}
 function dtkImg(it){let im=it.thumbnail||it.image||(Array.isArray(it.images)&&it.images[0]);if(!im)return '';return typeof im==='object'?(im.url||im.src||im.thumbnail||''):im}
 A.dtkLoginOpen=()=>{U.dtkLogin={};A.sheet('dtkLogin')};
-SH.dtkLogin=()=>{const u=dtkUsr();return{t:'🔗 Đăng nhập Đại Thế Kỷ',h:u?`<div class="note ok">Đang đăng nhập Đại Thế Kỷ: <b>${esc(u.name||u.fullName||u.email||'Tài khoản ĐTK')}</b></div><button class="btn gold full" style="margin-top:10px" data-a="dtkTongOpen">📘 Xem Bí kíp tổng</button><button class="btn ghost full" style="margin-top:8px" data-a="dtkLogout">Đăng xuất ĐTK</button>`:`<p class="sub" style="margin-top:0">Nhập tài khoản Đại Thế Kỷ <b>của chính bạn</b>. App chỉ giữ mã đăng nhập tạm trên máy này, <b>không lưu mật khẩu</b>.</p>
- <label class="f" for="dtku">Tài khoản ĐTK<input class="in" id="dtku" autocomplete="off" placeholder="Tài khoản / email ĐTK"></label>
+SH.dtkLogin=()=>{const u=dtkUsr();return{t:'🔗 Đăng nhập Đại Thế Kỷ',h:u?`<div class="note ok">Đang đăng nhập Đại Thế Kỷ: <b>${esc(u.name||u.fullName||u.full_name||u.username||u.email||'Tài khoản ĐTK')}</b></div><button class="btn gold full" style="margin-top:10px" data-a="dtkTongOpen">📘 Xem Bí kíp tổng</button><button class="btn ghost full" style="margin-top:8px" data-a="dtkLogout">Đăng xuất ĐTK</button>`:`<p class="sub" style="margin-top:0">Nhập tài khoản Đại Thế Kỷ <b>của chính bạn</b> (tên đăng nhập + mật khẩu). App chỉ giữ mã đăng nhập tạm trên máy này, <b>không lưu mật khẩu</b>.</p>
+ <label class="f" for="dtku">Tài khoản ĐTK<input class="in" id="dtku" autocomplete="off" placeholder="Tên đăng nhập Đại Thế Kỷ"></label>
  <label class="f" for="dtkp" style="margin-top:8px">Mật khẩu<input class="in" id="dtkp" type="password" autocomplete="off" placeholder="Mật khẩu ĐTK"></label>
  <button class="btn gold full" style="margin-top:12px" data-a="dtkDoLogin">Đăng nhập</button>`}};
+function dtkSum(){try{let s=localStorage.getItem('hoavinh-dtk-sum');if(!s){s='hv'+Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('hoavinh-dtk-sum',s)}return s}catch(e){return 'hv-web'}}
 A.dtkDoLogin=async()=>{const u=val('dtku'),p=val('dtkp');if(!u||!p){toast('Nhập tài khoản và mật khẩu nha');return}toast('Đang đăng nhập Đại Thế Kỷ…');
- try{const j=await dtkFetch('/auth/login',{email:u,password:p});const tk=j&&(j.token||(j.data&&j.data.token)||j.accessToken||(j.data&&j.data.accessToken));
+ try{const j=await dtkFetch('/auth/login',{username:u,password:p,sum:dtkSum()});const d=(j&&j.data)||{};const tk=d.access_token||d.accessToken||d.token||(j&&(j.access_token||j.token||j.accessToken));
   if(!tk)throw new Error('Không nhận được mã đăng nhập. Kiểm tra lại tài khoản/mật khẩu nha.');
-  dtkSetTok(tk);dtkSetUsr((j&&(j.user||j.data))||{email:u});toast('Đã đăng nhập Đại Thế Kỷ 🎉');A.dtkTongOpen()}
+  dtkSetTok(tk);dtkSetUsr(d.user||d||{username:u});toast('Đã đăng nhập Đại Thế Kỷ 🎉');A.dtkTongOpen()}
  catch(e){toast(e.message||'Đăng nhập thất bại')}};
 A.dtkLogout=()=>{dtkSetTok('');dtkSetUsr(null);U.sheet=null;render();toast('Đã đăng xuất Đại Thế Kỷ')};
 A.dtkTongOpen=async()=>{if(!dtkTok()){A.dtkLoginOpen();return}U.dtkTong={loading:true,list:[]};A.sheet('dtkTong');
