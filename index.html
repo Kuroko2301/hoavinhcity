@@ -880,7 +880,8 @@ TAB.ae=a=>{
   }else{
     h+=`<div class="card"><h2 class="h2">Lịch của anh em</h2><p class="sub">Lịch dẫn khách anh em nhập trong Hồ sơ dẫn khách tự về đây. Đề xuất lịch quan trọng lên Sếp.</p>${cal.map(x=>{const sent=S.calPush.some(p=>p.email===x.email&&p.i===x.i);return `<div class="li"><span class="pill gold num">${esc(x.c.time)}</span><div class="grow"><b>${esc(x.who)}</b> dẫn ${esc(x.c.name)}<div class="sub">${fmtD(x.c.date)} · ${esc(x.c.need)}</div></div>${sent?'<span class="pill ok">Đã đề xuất</span>':`<button class="btn ghost sm" data-a="pushCal" data-v="${esc(x.email)}|${x.i}">Đề xuất Sếp</button>`}</div>`}).join('')||'<p class="sub">Chưa có lịch.</p>'}</div>`;
   }
-  h+=`<div class="card"><h2 class="h2">Danh sách anh em</h2>${people.sort((x,y)=>y.act-x.act).map(p=>`<div class="li"><div class="grow"><div class="between"><b class="${hsGreen(p)?'hs-name hs-g':''}">${esc(p.name)}${hsGreen(p)?' ✓':''}</b><span class="num ${p.act<50?'':'muted'}" style="${p.act<50?'color:var(--bad);font-weight:800':''}">${p.act}%</span></div><div class="sub">${ROLES[p.role]} · ${p.khach} khách · ${p.tin} tin · ${p.vu} vụ</div><div class="bar ${p.act<50?'r':''}" style="margin-top:5px"><i style="width:${p.act}%"></i></div>${isSep?`<a class="link" style="display:inline-block;margin-top:4px;font-size:12px" href="https://drive.google.com/" target="_blank" rel="noopener">Mở thư mục Drive</a>`:''}</div></div>`).join('')}</div>`;
+  const roster=allPeople().filter(p=>p.email&&p.email!==a.email);const canRole=isSep||a.role==='tl';
+  h+=`<div class="card"><h2 class="h2">Danh sách anh em</h2>${roster.sort((x,y)=>y.act-x.act).map(p=>`<div class="li"><div class="grow"><div class="between"><b class="${hsGreen(p)?'hs-name hs-g':''}">${esc(p.name)}${hsGreen(p)?' ✓':''}</b><span class="num ${p.act<50?'':'muted'}" style="${p.act<50?'color:var(--bad);font-weight:800':''}">${p.act}%</span></div><div class="sub">${ROLES[p.role]} · ${p.khach} khách · ${p.tin} tin · ${p.vu} vụ</div><div class="bar ${p.act<50?'r':''}" style="margin-top:5px"><i style="width:${p.act}%"></i></div>${isSep?`<a class="link" style="display:inline-block;margin-top:4px;font-size:12px" href="https://drive.google.com/" target="_blank" rel="noopener">Mở thư mục Drive</a>`:''}${canRole&&!(a.role==='tl'&&p.role==='sep')?`<button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="doivai:${esc(p.email)}">Đổi vai trò</button>`:''}</div></div>`).join('')}</div>`;
   return h;
 };
 TAB.ts=a=>{
@@ -1510,6 +1511,9 @@ A.tab=v=>{U.tab=v;U.sheet=null;if(v==='test'&&U.test&&U.test.done){}window.scrol
 A.sheet=v=>{U.sheet=v;U.resetAsk=false;if(v==='qa'){U.qres=undefined;U.qq=''}render()};
 A.closeSheet=()=>{U.sheet=null;render()};
 A.closeBg=(v,el,e)=>{if(e.target===el){U.sheet=null;render()}};
+const ROLE_OPTS=[['ctv','Cộng tác viên'],['cg','Đầu chủ - Chuyên gia'],['tl','Trợ lý'],['sep','Trưởng phòng'],['hv','Học viên']];
+SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}`}};
+A.doiVai=v=>{const [email,role]=v.split('|');const p=acct(email);if(!p)return;if(p.role===role){U.sheet=null;render();return}p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};U.sheet=null;save();render();toast('Đã đổi '+p.name+' thành '+ROLES[role])};
 A.seg=v=>{const [k,s]=v.split(':');U.seg[k]=s;render()};
 /* auth */
 A.authMode=v=>{U.auth.mode=v;U.auth.err='';render()};
@@ -2746,6 +2750,14 @@ A.reject=async v=>{const p=acct(v);if(!p||LIVE.busy)return;busy(true);
 A.unlockFor=async v=>{if(LIVE.busy)return;busy(true);
  try{const {error}=await sb.rpc('mo_khoa_dang_nhap',{p_gmail:v});if(error)throw error;delete S.locks[v];toast('Đã mở khoá cho '+v)}
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
+
+/* ---- đổi vai trò người đang hoạt động (Sếp, Trợ lý) ---- */
+A.doiVai=async v=>{const i=v.indexOf('|');const email=v.slice(0,i),role=v.slice(i+1);const p=acct(email);if(!p||LIVE.busy)return;
+ if(p.role===role){U.sheet=null;render();return}busy(true,'Đang đổi vai trò…');
+ try{const {error}=await sb.rpc('doi_vai_tro',{p_id:p.id,p_vai_tro:A2R[role]});if(error)throw error;
+  p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};
+  await syncNow();toast('Đã đổi '+p.name+' thành '+ROLES[role])}
+ catch(err){toast(/Chỉ Sếp|Chỉ Trưởng phòng|Trợ lý không|ít nhất 1|không có quyền|không hợp lệ/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);U.sheet=null;render()}};
 
 /* ---- Hồ sơ nhân sự: chỉ đọc/ghi trên Supabase, không lưu trên máy ---- */
 try{localStorage.removeItem(HS_KEY)}catch(e){}
