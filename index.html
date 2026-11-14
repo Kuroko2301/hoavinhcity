@@ -2171,7 +2171,8 @@ function dtkCard(a){const lk=(S.dtk&&S.dtk.link)||'';const n=S.kho.filter(h=>h.s
  return `<div class="card dtk"><div class="row" style="gap:10px"><span class="dtk-logo">ĐTK</span><div class="grow"><b>Nguồn nhà Đại Thế Kỷ</b><div class="sub">${n?n+' căn từ Đại Thế Kỷ đang có trong Kho':'Chưa có căn nào từ Đại Thế Kỷ'}</div></div></div>
  <div class="grid2" style="margin-top:10px">${lk?`<a class="btn ghost dtk-a" href="${esc(lk)}" target="_blank" rel="noopener">📱 Mở Đại Thế Kỷ</a>`:`<button class="btn ghost" data-a="sheet" data-v="dtkLink">📱 Mở Đại Thế Kỷ</button>`}<button class="btn gold" data-a="dtkOpen">📥 Dán tin vào Kho</button></div>
  <div class="grid2" style="margin-top:8px"><label class="btn gold" style="display:grid;place-items:center;cursor:pointer;margin:0">📷 Thêm từ ảnh<input type="file" accept="image/*" capture="environment" data-dtkanh="1" hidden></label>${lk?`<button class="btn ghost" data-a="sheet" data-v="dtkXem">👁 Xem trong app</button>`:`<button class="btn ghost" data-a="sheet" data-v="dtkLink">⚙️ Cài link</button>`}</div>
- <p class="sub" style="margin-top:8px">Hai cách đưa nhà vào Kho: <b>Dán tin</b> (chép chữ trong Đại Thế Kỷ) hoặc <b>Thêm từ ảnh</b> (chụp/chọn ảnh tin, AI tự đọc giá, diện tích, quận, hẻm, hướng và cả giá giảm chào). Xem lại rồi lưu.</p></div>`}
+ <button class="btn full" style="margin-top:8px;background:linear-gradient(135deg,#0E5FA8,#0A3D6E);color:#fff" data-a="dtkTongOpen">🔗 Lấy Bí kíp tổng tự động${dtkUsr()?' (đã đăng nhập)':''}</button>
+ <p class="sub" style="margin-top:8px"><b>Lấy Bí kíp tổng tự động</b>: đăng nhập tài khoản Đại Thế Kỷ của bạn để kéo tin thẳng vào app. Hoặc <b>Dán tin</b> (chép chữ) / <b>Thêm từ ảnh</b> (AI đọc giá, diện tích, quận, hẻm, hướng, giá giảm chào). Xem lại rồi lưu.</p></div>`}
 function khoPart(a){const f=U.kf||(U.kf={});const L=khoList(a);const good=S.kho.filter(h=>cheap(h)>=.1).length;const mk=a.g.myKf;const gcMine=S.kho.filter(h=>gcOn(h)&&(!mk||((!(mk.q||[]).length||mk.q.includes(h.q))&&(mk.seg==null||mk.seg<0||tierIdx(h.p)===mk.seg))));
  return `<div class="card deal"><div class="kicker" style="color:var(--gold)">Định giá</div><div class="h2" style="color:#fff;margin:2px 0">🔥 ${good} căn rẻ hơn định giá từ 10%</div><div class="sub" style="color:#F8E6D2">So giá chào với định giá khu vực. Bấm một căn để xem bài đăng, ảnh, kịch bản TikTok, khảo sát và khách hợp.</div>${gcMine.length?`<div class="gc-note">🔻 <b>${gcMine.length} căn vừa giảm chào</b> ${mk?'trong khu vực của bạn':'trong Kho'}, đã được đẩy lên đầu danh sách.</div>`:''}</div>
   ${f.cl?`<div class="note ok between"><span>Đang lọc căn hợp với <b>${esc(f.cl)}</b></span><button class="link" data-a="kf" data-v="cl:">Bỏ lọc</button></div>`:''}
@@ -2278,6 +2279,39 @@ A.dtkSave=()=>{const [o,e]=dtkRead();if(e){toast(e);render();return}const h=dtkH
 A.gcSave=v=>{const h=S.kho.find(x=>x.id===v);const np=parseFloat(String(val('gcp')).replace(',','.'));if(!h)return;if(!(np>0)||np>=h.p){toast('Giá mới phải thấp hơn '+nf(h.p)+' tỷ nhé');return}
  h.gc={from:gcOn(h)?h.gc.from:h.p,d:today()};h.p=np;U.sheet=null;save();render();toast('Đã báo giảm chào, căn được đẩy lên đầu Kho 🔻')};
 A.dtkLinkSave=()=>{const l=val('dtkl');if(l&&!/^https?:\/\//i.test(l)){toast('Link phải bắt đầu bằng https://');return}S.dtk={link:l};U.sheet=null;save();render();toast('Đã lưu link Đại Thế Kỷ cho cả phòng')};
+/* ===== Kết nối API Đại Thế Kỷ (ĐTK đồng ý 2026-11-14) — đăng nhập + Bí kíp tổng. Chạy trên web thật; mỗi người dùng tài khoản ĐTK của mình, chỉ giữ mã tạm trên máy, không lưu mật khẩu ===== */
+const DTKAPI={base:'https://api-dtk.thangbk.com',ver:'v2'};
+function dtkTok(){try{return sessionStorage.getItem('hoavinh-dtk-token')||''}catch(e){return ''}}
+function dtkSetTok(t){try{t?sessionStorage.setItem('hoavinh-dtk-token',t):sessionStorage.removeItem('hoavinh-dtk-token')}catch(e){}}
+function dtkUsr(){try{return JSON.parse(sessionStorage.getItem('hoavinh-dtk-user')||'null')}catch(e){return null}}
+function dtkSetUsr(u){try{u?sessionStorage.setItem('hoavinh-dtk-user',JSON.stringify(u)):sessionStorage.removeItem('hoavinh-dtk-user')}catch(e){}}
+async function dtkFetch(path,body){const h={'Content-Type':'application/json','x-api-version':DTKAPI.ver};const tk=dtkTok();if(tk)h['Authorization']='Bearer '+tk;
+ const r=await fetch(DTKAPI.base+path,{method:'POST',headers:h,body:JSON.stringify(body||{})});let j=null;try{j=await r.json()}catch(e){}
+ if(!r.ok){const e=new Error((j&&(j.message||j.error))||('Lỗi máy chủ ĐTK ('+r.status+')'));e.status=r.status;throw e}return j}
+function dtkField(v){if(v==null)return '';if(typeof v==='object')return v.value!=null?(v.value+(v.unit?' '+v.unit:'')):(v.name||v.title||v.text||'');return ''+v}
+function dtkImg(it){let im=it.thumbnail||it.image||(Array.isArray(it.images)&&it.images[0]);if(!im)return '';return typeof im==='object'?(im.url||im.src||im.thumbnail||''):im}
+A.dtkLoginOpen=()=>{U.dtkLogin={};A.sheet('dtkLogin')};
+SH.dtkLogin=()=>{const u=dtkUsr();return{t:'🔗 Đăng nhập Đại Thế Kỷ',h:u?`<div class="note ok">Đang đăng nhập Đại Thế Kỷ: <b>${esc(u.name||u.fullName||u.email||'Tài khoản ĐTK')}</b></div><button class="btn gold full" style="margin-top:10px" data-a="dtkTongOpen">📘 Xem Bí kíp tổng</button><button class="btn ghost full" style="margin-top:8px" data-a="dtkLogout">Đăng xuất ĐTK</button>`:`<p class="sub" style="margin-top:0">Nhập tài khoản Đại Thế Kỷ <b>của chính bạn</b>. App chỉ giữ mã đăng nhập tạm trên máy này, <b>không lưu mật khẩu</b>.</p>
+ <label class="f" for="dtku">Tài khoản ĐTK<input class="in" id="dtku" autocomplete="off" placeholder="Tài khoản / email ĐTK"></label>
+ <label class="f" for="dtkp" style="margin-top:8px">Mật khẩu<input class="in" id="dtkp" type="password" autocomplete="off" placeholder="Mật khẩu ĐTK"></label>
+ <button class="btn gold full" style="margin-top:12px" data-a="dtkDoLogin">Đăng nhập</button>`}};
+A.dtkDoLogin=async()=>{const u=val('dtku'),p=val('dtkp');if(!u||!p){toast('Nhập tài khoản và mật khẩu nha');return}toast('Đang đăng nhập Đại Thế Kỷ…');
+ try{const j=await dtkFetch('/auth/login',{email:u,password:p});const tk=j&&(j.token||(j.data&&j.data.token)||j.accessToken||(j.data&&j.data.accessToken));
+  if(!tk)throw new Error('Không nhận được mã đăng nhập. Kiểm tra lại tài khoản/mật khẩu nha.');
+  dtkSetTok(tk);dtkSetUsr((j&&(j.user||j.data))||{email:u});toast('Đã đăng nhập Đại Thế Kỷ 🎉');A.dtkTongOpen()}
+ catch(e){toast(e.message||'Đăng nhập thất bại')}};
+A.dtkLogout=()=>{dtkSetTok('');dtkSetUsr(null);U.sheet=null;render();toast('Đã đăng xuất Đại Thế Kỷ')};
+A.dtkTongOpen=async()=>{if(!dtkTok()){A.dtkLoginOpen();return}U.dtkTong={loading:true,list:[]};A.sheet('dtkTong');
+ try{const j=await dtkFetch('/bi-kip-tong/search',{limit:20,offset:0,query:''});const list=(j&&(j.data||j.items||j.content||j.records))||(Array.isArray(j)?j:[]);
+  U.dtkTong={loading:false,list:Array.isArray(list)?list:[],total:j&&j.total};render()}
+ catch(e){if(e.status===401){dtkSetTok('');U.sheet=null;toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen();return}U.dtkTong={loading:false,list:[],err:e.message};render()}};
+SH.dtkTong=()=>{const d=U.dtkTong||{};let h='';
+ if(d.loading)h=`<p class="sub">Đang lấy tin từ Đại Thế Kỷ…</p>`;
+ else if(d.err)h=`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongOpen">Thử lại</button>`;
+ else if(!d.list.length)h=`<p class="sub">Chưa có tin nào.</p><button class="btn ghost full" style="margin-top:8px" data-a="dtkTongOpen">Tải lại</button>`;
+ else h=`<p class="sub" style="margin-top:0">${d.list.length} tin Bí kíp tổng${d.total?' · tổng '+d.total:''}. Bấm ➕ để thêm vào Kho nhà.</p>`+d.list.map((it,i)=>{const img=dtkImg(it);const meta=[dtkField(it.price)&&('💰 '+dtkField(it.price)),dtkField(it.area)&&('📐 '+dtkField(it.area)),dtkField(it.district)||dtkField(it.ward)].filter(Boolean).join(' · ');return `<div class="li" style="align-items:flex-start;gap:8px">${img?`<img src="${esc(img)}" alt="" style="width:54px;height:54px;border-radius:10px;object-fit:cover;flex-shrink:0">`:''}<div class="grow"><b>${esc(dtkField(it.title)||dtkField(it.address)||'Tin nhà')}</b>${meta?`<div class="sub">${esc(meta)}</div>`:''}${it.address?`<div class="sub">📍 ${esc(dtkField(it.address))}</div>`:''}<button class="btn ghost sm" style="margin-top:6px" data-a="dtkTongAdd" data-v="${i}">➕ Thêm vào Kho</button></div></div>`}).join('');
+ return{t:'📘 Bí kíp tổng · Đại Thế Kỷ',h}};
+A.dtkTongAdd=v=>{const d=U.dtkTong||{};const it=d.list[+v];if(!it)return;const price=(it.price&&typeof it.price==='object'&&+it.price.value)||0;const o={addr:dtkField(it.title)||dtkField(it.address),q:dtkField(it.district)||dtkField(it.ward),type:'Nhà phố hẻm',p:price,dg:price,dt:dtkField(it.area),hem:'',dir:'',tang:0,pn:0,link:''};const house=dtkHouse(o);house.anh=Array.isArray(it.images)?it.images.length:3;S.kho.unshift(house);save();toast('Đã thêm vào Kho nhà, xem lại trong Kho để chỉnh thêm nha')};
 A.kfMine=()=>{const a=me();const f=U.kf||{};a.g.myKf={q:(f.q||[]).slice(),seg:f.seg==null?-1:f.seg};save();render();toast('Đã lưu: '+myKfTxt(a.g.myKf)+'. Lần sau mở Kho sẽ lọc sẵn cho bạn')};
 (function migGc(){if(S.gcSeed)return;S.gcSeed=1;const set=(id,from,ago)=>{const h=(S.kho||[]).find(x=>x.id===id);if(h&&!h.gc)h.gc={from,d:dAgo(ago)}};set('k8',8.5,0);set('k10',6.9,2);set('k6',4.6,5);
  if(S.kho&&!S.kho.some(h=>h.id==='dmau'))S.kho.push({id:'dmau',addr:'72/9 Nguyễn Sơn',q:'Tân Phú',type:'Nhà phố hẻm',p:5.6,dg:6.1,dt:'4x16',hem:'5m',dir:'Tây Bắc',tang:3,pn:3,plus:['Hẻm thông, gần chợ'],minus:[],d:dAgo(1),by:'Anh Phát',so:false,anh:3,ks:null,src:'dtk',link:'',gc:{from:6,d:dAgo(1)}});save()})();
