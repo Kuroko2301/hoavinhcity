@@ -2901,7 +2901,7 @@ A.vvAsk=async()=>{const q=val('vvq');if(!q){toast('Nhập câu hỏi nha');retur
 A.vvAnswer=async q=>vvLocal(q);
 A.vvClear=()=>{U.vv=[];render()};
 
-SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát'],['clients','🤝','Thêm khách'],['dealreport','💎','Báo vụ chốt'],['lochang','🔎','Lọc hàng'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
+SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát nhà'],['clients','🤝','Thêm khách'],['dealreport','💎','Báo vụ chốt'],['lochang','🔎','Lọc hàng'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
 
 /* ===== v13: Văn hoá mở đầu, Học viện anh em + Zoom, Kỷ niệm, Nhà Truyền Thống ===== */
 const VANHOA=[['Chữ tín trước hợp đồng','Nói đúng thông tin nhà, đúng giá, đúng pháp lý. Khách tin mình thì mới quay lại.'],['Người đi trước dắt người đi sau','Ai mới vào đều có người dẫn đường. Hỗ trợ anh em là nhiệm vụ, có thưởng kim cương.'],['Mỗi ngày một viên gạch','Điểm danh, đăng tin, khảo sát, dẫn khách. Đều đặn mỗi ngày thì nhà sẽ cao.'],['Biết ơn và báo hiếu','Một phần hoa hồng mỗi vụ chốt dành cho báo hiếu và cầu cảm ơn.']];
