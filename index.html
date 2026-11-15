@@ -10,7 +10,7 @@
 .dlbody{display:flex;flex-direction:column;gap:10px;padding:0 14px 14px}.dlbody .grid2{gap:10px}.dlbody .grid2>*{min-width:0;width:100%}.dlbody select.in,.dlbody input.in{border:1.5px solid #3E9B63}
 .dlm{position:relative}.dlm>summary{list-style:none;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1.5px solid #3E9B63}.dlm>summary::-webkit-details-marker{display:none}.dlm.dis{opacity:.5;pointer-events:none}
 .dlmb{position:absolute;z-index:20;left:0;right:0;top:100%;max-height:260px;overflow:auto;background:var(--card,#fff);border:1px solid rgba(0,0,0,.15);border-radius:12px;padding:6px;box-shadow:0 12px 30px -10px rgba(0,0,0,.4)}.dlmb label{display:flex;gap:8px;align-items:center;padding:7px 6px;font-size:14px}
-.dlrange{position:relative;height:34px}.dlrange input{position:absolute;left:0;right:0;top:8px;width:100%;pointer-events:none;-webkit-appearance:none;appearance:none;background:transparent;accent-color:#2E8B57}.dlrange input::-webkit-slider-thumb{pointer-events:auto}.dlrange input::-moz-range-thumb{pointer-events:auto}.dlrange::before{content:'';position:absolute;left:4px;right:4px;top:15px;height:5px;border-radius:4px;background:#2E8B57;opacity:.6}
+.dlgb{display:flex;justify-content:space-between;margin-top:4px;font-size:13px;color:var(--muted,#8a7f76)}.dlgb span{display:flex;align-items:center;gap:6px}.dlgb button{width:36px;height:32px;border-radius:10px;border:1.5px solid #3E9B63;background:transparent;color:inherit;font-size:18px;font-weight:700}.dlrange{position:relative;height:34px}.dlrange input{position:absolute;left:0;right:0;top:8px;width:100%;pointer-events:none;-webkit-appearance:none;appearance:none;background:transparent;accent-color:#2E8B57}.dlrange input::-webkit-slider-thumb{pointer-events:auto}.dlrange input::-moz-range-thumb{pointer-events:auto}.dlrange::before{content:'';position:absolute;left:4px;right:4px;top:15px;height:5px;border-radius:4px;background:#2E8B57;opacity:.6}
 .dlit{position:relative;padding:14px}.dlnew{position:absolute;left:-4px;top:-8px;background:#E0453A;color:#fff;border-radius:999px;padding:2px 10px;font-size:12px}.dlt{background:none;border:0;padding:0;text-align:left;color:#2A6FC9;font-weight:700;font-size:16px;line-height:1.35;cursor:pointer}
 .dlmo{margin:8px 0 0;font-size:13.5px;color:var(--muted,#8a7f76);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.dlrow{display:flex;gap:12px;margin-top:10px;align-items:flex-start}.dlimg{border:0;padding:0;background:none;flex-shrink:0}.dlimg img{width:92px;height:92px;object-fit:cover;border-radius:10px}.dlmeta{font-size:13.5px;color:#3E9B63;display:flex;flex-direction:column;gap:3px;min-width:0}.dlmeta span{display:inline-block;width:22px}
 .dlnd{white-space:pre-wrap;line-height:1.55;font-size:14.5px;background:rgba(127,127,127,.08);border-radius:12px;padding:12px}.dlgal{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.dlgal>div{position:relative}.dlgal img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:zoom-in}.dlgal button{position:absolute;right:4px;bottom:4px;border:0;border-radius:999px;background:rgba(0,0,0,.6);color:#fff;width:30px;height:30px;font-size:14px}
@@ -2205,7 +2205,8 @@ function khoPart(a){const f=U.kf||(U.kf={});const L=khoList(a);const good=S.kho.
 /* ===== v30: Lọc nhà Đại Thế Kỷ giống web ĐTK (Di, 15/11/2026) =====
    Bộ lọc (Hình 1) → danh sách (Hình 2) → chi tiết (Hình 3-5): nội dung AI đã lọc + Copy,
    hình nhà (bỏ selfie) + tải hình, người ký gọn (Hình, Tên, Phòng, Facebook, Zalo). */
-const DL_GIA=[0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50,70,100,200,500,1000,10000];
+/* Giá (tỷ): dưới 20 tỷ bước 0,1 tỷ; từ 20 tỷ bước 5 tỷ; nấc cuối = không giới hạn */
+const DL_GIA=(()=>{const a=[];for(let i=0;i<=200;i++)a.push(i/10);for(let v=25;v<=500;v+=5)a.push(v);a.push(10000);return a})();
 function dlTcMau(){return {segment:TIERS.map((t,i)=>({value:i+1,title:t[1],name:['0-3000','3000-6000','6000-10000','10000-20000','20000-50000','50000-100000'][i]||''})),area:[{value:1,title:'Dưới 30m²',name:'0-30'},{value:2,title:'30 – 50m²',name:'30-50'},{value:3,title:'50 – 80m²',name:'50-80'},{value:4,title:'80 – 120m²',name:'80-120'},{value:5,title:'Trên 120m²',name:'120-100000'}],
  attribute:[{value:'1',title:'Hẻm xe hơi'},{value:'2',title:'Mặt tiền'},{value:'3',title:'Dòng tiền'},{value:'4',title:'Nhà nát'}],zone_group:[],label:[{value:'ban_manh',title:'Bán mạnh'}],sort:[],
  tinh:[{id:79,name:'TP Hồ Chí Minh',quan:QUAN_ALL.map((q,i)=>({id:i+1,name:q,phuong:[]}))}]}}
@@ -2218,14 +2219,15 @@ async function dtkApi(viec,b){b=b||{};
 function dlS(){return U.dl||(U.dl={mo:true,f:{pi0:0,pi1:DL_GIA.length-1,dm:[],wd:[]},list:[],page:1,size:20})}
 function dlTcLoad(){const d=dlS();if(d.tc||d.tcLoad||!d.mo)return;d.tcLoad=true;setTimeout(async()=>{try{d.tc=await dtkApi('tuy_chon')}catch(e){d.tc=dlTcMau();d.tcErr=e.message}d.tcLoad=false;render()},0)}
 function dlQuanAll(tc){const T=(tc&&tc.tinh)||[];const many=T.length>1;const out=[];T.forEach(t=>(t.quan||[]).forEach(q=>out.push({id:q.id,name:q.name+(many?' · '+t.name.replace(/^TP\s*/,''):''),tinh:t.id,phuong:q.phuong||[]})));return out}
-function dlGiaTxt(i){const v=DL_GIA[i];return v>=1000?(v/1000)+' nghìn tỷ':v+' tỷ'}
+function dlGiaTxt(i){const v=DL_GIA[i];return v>=10000?'trên 500 tỷ':(+v.toFixed(1))+' tỷ'}
+A.dlGiaB=(v)=>{const f=dlS().f;const [k,s]=v.split(':');let x=(f[k]==null?(k==='pi0'?0:DL_GIA.length-1):f[k])+(+s);x=Math.max(0,Math.min(DL_GIA.length-1,x));if(k==='pi0')x=Math.min(x,f.pi1);else x=Math.max(x,f.pi0);f[k]=x;render()};
 A.dlOpen=()=>{const d=dlS();d.mo=!d.mo;render()};
 A.dlTog=(v,el)=>{const d=dlS(),f=d.f;const i=v.indexOf(':');const k=v.slice(0,i),id=v.slice(i+1);f[k]=(f[k]||[]).map(String);f[k]=f[k].includes(id)?f[k].filter(y=>y!==id):f[k].concat([id]);if(k==='dm'&&f[k].length)f.d1='';render()};
 A.dlReset=()=>{const d=dlS();d.f={pi0:0,pi1:DL_GIA.length-1,dm:[],wd:[]};d.list=[];d.total=null;d.err=null;d.searched=false;render()};
 function dlBody(d,offset){const f=d.f,tc=d.tc||{};const Q=dlQuanAll(tc);let district=[],province=null;
  if(f.d1){const q=Q.find(x=>String(x.id)===String(f.d1));if(q){district=[q.id];province=q.tinh}}else if(f.dm.length){district=f.dm.slice();const q=Q.find(x=>String(x.id)===String(f.dm[0]));if(q)province=q.tinh}
  let area;if(f.area){const a=(tc.area||[]).find(x=>String(x.value)===String(f.area));if(a&&a.name){const p=String(a.name).split('-');area={from:parseInt(p[0])||0,to:parseInt(p[1])||null}}}
- const p0=DL_GIA[f.pi0||0],p1=DL_GIA[f.pi1==null?DL_GIA.length-1:f.pi1];const price=(p0>0||p1<10000)?{from:p0*1000,to:p1>=10000?null:p1*1000}:undefined;
+ const p0=DL_GIA[f.pi0||0],p1=DL_GIA[f.pi1==null?DL_GIA.length-1:f.pi1];const price=(p0>0||p1<10000)?{from:Math.round(p0*1000),to:p1>=10000?null:Math.round(p1*1000)}:undefined;
  const s=(tc.sort||[])[+(f.sort||0)];const sorts=s?{[s.field]:s.value}:undefined;
  const segV=f.seg!==''&&f.seg!=null?((tc.segment||[]).find(x=>String(x.value)===String(f.seg))||{}).value:undefined;
  return {size:d.size,offset:offset||0,keyword:f.kw||'',sorts,location:{province,district,ward:f.d1?(f.wd||[]):[]},area,price,segment:segV,attribute:f.attr?(isNaN(+f.attr)?f.attr:+f.attr):undefined,serial:f.serial||'',zone_group:f.zg||undefined,approval_house_label:f.label||undefined}}
@@ -2261,7 +2263,8 @@ function dlFormPart(){const d=dlS(),f=d.f,tc=d.tc;dlTcLoad();
   <div class="grid2"><input class="in" data-dl="serial" value="${esc(f.serial||'')}" placeholder="Số seri sổ">${dlSel('zg','Công ty thành viên',tc.zone_group||[],f.zg)}</div>
   <div class="grid2">${dlSel('label','Nhãn',tc.label||[],f.label)}<div></div></div>
   <div><div class="sub">Giá: <b id="dlGia" style="color:var(--green,#2E8B57)">${dlGiaTxt(f.pi0)} – ${dlGiaTxt(f.pi1)}</b></div>
-   <div class="dlrange"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi0}" data-dl="pi0" aria-label="Giá từ"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi1}" data-dl="pi1" aria-label="Giá đến"></div></div>
+   <div class="dlrange"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi0}" data-dl="pi0" aria-label="Giá từ"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi1}" data-dl="pi1" aria-label="Giá đến"></div>
+   <div class="dlgb"><span>Từ <button data-a="dlGiaB" data-v="pi0:-1" aria-label="Giảm giá từ">−</button><button data-a="dlGiaB" data-v="pi0:1" aria-label="Tăng giá từ">+</button></span><span>Đến <button data-a="dlGiaB" data-v="pi1:-1" aria-label="Giảm giá đến">−</button><button data-a="dlGiaB" data-v="pi1:1" aria-label="Tăng giá đến">+</button></span></div></div>
   <div class="grid2"><button class="btn ghost" data-a="dlReset">Xoá lọc</button><button class="btn" style="background:#2E8B57;color:#fff" data-a="dlSearch">🔍 Tìm kiếm</button></div>
   ${d.tcErr?`<p class="sub">Bộ lọc đang dùng bản rút gọn (${esc(d.tcErr)}).</p>`:''}</div></div>`}
 function dlMs(t){if(t==null||t==='')return 0;if(typeof t==='number'||/^\d+$/.test(String(t))){const n=+t;return n<1e12?n*1000:n}const x=Date.parse(t);return isNaN(x)?0:x}
