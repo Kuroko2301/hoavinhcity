@@ -1309,8 +1309,8 @@ function label3(text,bg){const c=document.createElement('canvas');c.width=320;c.
   x.fillStyle=bg?'#fff':'#231A17';x.textAlign='center';x.textBaseline='middle';x.fillText(text,160,37);
   const t=new THREE.CanvasTexture(c);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:t,depthTest:false,transparent:true}));s.scale.set(1.7,.38,1);s.renderOrder=5;return s}
 /* v28: đồ hoạ Kinh Thành — mô hình CC0 (Kenney, Quaternius) + nắng, bóng, cỏ, lối đi, khói, chim, mây */
-const G3B='3d/',G3V='28';
-const G3M=['tree_oak','tree_fat','tree_autumn','tree_pine','bush','bush_large','flower_red','fence','rock_small','rock_large','stump','log','mushroom_red','pumpkin','barrels','crate','sedan','taxi','van','cat','wolf_cartoon'];
+const G3B='3d/',G3V='29';
+const G3M=['tree_oak','tree_fat','tree_autumn','tree_pine','bush','bush_large','flower_red','fence','rock_small','rock_large','stump','log','mushroom_red','pumpkin','barrels','crate','sedan','taxi','van','cat','wolf_cartoon','suv_luxury'];
 const G3COL={leafsGreen:'#63B446',leafsDark:'#3F8F50',leafsFall:'#F2A23C',grass:'#6EBD4B',woodBark:'#8C5A35',woodBarkDark:'#6E4428',woodBirch:'#F2EBDD',wood:'#C98B57',woodDark:'#9C6438',dirt:'#A07651',woodInner:'#E8C99A',colorRed:'#E0484F',_defaultMat:'#F3EBDD'};
 function rnd3(s){s=s%2147483647||1;return ()=>{s=(s*16807)%2147483647;return (s-1)/2147483646}}
 function tex3(key,draw,rep){C3.tx=C3.tx||{};if(C3.tx[key])return C3.tx[key];const c=document.createElement('canvas');c.width=c.height=128;draw(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;if(rep)t.repeat.set(rep,rep);t.anisotropy=4;return C3.tx[key]=t}
@@ -1380,7 +1380,7 @@ function home3(a,noLabel){const T=THREE;const g=new T.Group();g.position.set(7.5
 /* --- mô hình GLB --- */
 function prep3(gl,name){const T=THREE;gl.scene.traverse(o=>{if(!o.isMesh)return;o.castShadow=true;o.receiveShadow=true;const old=o.material;const mats=(Array.isArray(old)?old:[old]).map(m=>{const nm=mt3({map:m.map||null,color:m.color?m.color.clone():new T.Color('#fff'),skinning:!!o.isSkinnedMesh,side:m.side});
     if(nm.map)nm.map.encoding=T.LinearEncoding;if(G3COL[m.name])nm.color.set(G3COL[m.name]);else if(!m.map&&m.color)nm.color.setRGB(Math.min(1,m.color.r*1.0),m.color.g,m.color.b);return nm});o.material=Array.isArray(old)?mats:mats[0];if(o.isSkinnedMesh)o.frustumCulled=false});
-  gl.scene.updateMatrixWorld(true);const b=new T.Box3();gl.scene.traverse(o=>{if(o.isMesh&&!o.isSkinnedMesh){o.geometry.computeBoundingBox();b.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld))}});gl.box=b;gl.name=name;return gl}
+  gl.scene.updateMatrixWorld(true);const b=new T.Box3();gl.scene.traverse(o=>{if(o.isMesh&&!o.isSkinnedMesh){if(!o.geometry.boundingBox)o.geometry.computeBoundingBox();b.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld))}});gl.box=b;gl.name=name;return gl}
 function js3(src){return new Promise(ok=>{const s=document.createElement('script');s.src=src;s.onload=()=>ok(true);s.onerror=()=>ok(false);document.head.appendChild(s)})}
 function glb3(){if(C3.glP)return C3.glP;if(!THREE.GLTFLoader||!window.MeshoptDecoder){C3.glP=Promise.resolve({});return C3.glP}
   C3.glP=Promise.all([MeshoptDecoder.ready,window.G3DATA?1:js3(G3B+'models.js?v='+G3V)]).then(()=>{const D=window.G3DATA||{};const L=new THREE.GLTFLoader();L.setMeshoptDecoder(MeshoptDecoder);const out={};
@@ -1410,6 +1410,13 @@ function deco3(gl){if(!C3.sc||C3.decoOn)return;C3.decoOn=true;const T=THREE;cons
   Object.keys(by).forEach(n=>{const inT=by[n].filter(o=>!o.out),out=by[n].filter(o=>o.out);D.add(inst3(gl[n],inT,true));if(out.length)D.add(inst3(gl[n],out,false))});
   /* xe chạy quanh vòng thành */
   C3.cars=[];[['taxi',0],['sedan',.38],['van',.7]].forEach(([n,ph])=>{if(!gl[n])return;const o=gl[n].scene.clone();o.scale.setScalar(.21);D.add(o);C3.cars.push({o,u:ph,sp:.022+R()*.006})});
+  /* xe Team Hoa Vinh treo cờ logo, chạy quanh sân Tổng bộ */
+  if(gl.suv_luxury){const o=new T.Group(),k=.19;const car=gl.suv_luxury.scene.clone();car.scale.setScalar(k);o.add(car);const top=(gl.suv_luxury.box.max.y||1.5)*k;
+    o.add(m3(new T.CylinderGeometry(.012,.014,.6,6),'#E8C35A',{p:[0,top+.28,-.1]}));o.add(m3(new T.SphereGeometry(.028,8,6),'#F3C24B',{p:[0,top+.6,-.1]}));
+    const fg=new T.PlaneGeometry(.44,.275,14,2);fg.translate(.22,0,0);fg.rotateY(Math.PI/2);let fb=null;const ft=window.G3FLAG?new T.TextureLoader().load(window.G3FLAG,t=>{if(fb){fb.image=t.image;fb.needsUpdate=true}}):null;
+    if(ft){fb=ft.clone();fb.needsUpdate=true;fb.wrapS=T.RepeatWrapping;fb.repeat.x=-1;fb.offset.x=1}
+    [[ft,T.FrontSide],[fb,T.BackSide]].forEach(([tx,sd])=>{const fm=new T.Mesh(fg,mt3(tx?{map:tx,side:sd}:{color:'#8E1B1B',side:sd}));fm.position.set(0,top+.44,-.1);fm.castShadow=sd===T.FrontSide;fm.userData.keep=1;o.add(fm)});
+    C3.flag={geo:fg,base:Float32Array.from(fg.attributes.position.array)};D.add(o);C3.cars.push({o,u:.1,sp:.05,path:[[2.98,2.98],[5.02,2.98],[5.02,5.02],[2.98,5.02]]})}
   /* mèo, chó dạo quanh */
   C3.pets=[];[['cat',.2],['wolf_cartoon',.22]].forEach(([n,s],k)=>{const g=gl[n];if(!g)return;const o=g.scene;o.scale.setScalar(s);o.updateMatrixWorld(true);const mx=new T.AnimationMixer(o);const clip=x=>g.animations.find(c=>new RegExp('\\|'+x+'$').test(c.name));
     const wa=clip('Walk')?mx.clipAction(clip('Walk')):null,id=clip('Idle')?mx.clipAction(clip('Idle')):null,ea=clip('Idle_Eating')?mx.clipAction(clip('Idle_Eating')):null;(id||wa)&&(id||wa).play();
@@ -1419,9 +1426,10 @@ function petGo3(p){const f=freeTiles3();const x=p.o.position.x,z=p.o.position.z;
 function petAct3(p,a){if(!a||p.cur===a)return;a.reset().play();if(p.cur)p.cur.crossFadeTo(a,.25,false);p.cur=a}
 const CAR3=[[-.42,-.42],[8.42,-.42],[8.42,8.42],[-.42,8.42]];
 function life3(dt,t){const T=THREE;
-  (C3.cars||[]).forEach(c=>{c.u=(c.u+dt*c.sp)%1;const L=4,s=c.u*L,k=Math.floor(s),f=s-k,a=CAR3[k],b=CAR3[(k+1)%4];c.o.position.set(a[0]+(b[0]-a[0])*f,0,a[1]+(b[1]-a[1])*f);const ang=Math.atan2(b[0]-a[0],b[1]-a[1]);let da=ang-c.o.rotation.y;da=Math.atan2(Math.sin(da),Math.cos(da));c.o.rotation.y+=da*Math.min(1,dt*6)});
+  (C3.cars||[]).forEach(c=>{const P=c.path||CAR3;c.u=(c.u+dt*c.sp)%1;const s=c.u*4,k=Math.floor(s),f=s-k,a=P[k],b=P[(k+1)%4];c.o.position.set(a[0]+(b[0]-a[0])*f,0,a[1]+(b[1]-a[1])*f);const ang=Math.atan2(b[0]-a[0],b[1]-a[1]);let da=ang-c.o.rotation.y;da=Math.atan2(Math.sin(da),Math.cos(da));c.o.rotation.y+=da*Math.min(1,dt*6)});
   (C3.pets||[]).forEach(p=>{p.mx.update(dt);if(p.tg){const dx=p.tg.x-p.o.position.x,dz=p.tg.z-p.o.position.z,d=Math.hypot(dx,dz);if(d<.04){p.tg=null;p.t=2+Math.random()*4;petAct3(p,Math.random()<.4&&p.ea?p.ea:p.id)}else{const st=Math.min(d,.32*dt);p.o.position.x+=dx/d*st;p.o.position.z+=dz/d*st;const ang=Math.atan2(dx,dz);let da=ang-p.o.rotation.y;da=Math.atan2(Math.sin(da),Math.cos(da));p.o.rotation.y+=da*Math.min(1,dt*6)}}
     else{p.t-=dt;if(p.t<=0){petGo3(p);petAct3(p,p.wa)}}});
+  if(C3.flag){const p=C3.flag.geo.attributes.position,B=C3.flag.base;for(let i=0;i<p.count;i++){const d=-B[i*3+2];p.array[i*3]=B[i*3]+Math.sin(t/110-d*16)*d*.16;p.array[i*3+1]=B[i*3+1]-d*d*.12}p.needsUpdate=true;C3.flag.geo.computeVertexNormals()}
   (C3.clouds||[]).forEach(c=>{c.position.x+=dt*c.userData.sp;if(c.position.x>22)c.position.x=-14});
   (C3.birds||[]).forEach(b=>{const u=b.userData;u.a+=dt*u.sp;b.position.set(4+Math.cos(u.a)*u.r,u.y+Math.sin(u.a*2)*.2,4+Math.sin(u.a)*u.r);b.rotation.y=-u.a+(u.sp>0?0:Math.PI);const fl=Math.sin(t/90+u.a*7)*.7;u.L.rotation.z=fl;u.R.rotation.z=-fl});
   if(!C3.smk||t-(C3.smkT||0)>3000){C3.smkT=t;const pts=[];C3.sc.traverse(o=>{if(o.userData.chim)pts.push(o.getWorldPosition(new T.Vector3()))});C3.smk=pts;C3.puffs=C3.puffs||[];
