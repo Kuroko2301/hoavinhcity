@@ -2231,7 +2231,10 @@ function dlBody(d,offset){const f=d.f,tc=d.tc||{};const Q=dlQuanAll(tc);let dist
  return {size:d.size,offset:offset||0,keyword:f.kw||'',sorts,location:{province,district,ward:f.d1?(f.wd||[]):[]},area,price,segment:segV,attribute:f.attr?(isNaN(+f.attr)?f.attr:+f.attr):undefined,serial:f.serial||'',zone_group:f.zg||undefined,approval_house_label:f.label||undefined}}
 A.dlSearch=async(more)=>{const d=dlS();if(!dtkTok()){A.dtkLoginOpen();return}const add=more==='more';const off=add?d.list.length:0;d.loading=true;d.err=null;d.searched=true;render();
  if(!add)setTimeout(()=>{const e=document.getElementById('dlKq');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},60);
- try{const j=await dtkApi('tim',dlBody(d,off));if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};let list=dd.data||(j&&j.data)||[];if(!Array.isArray(list))list=[];
+ try{const body=dlBody(d,off);let j;try{j=await dtkApi('tim',body)}catch(e1){if(e1.status===401||!(body.location&&body.location.district&&body.location.district.length))throw e1;
+   /* ĐTK chưa nhận lọc theo mã quận → tìm theo tên quận/phường */const Q=dlQuanAll(d.tc);const ten=body.location.district.map(id=>{const q=Q.find(x=>String(x.id)===String(id));return q?q.name.split(' · ')[0]:''}).filter(Boolean);
+   const P=(Q.find(x=>String(x.id)===String(d.f.d1))||{}).phuong||[];const tp=(body.location.ward||[]).map(id=>(P.find(w=>String(w.id)===String(id))||{}).name).filter(Boolean);
+   const b2=Object.assign({},body,{keyword:[body.keyword,tp.join(' ')||ten.join(' ')].filter(Boolean).join(' ')});delete b2.location;j=await dtkApi('tim',b2);d.theoTen=true}if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};let list=dd.data||(j&&j.data)||[];if(!Array.isArray(list))list=[];
   d.list=add?d.list.concat(list):list;d.total=dd.total!=null?dd.total:(j&&j.total);d.da=add?d.da:{}}
  catch(e){if(e.status===401){dtkSetTok('');toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen()}else d.err=e.message}
  d.loading=false;render()};
@@ -2262,12 +2265,13 @@ function dlFormPart(){const d=dlS(),f=d.f,tc=d.tc;dlTcLoad();
 function dlAgo(t){const x=Date.parse(t);if(!x)return '';const dt=new Date(x);const p=n=>String(n).padStart(2,'0');return `${p(dt.getHours())}:${p(dt.getMinutes())} ${p(dt.getDate())}/${p(dt.getMonth()+1)}/${dt.getFullYear()}`}
 function dlTc(kind,v){const L=((dlS().tc||{})[kind])||[];const o=L.find(x=>String(x.value)===String(v));return o?o.title:''}
 function dlImgUrl(im,big){if(!im)return '';if(typeof im==='string')return im;return big?(im.image||im.medium||im.big||im.url||im.thumb||''):(im.thumb||im.medium||im.image||im.url||'')}
+function dlUser(it){const o=it.owner&&typeof it.owner==='object'?it.owner:{};const u=Object.assign({},o,it.user||{});if(!u.full_name)u.full_name=o.full_name||o.name||o.fullname||'';if(!u.avatar)u.avatar=(typeof it.avatar==='string'?it.avatar:(it.avatar&&it.avatar.url))||o.avatar||'';return u}
 function dlCreated(it){return it.created||it.created_at||it.createdAt||it.updated||''}
 function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';const tc=d.tc||{};const s=tc.sort||[];
  const head=`<div class="card between dlres" id="dlKq"><div><b class="num" style="font-size:22px;color:#2E8B57">${d.loading&&!d.list.length?'…':(d.list.length+(d.total!=null?' / '+Number(d.total).toLocaleString('vi-VN'):''))}</b><div class="sub">căn từ Đại Thế Kỷ</div></div>${s.length?`<select class="in" style="width:auto" data-dl="sort">${s.map((o,i)=>`<option value="${i}" ${String(d.f.sort||0)===String(i)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`:''}</div>`;
  if(d.err)return head+`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" data-a="dlSearch">Thử lại</button>`;
  if(!d.list.length)return head+(d.loading?`<p class="sub" style="text-align:center">⏳ Đang lọc nhà trên Đại Thế Kỷ…</p>`:`<p class="sub">Không có căn nào khớp bộ lọc, thử bỏ bớt điều kiện nha.</p>`);
- return head+d.list.map((it,i)=>{const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const c=dlCreated(it);const moi=c&&Date.now()-Date.parse(c)<864e5;const u=it.user||{};
+ return head+d.list.map((it,i)=>{const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const c=dlCreated(it);const moi=c&&Date.now()-Date.parse(c)<864e5;const u=dlUser(it);
   const mo=String(it.description||'').replace(/\s+/g,' ').trim();const tt=dtkField(it.title)||'Tin nhà';
   const meta=[[ '👤',(u.full_name||'')+(dlTc('segment',it.segment)?' · '+dlTc('segment',it.segment):'')],['🛒',dlTc('label',it.approval_house_label)||dtkField(it.price&&it.price.status)||''],['📅',dlAgo(c)],['🏢',dlTc('zone_group',it.zone_group)||dtkField(it.agency)||'']].filter(x=>x[1]&&String(x[1]).trim());
   return `<div class="card dlit">${moi?'<b class="dlnew">NEW</b>':''}<button class="dlt" data-a="dlCt" data-v="${i}">${esc(tt)}</button>${mo&&mo!==tt?`<p class="dlmo">${esc(mo.slice(0,180))}</p>`:''}
@@ -2279,11 +2283,11 @@ A.dlAdd=v=>{const d=dlS();U.dtkTong={list:d.list,da:d.da||(d.da={}),inline:'dl'}
 A.dlCt=async v=>{const d=dlS();const it=d.list[+v];if(!it)return;const ct=U.dlCt={i:+v,it,loading:true};A.sheet('dlCt');
  try{const id=it.id||it._id;const r=await dtkApi('chi_tiet',{id,it});if(U.dlCt!==ct)return;ct.bk=Object.assign({},it,(r&&r.bk)||{});ct.bai=(r&&r.bai_ai)||'';ct.hn=r&&r.hinh_nha}
  catch(e){ct.bk=it;ct.err=e.message}ct.loading=false;if(U.sheet==='dlCt')render()};
-function dlFb(bk){const u=bk.user||{};const t=String(bk.description||'')+'\n'+String(bk.title||'');let link=u.facebook||'';const m=t.match(/https?:\/\/(?:www\.|m\.)?(?:facebook\.com|fb\.com|fb\.me)\/[^\s)]+/i);if(!link&&m)link=m[0];
+function dlFb(bk){const u=dlUser(bk);const t=String(bk.description||'')+'\n'+String(bk.title||'');let link=u.facebook||'';const m=t.match(/https?:\/\/(?:www\.|m\.)?(?:facebook\.com|fb\.com|fb\.me)\/[^\s)]+/i);if(!link&&m)link=m[0];
  const n=t.match(/facebook\s*[:：-]\s*([^\n]{2,60})/i);let ten=n?n[1].replace(/https?:\/\/\S+/,'').trim():'';if(/^https?:/i.test(ten))ten='';
  if(link&&!/^https?:/i.test(link))link='https://facebook.com/'+link.replace(/^@/,'');return {link,ten}}
-function dlZalo(bk){const u=bk.user||{};const t=String(bk.description||'');const m=t.match(/zalo[^\d\n]{0,12}((?:\+?84|0)(?:[\s.]?\d){8,10})/i);const p=(u.phone||'')||(m?m[1]:'');return String(p).replace(/[^\d+]/g,'')}
-SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.bk||c.it||{};const u=bk.user||{};
+function dlZalo(bk){const u=dlUser(bk);const t=String(bk.description||'');const m=t.match(/zalo[^\d\n]{0,12}((?:\+?84|0)(?:[\s.]?\d){8,10})/i);const p=(u.phone||'')||(m?m[1]:'');return String(p).replace(/[^\d+]/g,'')}
+SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.bk||c.it||{};const u=dlUser(bk);
  const imgs=(Array.isArray(bk.images)?bk.images:[]).map((im,i)=>({im,i,ok:!c.hn||c.hn[i]!==false}));const nha=imgs.filter(x=>x.ok);const an=imgs.length-nha.length;
  const loc=[dtkField(bk.location&&bk.location.district)||dtkField(bk.district),dlTc('zone_group',bk.zone_group)||dtkField(bk.agency)].filter(Boolean).join(' - ');
  const fb=dlFb(bk),zl=dlZalo(bk);const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
