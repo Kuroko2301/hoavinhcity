@@ -1371,7 +1371,7 @@ function loop3(t){if(!C3.r||!document.body.contains(C3.r.domElement)){C3.run=fal
   if(C3.mode===undefined){C3.mode='pause';C3.timer=2;C3.sit=0}
   if(C3.target&&!C3.target.w&&C3.mode==='sit')C3.mode='walk';
   if(C3.target&&C3.sit<.15){const dx=C3.target.x-C3.pos.x,dz=C3.target.z-C3.pos.z,dist=Math.hypot(dx,dz);
-    if(dist<.05){const k=C3.target.k,w=C3.target.w;C3.target=null;C3.mode='pause';C3.timer=w?1.2+Math.random()*2:6;if(k){if(k==='nha')A.goNha();else A.sheet('bld:'+k)}}
+    if(dist<.05){const k=C3.target.k,w=C3.target.w;C3.target=null;C3.mode='pause';C3.timer=w?1.2+Math.random()*2:6;if(k){try{if(k==='nha')A.goNha();else A.sheet('bld:'+k)}catch(e){console.warn(e);U.sheet=null;toast('Chưa mở được phòng này, thử lại giúp mình nha')}}}
     else{const sp=C3.target.w?(u.ride?1.1:.7):(u.ride?2.6:1.7);const st=Math.min(dist,sp*dt);C3.pos.x+=dx/dist*st;C3.pos.z+=dz/dist*st;const ang=Math.atan2(dx,dz);let da=ang-ch.rotation.y;da=Math.atan2(Math.sin(da),Math.cos(da));ch.rotation.y+=da*Math.min(1,dt*(C3.target.w?4:10));C3.wt=(C3.wt||0)+dt*(C3.target.w?6.5:10);sw=u.ride?0:Math.sin(C3.wt)*(C3.target.w?.45:.6)}}
   else if(!C3.target){C3.timer-=dt;
     if(C3.timer<=0){if(C3.mode==='sit'){C3.mode='pause';C3.timer=.9}else if(!u.ride&&C3.mode!=='stood'&&Math.random()<.4){C3.mode='sit';C3.timer=3+Math.random()*3}else wander3();if(C3.mode==='pause'&&C3.timer===.9)C3.mode='stood'}}
@@ -1429,10 +1429,12 @@ SHB.tongbo=()=>{const bd=S.accts.filter(x=>x.dob&&x.dob.slice(5,7)===today().sli
  return {t:'Tổng bộ Hoa Vinh',h:noticeCard()+`<div class="card" style="margin-top:10px"><div class="kicker" style="color:var(--gold2)">Chữ chạy hôm nay</div><p style="margin:6px 0 0;line-height:1.5">${esc(S.ticker)}</p></div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Cả phòng tháng này</h2><div class="stats"><div class="stat"><b>${people.length}</b><span>Anh em</span></div><div class="stat"><b>${S.deals.length}</b><span>Vụ chốt</span></div><div class="stat"><b>${nf(Math.round(S.accts.reduce((s,x)=>s+(x.g.kc||0),0)*10)/10)}</b><span>💎 Kim cương</span></div></div></div>
  <div class="card" style="margin-top:10px"><h2 class="h2">🎂 Sinh nhật tháng ${+today().slice(5,7)}</h2>${bd.map(x=>`<div class="li">${avatar(x,'sm')}<b class="grow">${esc(x.name)}</b><span class="pill ${x.dob.slice(5)===today().slice(5)?'gold':''}">${x.dob.slice(8)}/${x.dob.slice(5,7)}${x.dob.slice(5)===today().slice(5)?' · Hôm nay':''}</span></div>`).join('')||'<p class="sub">Tháng này chưa có ai.</p>'}<p class="sub">Ai sinh nhật sẽ nhận quà là nguyên liệu xây nhà.</p></div>`}};
-function tlRoom(email){const t=acct(email);const mine=S.msgs.filter(m=>m.to===email&&m.from===me().name);
+function tlFind(email,ten){const bo=x=>String(x||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').toLowerCase();
+ return acct(email)||(S.accts||[]).find(a=>a.role==='tl'&&a.status!=='off'&&new RegExp('(^|\\s)'+bo(ten)+'$').test(bo(a.name)))||{email:'',name:'Trợ lý '+ten,brand:'',avatar:'',role:'tl',g:G({})}}
+function tlRoom(email,ten){const t=tlFind(email,ten);email=t.email||email;const mine=S.msgs.filter(m=>m.to===email&&m.from===me().name);
  return {t:'Phòng '+t.name,h:`<div class="card"><div class="row">${avatar(t)}<div class="grow"><b>${esc(t.name)}</b><div class="sub">Nhận lịch, duyệt, hỗ trợ anh em</div></div></div><label class="f" for="msg" style="margin-top:10px">Gửi lời nhắn<textarea class="in" id="msg" placeholder="Xin lịch đi khảo sát cùng, hỏi thủ tục, báo việc..."></textarea></label><button class="btn full" style="margin-top:8px" data-a="sendMsg" data-v="${esc(email)}">Gửi cho ${esc(t.name)}</button>${mine.map(m=>`<div class="li"><span class="sub">${fmtD(m.d)}</span><div class="grow" style="font-size:13px">${esc(m.text)}</div><span class="pill ok">Đã gửi</span></div>`).join('')}</div>`}}
-SHB.tlthuy=()=>tlRoom('troly.thuy@gmail.com');
-SHB.tldi=()=>tlRoom('troly.di@gmail.com');
+SHB.tlthuy=()=>tlRoom('troly.thuy@gmail.com','Thủy');
+SHB.tldi=()=>tlRoom('troly.di@gmail.com','Di');
 SHB.vanhanh=()=>({t:'Phòng vận hành',h:`<div class="card"><h2 class="h2">Đơn vị tiền trong game</h2><p class="sub">Xếp từ rẻ tới đắt.</p><table class="tbl"><tr><th>Tiền</th><th>Kiếm bằng cách</th></tr><tr><td>🥈 Bạc</td><td>Nhiệm vụ hằng ngày: đăng tin, quay video, đăng bài, đăng video (+2 mỗi việc)</td></tr><tr><td>🥇 Vàng</td><td>Khảo sát nhà (+1 mỗi căn), mỗi hình dẫn khách +1 (che mặt khách vẫn được), nhiệm vụ khảo sát</td></tr><tr><td>💎 Kim cương</td><td>Vụ chốt được xét duyệt, tính theo hệ số T</td></tr></table></div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Hệ số T của vụ chốt</h2>${tierTable()}</div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Nguyên liệu xây nhà</h2><p class="sub" style="line-height:1.55">Gạch, gỗ, thép, kính có được từ điểm danh, quà sinh nhật và mua ở Siêu thị. Mỗi cấp nhà cần nhiều nguyên liệu hơn cấp trước.</p></div>
@@ -1458,7 +1460,7 @@ SHB.bando=()=>{const a=me();const L=[];S.accts.forEach(x=>x.g.surveys.forEach((s
  return {t:'Phòng bản đồ Hoa Vinh',h:`<div class="city"><svg viewBox="0 0 320 190" role="img" aria-label="Bản đồ khảo sát của phòng"><rect width="320" height="190" fill="#EFE6D4"/><path d="M0 60 H320 M0 130 H320 M70 0 V190 M240 0 V190" stroke="#fff" stroke-width="7"/><path d="M160 0 V190" stroke="#B8862A" stroke-width="1.5" stroke-dasharray="5 4"/><text x="80" y="18" class="lbl" text-anchor="middle">TÂN PHÚ</text><text x="240" y="18" class="lbl" text-anchor="middle">TÂN BÌNH</text>${pins.map(q=>`<g><path d="M${q.x} ${q.y} c-7 -9 -7 -17 0 -17 c7 0 7 8 0 17z" fill="#8E1B1B"/><text x="${q.x}" y="${q.y-8}" font-size="8" font-weight="800" fill="#fff" text-anchor="middle">${q.n}</text></g>`).join('')}</svg></div>
  <p class="sub">Bản đồ minh hoạ. Bản thật ghim đúng vị trí trên Google Maps.</p>${pins.map(q=>`<div class="li"><span class="pill gold num">${q.n}</span><div class="grow"><b>${esc(q.p.addr)}</b><div class="sub">${esc(q.p.who)} khảo sát${q.p.alley?' · hẻm '+esc(q.p.alley)+'m':''} · hướng ${esc(q.p.dir||'?')}</div><a class="link" style="font-size:12px" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q.p.addr)}" target="_blank" rel="noopener">Mở Google Maps</a></div></div>`).join('')}
  <button class="btn full" style="margin-top:10px" data-a="sheet" data-v="survey">Khảo sát căn mới và chia sẻ lên bản đồ</button>`}};
-SH.bld=k=>SHB[k]();
+SH.bld=k=>{try{return SHB[k]()}catch(e){console.warn('[bld]',k,e);return {t:'Phòng',h:'<p class="sub">Phòng này chưa mở được, Trợ lý Di đang sửa nha.</p>'}}};
 SH.bell=()=>{const a=me();const t0=new Date();t0.setHours(0,0,0,0);const days=Math.round((TET-t0)/864e5);const done=a.g.tasks[today()]||[];
  return {t:'🔔 Chuông 6 giờ sáng',h:`<div class="card tet"><div class="kicker">Chào buổi sáng</div><div class="h2" style="color:#fff;margin:6px 0">${esc(a.name)} ơi, ngày mới tới rồi!</div><div class="sub">Còn ${Math.floor(days/7)} tuần nữa là Tết. “${quote()}”</div></div>
  ${a.role==='hv'?`<p style="margin-top:12px">Bước tiếp theo trong lộ trình: <b>${(hvSteps(a).find(s=>!s[1])||['Bạn đã xong cả lộ trình'])[0]}</b></p>`:''}${bellGoals(a)}
@@ -1953,7 +1955,8 @@ document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.hs||!el.
   const rows=A_.slice(hi+1).filter(r=>String(r[C.ten]||'').trim()).map(r=>{const o={};for(const k in C)o[k]=C[k]>=0?String(r[C[k]]??'').trim():'';return o});
   hsUpload(rows);
  }catch(err){toast('File này chưa đọc được, Di gửi lại bản .xlsx nhé')}};fr.readAsArrayBuffer(file)})});
-document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.dtkanh||!el.files||!el.files[0])return;const file=el.files[0];const fr=new FileReader();fr.onload=()=>{toast('📷 Đang đọc ảnh tin…');A.dtkAnhFile&&A.dtkAnhFile(file,fr.result)};fr.readAsDataURL(file)});
+function thuNhoAnh(dataUrl,maxW,maxH){return new Promise(res=>{const im=new Image();im.onload=()=>{try{const k=Math.min(1,maxW/im.width,maxH/im.height);const w=Math.max(1,Math.round(im.width*k)),h=Math.max(1,Math.round(im.height*k));const cv=document.createElement('canvas');cv.width=w;cv.height=h;const cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,w,h);cx.drawImage(im,0,0,w,h);res(cv.toDataURL('image/jpeg',.85))}catch(e){res(dataUrl)}};im.onerror=()=>res(dataUrl);im.src=dataUrl})}
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.dtkanh||!el.files||!el.files[0])return;const file=el.files[0];el.value='';const fr=new FileReader();fr.onload=async()=>{toast('📷 Đang đọc ảnh tin…');const nho=await thuNhoAnh(fr.result,1200,2600);A.dtkAnhFile&&A.dtkAnhFile(file,nho)};fr.readAsDataURL(file)});
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.tc||!el.files||!el.files[0])return;const file=el.files[0];loadXlsx(()=>{const fr=new FileReader();fr.onload=()=>{let rows=0;try{const wb=XLSX.read(fr.result,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''}).filter(r=>r.some(c=>String(c).trim())).length}catch(err){}S.thuchi={file:file.name,rows:rows,at:today()};save();render();toast('Đã nhập file thu chi vào máy này')};fr.readAsArrayBuffer(file)})});
 
 /* ===== v11: Đăng bài đa nền tảng (theo sơ đồ) ===== */
@@ -2701,7 +2704,9 @@ A.dtkLinkSave=async()=>{const l=val('dtkl');if(l&&!/^https?:\/\//i.test(l)){toas
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
 /* ---- v28: Thêm từ ảnh (Edge Function doc-nha-tu-anh, AI đọc ảnh tin) ---- */
 A.dtkAnhFile=async(file,dataUrl)=>{if(LIVE.busy)return;busy(true,'📷 AI đang đọc ảnh tin…');
- try{const {data,error}=await sb.functions.invoke('doc-nha-tu-anh',{body:{anh_base64:dataUrl}});if(error)throw error;if(!data||!data.nha)throw new Error((data&&data.loi)||'Chưa đọc được ảnh');
+ try{const hetGio=new Promise((_,rej)=>setTimeout(()=>rej(new Error('AI đọc ảnh quá lâu (hơn 75 giây). Mạng yếu hoặc ảnh quá dài, thử lại hoặc cắt ảnh ngắn hơn nha.')),75000));
+  const {data,error}=await Promise.race([sb.functions.invoke('doc-nha-tu-anh',{body:{anh_base64:dataUrl}}),hetGio]);
+  if(error){let j=null;try{if(error.context&&error.context.json)j=await error.context.json()}catch(e){}if(j&&j.loi)throw new Error(j.loi);throw error}if(!data||!data.nha)throw new Error((data&&data.loi)||'Chưa đọc được ảnh');
   U.dtk={fromAnh:true,img:dataUrl,f:data.nha};U.sheet='dtk';toast('AI đã đọc xong, xem lại giúp nha')}
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
 /* ---- v22: AI viết bài từng căn (Edge Function viet-bai-nha, khoá AI nằm ở Supabase) ---- */
