@@ -2206,7 +2206,7 @@ function khoPart(a){const f=U.kf||(U.kf={});const L=khoList(a);const good=S.kho.
    Bộ lọc (Hình 1) → danh sách (Hình 2) → chi tiết (Hình 3-5): nội dung AI đã lọc + Copy,
    hình nhà (bỏ selfie) + tải hình, người ký gọn (Hình, Tên, Phòng, Facebook, Zalo). */
 const DL_GIA=[0,1,2,3,4,5,6,7,8,9,10,12,15,20,25,30,40,50,70,100,200,500,1000,10000];
-function dlTcMau(){return {segment:TIERS.map((t,i)=>({value:i+1,title:t[1]})),area:[{value:1,title:'Dưới 30m²',name:'0-30'},{value:2,title:'30 – 50m²',name:'30-50'},{value:3,title:'50 – 80m²',name:'50-80'},{value:4,title:'80 – 120m²',name:'80-120'},{value:5,title:'Trên 120m²',name:'120-100000'}],
+function dlTcMau(){return {segment:TIERS.map((t,i)=>({value:i+1,title:t[1],name:['0-3000','3000-6000','6000-10000','10000-20000','20000-50000','50000-100000'][i]||''})),area:[{value:1,title:'Dưới 30m²',name:'0-30'},{value:2,title:'30 – 50m²',name:'30-50'},{value:3,title:'50 – 80m²',name:'50-80'},{value:4,title:'80 – 120m²',name:'80-120'},{value:5,title:'Trên 120m²',name:'120-100000'}],
  attribute:[{value:'1',title:'Hẻm xe hơi'},{value:'2',title:'Mặt tiền'},{value:'3',title:'Dòng tiền'},{value:'4',title:'Nhà nát'}],zone_group:[],label:[{value:'ban_manh',title:'Bán mạnh'}],sort:[],
  tinh:[{id:79,name:'TP Hồ Chí Minh',quan:QUAN_ALL.map((q,i)=>({id:i+1,name:q,phuong:[]}))}]}}
 async function dtkApi(viec,b){b=b||{};
@@ -2220,10 +2220,10 @@ function dlTcLoad(){const d=dlS();if(d.tc||d.tcLoad||!d.mo)return;d.tcLoad=true;
 function dlQuanAll(tc){const T=(tc&&tc.tinh)||[];const many=T.length>1;const out=[];T.forEach(t=>(t.quan||[]).forEach(q=>out.push({id:q.id,name:q.name+(many?' · '+t.name.replace(/^TP\s*/,''):''),tinh:t.id,phuong:q.phuong||[]})));return out}
 function dlGiaTxt(i){const v=DL_GIA[i];return v>=1000?(v/1000)+' nghìn tỷ':v+' tỷ'}
 A.dlOpen=()=>{const d=dlS();d.mo=!d.mo;render()};
-A.dlTog=(v,el)=>{const d=dlS(),f=d.f;const [k,x]=v.split(':');const id=isNaN(+x)?x:+x;f[k]=f[k]||[];f[k]=f[k].includes(id)?f[k].filter(y=>y!==id):f[k].concat([id]);if(k==='dm'&&f[k].length)f.d1='';render()};
+A.dlTog=(v,el)=>{const d=dlS(),f=d.f;const i=v.indexOf(':');const k=v.slice(0,i),id=v.slice(i+1);f[k]=(f[k]||[]).map(String);f[k]=f[k].includes(id)?f[k].filter(y=>y!==id):f[k].concat([id]);if(k==='dm'&&f[k].length)f.d1='';render()};
 A.dlReset=()=>{const d=dlS();d.f={pi0:0,pi1:DL_GIA.length-1,dm:[],wd:[]};d.list=[];d.total=null;d.err=null;d.searched=false;render()};
 function dlBody(d,offset){const f=d.f,tc=d.tc||{};const Q=dlQuanAll(tc);let district=[],province=null;
- if(f.d1){const q=Q.find(x=>String(x.id)===String(f.d1));if(q){district=[q.id];province=q.tinh}}else if(f.dm.length){district=f.dm.slice();const q=Q.find(x=>x.id===f.dm[0]);if(q)province=q.tinh}
+ if(f.d1){const q=Q.find(x=>String(x.id)===String(f.d1));if(q){district=[q.id];province=q.tinh}}else if(f.dm.length){district=f.dm.slice();const q=Q.find(x=>String(x.id)===String(f.dm[0]));if(q)province=q.tinh}
  let area;if(f.area){const a=(tc.area||[]).find(x=>String(x.value)===String(f.area));if(a&&a.name){const p=String(a.name).split('-');area={from:parseInt(p[0])||0,to:parseInt(p[1])||null}}}
  const p0=DL_GIA[f.pi0||0],p1=DL_GIA[f.pi1==null?DL_GIA.length-1:f.pi1];const price=(p0>0||p1<10000)?{from:p0*1000,to:p1>=10000?null:p1*1000}:undefined;
  const s=(tc.sort||[])[+(f.sort||0)];const sorts=s?{[s.field]:s.value}:undefined;
@@ -2235,17 +2235,19 @@ A.dlSearch=async(more)=>{const d=dlS();if(!dtkTok()){A.dtkLoginOpen();return}con
    /* ĐTK chưa nhận lọc theo mã quận → tìm theo tên quận/phường */const Q=dlQuanAll(d.tc);const ten=body.location.district.map(id=>{const q=Q.find(x=>String(x.id)===String(id));return q?q.name.split(' · ')[0]:''}).filter(Boolean);
    const P=(Q.find(x=>String(x.id)===String(d.f.d1))||{}).phuong||[];const tp=(body.location.ward||[]).map(id=>(P.find(w=>String(w.id)===String(id))||{}).name).filter(Boolean);
    const b2=Object.assign({},body,{keyword:[body.keyword,tp.join(' ')||ten.join(' ')].filter(Boolean).join(' ')});delete b2.location;j=await dtkApi('tim',b2);d.theoTen=true}if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};let list=dd.data||(j&&j.data)||[];if(!Array.isArray(list))list=[];
-  d.list=add?d.list.concat(list):list;d.total=dd.total!=null?dd.total:(j&&j.total);d.nextOff=dd.next_offset!=null?dd.next_offset:d.list.length;d.het=dd.het!=null?!!dd.het:(d.total!=null&&d.list.length>=d.total);d.da=add?d.da:{}}
+  d.list=add?d.list.concat(list):list;d.total=dd.total!=null?dd.total:(j&&j.total);d.nextOff=dd.next_offset!=null?dd.next_offset:d.list.length;d.du=dd.du;d.het=dd.het!=null?!!dd.het:(d.total!=null&&d.list.length>=d.total);d.da=add?d.da:{}}
  catch(e){if(e.status===401){dtkSetTok('');toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen()}else d.err=e.message}
  d.loading=false;render()};
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.dl;if(!k)return;const d=dlS(),f=d.f;
  if(k==='pi0'||k==='pi1'){let v=+e.target.value;if(k==='pi0'&&v>f.pi1)v=f.pi1;if(k==='pi1'&&v<f.pi0)v=f.pi0;f[k]=v}else f[k]=e.target.value;
- if(k==='d1'){f.wd=[];if(f.d1)f.dm=[]}if(k==='sort'&&d.searched){A.dlSearch();return}render()});
+ if(k==='d1'){f.wd=[];if(f.d1)f.dm=[]}if(k==='seg')dlSegGia(f,d.tc);if(k==='sort'&&d.searched){A.dlSearch();return}render()});
+function dlGiaIdx(ty){let b=0;DL_GIA.forEach((v,i)=>{if(Math.abs(v-ty)<Math.abs(DL_GIA[b]-ty))b=i});return b}
+function dlSegGia(f,tc){const s=((tc&&tc.segment)||[]).find(x=>String(x.value)===String(f.seg));if(!s||!s.name){f.pi0=0;f.pi1=DL_GIA.length-1;return}const p=String(s.name).split('-').map(Number);f.pi0=Number.isFinite(p[0])?dlGiaIdx(p[0]/1000):0;f.pi1=Number.isFinite(p[1])&&p[1]>0?dlGiaIdx(p[1]/1000):DL_GIA.length-1}
 document.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.dl;if(!k)return;const f=dlS().f;
  if(k==='pi0'||k==='pi1'){let v=+e.target.value;if(k==='pi0'&&v>f.pi1){v=f.pi1;e.target.value=v}if(k==='pi1'&&v<f.pi0){v=f.pi0;e.target.value=v}f[k]=v;const o=document.getElementById('dlGia');if(o)o.textContent=dlGiaTxt(f.pi0)+' – '+dlGiaTxt(f.pi1)}
  else if(k==='kw'||k==='serial')f[k]=e.target.value});
 function dlSel(k,ph,opts,cur){return `<select class="in" data-dl="${k}" aria-label="${ph}"><option value="">${ph}</option>${opts.map(o=>`<option value="${esc(String(o.value))}" ${String(cur)===String(o.value)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`}
-function dlMulti(k,ph,opts,cur,dis){const n=(cur||[]).length;return `<details class="dlm${dis?' dis':''}"><summary class="in">${n?esc(opts.filter(o=>cur.includes(o.id)).map(o=>o.name).slice(0,2).join(', '))+(n>2?' +'+(n-2):''):ph}</summary><div class="dlmb">${opts.length?opts.map(o=>`<label><input type="checkbox" data-a="dlTog" data-v="${k}:${o.id}" ${cur.includes(o.id)?'checked':''}> ${esc(o.name)}</label>`).join(''):'<div class="sub">Chưa có danh sách</div>'}</div></details>`}
+function dlMulti(k,ph,opts,cur,dis){cur=(cur||[]).map(String);const n=cur.length;return `<details class="dlm${dis?' dis':''}"><summary class="in">${n?esc(opts.filter(o=>cur.includes(String(o.id))).map(o=>o.name).slice(0,2).join(', '))+(n>2?' +'+(n-2):''):ph}</summary><div class="dlmb">${opts.length?opts.map(o=>`<label><input type="checkbox" data-a="dlTog" data-v="${k}:${o.id}" ${cur.includes(String(o.id))?'checked':''}> ${esc(o.name)}</label>`).join(''):'<div class="sub">Chưa có danh sách</div>'}</div></details>`}
 function dlFormPart(){const d=dlS(),f=d.f,tc=d.tc;dlTcLoad();
  const head=`<button class="dlhead" data-a="dlOpen"><span>🔎 <b>Lọc nhà Đại Thế Kỷ</b><small>Phân khúc · Quận · Phường · Diện tích · Giá…</small></span><b>${d.mo?'▲':'▼'}</b></button>`;
  if(!d.mo)return `<div class="card dlcard">${head}</div>`;
@@ -2269,12 +2271,12 @@ function dlImgUrl(im,big){if(!im)return '';if(typeof im==='string')return im;ret
 function dlUser(it){const o=it.owner&&typeof it.owner==='object'?it.owner:{};const u=Object.assign({},o,it.user||{});if(!u.full_name)u.full_name=o.full_name||o.name||o.fullname||'';if(!u.avatar)u.avatar=(typeof it.avatar==='string'?it.avatar:(it.avatar&&it.avatar.url))||o.avatar||'';return u}
 function dlCreated(it){return it.published||it.created||it.created_at||it.createdAt||it.modified||''}
 function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';const tc=d.tc||{};const s=tc.sort||[];
- const head=`<div class="card between dlres" id="dlKq"><div><b class="num" style="font-size:22px;color:#2E8B57">${d.loading&&!d.list.length?'…':(d.list.length+(d.total!=null?' / '+Number(d.total).toLocaleString('vi-VN'):(d.het?'':'+')))}</b><div class="sub">căn từ Đại Thế Kỷ</div></div>${s.length?`<select class="in" style="width:auto" data-dl="sort">${s.map((o,i)=>`<option value="${i}" ${String(d.f.sort||0)===String(i)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`:''}</div>`;
+ const head=`<div class="card between dlres" id="dlKq"><div><b class="num" style="font-size:22px;color:#2E8B57">${d.loading&&!d.list.length?'…':(d.total!=null?Number(d.total).toLocaleString('vi-VN')+(d.du===false?'+':''):d.list.length+(d.het?'':'+'))}</b><div class="sub">căn từ Đại Thế Kỷ</div></div>${s.length?`<select class="in" style="width:auto" data-dl="sort">${s.map((o,i)=>`<option value="${i}" ${String(d.f.sort||0)===String(i)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`:''}</div>`;
  if(d.err)return head+`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" data-a="dlSearch">Thử lại</button>`;
  if(!d.list.length)return head+(d.loading?`<p class="sub" style="text-align:center">⏳ Đang lọc nhà trên Đại Thế Kỷ…</p>`:`<p class="sub">Không có căn nào khớp bộ lọc, thử bỏ bớt điều kiện nha.</p>`);
  return head+d.list.map((it,i)=>{const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const c=dlCreated(it);const moi=it.newly===true||it.newly===1||(dlMs(c)&&Date.now()-dlMs(c)<864e5);const u=dlUser(it);
   const mo=String(it.description||'').replace(/\s+/g,' ').trim();const tt=dtkField(it.title)||'Tin nhà';
-  const lv=dlTc('level',it.level);const meta=[['👤',[it.point!=null&&it.point!==''?(+it.point>0?'+':'')+it.point+'.':'',lv||u.full_name||'',dlTc('segment',it.segment)?'· '+dlTc('segment',it.segment):''].filter(Boolean).join(' ')],['🛒',dlTc('label',it.approval_house_label)],['📅',dlAgo(c)],['🏢',dlTc('zone_group',it.zone_group)||(typeof it.agency==='string'?it.agency:'')]].filter(x=>x[1]&&String(x[1]).trim()&&String(x[1]).trim()!=='0');
+  const lv=dlTc('level',it.level);const meta=[['🛒',dlTc('label',it.approval_house_label)],['📅',dlAgo(c)],['🏢',dlTc('zone_group',it.zone_group)||(typeof it.agency==='string'?it.agency:'')]].filter(x=>x[1]&&String(x[1]).trim()&&String(x[1]).trim()!=='0');
   return `<div class="card dlit">${moi?'<b class="dlnew">NEW</b>':''}<button class="dlt" data-a="dlCt" data-v="${i}">${esc(tt)}</button>${mo&&mo!==tt?`<p class="dlmo">${esc(mo.slice(0,180))}</p>`:''}
   <div class="dlrow">${img?`<button class="dlimg" data-a="dlCt" data-v="${i}"><img src="${esc(img)}" alt="" loading="lazy"></button>`:''}<div class="dlmeta">${meta.map(m=>`<div><span>${m[0]}</span>${esc(String(m[1]))}</div>`).join('')}</div></div>
   <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="dlCt" data-v="${i}">📄 Xem chi tiết</button>${(d.da||{})[i]?'<div class="note ok" style="margin:0;text-align:center">✅ Đã thêm</div>':`<button class="btn gold sm" data-a="dlAdd" data-v="${i}">➕ Thêm vào Kho</button>`}</div></div>`}).join('')+
