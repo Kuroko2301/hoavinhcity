@@ -2298,7 +2298,7 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
  const loc=[dtkField(bk.location&&bk.location.district)||dtkField(bk.district),dlTc('zone_group',bk.zone_group)||dtkField(bk.agency)].filter(Boolean).join(' - ');
  const fb=dlFb(bk),zl=dlZalo(bk);const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
  const nd=c.loading?`<p class="sub">✨ AI đang đọc tin, lọc nội dung và hình…</p>`:c.bai?`<div class="dlnd">${esc(c.bai)}</div><button class="btn gold full" style="margin-top:8px" data-a="dlCopy">📋 Copy nội dung</button>`:`<div class="note">${c.err?esc(c.err)+'. ':''}Chưa có nội dung AI${sb_co()?'':' (bản demo)'}, đang hiện tin gốc.</div><div class="dlnd">${esc(goc)}</div><button class="btn gold full" style="margin-top:8px" data-a="dlCopy">📋 Copy nội dung</button>`;
- return {t:'🏠 Chi tiết nhà',h:`<b class="dlt" style="display:block">${esc(dtkField(bk.title)||'Tin nhà')}</b>${loc?`<div class="sub" style="margin-top:4px">📍 ${esc(loc)}</div>`:''}
+ return {t:'🏠 Chi tiết nhà',h:`<b class="dlt" style="display:block">${esc(dtkField(bk.title)||'Tin nhà')}</b>
   <div class="kicker" style="margin:14px 0 6px">Mô tả chi tiết · AI đã lọc</div>${nd}
   ${!c.loading&&c.bai?`<details style="margin-top:8px"><summary class="sub">Xem tin gốc</summary><div class="dlnd sub">${esc(goc)}</div></details>`:''}
   <div class="kicker" style="margin:16px 0 6px">Hình ảnh nhà ${nha.length?'('+nha.length+')':''}</div>
