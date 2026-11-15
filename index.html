@@ -1635,7 +1635,8 @@ SH.survey=()=>{const a=me();const d=U.ksD||{anh:[]};const sua=!!d.id;const mine=
  const HG=['Đông','Tây','Nam','Bắc','Đông Nam','Đông Bắc','Tây Nam','Tây Bắc'];
  return {t:sua?'✏️ Sửa khảo sát':'Khảo sát nhà',h:`${ksDriveNote(a)}<div class="stack">
  <label class="f" for="sa">Địa chỉ<input class="in" id="sa" value="${esc(d.addr||'')}" placeholder="Số nhà, tên đường, phường"></label>
- <div class="grid2"><label class="f" for="sw2">Hẻm trước nhà (m)<input class="in" id="sw2" value="${esc(d.alley||'')}" placeholder="5 hoặc xe hơi"></label><label class="f" for="sd">Hướng nhà<select class="in" id="sd">${HG.map(x=>`<option${d.dir===x?' selected':''}>${x}</option>`).join('')}</select></label></div>
+ <div class="card" style="padding:12px"><div class="between" style="gap:10px"><div class="grow"><b>📍 Vị trí căn nhà</b><div class="sub">${d.lat?`✓ Đã lưu vị trí (sai số khoảng ${Math.max(1,Math.round(d.acc||0))}m) · <a class="link" href="${ksMapUrl(d)}" target="_blank" rel="noopener">xem thử</a>`:'Đứng ngay tại căn nhà rồi bấm Lấy vị trí'}</div></div><button class="btn ${d.lat?'ghost':'gold'} sm" data-a="ksViTri">${d.lat?'Lấy lại':'Lấy vị trí'}</button></div></div>
+ <label class="f" for="sd">Hướng nhà<select class="in" id="sd">${HG.map(x=>`<option${d.dir===x?' selected':''}>${x}</option>`).join('')}</select></label>
  <div><div class="sub" style="font-weight:800;margin-bottom:6px">📷 Hình ảnh căn nhà (${d.anh.length}/${KS_MAX})</div><div class="ksgrid">${d.anh.map((x,i)=>`<div class="ksth"><img src="${esc(x.url)}" alt="Ảnh ${i+1}"><button data-a="ksBoAnh" data-v="${i}" aria-label="Bỏ ảnh ${i+1}">×</button></div>`).join('')}${d.anh.length<KS_MAX?`<label class="ksadd"><input type="file" accept="image/*" multiple data-ksanh="1" style="display:none"><span><b>＋</b>Tải hình lên</span></label>`:''}</div></div>
  <label class="f" for="kdac">🏠 Đặc điểm căn nhà<textarea class="in" id="kdac" placeholder="Diện tích, số tầng, số phòng, nội thất, pháp lý, giá chủ chào...">${esc(d.dac||'')}</textarea></label>
  <label class="f" for="kmanh">👍 Điểm mạnh<textarea class="in" id="kmanh" placeholder="Hẻm xe hơi, gần chợ, nở hậu, nhà mới xây...">${esc(d.manh||'')}</textarea></label>
@@ -1755,16 +1756,16 @@ function ksImgResize(file,max,q){return new Promise((res,rej)=>{const u=URL.crea
   c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);const url=c.toDataURL('image/jpeg',q);c.toBlob(b=>b?res({blob:b,url}):rej(new Error('Không đọc được ảnh')),'image/jpeg',q)};
  img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Không đọc được ảnh này'))};img.src=u})}
 function ksKeep(){const d=U.ksD||(U.ksD={anh:[]});const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};
- [['addr','sa'],['alley','sw2'],['dir','sd'],['dac','kdac'],['manh','kmanh'],['yeu','kyeu']].forEach(([k,i])=>{const v=g(i);if(v!==undefined)d[k]=v});return d}
+ [['addr','sa'],['dir','sd'],['dac','kdac'],['manh','kmanh'],['yeu','kyeu']].forEach(([k,i])=>{const v=g(i);if(v!==undefined)d[k]=v});return d}
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!el.dataset.ksanh||!el.files||!el.files.length)return;const d=ksKeep();const fs=[...el.files];el.value='';
  const con=KS_MAX-d.anh.length;if(con<=0){toast('Tối đa '+KS_MAX+' hình mỗi căn');return}if(fs.length>con)toast('Lấy thêm '+con+' hình (tối đa '+KS_MAX+')');else toast('Đang xử lý hình…');
  Promise.all(fs.slice(0,con).map(f=>ksImgResize(f,ksPrepMax,.72).catch(()=>null))).then(L=>{const ok=L.filter(Boolean);ok.forEach(x=>d.anh.push(x));if(ok.length<Math.min(fs.length,con))toast('Có hình không đọc được, chọn hình khác nhé');render()})});
 const ksMet=v=>{v=String(v||'').trim();return v?(/^\d+([.,]\d+)?$/.test(v)?v+'m':v):''};
-const ksCard=s=>`<button class="kscard" data-a="ksXem" data-v="${esc(s.key)}">${s.anh.length&&s.anh[0].url?`<img src="${esc(s.anh[0].url)}" alt="" loading="lazy">`:'<span class="ksno">📍</span>'}<div class="grow"><b>${esc(s.addr)}</b><div class="sub">${[ksMet(s.alley)?'hẻm '+ksMet(s.alley):'',s.dir,s.anh.length?'📷 '+s.anh.length+' hình':'',s.so?'có sổ':''].filter(Boolean).join(' · ')}</div>${s.manh?`<div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👍 ${esc(s.manh.split('\n')[0])}</div>`:''}<div class="sub">📍 ${esc(s.by)} · ${esc(fmtD(s.d))}</div></div></button>`;
+const ksCard=s=>`<button class="kscard" data-a="ksXem" data-v="${esc(s.key)}">${s.anh.length&&s.anh[0].url?`<img src="${esc(s.anh[0].url)}" alt="" loading="lazy">`:'<span class="ksno">📍</span>'}<div class="grow"><b>${esc(s.addr)}</b><div class="sub">${[s.lat?'📍 có vị trí':'',s.dir,s.anh.length?'📷 '+s.anh.length+' hình':'',s.so?'có sổ':''].filter(Boolean).join(' · ')}</div>${s.manh?`<div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👍 ${esc(s.manh.split('\n')[0])}</div>`:''}<div class="sub">📍 ${esc(s.by)} · ${esc(fmtD(s.d))}</div></div></button>`;
 let ksGet=key=>htKsAll().find(s=>s.key===key);
 let ksDriveNote=a=>'';
 let ksDriveRow=(s,a)=>'';
-let ksSave=async(a,d)=>{const s={addr:d.addr.trim(),alley:d.alley||'',dir:d.dir||'',dac:(d.dac||'').trim(),manh:(d.manh||'').trim(),yeu:(d.yeu||'').trim(),anh:d.anh.map(x=>x.url)};
+let ksSave=async(a,d)=>{const s={addr:d.addr.trim(),alley:d.alley||'',dir:d.dir||'',dac:(d.dac||'').trim(),manh:(d.manh||'').trim(),yeu:(d.yeu||'').trim(),anh:d.anh.map(x=>x.url),lat:d.lat||null,lng:d.lng||null,acc:d.acc||null};
  if(d.id){const o=a.g.surveys.find(x=>x.id===d.id);if(!o)throw new Error('Không tìm thấy căn này');Object.assign(o,s,{so:o.so||!!d.soFile,sua:today()})}
  else a.g.surveys.push(Object.assign(s,{id:'k'+Date.now().toString(36),so:!!d.soFile,d:today(),shared:true}))};
 let ksDel=async s=>{const a=S.accts.find(x=>x.email===s.byEmail);if(a)a.g.surveys=a.g.surveys.filter(x=>x.id!==s.id)};
@@ -1772,18 +1773,23 @@ SH.ksXem=()=>{const a=me();const s=ksGet(U.ksXem);if(!s)return {t:'Khảo sát n
  const blk=(ic,t,v,c)=>v?`<div class="card ksblk"><div class="sub" style="font-weight:800${c?';color:'+c:''}">${ic} ${t}</div><p>${esc(v)}</p></div>`:'';const anh=s.anh.filter(x=>x.url);
  return {t:'📍 Khảo sát nhà',h:`<h2 class="h2" style="margin:0 0 8px">${esc(s.addr)}</h2>
  ${anh.length?`<div class="ksgal">${anh.map((x,i)=>`<img src="${esc(x.url)}" alt="Hình ${i+1} của căn ${esc(s.addr)}" loading="lazy">`).join('')}</div><div class="sub" style="text-align:center;margin-top:4px">${anh.length} hình · vuốt ngang để xem hết</div>`:'<div class="note">Căn này chưa có hình.</div>'}
- <div class="sub" style="margin-top:10px">${[ksMet(s.alley)?'Hẻm trước nhà '+ksMet(s.alley):'',s.dir?'Hướng '+s.dir:'',s.so?'Có sổ':''].filter(Boolean).join(' · ')}</div>
- <a class="link" style="font-size:13px" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.addr)}" target="_blank" rel="noopener">🗺️ Mở Google Maps</a>
+ <div class="sub" style="margin-top:10px">${[s.dir?'Hướng '+s.dir:'',s.so?'Có sổ':'',s.lat?'Vị trí do người khảo sát lấy tại nhà':''].filter(Boolean).join(' · ')}</div>
+ <a class="link" style="font-size:13px" href="${ksMapUrl(s)}" target="_blank" rel="noopener">🗺️ ${s.lat?'Mở đúng vị trí trên Google Maps':'Mở Google Maps (theo địa chỉ)'}</a>
  ${blk('🏠','Đặc điểm căn nhà',s.dac||s.note)}${blk('👍','Điểm mạnh',s.manh,'#2E7D4F')}${blk('👎','Điểm yếu',s.yeu,'var(--bad)')}
  <div class="sub" style="margin-top:10px">Người khảo sát: <b>${esc(s.by)}</b> · ${esc(fmtD(s.d))}${s.sua?' · sửa '+esc(fmtD(s.sua)):''}</div>${ksDriveRow(s,a)}
  ${mine?`<div class="grid2" style="margin-top:12px"><button class="btn gold" data-a="ksSua" data-v="${esc(s.key)}">✏️ Sửa</button><button class="btn ghost" data-a="ksXoa" data-v="${esc(s.key)}">Xoá</button></div>`:`<div class="note" style="margin-top:12px">🔒 Chỉ ${esc(s.by)} (người đăng) được sửa căn này. Bạn xem được thôi nha.</div>`}
  <button class="btn ghost full" style="margin-top:8px" data-a="copySurvey" data-v="${esc(s.addr)}|${esc(s.alley)}|${esc(s.dir)}">Chép để chia sẻ</button>`}};
+const ksMapUrl=s=>s&&s.lat&&s.lng?`https://www.google.com/maps/search/?api=1&query=${(+s.lat).toFixed(6)},${(+s.lng).toFixed(6)}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((s&&s.addr)||'')}`;
+A.ksViTri=()=>{const d=ksKeep();if(!navigator.geolocation){toast('Máy này chưa hỗ trợ lấy vị trí');return}toast('📍 Đang lấy vị trí…');
+ navigator.geolocation.getCurrentPosition(p=>{d.lat=p.coords.latitude;d.lng=p.coords.longitude;d.acc=p.coords.accuracy;render();toast(p.coords.accuracy>60?'Đã lấy vị trí nhưng sai số lớn ('+Math.round(p.coords.accuracy)+'m). Ra chỗ thoáng bấm Lấy lại nha':'✓ Đã lưu vị trí căn nhà')},
+  e=>toast(e&&e.code===1?'Chưa cho phép vị trí. Vào cài đặt trình duyệt, cho trang này dùng Vị trí rồi bấm lại nha':'Chưa lấy được vị trí, bật GPS hoặc ra chỗ thoáng rồi thử lại nhé'),
+  {enableHighAccuracy:true,timeout:20000,maximumAge:0})};
 A.ksXem=v=>{U.ksXem=v;U.sheet='ksXem';render()};
 A.ksCaPhong=()=>{U.htseg='ks';U.sheet='hoitruong';render()};
 A.ksBoAnh=v=>{const d=ksKeep();d.anh.splice(+v,1);render()};
 A.ksHuySua=()=>{U.ksD=null;render()};
 A.ksSua=v=>{const s=ksGet(v);if(!s)return;if(s.byEmail!==me().email){toast('Chỉ người đăng mới sửa được');return}
- U.ksD={id:s.id,addr:s.addr,alley:s.alley,dir:s.dir,dac:s.dac||s.note||'',manh:s.manh||'',yeu:s.yeu||'',anh:s.anh.map(x=>({...x}))};U.sheet='survey';render()};
+ U.ksD={id:s.id,addr:s.addr,alley:s.alley,dir:s.dir,lat:s.lat,lng:s.lng,acc:s.acc,dac:s.dac||s.note||'',manh:s.manh||'',yeu:s.yeu||'',anh:s.anh.map(x=>({...x}))};U.sheet='survey';render()};
 A.ksXoa=async v=>{const s=ksGet(v);if(!s)return;if(s.byEmail!==me().email){toast('Chỉ người đăng mới xoá được');return}
  if(U.ksDelAsk!==v){U.ksDelAsk=v;toast('Bấm “Xoá” lần nữa để xoá căn này');setTimeout(()=>{if(U.ksDelAsk===v)U.ksDelAsk=null},6000);return}
  U.ksDelAsk=null;try{await ksDel(s);U.sheet='survey';save();toast('Đã xoá khảo sát')}catch(e){toast(e&&e.message?e.message:'Chưa xoá được')}render()};
@@ -3428,13 +3434,13 @@ A.addPost=async()=>{const a=me();const t=val('pc');
 ksPrepMax=1600;
 LIVE.ks={rows:[],url:{},t:0};
 async function loadKs(){if(!sb||!LIVE.me)return;LIVE.ks.t=Date.now();
- const {data,error}=await sb.from('khao_sat_nha').select('id,nguoi_tao_id,dia_chi,hem_truoc_nha,huong,anh_so,ghi_chu,dac_diem,diem_manh,diem_yeu,anh,drive_link,drive_trang_thai,drive_loi,tao_luc,cap_nhat_luc').order('tao_luc',{ascending:false}).limit(300);
+ const {data,error}=await sb.from('khao_sat_nha').select('id,nguoi_tao_id,dia_chi,hem_truoc_nha,huong,anh_so,ghi_chu,dac_diem,diem_manh,diem_yeu,anh,vi_do,kinh_do,do_chinh_xac,drive_link,drive_trang_thai,drive_loi,tao_luc,cap_nhat_luc').order('tao_luc',{ascending:false}).limit(300);
  if(error){console.warn(error);return}LIVE.ks.rows=data||[];
  const need=[...new Set(LIVE.ks.rows.flatMap(r=>Array.isArray(r.anh)?r.anh:[]))].filter(p=>!LIVE.ks.url[p]);
  for(let i=0;i<need.length;i+=100){const {data:su}=await sb.storage.from('khao-sat').createSignedUrls(need.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)LIVE.ks.url[x.path]=x.signedUrl})}}
 function ksLamMoi(force){if(!force&&Date.now()-LIVE.ks.t<20000)return;loadKs().then(()=>{if(U.sheet==='survey'||U.sheet==='ksXem'||U.sheet==='hoitruong')render()}).catch(e=>console.warn(e))}
 htKsAll=function(){return (LIVE.ks.rows||[]).map(r=>{const u=S.accts.find(x=>x.id===r.nguoi_tao_id);const sua=r.cap_nhat_luc&&r.tao_luc&&Date.parse(r.cap_nhat_luc)-Date.parse(r.tao_luc)>120000;
- return {key:'r'+r.id,id:r.id,addr:r.dia_chi||'',alley:r.hem_truoc_nha||'',dir:r.huong||'',so:!!r.anh_so,note:r.ghi_chu||'',dac:r.dac_diem||'',manh:r.diem_manh||'',yeu:r.diem_yeu||'',
+ return {key:'r'+r.id,id:r.id,addr:r.dia_chi||'',alley:r.hem_truoc_nha||'',dir:r.huong||'',so:!!r.anh_so,note:r.ghi_chu||'',dac:r.dac_diem||'',manh:r.diem_manh||'',yeu:r.diem_yeu||'',lat:r.vi_do,lng:r.kinh_do,acc:r.do_chinh_xac,
   anh:(Array.isArray(r.anh)?r.anh:[]).map(p=>({path:p,url:LIVE.ks.url[p]||''})),by:u?u.name:'Anh em',byEmail:u?u.email:'',byId:r.nguoi_tao_id,
   d:r.tao_luc?isoD(new Date(r.tao_luc)):today(),sua:sua?isoD(new Date(r.cap_nhat_luc)):'',drive:{link:r.drive_link||'',st:r.drive_trang_thai||'cho',loi:r.drive_loi||''}}})};
 const _shSurvey=SH.survey;SH.survey=()=>{ksLamMoi(false);return _shSurvey()};
@@ -3457,7 +3463,7 @@ ksSave=async(a,d)=>{const uid=LIVE.me.id;busy(true,d.anh.some(x=>x.blob)?'Đang 
    const {error}=await sb.storage.from('khao-sat').upload(p,x.blob,{contentType:'image/jpeg',upsert:false});if(error)throw error;paths.push(p);LIVE.ks.url[p]=x.url}
   let soPath=null;if(d.soFile){const b=await ksImgResize(d.soFile,2000,.85);const p=uid+'/so-'+st+'.jpg';const {error}=await sb.storage.from('so-nha').upload(p,b.blob,{contentType:'image/jpeg'});if(error)throw error;soPath=p}
   const addr=d.addr.trim();
-  const rec={dia_chi:addr,hem_truoc_nha:(d.alley||'').trim()||null,huong:d.dir||null,dac_diem:(d.dac||'').trim()||null,diem_manh:(d.manh||'').trim()||null,diem_yeu:(d.yeu||'').trim()||null,anh:paths,link_ban_do:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr)};
+  const rec={dia_chi:addr,hem_truoc_nha:(d.alley||'').trim()||null,huong:d.dir||null,dac_diem:(d.dac||'').trim()||null,diem_manh:(d.manh||'').trim()||null,diem_yeu:(d.yeu||'').trim()||null,anh:paths,vi_do:d.lat||null,kinh_do:d.lng||null,do_chinh_xac:d.acc||null,link_ban_do:ksMapUrl({addr,lat:d.lat,lng:d.lng})};
   if(soPath)rec.anh_so=soPath;let id;
   if(d.id){const old=LIVE.ks.rows.find(r=>r.id===d.id);const {error}=await sb.from('khao_sat_nha').update(rec).eq('id',d.id);if(error)throw error;id=d.id;
    const bo=(old&&Array.isArray(old.anh)?old.anh:[]).filter(p=>!paths.includes(p)&&p.startsWith(uid+'/'));if(bo.length)sb.storage.from('khao-sat').remove(bo).catch(()=>{})}
