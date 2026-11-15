@@ -1751,15 +1751,28 @@ A.addSurvey=async()=>{const a=me();const d=ksKeep();if(!(d.addr||'').trim()){toa
  catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}};
 /* ===== v31: Khảo sát nhà (hình, đặc điểm, điểm mạnh, điểm yếu · ai cũng xem, chỉ người đăng sửa) ===== */
 const KS_MAX=10;let ksPrepMax=480;
-function ksImgResize(file,max,q){return new Promise((res,rej)=>{const u=URL.createObjectURL(file);const img=new Image();
- img.onload=()=>{const k=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);
-  c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);const url=c.toDataURL('image/jpeg',q);c.toBlob(b=>b?res({blob:b,url}):rej(new Error('Không đọc được ảnh')),'image/jpeg',q)};
- img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Không đọc được ảnh này'))};img.src=u})}
+let ksHeicLib=null;
+function ksHeicLoad(){return ksHeicLib||(ksHeicLib=new Promise((res,rej)=>{if(window.heic2any)return res(window.heic2any);const nap=(L)=>{if(!L.length){ksHeicLib=null;return rej(new Error('Không tải được bộ đọc ảnh HEIC, kiểm tra mạng rồi thử lại nha'))}const sc=document.createElement('script');sc.src=L[0];sc.onload=()=>window.heic2any?res(window.heic2any):nap(L.slice(1));sc.onerror=()=>nap(L.slice(1));document.head.appendChild(sc)};nap(['heic2any.min.js','https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js'])}))}
+const ksLaHeic=(f,head)=>/hei[cf]/i.test(f.type||'')||/\.(heic|heif)$/i.test(f.name||'')||(head&&/ftyp(heic|heix|hevc|hevx|heim|heis|mif1|msf1)/.test(head));
+function ksDocAnh(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob);const img=new Image();img.decoding='async';
+ img.onload=()=>res({src:img,w:img.naturalWidth,h:img.naturalHeight,done:()=>URL.revokeObjectURL(u)});img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};img.src=u})}
+async function ksGiaiMa(file){
+ if(!file||!file.size)throw new Error('Hình chưa tải xong về máy (0 byte). Mở hình trong Drive, tải về máy rồi chọn lại nha');
+ let head='';try{const ab=await file.slice(0,32).arrayBuffer();head=String.fromCharCode(...new Uint8Array(ab))}catch(e){}
+ if(window.createImageBitmap&&!ksLaHeic(file,head)){try{const bm=await createImageBitmap(file,{imageOrientation:'from-image'});return {src:bm,w:bm.width,h:bm.height,done:()=>bm.close&&bm.close()}}catch(e){}}
+ if(!ksLaHeic(file,head)){try{return await ksDocAnh(file)}catch(e){}}
+ // HEIC/HEIF (ảnh iPhone, ảnh tải từ Drive/Google Photos) hoặc định dạng trình duyệt không tự đọc được
+ try{return await ksDocAnh(file)}catch(e){}
+ const h2a=await ksHeicLoad();let out=await h2a({blob:file,toType:'image/jpeg',quality:.9});if(Array.isArray(out))out=out[0];return ksDocAnh(out)}
+function ksImgResize(file,max,q){return ksGiaiMa(file).then(o=>new Promise((res,rej)=>{try{
+ const k=Math.min(1,max/Math.max(o.w,o.h));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(o.w*k));c.height=Math.max(1,Math.round(o.h*k));
+ c.getContext('2d').drawImage(o.src,0,0,c.width,c.height);o.done();
+ const url=c.toDataURL('image/jpeg',q);c.toBlob(b=>b?res({blob:b,url}):rej(new Error('Không đọc được ảnh')),'image/jpeg',q)}catch(e){o.done();rej(e)}}))}
 function ksKeep(){const d=U.ksD||(U.ksD={anh:[]});const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};
  [['addr','sa'],['dir','sd'],['dac','kdac'],['manh','kmanh'],['yeu','kyeu']].forEach(([k,i])=>{const v=g(i);if(v!==undefined)d[k]=v});return d}
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!el.dataset.ksanh||!el.files||!el.files.length)return;const d=ksKeep();const fs=[...el.files];el.value='';
  const con=KS_MAX-d.anh.length;if(con<=0){toast('Tối đa '+KS_MAX+' hình mỗi căn');return}if(fs.length>con)toast('Lấy thêm '+con+' hình (tối đa '+KS_MAX+')');else toast('Đang xử lý hình…');
- Promise.all(fs.slice(0,con).map(f=>ksImgResize(f,ksPrepMax,.72).catch(()=>null))).then(L=>{const ok=L.filter(Boolean);ok.forEach(x=>d.anh.push(x));if(ok.length<Math.min(fs.length,con))toast('Có hình không đọc được, chọn hình khác nhé');render()})});
+ let ksLoi='';Promise.all(fs.slice(0,con).map(f=>ksImgResize(f,ksPrepMax,.72).catch(e=>{ksLoi=(e&&e.message)||'';console.warn('ksAnh',f&&f.name,f&&f.type,f&&f.size,e);return null}))).then(L=>{const ok=L.filter(Boolean);ok.forEach(x=>d.anh.push(x));const hong=Math.min(fs.length,con)-ok.length;if(hong>0)toast(hong+' hình chưa đọc được'+(ksLoi&&ksLoi.length>12?': '+ksLoi:'. Thử chụp màn hình tấm đó rồi tải lên nhé'));render()})});
 const ksMet=v=>{v=String(v||'').trim();return v?(/^\d+([.,]\d+)?$/.test(v)?v+'m':v):''};
 const ksCard=s=>`<button class="kscard" data-a="ksXem" data-v="${esc(s.key)}">${s.anh.length&&s.anh[0].url?`<img src="${esc(s.anh[0].url)}" alt="" loading="lazy">`:'<span class="ksno">📍</span>'}<div class="grow"><b>${esc(s.addr)}</b><div class="sub">${[s.lat?'📍 có vị trí':'',s.dir,s.anh.length?'📷 '+s.anh.length+' hình':'',s.so?'có sổ':''].filter(Boolean).join(' · ')}</div>${s.manh?`<div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👍 ${esc(s.manh.split('\n')[0])}</div>`:''}<div class="sub">📍 ${esc(s.by)} · ${esc(fmtD(s.d))}</div></div></button>`;
 let ksGet=key=>htKsAll().find(s=>s.key===key);
