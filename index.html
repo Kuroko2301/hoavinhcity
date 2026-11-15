@@ -1300,7 +1300,7 @@ const C3={yaw:0,dist:7.5,cbs:[]};
 function load3(cb){if(window.THREE&&C3.libs){cb();return}C3.cbs.push(cb);if(C3.loading)return;C3.loading=true;
  const js=js3;
  (async()=>{if(!window.THREE&&!(await js('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'))){C3.loading=false;C3.failed=true;mount3d();return}
-  await Promise.all(['BufferGeometryUtils.js','GLTFLoader.js','meshopt_decoder.js'].map(f=>js(G3B+f+'?v='+G3V)));C3.libs=true;C3.loading=false;const f=C3.cbs;C3.cbs=[];f.forEach(x=>x())})()}
+  await Promise.all([['BufferGeometryUtils.js','utils'],['GLTFLoader.js','loaders'],['meshopt_decoder.js','libs']].map(([f,d])=>js(G3B+f+'?v='+G3V).then(ok=>ok||js('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/'+d+'/'+f))));C3.libs=true;C3.loading=false;const f=C3.cbs;C3.cbs=[];f.forEach(x=>x())})()}
 function m3(geo,color,o){const T=THREE;const mats=C3.mats||(C3.mats={});const mat=mats[color]||(mats[color]=new T.MeshLambertMaterial({color}));const m=new T.Mesh(geo,mat);m.castShadow=true;m.receiveShadow=true;if(o){if(o.p)m.position.set(o.p[0],o.p[1],o.p[2]);if(o.r)m.rotation.set(o.r[0]||0,o.r[1]||0,o.r[2]||0)}return m}
 const bx3=(w,h,d)=>new THREE.BoxGeometry(w,h,d);
 const pyr3=(r,h)=>{const g=new THREE.ConeGeometry(r,h,4);g.rotateY(Math.PI/4);return g};
