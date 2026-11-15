@@ -2505,8 +2505,11 @@ function vvLocal(q){const a=me();const kb=QA_SEED.concat((a&&a.g&&a.g.qa)||[]);c
  let best=null,sc=0;kb.forEach(x=>{const t=(x.q+' '+x.a).toLowerCase();const n=w.filter(k=>t.includes(k)).length;if(n>sc){sc=n;best=x}});
  if(best&&sc>=2)return best.a;
  return 'VinViLLa ghi nhận câu hỏi rồi nha. Bản demo chỉ trả lời từ kho Hỏi đáp nhanh của Phòng; trên app thật VinViLLa dùng AI để trả lời đầy đủ. Bạn có thể hỏi Trưởng phòng hoặc Trợ lý, rồi dạy lại cho AI ở mục Hỏi đáp nhanh nhé.'}
+function vvMd(t){return esc(t).split('\n').map(l=>{let x=l.replace(/^\s*[-*]{3,}\s*$/,'<hr style="border:none;border-top:1px solid var(--line);margin:6px 0">');
+ x=x.replace(/^(\s*)[*-]\s+/,'$1• ').replace(/^\s*&gt;\s?/,'<span style="opacity:.75">❝ </span>').replace(/^#{1,6}\s+(.*)$/,'<b>$1</b>');
+ return x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g,'$1<i>$2</i>')}).join('\n')}
 SH.vinvilla=()=>{const L=U.vv||[];return {t:'🤖 Trợ lý VinViLLa',h:`<p class="sub" style="margin-top:0">Hỏi gì cũng được: pháp lý, thương lượng, cách dẫn khách, viết tin… VinViLLa là trợ lý AI của Hoa Vinh.</p>
- <div class="stack" style="gap:8px;margin:10px 0">${L.length?L.map(m=>`<div class="note ${m.who==='me'?'':'ok'}" style="${m.who==='me'?'margin-left:18%;text-align:right':'margin-right:10%'};white-space:pre-wrap">${m.who==='me'?'':'🤖 '}${esc(m.t)}</div>`).join(''):`<div class="note">Ví dụ: “Chủ nhà chào 6 tỷ, khách trả 5,5 tỷ, nói sao cho hai bên gặp nhau?”</div>`}${U.vvBusy?'<div class="sub">VinViLLa đang suy nghĩ…</div>':''}</div>
+ <div class="stack" style="gap:8px;margin:10px 0">${L.length?L.map(m=>`<div class="note ${m.who==='me'?'':'ok'}" style="${m.who==='me'?'margin-left:18%;text-align:right':'margin-right:10%'};white-space:pre-wrap">${m.who==='me'?esc(m.t):'🤖 '+vvMd(m.t)}</div>`).join(''):`<div class="note">Ví dụ: “Chủ nhà chào 6 tỷ, khách trả 5,5 tỷ, nói sao cho hai bên gặp nhau?”</div>`}${U.vvBusy?'<div class="sub">VinViLLa đang suy nghĩ…</div>':''}</div>
  <div class="row" style="gap:6px"><input class="in grow" id="vvq" placeholder="Nhập câu hỏi cho VinViLLa" autocomplete="off"><button class="btn gold sm" data-a="vvAsk">Gửi</button></div>
  ${L.length?'<button class="link" style="font-size:12px;margin-top:8px" data-a="vvClear">Xoá cuộc trò chuyện</button>':''}`}};
 A.vvAsk=async()=>{const q=val('vvq');if(!q){toast('Nhập câu hỏi nha');return}U.vv=(U.vv||[]).concat([{who:'me',t:q}]);U.vvBusy=true;render();
