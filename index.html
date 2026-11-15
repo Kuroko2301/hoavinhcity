@@ -1751,8 +1751,12 @@ A.addSurvey=async()=>{const a=me();const d=ksKeep();if(!(d.addr||'').trim()){toa
  catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}};
 /* ===== v31: Khảo sát nhà (hình, đặc điểm, điểm mạnh, điểm yếu · ai cũng xem, chỉ người đăng sửa) ===== */
 const KS_MAX=10;let ksPrepMax=480;
-let ksHeicLib=null;
-function ksHeicLoad(){return ksHeicLib||(ksHeicLib=new Promise((res,rej)=>{if(window.heic2any)return res(window.heic2any);const nap=(L)=>{if(!L.length){ksHeicLib=null;return rej(new Error('Không tải được bộ đọc ảnh HEIC, kiểm tra mạng rồi thử lại nha'))}const sc=document.createElement('script');sc.src=L[0];sc.onload=()=>window.heic2any?res(window.heic2any):nap(L.slice(1));sc.onerror=()=>nap(L.slice(1));document.head.appendChild(sc)};nap(['heic2any.min.js','https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js'])}))}
+const ksLibs={};
+function ksNapJs(ten,L,glob){return ksLibs[ten]||(ksLibs[ten]=new Promise((res,rej)=>{if(window[glob])return res(window[glob]);const nap=(L)=>{if(!L.length){delete ksLibs[ten];return rej(new Error('Không tải được bộ đọc ảnh HEIC, kiểm tra mạng rồi thử lại nha'))}const sc=document.createElement('script');sc.src=L[0];sc.onload=()=>window[glob]?res(window[glob]):nap(L.slice(1));sc.onerror=()=>nap(L.slice(1));document.head.appendChild(sc)};nap(L)}))}
+async function ksHeicSangJpg(file){let loi=null;
+ try{const H=await ksNapJs('heicto',['heic-to.js','https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js'],'HeicTo');return await H({blob:file,type:'image/jpeg',quality:.9})}catch(e){loi=e;console.warn('heic-to',e)}
+ try{const h2a=await ksNapJs('heic2any',['heic2any.min.js','https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js'],'heic2any');let o=await h2a({blob:file,toType:'image/jpeg',quality:.9});return Array.isArray(o)?o[0]:o}catch(e){console.warn('heic2any',e)}
+ throw new Error('Ảnh HEIC này chưa đọc được'+(loi&&loi.message?' ('+loi.message+')':'')+'. Thử chụp màn hình tấm ảnh rồi tải lên nha')}
 const ksLaHeic=(f,head)=>/hei[cf]/i.test(f.type||'')||/\.(heic|heif)$/i.test(f.name||'')||(head&&/ftyp(heic|heix|hevc|hevx|heim|heis|mif1|msf1)/.test(head));
 function ksDocAnh(blob){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob);const img=new Image();img.decoding='async';
  img.onload=()=>res({src:img,w:img.naturalWidth,h:img.naturalHeight,done:()=>URL.revokeObjectURL(u)});img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};img.src=u})}
@@ -1763,7 +1767,7 @@ async function ksGiaiMa(file){
  if(!ksLaHeic(file,head)){try{return await ksDocAnh(file)}catch(e){}}
  // HEIC/HEIF (ảnh iPhone, ảnh tải từ Drive/Google Photos) hoặc định dạng trình duyệt không tự đọc được
  try{return await ksDocAnh(file)}catch(e){}
- const h2a=await ksHeicLoad();let out=await h2a({blob:file,toType:'image/jpeg',quality:.9});if(Array.isArray(out))out=out[0];return ksDocAnh(out)}
+ return ksDocAnh(await ksHeicSangJpg(file))}
 function ksImgResize(file,max,q){return ksGiaiMa(file).then(o=>new Promise((res,rej)=>{try{
  const k=Math.min(1,max/Math.max(o.w,o.h));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(o.w*k));c.height=Math.max(1,Math.round(o.h*k));
  c.getContext('2d').drawImage(o.src,0,0,c.width,c.height);o.done();
