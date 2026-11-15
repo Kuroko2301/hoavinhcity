@@ -1,0 +1,9 @@
+Mô hình 3D trong thư mục này (các file .glb) là tài sản CC0 1.0 (public domain), dùng tự do kể cả thương mại, không bắt buộc ghi công. Hoa Vinh City vẫn ghi công:
+
+- Kenney (https://www.kenney.nl) — Nature Kit, Car Kit: cây, bụi, hoa, hàng rào, đá, gốc cây, khúc gỗ, nấm, bí ngô, thùng, xe.
+- Quaternius (https://quaternius.com) — mèo (cat), chó (wolf_cartoon).
+Bản tối ưu (meshopt) lấy từ gói npm @netforge/asset-library-files 0.2.0 (MIT; file NOTICE trong gói ghi rõ nguồn CC0 ở trên).
+Toàn văn CC0 1.0: CC0-1.0.txt
+
+Thư viện: three.js r128 examples (GLTFLoader.js, BufferGeometryUtils.js) — MIT License, Copyright © 2010-2021 three.js authors.
+meshopt_decoder.js — meshoptimizer, MIT License, Copyright (C) 2016-2020 Arseny Kapoulkine.
