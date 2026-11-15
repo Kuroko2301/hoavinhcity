@@ -2994,6 +2994,7 @@ const MUS_DEF={
    M.kick(b0,1);M.kick(b0+2,1);M.kick(b0+2.5,.8);M.snare(b0+1,.85);M.snare(b0+3,.85);for(let k=0;k<8;k++)M.hat(b0+k/2,k%2?.06:.1);if(bar===3||bar===7){M.snare(b0+3.5,.6);M.snare(b0+3.75,.7)}}
   lead.forEach(([b,d,n])=>M.tone(b,d*.95,n,.06,{w:'sq',dist:2,lp:.3,vib:.008,a:.01,r:.12}));M.crash(0,.35);M.crash(16,.35)}}
 };
+const MUS_PCM={};
 function musWav(id){const G=MUS_DEF[id]||MUS_DEF.chill;const sr=22050,spb=60/G.bpm,N=Math.round(32*spb*sr);const dr=new Float32Array(N),mu=new Float32Array(N);const kicks=[];
  let sd=20261115;const rn=()=>{sd=(sd*16807)%2147483647;return sd/1073741823.5-1};const S=b=>b*spb;const mf=m=>440*Math.pow(2,(m-69)/12);
  const hit=(t,len,fn)=>{const s0=Math.round(t*sr),L=Math.floor(len*sr);for(let i=0;i<L;i++)dr[(s0+i)%N]+=fn(i/sr)};
@@ -3016,10 +3017,10 @@ function musWav(id){const G=MUS_DEF[id]||MUS_DEF.chill;const sr=22050,spb=60/G.b
  G.make(M);
  if(G.duck){const g=new Float32Array(N).fill(1);kicks.forEach(t0=>{const s0=Math.round(t0*sr),L=Math.floor(spb*sr);for(let i=0;i<L;i++){const j=(s0+i)%N;g[j]=Math.min(g[j],1-G.duck*Math.exp(-i/sr*9))}});for(let i=0;i<N;i++)mu[i]*=g[i]}
  if(G.echo){const [db,fb,wet]=G.echo;const d=Math.round(S(db)*sr),y=new Float32Array(N);for(let p=0;p<2;p++)for(let i=0;i<N;i++){const j=(i-d+N)%N;y[i]=mu[j]+fb*y[j]}for(let i=0;i<N;i++)mu[i]+=wet*y[i]}
- let pk=0;const out=new Float32Array(N);for(let i=0;i<N;i++){const v=Math.tanh((dr[i]*.85+mu[i])*1.15);out[i]=v;pk=Math.max(pk,Math.abs(v))}const gn=pk>0?.9/pk:1;
+ let pk=0;const out=new Float32Array(N);for(let i=0;i<N;i++){const v=Math.tanh((dr[i]*.85+mu[i])*1.15);out[i]=v;pk=Math.max(pk,Math.abs(v))}const gn=pk>0?.9/pk:1;for(let i=0;i<N;i++)out[i]*=gn;MUS_PCM[id]=out;
  const ab=new ArrayBuffer(44+N*2),dv=new DataView(ab);const ws=(o,x)=>{for(let i=0;i<x.length;i++)dv.setUint8(o+i,x.charCodeAt(i))};
  ws(0,'RIFF');dv.setUint32(4,36+N*2,true);ws(8,'WAVE');ws(12,'fmt ');dv.setUint32(16,16,true);dv.setUint16(20,1,true);dv.setUint16(22,1,true);dv.setUint32(24,sr,true);dv.setUint32(28,sr*2,true);dv.setUint16(32,2,true);dv.setUint16(34,16,true);ws(36,'data');dv.setUint32(40,N*2,true);
- for(let i=0;i<N;i++)dv.setInt16(44+i*2,Math.max(-1,Math.min(1,out[i]*gn))*32767,true);
+ for(let i=0;i<N;i++)dv.setInt16(44+i*2,Math.max(-1,Math.min(1,out[i]))*32767,true);
  return URL.createObjectURL(new Blob([ab],{type:'audio/wav'}))}
 const MUS={audio:null,playing:false,urls:{},cur:null,
  genre(){const g=S.music&&S.music.genre;return MUS_DEF[g]?g:'chill'},
@@ -3029,14 +3030,28 @@ const MUS={audio:null,playing:false,urls:{},cur:null,
    w(0,'RIFF');v.setUint32(4,36+n*2,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,22050,true);v.setUint32(28,44100,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,n*2,true);
    return this._sil=URL.createObjectURL(new Blob([b],{type:'audio/wav'}))},
  _play(){const p=this.audio.play();if(p&&p.catch)p.catch(()=>{})},
- start(){this._ensure();if(!this.audio)return;const a=this.audio,g=this.genre();a.volume=(S.music&&S.music.vol!=null?S.music.vol:.35);this.playing=true;
+ _ctx(){if(this.ctx!==undefined)return this.ctx;const C=window.AudioContext||window.webkitAudioContext;try{this.ctx=C?new C():null}catch(e){this.ctx=null}
+   if(this.ctx){this.gain=this.ctx.createGain();this.gain.connect(this.ctx.destination)}return this.ctx},
+ _vol(){return S.music&&S.music.vol!=null?S.music.vol:.35},
+ start(){this._ensure();const ctx=this._ctx(),g=this.genre();this.playing=true;
+   try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch(e){}
+   if(ctx){if(ctx.state!=='running'){try{ctx.resume()}catch(e){}}this.gain.gain.value=this._vol();
+    if(this.audio){try{const sl=this._silent();if(this.audio.src!==sl)this.audio.src=sl;this.audio.volume=1;this._play()}catch(e){}}
+    if(this.cur===g&&this.src)return;
+    const go=()=>{if(!this.playing||this.genre()!==g)return;try{this.url(g)}catch(e){console.warn('nhac',e);return}const pcm=MUS_PCM[g];if(!pcm)return;
+     const b=ctx.createBuffer(1,pcm.length,22050);b.getChannelData(0).set(pcm);const sn=ctx.createBufferSource();sn.buffer=b;sn.loop=true;
+     const fg=ctx.createGain();sn.connect(fg);fg.connect(this.gain);const t=ctx.currentTime;fg.gain.setValueAtTime(0,t);fg.gain.linearRampToValueAtTime(1,t+.6);
+     if(this.src){const o=this.src;try{o.g.gain.cancelScheduledValues(t);o.g.gain.setValueAtTime(o.g.gain.value,t);o.g.gain.linearRampToValueAtTime(0,t+.6);o.s.stop(t+.7)}catch(e){}}
+     sn.start(t);this.src={s:sn,g:fg};this.cur=g};
+    clearTimeout(this._t);if(this.urls[g])go();else this._t=setTimeout(go,80);return}
+   if(!this.audio)return;const a=this.audio;a.volume=this._vol();
    if(this.cur===g){this._play();return}
    const go=()=>{if(!this.playing||this.genre()!==g)return;try{a.src=this.url(g);this.cur=g}catch(e){console.warn('nhac',e);return}this._play()};
    if(this.urls[g]){go();return}
    try{a.src=this._silent();this.cur=null;this._play()}catch(e){}
    clearTimeout(this._t);this._t=setTimeout(go,80)},
- stop(){this.playing=false;if(this.audio){try{this.audio.pause()}catch(e){}}},
- vol(v){if(S.music)S.music.vol=v;if(this.audio)this.audio.volume=v},
+ stop(){this.playing=false;clearTimeout(this._t);if(this.src){const o=this.src,t=this.ctx.currentTime;try{o.g.gain.cancelScheduledValues(t);o.g.gain.setValueAtTime(o.g.gain.value,t);o.g.gain.linearRampToValueAtTime(0,t+.3);o.s.stop(t+.35)}catch(e){}this.src=null;this.cur=null}if(this.audio){try{this.audio.pause()}catch(e){}}},
+ vol(v){if(S.music)S.music.vol=v;if(this.gain)this.gain.gain.value=v;else if(this.audio)this.audio.volume=v},
  apply(){if(S.music&&S.music.on)this.start();else this.stop()}
 };
 window.__MUS=MUS;
