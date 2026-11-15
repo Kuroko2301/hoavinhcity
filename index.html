@@ -2304,7 +2304,7 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
   <div class="kicker" style="margin:16px 0 6px">Hình ảnh nhà ${nha.length?'('+nha.length+')':''}</div>
   ${c.loading?'<p class="sub">⏳ Đang lọc hình…</p>':nha.length?`<div class="dlgal">${nha.map(x=>`<div><img src="${esc(dlImgUrl(x.im))}" alt="Hình nhà" loading="lazy" data-a="dlXem" data-v="${x.i}"><button data-a="dlTai" data-v="${x.i}" aria-label="Tải hình">⬇️</button></div>`).join('')}</div>${an?`<p class="sub">Đã ẩn ${an} hình có mặt người (selfie).</p>`:''}<button class="btn full" style="margin-top:8px;background:#2E8B57;color:#fff" data-a="dlTaiHet">⬇️ Tải tất cả ${nha.length} hình về máy</button>`:'<p class="sub">Tin này chưa có hình nhà.</p>'}
   <div class="kicker" style="margin:16px 0 6px">Thông tin khác</div>
-  <div class="dlkv"><div><span>Giá</span><b>${esc(dtkField(bk.price)||'')}</b></div>${dlTc('segment',bk.segment)?`<div><span>Phân khúc</span><b>${esc(dlTc('segment',bk.segment))}</b></div>`:''}<div><span>Ngày đăng</span><b>${esc(dlAgo(dlCreated(bk)))}</b></div></div>
+  <div class="dlkv"><div><span>Ngày đăng</span><b>${esc(dlAgo(dlCreated(bk)))}</b></div></div>
   <div class="kicker" style="margin:16px 0 6px">Người ký căn</div>
   <div class="dlnk">${u.avatar?`<img src="${esc(u.avatar)}" alt="">`:'<div class="dlav">👤</div>'}<div class="grow" style="min-width:0"><b>${esc(u.full_name||'Chưa rõ tên')}</b><div class="sub">🏢 ${esc(u.dept||'')}</div>
    <div class="sub">📘 ${fb.link?`<a href="${esc(fb.link)}" target="_blank" rel="noopener">${esc(fb.ten||'Facebook')}</a>`:esc(fb.ten||'')}</div>
