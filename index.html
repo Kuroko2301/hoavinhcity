@@ -2101,6 +2101,37 @@ const CH=[
  {k:'youtube',n:'YouTube phòng',ic:'▶️',auto:1,chung:1},{k:'zalooa',n:'Zalo OA phòng',ic:'💬',auto:1,chung:1},{k:'insta',n:'Instagram',ic:'📸',auto:1},
  {k:'fbme',n:'FB cá nhân',ic:'👤',auto:0},{k:'fbgroup',n:'Nhóm Facebook',ic:'👥',auto:0},{k:'zalome',n:'Zalo cá nhân',ic:'🗨️',auto:0},{k:'mess',n:'Messenger',ic:'💌',auto:0}];
 const chOf=k=>CH.find(c=>c.k===k);
+/* ===== v30: Kết nối mạng xã hội (demo giả lập; bản thật nối Supabase: mxh-ket-noi, mxh-dang-bai) ===== */
+let mxhThat=false;
+const MXH=[{nt:'facebook_page',ic:'📘',n:'Trang Facebook của phòng',chung:1,dang:'chữ, ảnh, video'},
+ {nt:'youtube',ic:'▶️',n:'YouTube của phòng',chung:1,dang:'video'},
+ {nt:'zalo_oa',ic:'💬',n:'Zalo OA của phòng',chung:1,dang:'bài viết có ảnh bìa'},
+ {nt:'tiktok',ic:'🎵',n:'TikTok của bạn',chung:0,dang:'video'},
+ {nt:'youtube',ic:'▶️',n:'YouTube của bạn',chung:0,dang:'video'}];
+const MXH_CK={facebook_page:'fbpage',youtube:'youtube',zalo_oa:'zalooa',tiktok:'tiktok'};
+const MXH_IC={facebook_page:'📘',youtube:'▶️',zalo_oa:'💬',tiktok:'🎵'};
+let mxhKenh=a=>{S.mxhDemo=S.mxhDemo||[];return S.mxhDemo.filter(k=>k.chung||k.email===a.email)};
+let mxhCfg=()=>null;
+let postAutoPick=(a,chs,adm)=>`<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${chs.filter(c=>c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbpage'||c.k==='tiktok'?'checked':''}><span>${c.ic} ${c.n}${c.chung&&c.k!=='cong'&&!adm?' <em>cần duyệt</em>':''}</span></label>`).join('')}</div></div>`;
+let postServerMine=a=>'';
+let postServerQl=a=>'';
+SH.mxh=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const ks=mxhKenh(a);const cfg=mxhCfg();
+ const row=m=>{const mine=ks.filter(k=>k.nt===m.nt&&!!k.chung===!!m.chung);const ok=!cfg||!!cfg[m.nt];const can=m.chung?adm:true;
+  return `<div class="li" style="align-items:flex-start"><span class="chic">${m.ic}</span><div class="grow"><b>${m.n}</b><div class="sub">Robot đăng được: ${m.dang}</div>
+  ${mine.map(k=>`<div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><span class="pill ${k.st==='hoat_dong'?'ok':'bad'}">${k.st==='hoat_dong'?'✓ '+esc(k.ten):'Cần kết nối lại · '+esc(k.ten)}</span>${can?`<button class="btn ghost sm" data-a="mxhNgat" data-v="${esc(String(k.id))}">Ngắt</button>`:''}</div>${k.loi?`<div class="sub" style="color:#B3261E;margin-top:4px">${esc(k.loi)}</div>`:''}`).join('')}
+  ${!mine.length&&!can?'<div class="sub" style="margin-top:4px">Chưa kết nối. Sếp hoặc Trợ lý kết nối kênh chung.</div>':''}
+  ${!ok?'<div class="sub" style="margin-top:4px">⚙️ Chưa cài khoá ứng dụng. Trợ lý làm theo hướng dẫn kết nối mạng xã hội.</div>':''}</div>
+  ${can&&ok?`<button class="btn ${mine.length?'ghost':'gold'} sm" data-a="mxhKetNoi" data-v="${m.nt}|${m.chung?1:0}">${mine.length?'Kết nối lại':'Kết nối'}</button>`:''}</div>`};
+ return {t:'Kết nối mạng xã hội',h:`<p class="sub">Kết nối một lần, robot tự đăng bài đúng giờ. Chìa khoá cất kín trên máy chủ, app và anh em không nhìn thấy.</p>
+ <div class="card" style="margin-top:10px"><h2 class="h2">🏢 Kênh chung của phòng</h2>${MXH.filter(m=>m.chung).map(row).join('')}<div class="sub" style="margin-top:8px">Anh em chọn kênh chung khi đăng thì bài chờ Trợ lý hoặc Sếp duyệt.</div></div>
+ <div class="card" style="margin-top:10px"><h2 class="h2">🙋 Kênh của bạn</h2>${MXH.filter(m=>!m.chung).map(row).join('')}</div>
+ <div class="card" style="margin-top:10px"><h2 class="h2">📲 Chia sẻ 1 chạm</h2><p class="sub">Facebook cá nhân, Nhóm Facebook, Zalo cá nhân, Messenger không cho đăng tự động. Khi đăng bài, app soạn sẵn nội dung để bạn chạm chia sẻ.</p></div>
+ <div class="note">${mxhThat?'TikTok và YouTube: khi nền tảng chưa duyệt ứng dụng của phòng, video tạm đăng ở chế độ riêng tư.':'Bản demo: bấm Kết nối là giả lập. Bản thật mở trang đăng nhập của Facebook, Google, Zalo, TikTok.'}</div>`}};
+A.mxhKetNoi=v=>{const a=me();const [nt,c]=String(v).split('|');const m=MXH.find(x=>x.nt===nt&&String(x.chung)===c);S.mxhDemo=S.mxhDemo||[];
+ S.mxhDemo=S.mxhDemo.filter(k=>!(k.nt===nt&&String(k.chung)===c&&(k.chung||k.email===a.email)));
+ S.mxhDemo.push({id:'d'+Date.now(),nt,chung:c==='1'?1:0,email:a.email,ten:(m?m.n:nt)+' (demo)',st:'hoat_dong'});save();render();toast('Đã kết nối (giả lập)')};
+A.mxhNgat=v=>{S.mxhDemo=(S.mxhDemo||[]).filter(k=>String(k.id)!==String(v));save();render();toast('Đã ngắt kết nối')};
+
 const CST={cho:['Chờ tới giờ',''],gui:['Đang gửi','warn'],ok:['Thành công','ok'],loi:['Lỗi, sẽ thử lại','bad'],hong:['Lỗi 3 lần, báo Trợ lý','bad'],tay:['Cần chia sẻ tay','gold'],da:['Đã chia sẻ','ok'],go:['Đã gỡ','']};
 const PST={duyet:['Chờ duyệt','warn'],tra:['Bị trả lại','bad'],hen:['Đã hẹn',''],dang:['Đang đăng','warn'],xong:['Xong','ok'],loi:['Có lỗi','bad'],go:['Đã gỡ','']};
 const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
@@ -2140,19 +2171,19 @@ SH.post=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const seg=U.se
  let h=`<div class="seg">${segs.map(([k,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="post:${k}">${l}</button>`).join('')}</div>`;
  if(seg==='soan'){const chs=CH.filter(c=>c.k!=='cong'||a.role!=='ctv');
   h+=`<div class="flow"><span>✍️ Soạn</span><i></i><span>🗄️ Lưu, hẹn giờ</span><i></i><span>🤖 Robot đăng</span><i></i><span>🔔 Báo kết quả</span></div>
-  <div class="stack" style="margin-top:10px"><button class="btn ghost full" data-a="quayVideo">🎬 Tôi vừa quay xong video (+2 Bạc)</button>
+  <div class="stack" style="margin-top:10px"><button class="btn ghost full" data-a="sheet" data-v="mxh">🔌 Kết nối mạng xã hội (Facebook, YouTube, Zalo, TikTok)</button><button class="btn ghost full" data-a="quayVideo">🎬 Tôi vừa quay xong video (+2 Bạc)</button>
   <div class="picks">${[['bai_viet','📝 Bài viết'],['video','🎬 Video']].map(([k,l])=>`<button class="${(U.ploai||'bai_viet')===k?'on':''}" data-a="ploai" data-v="${k}">${l}</button>`).join('')}</div>
   <label class="f" for="pc">Nội dung<textarea class="in" id="pc" placeholder="Nhà phố hẻm xe hơi Tân Phú, 4x16m...">${esc(U.pdraft||'')}</textarea></label>
   <button class="btn ghost sm" data-a="pAi">✨ AI gợi ý viết lại</button>
-  <label class="f" for="pv">${(U.ploai||'bai_viet')==='video'?'Video (lưu Google Drive, app chỉ giữ link)':'Ảnh (không bắt buộc)'}<input class="in" id="pv" type="file" accept="${(U.ploai||'bai_viet')==='video'?'video/*':'image/*'}"></label>
+  <label class="f" for="pv">${(U.ploai||'bai_viet')==='video'?'Video (lưu Google Drive, app chỉ giữ link)':'Ảnh (không bắt buộc)'}<input class="in" id="pv" type="file" accept="${(U.ploai||'bai_viet')==='video'?'video/*':'image/*'}" ${(U.ploai||'bai_viet')==='video'?'':'multiple'}></label>
   <label class="row sub" style="align-items:flex-start"><input type="checkbox" id="pmd" style="margin-top:3px"><span>Bài có dùng <b>Media của phòng</b> (link tự gửi Minh để tính điểm)</span></label>
-  <div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${chs.filter(c=>c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbpage'||c.k==='tiktok'?'checked':''}><span>${c.ic} ${c.n}${c.chung&&c.k!=='cong'&&!adm?' <em>cần duyệt</em>':''}</span></label>`).join('')}</div></div>
+  ${postAutoPick(a,chs,adm)}
   <div><div class="sub" style="font-weight:800;margin-bottom:6px">📲 Chia sẻ 1 chạm <span style="font-weight:600">(nền tảng không cho đăng tự động)</span></div><div class="chpick">${chs.filter(c=>!c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbme'?'checked':''}><span>${c.ic} ${c.n}</span></label>`).join('')}</div></div>
   <div><div class="sub" style="font-weight:800;margin-bottom:6px">Thời gian</div><div class="picks">${[['now','Đăng ngay'],['gold','⏰ Giờ vàng'],['hen','Hẹn giờ']].map(([k,l])=>`<button class="${(U.pwhen||'now')===k?'on':''}" data-a="pwhen" data-v="${k}">${l}</button>`).join('')}</div>
   ${(U.pwhen||'now')==='gold'?`<div class="sub" style="margin-top:6px">Giờ vàng Trợ lý đặt: ${Object.entries(S.gold).map(([k,v])=>chOf(k).n+' '+v).join(' · ')}</div>`:''}${(U.pwhen||'now')==='hen'?'<input class="in" id="pt2" type="datetime-local" style="margin-top:8px">':''}</div>
   <button class="btn full" data-a="addPost">Gửi đăng bài</button>
   <div class="note">Bản demo: robot đăng giả lập ngay trên máy. Bản thật dùng Supabase hẹn giờ, robot gọi API từng nền tảng, lỗi thì thử lại sau 5, 15, 60 phút.</div></div>`}
- if(seg==='mine'){h+=`<div class="row" style="margin-top:10px"><button class="btn ghost sm grow" data-a="ffwd">⏩ Tua tới giờ đăng (demo)</button></div>${mine.map(p=>postCard(p,false)).join('')||'<p class="sub" style="margin-top:10px">Chưa có bài nào.</p>'}
+ if(seg==='mine'){h+=postServerMine(a)+`<div class="row" style="margin-top:10px"><button class="btn ghost sm grow" data-a="ffwd">⏩ Tua tới giờ đăng (demo)</button></div>${mine.map(p=>postCard(p,false)).join('')||'<p class="sub" style="margin-top:10px">Chưa có bài nào.</p>'}
   ${mediaMine(a)}`}
  if(seg==='ql'&&adm){const q=S.bai.filter(p=>p.st==='duyet'),bad=S.bai.filter(p=>p.ch.some(c=>c.st==='hong'||c.st==='loi')),soon=S.bai.filter(p=>p.loai==='chay_ngang'&&p.ch.some(c=>c.st==='cho'));
   const all=S.bai.filter(p=>p.d===today());
@@ -2161,7 +2192,7 @@ SH.post=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const seg=U.se
   ${soon.length?`<h3 class="h3" style="margin:14px 0 4px">Chạy ngang sắp đẩy ra mạng (15 phút kịp gỡ)</h3>${soon.map(p=>postCard(p,true)).join('')}`:''}
   ${bad.length?`<h3 class="h3" style="margin:14px 0 4px">Kênh lỗi</h3>${bad.map(p=>postCard(p,true)).join('')}`:''}
   <div class="card" style="margin-top:14px"><h2 class="h2">⏰ Giờ vàng từng kênh</h2><div class="grid2">${Object.entries(S.gold).map(([k,v])=>`<label class="f" for="gv_${k}">${chOf(k).ic} ${chOf(k).n}<input class="in" type="time" id="gv_${k}" value="${v}"></label>`).join('')}</div><button class="btn full" style="margin-top:8px" data-a="saveGold">Lưu giờ vàng</button></div>
-  <div class="card" style="margin-top:10px"><h2 class="h2">🔌 Kênh chung của phòng</h2>${CH.filter(c=>c.chung&&c.k!=='cong').map((c,i)=>`<div class="li"><span class="chic">${c.ic}</span><div class="grow"><b>${c.n}</b><div class="sub">${i===2?'Chìa khoá hết hạn sau 6 ngày':'Đang kết nối'}</div></div>${i===2?'<button class="btn gold sm" data-a="reconnect">Kết nối lại</button>':'<span class="pill ok">Đang dùng</span>'}</div>`).join('')}</div>`}
+  ${postServerQl(a)}<div class="card" style="margin-top:10px"><h2 class="h2">🔌 Kênh chung của phòng</h2><p class="sub">Kết nối Trang Facebook, YouTube, Zalo OA của phòng để robot tự đăng.</p><button class="btn gold full" style="margin-top:8px" data-a="sheet" data-v="mxh">Mở Kết nối mạng xã hội</button></div>`}
  return {t:'Đăng bài đa nền tảng',h}};
 function mediaMine(a){const L=S.media.filter(m=>m.email?m.email===a.email:m.who===a.name);const ok=L.filter(m=>m.st==='ok').length;
  return `<div class="card" style="margin-top:12px"><div class="between"><h2 class="h2" style="margin:0">🎬 Link Media gửi Minh</h2><span class="pill ok">${ok} điểm</span></div><p class="sub" style="margin:4px 0 8px">Bài dùng Media: robot tự gửi link. Bài chia sẻ tay thì dán link vào đây. Mỗi link chỉ tính 1 lần.</p>
@@ -2895,7 +2926,7 @@ function memoryCard(a){return `<div class="card memc"><div class="grid2" style="
 */
 const SB_URL='https://tvyitklexxtcbjyzjifp.supabase.co';
 const SB_KEY='sb_publishable_0sg-ypz1pOpBlouvkg-XqA_kB6WHKzv';
-const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'hoavinh-phien-dang-nhap'}}):null;
+const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'hoavinh-phien-dang-nhap',detectSessionInUrl:false}}):null;
 const R2A={sep:'sep',tro_ly:'tl',cg_dc:'cg',ctv:'ctv',hoc_vien:'hv'};const A2R={};for(const k in R2A)A2R[R2A[k]]=k;
 const LIVE={snap:{},me:null,hs:null,busy:false,t:null,lockUntil:0,lockEmail:''};
 const _save=save,_logout=A.logout;
@@ -3225,6 +3256,108 @@ A.vvAnswer=async(q,hist)=>{if(!sb)return _vvLocal(q);
  let j=data;try{if(!j&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}
  if(error&&error.context&&error.context.status===404)return _vvLocal(q);
  throw new Error((j&&j.loi)||errVi(error))};
+/* ---- v30: Kết nối mạng xã hội THẬT (Edge Function mxh-ket-noi + robot mxh-dang-bai, bảng kenh_mxh/bai_dang/dang_len_kenh) ---- */
+mxhThat=true;
+LIVE.mxh={cfg:null,kenh:[],bai:[],ql:[],tK:0,tB:0,del:null};
+async function fnLoi(error,data){let j=data;try{if((!j||!j.loi)&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}return (j&&j.loi)||errVi(error)}
+const MXH_CB=(function(){try{const q=new URLSearchParams(location.search);if(!q.get('state')||!(q.get('code')||q.get('error')))return null;
+ const o={state:q.get('state'),code:q.get('code'),oa_id:q.get('oa_id')||undefined,loi:q.get('error_description')||q.get('error_message')||q.get('error')};
+ history.replaceState(null,'',location.pathname+location.hash);return o}catch(e){return null}})();
+async function loadMxh(){if(!sb||!LIVE.me)return;LIVE.mxh.tK=Date.now();
+ const [k,c]=await Promise.all([sb.from('kenh_mxh').select('id,chu_so_huu_id,nen_tang,ten_kenh,la_kenh_chung,trang_thai,loi_gan_nhat').order('id'),
+  sb.functions.invoke('mxh-ket-noi',{body:{action:'cau_hinh'}}).catch(e=>({error:e}))]);
+ if(!k.error)LIVE.mxh.kenh=k.data||[];if(c&&c.data&&c.data.nen_tang)LIVE.mxh.cfg=c.data.nen_tang}
+const MXH_SEL='id,tac_gia_id,loai,noi_dung,trang_thai,hen_gio,tao_luc,ly_do_tra,dang_len_kenh(id,kenh_id,hen_gio,trang_thai,so_lan_thu,link_bai,loi_gan_nhat,dang_luc,thu_lai_luc)';
+async function loadMxhBai(){const m=me();if(!sb||!LIVE.me||!m)return;LIVE.mxh.tB=Date.now();const adm=m.role==='tl'||m.role==='sep';
+ const r1=await sb.from('bai_dang').select(MXH_SEL).eq('tac_gia_id',LIVE.me.id).order('id',{ascending:false}).limit(20);
+ if(!r1.error)LIVE.mxh.bai=(r1.data||[]).filter(b=>b.dang_len_kenh&&b.dang_len_kenh.length);
+ if(adm){const r2=await sb.from('bai_dang').select(MXH_SEL).in('trang_thai',['cho_duyet','loi']).order('id',{ascending:false}).limit(30);
+  if(!r2.error)LIVE.mxh.ql=(r2.data||[]).filter(b=>b.dang_len_kenh&&b.dang_len_kenh.length)}}
+function mxhLamMoi(force){const n=Date.now();const p=[];if(force||n-LIVE.mxh.tK>30000)p.push(loadMxh());if(force||n-LIVE.mxh.tB>15000)p.push(loadMxhBai());
+ if(p.length)Promise.all(p).then(()=>{if(U.sheet==='post'||U.sheet==='mxh')render()}).catch(e=>console.warn(e))}
+mxhKenh=a=>(LIVE.mxh.kenh||[]).filter(r=>r.la_kenh_chung||(a&&r.chu_so_huu_id===a.id)).map(r=>({id:r.id,nt:r.nen_tang,ten:r.ten_kenh||r.nen_tang,chung:r.la_kenh_chung?1:0,st:r.trang_thai,loi:r.trang_thai!=='hoat_dong'?r.loi_gan_nhat:''}));
+mxhCfg=()=>LIVE.mxh.cfg;
+const _shMxh=SH.mxh;SH.mxh=()=>{mxhLamMoi(false);return _shMxh()};
+const _shPost=SH.post;SH.post=()=>{mxhLamMoi(false);return _shPost()};
+A.mxhKetNoi=async v=>{const [nt,c]=String(v).split('|');if(LIVE.busy)return;busy(true,'Đang mở trang đăng nhập…');
+ try{await syncNow();const {data,error}=await sb.functions.invoke('mxh-ket-noi',{body:{action:'bat_dau',nen_tang:nt,chung:c==='1'}});
+  if(error||!data||!data.url)throw new Error(await fnLoi(error,data));location.href=data.url}
+ catch(err){busy(false);toast(err.message||errVi(err))}};
+A.mxhNgat=async v=>{if(LIVE.mxh.del!==String(v)){LIVE.mxh.del=String(v);toast('Bấm “Ngắt” lần nữa để ngắt. Lịch đăng của kênh này cũng bị xoá.');setTimeout(()=>{LIVE.mxh.del=null},6000);return}
+ LIVE.mxh.del=null;if(LIVE.busy)return;busy(true);
+ try{const {error}=await sb.from('kenh_mxh').delete().eq('id',+v);if(error)throw error;await loadMxh();toast('Đã ngắt kết nối')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+async function mxhXong(o){U.splashDone=true;U.sheet='mxh';
+ if(o.loi||!o.code){toast('Chưa kết nối được: '+(o.loi||'bạn chưa đồng ý cấp quyền'));render();return}
+ busy(true,'Đang hoàn tất kết nối…');
+ try{const {data,error}=await sb.functions.invoke('mxh-ket-noi',{body:{action:'xong',state:o.state,code:o.code,oa_id:o.oa_id}});
+  if(error||!data||!data.ok)throw new Error(await fnLoi(error,data));await loadMxh();toast('🎉 Đã kết nối '+((data.kenh||[]).join(', ')||'xong'))}
+ catch(err){toast(err.message||errVi(err))}finally{busy(false);render()}}
+const _afterLoginMxh=afterLogin;
+afterLogin=async function(fresh){await _afterLoginMxh(fresh);
+ if(LIVE.me&&S.me){if(MXH_CB&&!MXH_CB.xong){MXH_CB.xong=1;mxhXong(MXH_CB)}else mxhLamMoi(true)}};
+const MXH_VID={youtube:1,tiktok:1};
+postAutoPick=(a,chs,adm)=>{const ks=mxhKenh(a).filter(k=>k.st==='hoat_dong');const vid=(U.ploai||'bai_viet')==='video';const cong=chs.some(c=>c.k==='cong');
+ const ok=k=>vid||!MXH_VID[k.nt];
+ return `<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${cong?'<label><input type="checkbox" class="pf" value="cong"><span>🏕️ Cổng trại</span></label>':''}${ks.map(k=>`<label${ok(k)?'':' style="opacity:.55"'}><input type="checkbox" class="pfk" value="${k.id}" data-nt="${k.nt}" ${ok(k)?'':'disabled'} ${ok(k)&&(k.nt==='facebook_page'||k.nt==='tiktok')?'checked':''}><span>${MXH_IC[k.nt]||'🔗'} ${esc(k.ten)}${k.chung&&!adm?' <em>cần duyệt</em>':''}${ok(k)?'':' <em>chỉ đăng video</em>'}</span></label>`).join('')}</div>
+ ${ks.length?'':'<div class="note" style="margin-top:6px">Chưa có kênh nào được kết nối. Bấm “🔌 Kết nối mạng xã hội” ở trên nhé.</div>'}</div>`};
+const LST={cho:['Chờ tới giờ',''],cho_duyet:['Chờ duyệt','warn'],dang_dang:['Đang đăng','warn'],xong:['Đã đăng','ok'],loi:['Lỗi, robot sẽ thử lại','bad'],hong:['Lỗi 3 lần','bad'],huy:['Đã huỷ','']};
+const BST={cho_duyet:['Chờ duyệt','warn'],da_hen:['Đã hẹn',''],da_dang:['Đã đăng','ok'],loi:['Có lỗi','bad'],tra_lai:['Bị trả lại','bad']};
+const tgVi=t=>{if(!t)return '';const d=new Date(t);return hhmm(d)+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')};
+function mxhLuot(l,quyen){const k=(LIVE.mxh.kenh||[]).find(x=>x.id===l.kenh_id);const st=LST[l.trang_thai]||[l.trang_thai,''];
+ return `<div class="chrow"><span class="chic">${k?MXH_IC[k.nen_tang]||'🔗':'🔗'}</span><div class="grow"><b style="font-size:13px">${esc(k?k.ten_kenh:'Kênh đã ngắt')}</b><div class="sub">${l.trang_thai==='xong'?'Lúc '+tgVi(l.dang_luc)+(l.link_bai?` · <a href="${esc(l.link_bai)}" target="_blank" rel="noopener">Xem bài</a>`:''):l.trang_thai==='cho'?'Đăng lúc '+tgVi(l.hen_gio):(l.trang_thai==='loi'||l.trang_thai==='hong')?esc(l.loi_gan_nhat||'')+(l.trang_thai==='loi'&&l.thu_lai_luc?' · thử lại lúc '+tgVi(l.thu_lai_luc):''):''}</div></div>
+  <span class="pill ${st[1]}">${st[0]}</span>${quyen&&(l.trang_thai==='loi'||l.trang_thai==='hong')?`<button class="btn sm" data-a="mxhLuot" data-v="${l.id}|thu_lai">Đăng lại</button>`:''}${quyen&&(l.trang_thai==='cho'||l.trang_thai==='cho_duyet')?`<button class="btn ghost sm" data-a="mxhLuot" data-v="${l.id}|huy">Huỷ</button>`:''}</div>`}
+function mxhBai(b,ql){const st=BST[b.trang_thai]||[b.trang_thai,''];const tg=(S.accts||[]).find(x=>x.id===b.tac_gia_id);
+ return `<div class="pcard"><div class="between"><span class="pill">${b.loai==='video'?'🎬 Video':'📝 Bài viết'}</span><span class="pill ${st[1]}">${st[0]}</span></div>
+ <p style="margin:8px 0;font-size:13.5px;line-height:1.5;white-space:pre-wrap">${esc((b.noi_dung||'').slice(0,400))}</p><div class="sub">${ql&&tg?esc(tg.name)+' · ':''}${tgVi(b.tao_luc)}${b.ly_do_tra?' · lý do trả: '+esc(b.ly_do_tra):''}</div>
+ <div style="margin-top:6px">${b.dang_len_kenh.slice().sort((x,y)=>x.id-y.id).map(l=>mxhLuot(l,true)).join('')}</div>
+ ${ql&&b.trang_thai==='cho_duyet'?`<input class="in" id="mxly_${b.id}" placeholder="Lý do nếu trả lại" style="margin-top:8px;min-height:36px;font-size:13px"><div class="grid2" style="margin-top:8px"><button class="btn green sm" data-a="mxhDuyet" data-v="${b.id}|1">Duyệt, cho đăng</button><button class="btn ghost sm" data-a="mxhDuyet" data-v="${b.id}|0">Trả lại</button></div>`:''}</div>`}
+postServerMine=a=>{const L=LIVE.mxh.bai||[];return `<div class="between" style="margin-top:12px"><h3 class="h3" style="margin:0">🤖 Bài robot đăng lên mạng xã hội</h3><button class="btn ghost sm" data-a="mxhLamMoi">↻ Tải lại</button></div>
+ ${L.map(b=>mxhBai(b,false)).join('')||'<p class="sub">Chưa có bài nào gửi robot. Soạn bài, chọn kênh đã kết nối rồi bấm Gửi nhé.</p>'}
+ <h3 class="h3" style="margin:14px 0 4px">Bài trong app (Cổng trại, chia sẻ 1 chạm)</h3>`};
+postServerQl=a=>{const L=LIVE.mxh.ql||[];const q=L.filter(b=>b.trang_thai==='cho_duyet'),e=L.filter(b=>b.trang_thai==='loi');
+ return `<div class="card" style="margin-top:14px"><div class="between"><h2 class="h2" style="margin:0">🤖 Robot mạng xã hội</h2><button class="btn ghost sm" data-a="mxhLamMoi">↻ Tải lại</button></div>
+ <h3 class="h3" style="margin:10px 0 4px">Chờ duyệt kênh chung (${q.length})</h3>${q.map(b=>mxhBai(b,true)).join('')||'<p class="sub">Không có bài chờ duyệt.</p>'}
+ ${e.length?`<h3 class="h3" style="margin:14px 0 4px">Bài có kênh lỗi (${e.length})</h3>${e.map(b=>mxhBai(b,true)).join('')}`:''}</div>`};
+A.mxhLamMoi=()=>{mxhLamMoi(true);toast('Đang tải lại…')};
+A.mxhLuot=async v=>{const [id,viec]=String(v).split('|');if(LIVE.busy)return;busy(true);
+ try{const {error}=await sb.rpc('doi_luot_dang',{p_luot:+id,p_viec:viec});if(error)throw error;
+  if(viec==='thu_lai'){const l=[...LIVE.mxh.bai,...LIVE.mxh.ql].flatMap(b=>b.dang_len_kenh.map(x=>({x,b}))).find(o=>o.x.id===+id);if(l)sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:l.b.id}}).then(()=>mxhLamMoi(true)).catch(()=>{})}
+  await loadMxhBai();toast(viec==='thu_lai'?'Robot đang đăng lại':'Đã huỷ lượt đăng')}
+ catch(err){toast(/Không có quyền|Không thấy/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);render()}};
+A.mxhDuyet=async v=>{const [id,ok]=String(v).split('|');if(LIVE.busy)return;const ly=ok==='1'?null:(val('mxly_'+id)||'Trợ lý nhờ sửa lại nội dung');busy(true,ok==='1'?'Đang duyệt…':'Đang trả lại…');
+ try{const {error}=await sb.rpc('duyet_bai_dang',{p_bai:+id,p_dong_y:ok==='1',p_ly_do:ly});if(error)throw error;
+  if(ok==='1')sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:+id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
+  await loadMxhBai();toast(ok==='1'?'Đã duyệt, robot đăng ngay hoặc đúng giờ hẹn':'Đã trả lại bài')}
+ catch(err){toast(/Chỉ Trợ lý/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);render()}};
+const _addPostMxh=A.addPost;
+A.addPost=async()=>{const a=me();const t=val('pc');
+ const kids=[...document.querySelectorAll('.pfk:checked')].map(x=>({id:+x.value,nt:x.dataset.nt}));
+ if(!t||!kids.length)return _addPostMxh();
+ if(LIVE.busy)return;const w=U.pwhen||'now';let hen=null;
+ if(w==='hen'){const v=val('pt2');if(!v){toast('Chọn giờ hẹn nhé');return}hen=new Date(v).toISOString()}
+ const vid=(U.ploai||'bai_viet')==='video';const inp=document.getElementById('pv');const files=inp&&inp.files?[...inp.files]:[];
+ if(vid&&!files.length){toast('Chọn video để robot đăng nhé');return}
+ const big=files.find(f=>f.size>50*1024*1024);if(big){toast('File “'+big.name+'” lớn hơn 50MB. Nén video nhỏ lại hoặc quay 720p nhé');return}
+ const hr={};if(w==='gold')kids.forEach(k=>{const ck=MXH_CK[k.nt];if(S.gold[ck])hr[k.id]=new Date(nextGold(ck)).toISOString()});
+ const adm=a.role==='tl'||a.role==='sep';const ch=mxhKenh(a);const need=!adm&&kids.some(k=>(ch.find(x=>x.id===k.id)||{}).chung);
+ const others=[...document.querySelectorAll('.pf:checked')].length;
+ busy(true,files.length?'Đang tải '+files.length+' file lên…':'Đang gửi bài…');
+ try{const media=[];let i=0;
+  for(const f of files){const ext=((f.name.split('.').pop()||'').toLowerCase().replace(/[^a-z0-9]/g,''))||(vid?'mp4':'jpg');
+   const path=LIVE.me.id+'/'+Date.now()+'-'+(i++)+'.'+ext;
+   const {error}=await sb.storage.from('dang-bai').upload(path,f,{contentType:f.type||undefined,upsert:false});if(error)throw error;
+   media.push({duong_dan:path,loai:vid?'video':'anh',dung_luong:String(f.size)})}
+  const {data:id,error}=await sb.rpc('tao_bai_dang',{p_noi_dung:t,p_loai:vid?'video':'bai_viet',p_kenh_ids:kids.map(k=>k.id),p_hen_gio:hen,p_media:media,p_hen_rieng:hr});if(error)throw error;
+  busy(false);
+  if(w==='now')sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
+  if(others){_addPostMxh()}
+  else{const ty=vid?'video':'bai';a.g.posts.push({t,pf:kids.map(k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt),at:w==='now'?'':'hẹn',d:today(),ty});
+   U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
+  toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
+  await loadMxhBai()}
+ catch(err){toast(/nội dung|ít nhất|không phải của bạn|không hợp lệ|Chỉ anh em/.test(err.message||'')?err.message:errVi(err))}
+ finally{busy(false);render()}};
 /* ===================== HẾT PHẦN NỐI SUPABASE ===================== */
 
 render();
