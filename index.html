@@ -1631,7 +1631,7 @@ SH.journey=()=>{const a=me();const g=a.g;return {t:'Nhìn lại chặng đườn
  <h3 class="h3" style="margin:16px 0 8px">Nhìn lại theo từng tuần</h3>${[0,1,2,3].map(off=>{const w=weekStats(a,off);const ev=g.journey.filter(e=>e.d>=w.s&&e.d<=w.e);return `<div class="card" style="margin-top:8px"><div class="between"><b>${off===0?'Tuần này':off===1?'Tuần trước':off+' tuần trước'}</b><span class="sub">${fmtD(w.s)} – ${fmtD(w.e)}</span></div><div class="row wrap" style="margin-top:6px;gap:6px"><span class="pill">+${nf(w.bac)} 🥈</span><span class="pill">+${nf(w.vang)} 🥇</span><span class="pill">+${nf(w.kc)} 💎</span><span class="pill">${w.n} lần nhận thưởng</span></div>${ev.map(e=>`<div class="sub" style="margin-top:4px">• ${esc(e.t)}</div>`).join('')}</div>`}).join('')}<h3 class="h3" style="margin:16px 0 8px">Các cột mốc</h3><div class="tl">${g.journey.slice().reverse().map(e=>`<div class="ev"><span class="sub">${fmtD(e.d)}</span><b>${esc(e.t)}</b><span class="sub">${esc(e.s||'')}</span></div>`).join('')}</div><p class="sub">Gia nhập ngày ${fmtD(a.joined)}. Mỗi cột mốc mới (lên cấp nhà, vụ chốt, được duyệt cờ...) tự thêm vào đây.</p>`}};
 SH.clients=()=>{const a=me();return {t:'Hồ sơ dẫn khách',h:`<div class="stack"><div class="grid2"><input class="in" id="kn" placeholder="Tên khách"><input class="in" id="kp" placeholder="Số điện thoại (không bắt buộc)" inputmode="tel"></div><textarea class="in" id="kq" placeholder="Yêu cầu của khách: khu vực, tầm giá, diện tích..."></textarea><div class="grid3"><select class="in" id="kqq"><option value="">Khu vực</option>${QUAN.map(q=>`<option>${q}</option>`).join('')}</select><input class="in num" id="kq1" inputmode="decimal" placeholder="Từ (tỷ)"><input class="in num" id="kq2" inputmode="decimal" placeholder="Đến (tỷ)"></div><div class="grid2"><input class="in" id="kd" type="date" value="${today()}"><input class="in" id="kt" type="time" value="15:00"></div><label class="row sub"><input type="checkbox" id="kr" checked> Nhắc tôi trước giờ dẫn khách</label><button class="btn full" data-a="addClient">Lưu lịch dẫn khách</button><p class="sub">Lịch dẫn khách tự gửi tới Trợ lý.</p></div>
  <h3 class="h3" style="margin:14px 0 4px">Lịch đã lưu</h3>${a.g.clients.map((c,i)=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">${esc(c.time)}</span><div class="grow"><b>${esc(c.name)}</b> <span class="sub">${esc(c.phone||'')}</span><div class="sub">${fmtD(c.date)} · ${esc(c.need)}${c.photos?' · đã gửi '+c.photos+' hình':''}</div></div><label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div>`).reverse().join('')}<p class="sub" style="margin-top:6px">Mỗi hình dẫn khách được 1 Vàng. Che mặt khách vẫn được tính.</p>`}};
-SH.survey=()=>{const a=me();const d=U.ksD||{anh:[]};const sua=!!d.id;const mine=htKsAll().filter(s=>s.byEmail===a.email);
+SH.survey=()=>{const a=me();const d=U.ksD||{anh:[],so:[]};const sua=!!d.id;const mine=htKsAll().filter(s=>s.byEmail===a.email);
  const HG=['Đông','Tây','Nam','Bắc','Đông Nam','Đông Bắc','Tây Nam','Tây Bắc'];
  return {t:sua?'✏️ Sửa khảo sát':'Khảo sát nhà',h:`${ksDriveNote(a)}<div class="stack">
  <label class="f" for="sa">Địa chỉ<input class="in" id="sa" value="${esc(d.addr||'')}" placeholder="Số nhà, tên đường, phường"></label>
@@ -1641,7 +1641,7 @@ SH.survey=()=>{const a=me();const d=U.ksD||{anh:[]};const sua=!!d.id;const mine=
  <label class="f" for="kdac">🏠 Đặc điểm căn nhà<textarea class="in" id="kdac" placeholder="Diện tích, số tầng, số phòng, nội thất, pháp lý, giá chủ chào...">${esc(d.dac||'')}</textarea></label>
  <label class="f" for="kmanh">👍 Điểm mạnh<textarea class="in" id="kmanh" placeholder="Hẻm xe hơi, gần chợ, nở hậu, nhà mới xây...">${esc(d.manh||'')}</textarea></label>
  <label class="f" for="kyeu">👎 Điểm yếu<textarea class="in" id="kyeu" placeholder="Hẻm nhỏ, cột điện trước nhà, dính lộ giới...">${esc(d.yeu||'')}</textarea></label>
- <label class="f" for="ss">Ảnh sổ (không bắt buộc · chỉ bạn, Trợ lý, Sếp xem)<input class="in" id="ss" type="file" accept="image/*"></label>
+ <div><div class="sub" style="font-weight:800;margin-bottom:2px">📄 Ảnh sổ (${(d.so||[]).length}/${KS_MAX})</div><div class="sub" style="margin-bottom:6px">Không bắt buộc · 🔒 chỉ bạn, Trợ lý, Sếp xem</div><div class="ksgrid">${(d.so||[]).map((x,i)=>`<div class="ksth"><img src="${esc(x.url)}" alt="Ảnh sổ ${i+1}"><button data-a="ksBoSo" data-v="${i}" aria-label="Bỏ ảnh sổ ${i+1}">×</button></div>`).join('')}${(d.so||[]).length<KS_MAX?`<label class="ksadd"><input type="file" accept="image/*" multiple data-ksso="1" style="display:none"><span><b>＋</b>Ảnh sổ</span></label>`:''}</div></div>
  <button class="btn full" data-a="addSurvey">${sua?'Lưu thay đổi':'Lưu khảo sát'}</button>${sua?'<button class="btn ghost full" data-a="ksHuySua">Huỷ sửa</button>':''}
  <div class="sub">Ai trong phòng cũng bấm vào xem được hình và thông tin. Chỉ bạn (người đăng) được sửa.</div></div>
  <div class="between" style="margin:16px 0 2px"><h3 class="h3" style="margin:0">Căn bạn đã khảo sát (${mine.length})</h3><button class="link" data-a="ksCaPhong">Xem của cả phòng</button></div>
@@ -1746,7 +1746,7 @@ function flagDecide(v,ok){const [t,k]=v.split('|');if(t==='q'){const f=S.flagQue
 A.addClient=()=>{const a=me();const n=val('kn');if(!n){toast('Nhập tên khách nhé');return}const n1=parseFloat(val('kq1').replace(',','.'))||0,n2=parseFloat(val('kq2').replace(',','.'))||99;a.g.clients.push({name:n,phone:val('kp'),need:val('kq')||[val('kqq'),n2<99?nf(n1)+' đến '+nf(n2)+' tỷ':''].filter(Boolean).join(', ')||'Chưa ghi yêu cầu',q:val('kqq'),min:n1,max:n2,stage:'moi',last:today(),hot:true,date:val('kd')||today(),time:val('kt')||'15:00',remind:document.getElementById('kr').checked});toast('Đã lưu lịch dẫn khách');save();render()};
 A.addSurvey=async()=>{const a=me();const d=ksKeep();if(!(d.addr||'').trim()){toast('Nhập địa chỉ nhé');return}
  if(!d.anh.length&&!(d.dac||'').trim()&&!(d.manh||'').trim()&&!(d.yeu||'').trim()){toast('Thêm hình hoặc vài dòng đặc điểm nha');return}
- const f=document.getElementById('ss');d.soFile=f&&f.files&&f.files[0]||null;if(U.ksBusy)return;U.ksBusy=true;const moi=!d.id;
+ if(U.ksBusy)return;U.ksBusy=true;const moi=!d.id;
  try{await ksSave(a,d);U.ksD=null;if(moi)give(a,{vang:1},'Khảo sát nhà');else toast('Đã lưu thay đổi');save()}
  catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}};
 /* ===== v31: Khảo sát nhà (hình, đặc điểm, điểm mạnh, điểm yếu · ai cũng xem, chỉ người đăng sửa) ===== */
@@ -1772,27 +1772,28 @@ function ksImgResize(file,max,q){return ksGiaiMa(file).then(o=>new Promise((res,
  const k=Math.min(1,max/Math.max(o.w,o.h));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(o.w*k));c.height=Math.max(1,Math.round(o.h*k));
  c.getContext('2d').drawImage(o.src,0,0,c.width,c.height);o.done();
  const url=c.toDataURL('image/jpeg',q);c.toBlob(b=>b?res({blob:b,url}):rej(new Error('Không đọc được ảnh')),'image/jpeg',q)}catch(e){o.done();rej(e)}}))}
-function ksKeep(){const d=U.ksD||(U.ksD={anh:[]});const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};
+function ksKeep(){const d=U.ksD||(U.ksD={anh:[],so:[]});if(!d.so)d.so=[];const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};
  [['addr','sa'],['dir','sd'],['dac','kdac'],['manh','kmanh'],['yeu','kyeu']].forEach(([k,i])=>{const v=g(i);if(v!==undefined)d[k]=v});return d}
-document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!el.dataset.ksanh||!el.files||!el.files.length)return;const d=ksKeep();const fs=[...el.files];el.value='';
- const con=KS_MAX-d.anh.length;if(con<=0){toast('Tối đa '+KS_MAX+' hình mỗi căn');return}if(fs.length>con)toast('Lấy thêm '+con+' hình (tối đa '+KS_MAX+')');else toast('Đang xử lý hình…');
- let ksLoi='';Promise.all(fs.slice(0,con).map(f=>ksImgResize(f,ksPrepMax,.72).catch(e=>{ksLoi=(e&&e.message)||'';console.warn('ksAnh',f&&f.name,f&&f.type,f&&f.size,e);return null}))).then(L=>{const ok=L.filter(Boolean);ok.forEach(x=>d.anh.push(x));const hong=Math.min(fs.length,con)-ok.length;if(hong>0)toast(hong+' hình chưa đọc được'+(ksLoi&&ksLoi.length>12?': '+ksLoi:'. Thử chụp màn hình tấm đó rồi tải lên nhé'));render()})});
+let ksSoMax=480;
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!(el.dataset.ksanh||el.dataset.ksso)||!el.files||!el.files.length)return;const d=ksKeep();const fs=[...el.files];el.value='';const laSo=!!el.dataset.ksso;const DS=laSo?d.so:d.anh;
+ const con=KS_MAX-DS.length;if(con<=0){toast('Tối đa '+KS_MAX+(laSo?' ảnh sổ':' hình')+' mỗi căn');return}if(fs.length>con)toast('Lấy thêm '+con+' hình (tối đa '+KS_MAX+')');else toast('Đang xử lý hình…');
+ let ksLoi='';Promise.all(fs.slice(0,con).map(f=>ksImgResize(f,laSo?ksSoMax:ksPrepMax,laSo?.85:.72).catch(e=>{ksLoi=(e&&e.message)||'';console.warn('ksAnh',f&&f.name,f&&f.type,f&&f.size,e);return null}))).then(L=>{const ok=L.filter(Boolean);ok.forEach(x=>DS.push(x));const hong=Math.min(fs.length,con)-ok.length;if(hong>0)toast(hong+' hình chưa đọc được'+(ksLoi&&ksLoi.length>12?': '+ksLoi:'. Thử chụp màn hình tấm đó rồi tải lên nhé'));render()})});
 const ksMet=v=>{v=String(v||'').trim();return v?(/^\d+([.,]\d+)?$/.test(v)?v+'m':v):''};
 const ksCard=s=>`<button class="kscard" data-a="ksXem" data-v="${esc(s.key)}">${s.anh.length&&s.anh[0].url?`<img src="${esc(s.anh[0].url)}" alt="" loading="lazy">`:'<span class="ksno">📍</span>'}<div class="grow"><b>${esc(s.addr)}</b><div class="sub">${[s.lat?'📍 có vị trí':'',s.dir,s.anh.length?'📷 '+s.anh.length+' hình':'',s.so?'có sổ':''].filter(Boolean).join(' · ')}</div>${s.manh?`<div class="sub" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">👍 ${esc(s.manh.split('\n')[0])}</div>`:''}<div class="sub">📍 ${esc(s.by)} · ${esc(fmtD(s.d))}</div></div></button>`;
 let ksGet=key=>htKsAll().find(s=>s.key===key);
 let ksDriveNote=a=>'';
 let ksDriveRow=(s,a)=>'';
-let ksSave=async(a,d)=>{const s={addr:d.addr.trim(),alley:d.alley||'',dir:d.dir||'',dac:(d.dac||'').trim(),manh:(d.manh||'').trim(),yeu:(d.yeu||'').trim(),anh:d.anh.map(x=>x.url),lat:d.lat||null,lng:d.lng||null,acc:d.acc||null};
- if(d.id){const o=a.g.surveys.find(x=>x.id===d.id);if(!o)throw new Error('Không tìm thấy căn này');Object.assign(o,s,{so:o.so||!!d.soFile,sua:today()})}
- else a.g.surveys.push(Object.assign(s,{id:'k'+Date.now().toString(36),so:!!d.soFile,d:today(),shared:true}))};
+let ksSave=async(a,d)=>{const s={addr:d.addr.trim(),alley:d.alley||'',dir:d.dir||'',dac:(d.dac||'').trim(),manh:(d.manh||'').trim(),yeu:(d.yeu||'').trim(),anh:d.anh.map(x=>x.url),soAnh:(d.so||[]).map(x=>x.url),lat:d.lat||null,lng:d.lng||null,acc:d.acc||null};s.so=s.soAnh.length>0;
+ if(d.id){const o=a.g.surveys.find(x=>x.id===d.id);if(!o)throw new Error('Không tìm thấy căn này');Object.assign(o,s,{sua:today()})}
+ else a.g.surveys.push(Object.assign(s,{id:'k'+Date.now().toString(36),d:today(),shared:true}))};
 let ksDel=async s=>{const a=S.accts.find(x=>x.email===s.byEmail);if(a)a.g.surveys=a.g.surveys.filter(x=>x.id!==s.id)};
 SH.ksXem=()=>{const a=me();const s=ksGet(U.ksXem);if(!s)return {t:'Khảo sát nhà',h:'<p class="sub">Không tìm thấy căn này (có thể người đăng đã xoá).</p>'};const mine=s.byEmail===a.email;
  const blk=(ic,t,v,c)=>v?`<div class="card ksblk"><div class="sub" style="font-weight:800${c?';color:'+c:''}">${ic} ${t}</div><p>${esc(v)}</p></div>`:'';const anh=s.anh.filter(x=>x.url);
  return {t:'📍 Khảo sát nhà',h:`<h2 class="h2" style="margin:0 0 8px">${esc(s.addr)}</h2>
  ${anh.length?`<div class="ksgal">${anh.map((x,i)=>`<img src="${esc(x.url)}" alt="Hình ${i+1} của căn ${esc(s.addr)}" loading="lazy">`).join('')}</div><div class="sub" style="text-align:center;margin-top:4px">${anh.length} hình · vuốt ngang để xem hết</div>`:'<div class="note">Căn này chưa có hình.</div>'}
- <div class="sub" style="margin-top:10px">${[s.dir?'Hướng '+s.dir:'',s.so?'Có sổ':'',s.lat?'Vị trí do người khảo sát lấy tại nhà':''].filter(Boolean).join(' · ')}</div>
+ <div class="sub" style="margin-top:10px">${[s.dir?'Hướng '+s.dir:'',s.so?'Có sổ'+((s.soAnh||[]).length>1?' ('+s.soAnh.length+' ảnh)':''):'',s.lat?'Vị trí do người khảo sát lấy tại nhà':''].filter(Boolean).join(' · ')}</div>
  <a class="link" style="font-size:13px" href="${ksMapUrl(s)}" target="_blank" rel="noopener">🗺️ ${s.lat?'Mở đúng vị trí trên Google Maps':'Mở Google Maps (theo địa chỉ)'}</a>
- ${blk('🏠','Đặc điểm căn nhà',s.dac||s.note)}${blk('👍','Điểm mạnh',s.manh,'#2E7D4F')}${blk('👎','Điểm yếu',s.yeu,'var(--bad)')}
+ ${(()=>{const so=(s.soAnh||[]).filter(x=>x.url);if(!so.length||!(mine||a.role==='tl'||a.role==='sep'))return '';return `<div class="card ksblk"><div class="sub" style="font-weight:800">📄 Ảnh sổ (${so.length}) · 🔒 chỉ người đăng, Trợ lý, Sếp xem</div><div class="ksgal" style="margin-top:6px">${so.map((x,i)=>`<a href="${esc(x.url)}" target="_blank" rel="noopener"><img src="${esc(x.url)}" alt="Ảnh sổ ${i+1}" loading="lazy"></a>`).join('')}</div></div>`})()}${blk('🏠','Đặc điểm căn nhà',s.dac||s.note)}${blk('👍','Điểm mạnh',s.manh,'#2E7D4F')}${blk('👎','Điểm yếu',s.yeu,'var(--bad)')}
  <div class="sub" style="margin-top:10px">Người khảo sát: <b>${esc(s.by)}</b> · ${esc(fmtD(s.d))}${s.sua?' · sửa '+esc(fmtD(s.sua)):''}</div>${ksDriveRow(s,a)}
  ${mine?`<div class="grid2" style="margin-top:12px"><button class="btn gold" data-a="ksSua" data-v="${esc(s.key)}">✏️ Sửa</button><button class="btn ghost" data-a="ksXoa" data-v="${esc(s.key)}">Xoá</button></div>`:`<div class="note" style="margin-top:12px">🔒 Chỉ ${esc(s.by)} (người đăng) được sửa căn này. Bạn xem được thôi nha.</div>`}
  <button class="btn ghost full" style="margin-top:8px" data-a="copySurvey" data-v="${esc(s.addr)}|${esc(s.alley)}|${esc(s.dir)}">Chép để chia sẻ</button>`}};
@@ -1804,13 +1805,14 @@ A.ksViTri=()=>{const d=ksKeep();if(!navigator.geolocation){toast('Máy này chư
 A.ksXem=v=>{U.ksXem=v;U.sheet='ksXem';render()};
 A.ksCaPhong=()=>{U.htseg='ks';U.sheet='hoitruong';render()};
 A.ksBoAnh=v=>{const d=ksKeep();d.anh.splice(+v,1);render()};
+A.ksBoSo=v=>{const d=ksKeep();d.so.splice(+v,1);render()};
 A.ksHuySua=()=>{U.ksD=null;render()};
 A.ksSua=v=>{const s=ksGet(v);if(!s)return;if(s.byEmail!==me().email){toast('Chỉ người đăng mới sửa được');return}
- U.ksD={id:s.id,addr:s.addr,alley:s.alley,dir:s.dir,lat:s.lat,lng:s.lng,acc:s.acc,dac:s.dac||s.note||'',manh:s.manh||'',yeu:s.yeu||'',anh:s.anh.map(x=>({...x}))};U.sheet='survey';render()};
+ U.ksD={id:s.id,addr:s.addr,alley:s.alley,dir:s.dir,lat:s.lat,lng:s.lng,acc:s.acc,dac:s.dac||s.note||'',manh:s.manh||'',yeu:s.yeu||'',anh:s.anh.map(x=>({...x})),so:(s.soAnh||[]).map(x=>({...x}))};U.sheet='survey';render()};
 A.ksXoa=async v=>{const s=ksGet(v);if(!s)return;if(s.byEmail!==me().email){toast('Chỉ người đăng mới xoá được');return}
  if(U.ksDelAsk!==v){U.ksDelAsk=v;toast('Bấm “Xoá” lần nữa để xoá căn này');setTimeout(()=>{if(U.ksDelAsk===v)U.ksDelAsk=null},6000);return}
  U.ksDelAsk=null;try{await ksDel(s);U.sheet='survey';save();toast('Đã xoá khảo sát')}catch(e){toast(e&&e.message?e.message:'Chưa xoá được')}render()};
-A.copySurvey=v=>{const [ad,al,dir]=v.split('|');copy(`Khảo sát nhà: ${ad}\nHẻm trước nhà: ${al||'?'}m · Hướng ${dir}\nBản đồ: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ad)}`)};
+A.copySurvey=v=>{const [ad,al,dir]=v.split('|');copy(`Khảo sát nhà: ${ad}\nHướng ${dir}\nBản đồ: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ad)}`)};
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>toast('Đã chép, dán vào Zalo hoặc Facebook nhé'),()=>toast('Máy chưa cho chép, giữ tay vào chữ để chép'))}catch(e){toast('Máy chưa cho chép')}}
 A.aiWrite=()=>{const t=val('ain');U.aiIn=t;if(!t){toast('Dán tin vào trước nhé');return}U.aiOut=aiRewrite(t);render()};
 function aiRewrite(t){
@@ -2825,7 +2827,7 @@ SH.muctieu=()=>{const a=me();const ids=a.g.targets||[];const L=ids.map(id=>S.kho
   ${L.length?`<button class="btn full" data-a="seg" data-v="viec:kho">← Về Kho nhà chọn thêm</button>`:''}`}};
 
 /* --- Hội Trường --- */
-function htKsAll(){const out=[];let n=0;S.accts.forEach(a=>(a.g.surveys||[]).filter(s=>s.shared!==false).forEach(s=>{if(!s.id)s.id='k'+Date.now().toString(36)+(n++);out.push({...s,key:a.email+'|'+s.id,by:a.name,byEmail:a.email,anh:(s.anh||[]).map(u=>typeof u==='string'?{url:u}:u)})}));return out.sort((x,y)=>(y.d||'').localeCompare(x.d||''))}
+function htKsAll(){const out=[];let n=0;S.accts.forEach(a=>(a.g.surveys||[]).filter(s=>s.shared!==false).forEach(s=>{if(!s.id)s.id='k'+Date.now().toString(36)+(n++);out.push({...s,key:a.email+'|'+s.id,by:a.name,byEmail:a.email,anh:(s.anh||[]).map(u=>typeof u==='string'?{url:u}:u),soAnh:(s.soAnh||[]).map(u=>typeof u==='string'?{url:u}:u)})}));return out.sort((x,y)=>(y.d||'').localeCompare(x.d||''))}
 SH.hoitruong=()=>{const a=me();const H=S.hoiTruong;const seg=U.htseg||'ks';
  const tabBtn=(k,l,n)=>`<button class="${seg===k?'on':''}" data-a="htseg" data-v="${k}">${l}${n?` (${n})`:''}</button>`;
  let body='';
@@ -3448,16 +3450,20 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  finally{busy(false);render()}};
 /* ---- v31: Khảo sát nhà thật: bảng khao_sat_nha, hình ở kho khao-sat, sổ ở kho so-nha (chỉ người đăng + Sếp/Trợ lý),
    sao lưu Google Drive chính qua Edge Function khao-sat-drive (Drive kết nối qua mxh-ket-noi, nen_tang google_drive) ---- */
-ksPrepMax=1600;
+ksPrepMax=1600;ksSoMax=2000;
 LIVE.ks={rows:[],url:{},t:0};
 async function loadKs(){if(!sb||!LIVE.me)return;LIVE.ks.t=Date.now();
- const {data,error}=await sb.from('khao_sat_nha').select('id,nguoi_tao_id,dia_chi,hem_truoc_nha,huong,anh_so,ghi_chu,dac_diem,diem_manh,diem_yeu,anh,vi_do,kinh_do,do_chinh_xac,drive_link,drive_trang_thai,drive_loi,tao_luc,cap_nhat_luc').order('tao_luc',{ascending:false}).limit(300);
+ const {data,error}=await sb.from('khao_sat_nha').select('id,nguoi_tao_id,dia_chi,hem_truoc_nha,huong,anh_so,anh_so_ds,ghi_chu,dac_diem,diem_manh,diem_yeu,anh,vi_do,kinh_do,do_chinh_xac,drive_link,drive_trang_thai,drive_loi,tao_luc,cap_nhat_luc').order('tao_luc',{ascending:false}).limit(300);
  if(error){console.warn(error);return}LIVE.ks.rows=data||[];
  const need=[...new Set(LIVE.ks.rows.flatMap(r=>Array.isArray(r.anh)?r.anh:[]))].filter(p=>!LIVE.ks.url[p]);
- for(let i=0;i<need.length;i+=100){const {data:su}=await sb.storage.from('khao-sat').createSignedUrls(need.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)LIVE.ks.url[x.path]=x.signedUrl})}}
+ for(let i=0;i<need.length;i+=100){const {data:su}=await sb.storage.from('khao-sat').createSignedUrls(need.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)LIVE.ks.url[x.path]=x.signedUrl})}
+ // ảnh sổ: chỉ người đăng + Sếp/Trợ lý mới xin link xem
+ const ql=['sep','tro_ly'].includes(LIVE.me.vai_tro);const soCan=[...new Set(LIVE.ks.rows.filter(r=>ql||r.nguoi_tao_id===LIVE.me.id).flatMap(ksSoDs))].filter(p=>!LIVE.ks.url['so:'+p]);
+ for(let i=0;i<soCan.length;i+=100){const {data:su}=await sb.storage.from('so-nha').createSignedUrls(soCan.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)LIVE.ks.url['so:'+x.path]=x.signedUrl})}}
+function ksSoDs(r){const d=Array.isArray(r.anh_so_ds)?r.anh_so_ds:[];return d.length?d:(r.anh_so?[r.anh_so]:[])}
 function ksLamMoi(force){if(!force&&Date.now()-LIVE.ks.t<20000)return;loadKs().then(()=>{if(U.sheet==='survey'||U.sheet==='ksXem'||U.sheet==='hoitruong')render()}).catch(e=>console.warn(e))}
 htKsAll=function(){return (LIVE.ks.rows||[]).map(r=>{const u=S.accts.find(x=>x.id===r.nguoi_tao_id);const sua=r.cap_nhat_luc&&r.tao_luc&&Date.parse(r.cap_nhat_luc)-Date.parse(r.tao_luc)>120000;
- return {key:'r'+r.id,id:r.id,addr:r.dia_chi||'',alley:r.hem_truoc_nha||'',dir:r.huong||'',so:!!r.anh_so,note:r.ghi_chu||'',dac:r.dac_diem||'',manh:r.diem_manh||'',yeu:r.diem_yeu||'',lat:r.vi_do,lng:r.kinh_do,acc:r.do_chinh_xac,
+ return {key:'r'+r.id,id:r.id,addr:r.dia_chi||'',alley:r.hem_truoc_nha||'',dir:r.huong||'',so:ksSoDs(r).length>0,soAnh:ksSoDs(r).map(p=>({path:p,url:LIVE.ks.url['so:'+p]||''})),note:r.ghi_chu||'',dac:r.dac_diem||'',manh:r.diem_manh||'',yeu:r.diem_yeu||'',lat:r.vi_do,lng:r.kinh_do,acc:r.do_chinh_xac,
   anh:(Array.isArray(r.anh)?r.anh:[]).map(p=>({path:p,url:LIVE.ks.url[p]||''})),by:u?u.name:'Anh em',byEmail:u?u.email:'',byId:r.nguoi_tao_id,
   d:r.tao_luc?isoD(new Date(r.tao_luc)):today(),sua:sua?isoD(new Date(r.cap_nhat_luc)):'',drive:{link:r.drive_link||'',st:r.drive_trang_thai||'cho',loi:r.drive_loi||''}}})};
 const _shSurvey=SH.survey;SH.survey=()=>{ksLamMoi(false);return _shSurvey()};
@@ -3474,24 +3480,25 @@ ksDriveRow=(s,a)=>{const adm=a.role==='tl'||a.role==='sep';if(!(adm||s.byEmail==
  if(d.st==='xong')return `<div class="sub" style="margin-top:6px">☁️ Đã lưu Google Drive chính${adm&&d.link?` · <a class="link" href="${esc(d.link)}" target="_blank" rel="noopener">Mở thư mục</a>`:''}</div>`;
  if(d.st==='loi')return `<div class="sub" style="margin-top:6px;color:var(--bad)">⚠️ Chưa lưu được lên Drive: ${esc(d.loi||'')}</div><button class="btn ghost sm" style="margin-top:6px" data-a="ksDrive" data-v="${esc(s.key)}">Lưu lại lên Drive</button>`;
  return `<div class="sub" style="margin-top:6px">☁️ Chờ lưu lên Google Drive chính</div>`};
-ksSave=async(a,d)=>{const uid=LIVE.me.id;busy(true,d.anh.some(x=>x.blob)?'Đang tải hình lên…':'Đang lưu…');
+ksSave=async(a,d)=>{const uid=LIVE.me.id;const SO=d.so||[];busy(true,d.anh.some(x=>x.blob)||SO.some(x=>x.blob)?'Đang tải hình lên…':'Đang lưu…');
  try{const paths=[];let i=0;const st=Date.now();
   for(const x of d.anh){if(x.path){paths.push(x.path);continue}if(!x.blob)continue;const p=uid+'/'+st+'-'+(i++)+'.jpg';
    const {error}=await sb.storage.from('khao-sat').upload(p,x.blob,{contentType:'image/jpeg',upsert:false});if(error)throw error;paths.push(p);LIVE.ks.url[p]=x.url}
-  let soPath=null;if(d.soFile){const b=await ksImgResize(d.soFile,2000,.85);const p=uid+'/so-'+st+'.jpg';const {error}=await sb.storage.from('so-nha').upload(p,b.blob,{contentType:'image/jpeg'});if(error)throw error;soPath=p}
+  const soPaths=[];let j=0;for(const x of SO){if(x.path){soPaths.push(x.path);continue}if(!x.blob)continue;const p=uid+'/so-'+st+'-'+(j++)+'.jpg';const {error}=await sb.storage.from('so-nha').upload(p,x.blob,{contentType:'image/jpeg',upsert:false});if(error)throw error;soPaths.push(p);LIVE.ks.url['so:'+p]=x.url}
   const addr=d.addr.trim();
   const rec={dia_chi:addr,hem_truoc_nha:(d.alley||'').trim()||null,huong:d.dir||null,dac_diem:(d.dac||'').trim()||null,diem_manh:(d.manh||'').trim()||null,diem_yeu:(d.yeu||'').trim()||null,anh:paths,vi_do:d.lat||null,kinh_do:d.lng||null,do_chinh_xac:d.acc||null,link_ban_do:ksMapUrl({addr,lat:d.lat,lng:d.lng})};
-  if(soPath)rec.anh_so=soPath;let id;
+  rec.anh_so_ds=soPaths;rec.anh_so=soPaths[0]||null;let id;
   if(d.id){const old=LIVE.ks.rows.find(r=>r.id===d.id);const {error}=await sb.from('khao_sat_nha').update(rec).eq('id',d.id);if(error)throw error;id=d.id;
-   const bo=(old&&Array.isArray(old.anh)?old.anh:[]).filter(p=>!paths.includes(p)&&p.startsWith(uid+'/'));if(bo.length)sb.storage.from('khao-sat').remove(bo).catch(()=>{})}
+   const bo=(old&&Array.isArray(old.anh)?old.anh:[]).filter(p=>!paths.includes(p)&&p.startsWith(uid+'/'));if(bo.length)sb.storage.from('khao-sat').remove(bo).catch(()=>{});
+   const boSo=(old?ksSoDs(old):[]).filter(p=>!soPaths.includes(p)&&p.startsWith(uid+'/'));if(boSo.length)sb.storage.from('so-nha').remove(boSo).catch(()=>{})}
   else{rec.nguoi_tao_id=uid;const {data,error}=await sb.from('khao_sat_nha').insert(rec).select('id').single();if(error)throw error;id=data.id;
-   a.g.surveys.push({id:'r'+id,addr,alley:rec.hem_truoc_nha||'',dir:d.dir||'',so:!!soPath,d:today(),shared:false})}
+   a.g.surveys.push({id:'r'+id,addr,alley:rec.hem_truoc_nha||'',dir:d.dir||'',so:soPaths.length>0,d:today(),shared:false})}
   await loadKs();
   sb.functions.invoke('khao-sat-drive',{body:{action:'dong_bo',id}}).then(()=>ksLamMoi(true)).catch(()=>{});
  }catch(err){throw new Error(/row-level|permission|policy/i.test(err.message||'')?'Không có quyền sửa căn này':errVi(err))}
  finally{busy(false)}};
 ksDel=async s=>{const {error}=await sb.from('khao_sat_nha').delete().eq('id',s.id);if(error)throw new Error(errVi(error));
- if(LIVE.me&&s.byId===LIVE.me.id){const ps=s.anh.map(x=>x.path).filter(Boolean);if(ps.length)sb.storage.from('khao-sat').remove(ps).catch(()=>{});const a=me();if(a)a.g.surveys=a.g.surveys.filter(x=>x.id!=='r'+s.id)}
+ if(LIVE.me&&s.byId===LIVE.me.id){const ps=s.anh.map(x=>x.path).filter(Boolean);if(ps.length)sb.storage.from('khao-sat').remove(ps).catch(()=>{});const pso=(s.soAnh||[]).map(x=>x.path).filter(Boolean);if(pso.length)sb.storage.from('so-nha').remove(pso).catch(()=>{});const a=me();if(a)a.g.surveys=a.g.surveys.filter(x=>x.id!=='r'+s.id)}
  await loadKs()};
 A.ksDrive=async v=>{const s=ksGet(v);if(!s||LIVE.busy)return;busy(true,'Đang lưu lên Drive…');
  try{const {data,error}=await sb.functions.invoke('khao-sat-drive',{body:{action:'dong_bo',id:s.id}});
