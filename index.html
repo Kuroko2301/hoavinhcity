@@ -2715,7 +2715,7 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
  const imgs=(Array.isArray(bk.images)?bk.images:[]).map((im,i)=>({im,i,ok:!c.hn||c.hn[i]!==false}));const nha=imgs.filter(x=>x.ok);const an=imgs.length-nha.length;
  const loc=[dtkField(bk.location&&bk.location.district)||dtkField(bk.district),dlTc('zone_group',bk.zone_group)||dtkField(bk.agency)].filter(Boolean).join(' - ');
  const fb=dlFb(bk),zl=dlZalo(bk);const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
- const nd=c.loading?`<p class="sub">✨ AI đang đọc tin, lọc nội dung và hình…</p>`:c.bai?`<div class="dlnd">${esc(c.bai)}</div><button class="btn gold full" style="margin-top:8px" data-a="dlCopy">📋 Copy nội dung</button>`:`<div class="note">${c.err?esc(c.err)+'. ':''}Chưa có nội dung AI${sb_co()?'':' (bản demo)'}, đang hiện tin gốc.</div><div class="dlnd">${esc(goc)}</div><button class="btn gold full" style="margin-top:8px" data-a="dlCopy">📋 Copy nội dung</button>`;
+ const nd=c.loading?`<p class="sub">✨ AI đang đọc tin, lọc nội dung và hình…</p>`:c.bai?`<div class="dlnd">${esc(c.bai)}</div>${dlNut(c,nha.length)}`:`<div class="note">${c.err?esc(c.err)+'. ':''}Chưa có nội dung AI${sb_co()?'':' (bản demo)'}, đang hiện tin gốc.</div><div class="dlnd">${esc(goc)}</div>${dlNut(c,nha.length)}`;
  return {t:'🏠 Chi tiết nhà',h:`<b class="dlt" style="display:block">${esc(dtkField(bk.title)||'Tin nhà')}</b>
   <div class="kicker" style="margin:14px 0 6px">Mô tả chi tiết · AI đã lọc</div>${nd}
   ${!c.loading&&c.bai?`<details style="margin-top:8px"><summary class="sub">Xem tin gốc</summary><div class="dlnd sub">${esc(goc)}</div></details>`:''}
@@ -2728,6 +2728,37 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
    <div class="sub">📘 ${fb.link?`<a href="${esc(fb.link)}" target="_blank" rel="noopener">${esc(fb.ten||'Facebook')}</a>`:esc(fb.ten||'')}</div>
    <div class="sub">💬 ${zl?`<a href="https://zalo.me/${esc(zl.replace(/^\+?84/,'0'))}" target="_blank" rel="noopener">Zalo ${esc(zl)}</a>`:''}</div></div></div>
   ${(U.dl&&U.dl.da||{})[c.i]?'<div class="note ok" style="margin-top:12px;text-align:center">✅ Đã thêm vào Kho</div>':`<button class="btn gold full" style="margin-top:12px" data-a="dlAdd" data-v="${c.i}">➕ Thêm căn này vào Kho</button>`}`}};
+function dlNut(c,n){const s=c.shf&&c.shf.length;
+ return `<div class="grid2" style="margin-top:8px"><button class="btn gold" data-a="dlCopy">📋 Copy nội dung</button><button class="btn" data-a="dlTaoMoi" ${c.taoMoi?'disabled':''}>${c.taoMoi?'✨ AI đang viết…':'✨ Tạo mới mô tả'}</button></div>
+ <button class="btn full" style="margin-top:8px;background:#0068FF;color:#fff" data-a="dlShare" ${c.shDang?'disabled':''}>${c.shDang?'⏳ Đang chuẩn bị '+n+' hình…':s?'📲 Gửi qua Zalo ngay ('+s+' hình + bài viết)':'📲 Chia sẻ Zalo (bài viết + '+n+' hình)'}</button>
+ ${c.cu&&c.cu.length>1?`<p class="sub" style="margin-top:6px">Đã có ${c.cu.length} phiên bản mô tả. Bấm “Tạo mới” để AI viết thêm bản khác.</p>`:''}`}
+/* v53: Tạo mới mô tả. Bản thật: trạm dtk-tim-nha viec viet_lai (Gemini, góc nhìn ngẫu nhiên, tránh trùng các bản cũ) */
+const DL_TIEU_DE=['{Q}: CĂN NÀY LÀM NHIỀU NGƯỜI PHẢI TÍNH LẠI CHUYỆN MUA CHUNG CƯ?','AI NÓI {Q} HẾT NHÀ ĐẸP GIÁ HỢP LÝ? XEM CĂN NÀY RỒI HÃY KẾT LUẬN','ĐẦU TƯ HAY ĐỂ Ở? CĂN NÀY Ở {Q} TRẢ LỜI ĐƯỢC CẢ HAI','HIẾM LẮM MỚI CÓ MỘT CĂN NHƯ VẦY Ở {Q}','GIA ĐÌNH TRẺ Ở {Q} ĐANG TÌM CHÍNH LÀ CĂN NÀY?'];
+function dlVietLaiDemo(bai,cu){const ls=String(bai||'').split('\n');const than=ls.slice(1).join('\n');const q=(String(bai).match(/(Quận [^,\n]+|Q\.?\s?\d+|Tân Phú|Bình Tân|Gò Vấp|Tân Bình|Thủ Đức)/i)||['Sài Gòn'])[0];
+ const da=new Set((cu||[]).map(x=>String(x).split('\n')[0]));const ds=DL_TIEU_DE.map(t=>t.replace('{Q}',q.toUpperCase())).filter(t=>!da.has(t));
+ return (ds[Math.floor(Math.random()*ds.length)]||DL_TIEU_DE[0].replace('{Q}',q.toUpperCase()))+'\n'+than}
+A.dlTaoMoi=async()=>{const c=U.dlCt;if(!c||c.taoMoi)return;const bk=c.bk||c.it||{};const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
+ c.cu=c.cu||[c.bai||goc];c.taoMoi=true;render();
+ try{const r=await dtkApi('viet_lai',{id:bk.id||bk._id,cu:c.cu});let moi=r&&r.bai_ai;if(!moi)moi=dlVietLaiDemo(c.bai||goc,c.cu);
+  if(U.dlCt!==c)return;c.bai=moi;c.cu.push(moi);toast('✨ Đã có mô tả mới')}
+ catch(e){toast(e.message||'AI đang bận, thử lại nha')}
+ finally{c.taoMoi=false;if(U.sheet==='dlCt')render()}};
+/* v53: Chia sẻ Zalo: gửi bài viết + tất cả hình nhà trong 1 lần */
+A.dlShare=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const bk=c.bk||c.it||{};const text=c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n');
+ try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
+ const gui=async files=>{let d={files,text};try{if(!navigator.canShare(d))d={files}}catch(e){d={files}}await navigator.share(d);toast('Đã gửi. Nếu Zalo chưa hiện chữ, nhấn giữ ô viết rồi chọn Dán nhé')};
+ if(c.shf&&c.shf.length){try{await gui(c.shf)}catch(e){if(e&&e.name!=='AbortError')toast('Chưa mở được bảng chia sẻ, bấm lại nhé')}return}
+ const list=(bk.images||[]).map((im,i)=>({im,i})).filter(x=>!c.hn||c.hn[x.i]!==false).slice(0,20);
+ if(!list.length){if(navigator.share){navigator.share({text}).catch(()=>{})}else{copy(text)}return}
+ c.shDang=true;render();const files=[];const ten=String(bk.id||'nha').slice(0,20);
+ for(const x of list){try{const b=await dlBlob(dlImgUrl(x.im,true));const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');files.push(new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:b.type||'image/jpeg'}))}catch(e){}}
+ c.shDang=false;
+ if(!files.length){render();toast('Chưa tải được hình, thử lại sau nha');return}
+ let ok=false;try{ok=!!(navigator.canShare&&navigator.canShare({files}))}catch(e){}
+ if(!ok){render();files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+files.length+' hình về máy và chép sẵn bài viết')
+  ;return}
+ c.shf=files;render();
+ try{await gui(files)}catch(e){if(e&&e.name==='AbortError')return;toast('✅ '+files.length+' hình đã sẵn sàng. Bấm nút xanh “Gửi qua Zalo ngay” để mở Zalo nhé')}};
 function sb_co(){try{return typeof sb!=='undefined'&&!!sb}catch(e){return false}}
 A.dlCopy=()=>{const c=U.dlCt;if(!c)return;const bk=c.bk||c.it||{};copy(c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n'))};
 A.dlXem=v=>{const c=U.dlCt;const im=c&&(c.bk||c.it).images[+v];if(im)window.open(dlImgUrl(im,true),'_blank','noopener')};
