@@ -3629,7 +3629,7 @@ postAutoPick=(a,chs,adm)=>{const ks=mxhKenh(a).filter(k=>k.st==='hoat_dong');con
  const ok=k=>vid||!MXH_VID[k.nt];
  return `<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${cong?'<label><input type="checkbox" class="pf" value="cong"><span>🏕️ Cổng trại</span></label>':''}${ks.map(k=>`<label${ok(k)?'':' style="opacity:.55"'}><input type="checkbox" class="pfk" value="${k.id}" data-nt="${k.nt}" ${ok(k)?'':'disabled'} ${ok(k)&&(k.nt==='facebook_page'||k.nt==='tiktok')?'checked':''}><span>${MXH_IC[k.nt]||'🔗'} ${esc(k.ten)}${k.chung&&!adm?' <em>cần duyệt</em>':''}${ok(k)?'':' <em>chỉ đăng video</em>'}</span></label>`).join('')}</div>
  ${ks.length?'':'<div class="note" style="margin-top:6px">Chưa có kênh nào được kết nối. Bấm “🔌 Kết nối mạng xã hội” ở trên nhé.</div>'}</div>`};
-const LST={cho:['Chờ tới giờ',''],cho_duyet:['Chờ duyệt','warn'],dang_dang:['Đang đăng','warn'],xong:['Đã đăng','ok'],loi:['Lỗi, robot sẽ thử lại','bad'],hong:['Lỗi 3 lần','bad'],huy:['Đã huỷ','']};
+const LST={cho:['Chờ tới giờ',''],cho_duyet:['Chờ duyệt','warn'],dang_dang:['Đang đăng','warn'],gui_thang:['Đang gửi video lên YouTube','warn'],xong:['Đã đăng','ok'],loi:['Lỗi, robot sẽ thử lại','bad'],hong:['Lỗi 3 lần','bad'],huy:['Đã huỷ','']};
 const BST={cho_duyet:['Chờ duyệt','warn'],da_hen:['Đã hẹn',''],da_dang:['Đã đăng','ok'],loi:['Có lỗi','bad'],tra_lai:['Bị trả lại','bad']};
 const tgVi=t=>{if(!t)return '';const d=new Date(t);return hhmm(d)+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')};
 function mxhLuot(l,quyen){const k=(LIVE.mxh.kenh||[]).find(x=>x.id===l.kenh_id);const st=LST[l.trang_thai]||[l.trang_thai,''];
@@ -3658,6 +3658,26 @@ A.mxhDuyet=async v=>{const [id,ok]=String(v).split('|');if(LIVE.busy)return;cons
   if(ok==='1')sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:+id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
   await loadMxhBai();toast(ok==='1'?'Đã duyệt, robot đăng ngay hoặc đúng giờ hẹn':'Đã trả lại bài')}
  catch(err){toast(/Chỉ Trợ lý/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);render()}};
+/* v44: gửi video thẳng lên YouTube (Edge Function mxh-gui-thang mở đường gửi 1 lần, chìa vẫn ở máy chủ) */
+function ytTien(p,f){let el=document.getElementById('ytup');if(p<0){if(el)el.remove();window.onbeforeunload=null;return}
+ if(!el){el=document.createElement('div');el.id='ytup';el.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));width:min(92vw,420px);z-index:60;padding:12px 14px;border-radius:18px;background:rgba(30,20,16,.88);color:#fff;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 10px 30px -10px rgba(0,0,0,.6);font-size:13px;line-height:1.4';
+  el.innerHTML='<b>🎬 Đang gửi video lên YouTube · <span id="ytpc">0%</span></b><div style="height:8px;border-radius:6px;background:rgba(255,255,255,.18);margin:8px 0 6px;overflow:hidden"><i id="ytbar" style="display:block;height:100%;width:0;background:linear-gradient(90deg,#F3C24B,#FF6B6B);transition:width .3s"></i></div><span style="opacity:.8">Giữ màn hình app mở cho tới khi xong nha · <span id="ytmb"></span></span>';
+  document.body.appendChild(el);window.onbeforeunload=e=>{e.preventDefault();e.returnValue='';return ''}}
+ const pc=Math.round(p*100),mb=f?f.size/1048576:0;const q=id=>document.getElementById(id);
+ if(q('ytpc'))q('ytpc').textContent=pc+'%';if(q('ytbar'))q('ytbar').style.width=pc+'%';if(q('ytmb')&&f)q('ytmb').textContent=(mb*p).toFixed(0)+' / '+mb.toFixed(0)+' MB'}
+async function ytFnLoi(error,data){let j=data;try{if((!j||!j.loi)&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}return (j&&j.loi)||(error&&errVi(error))||''}
+async function guiThangYt(bai,kenh,f,hen){let wl=null;ytTien(0,f);try{if(navigator.wakeLock)wl=await navigator.wakeLock.request('screen')}catch(e){}
+ const ty=f.type||'video/mp4';
+ try{const {data,error}=await sb.functions.invoke('mxh-gui-thang',{body:{action:'mo_duong',bai_dang_id:bai,kenh_id:kenh,size:f.size,type:ty,hen:hen||null}});
+  if(error||!data||!data.upload_url)throw new Error(await ytFnLoi(error,data)||'Không mở được đường gửi video');
+  const res=await new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('PUT',data.upload_url);x.setRequestHeader('Content-Type',ty);
+   x.upload.onprogress=e=>{if(e.lengthComputable)ytTien(e.loaded/e.total,f)};
+   x.onload=()=>{if(x.status>=200&&x.status<300){try{ok(JSON.parse(x.responseText))}catch(e){ok({})}}else no(new Error('YouTube báo lỗi '+x.status))};
+   x.onerror=()=>no(new Error('Mạng bị ngắt khi đang gửi video, thử lại bằng Wi-Fi nhé'));x.send(f)});
+  if(!res||!res.id)throw new Error('YouTube chưa nhận video');
+  ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,video_id:res.id}});return true}
+ catch(e){try{await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,loi:String(e.message||e)}})}catch(x){}toast('YouTube: '+(e.message||e));return false}
+ finally{ytTien(-1);try{wl&&wl.release()}catch(e){}}}
 const _addPostMxh=A.addPost;
 A.addPost=async()=>{const a=me();const t=val('pc');
  const kids=[...document.querySelectorAll('.pfk:checked')].map(x=>({id:+x.value,nt:x.dataset.nt}));
@@ -3666,23 +3686,27 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  if(w==='hen'){const v=val('pt2');if(!v){toast('Chọn giờ hẹn nhé');return}hen=new Date(v).toISOString()}
  const vid=(U.ploai||'bai_viet')==='video';const inp=document.getElementById('pv');const files=inp&&inp.files?[...inp.files]:[];
  if(vid&&!files.length){toast('Chọn video để robot đăng nhé');return}
- const big=files.find(f=>f.size>50*1024*1024);if(big){toast('File “'+big.name+'” lớn hơn 50MB. Nén video nhỏ lại hoặc quay 720p nhé');return}
+ const ytK=vid?kids.filter(k=>k.nt==='youtube'):[];const khac=kids.filter(k=>!ytK.includes(k));
+ const big=files.find(f=>f.size>50*1024*1024);if(big&&(!vid||khac.length)){toast(vid?'Video trên 50MB chỉ gửi thẳng được lên YouTube. Bỏ chọn kênh khác hoặc chọn video dưới 50MB nhé':'File “'+big.name+'” lớn hơn 50MB nhé');return}
  const hr={};if(w==='gold')kids.forEach(k=>{const ck=MXH_CK[k.nt];if(S.gold[ck])hr[k.id]=new Date(nextGold(ck)).toISOString()});
+ const ytHen={};ytK.forEach(k=>{ytHen[k.id]=hr[k.id]||hen;hr[k.id]='2999-01-01T00:00:00Z'});const luuKho=!vid||khac.length>0;
  const adm=a.role==='tl'||a.role==='sep';const ch=mxhKenh(a);const need=!adm&&kids.some(k=>(ch.find(x=>x.id===k.id)||{}).chung);
  const others=[...document.querySelectorAll('.pf:checked')].length;
  busy(true,files.length?'Đang tải '+files.length+' file lên…':'Đang gửi bài…');
  try{const media=[];let i=0;
-  for(const f of files){const ext=((f.name.split('.').pop()||'').toLowerCase().replace(/[^a-z0-9]/g,''))||(vid?'mp4':'jpg');
+  for(const f of (luuKho?files:[])){const ext=((f.name.split('.').pop()||'').toLowerCase().replace(/[^a-z0-9]/g,''))||(vid?'mp4':'jpg');
    const path=LIVE.me.id+'/'+Date.now()+'-'+(i++)+'.'+ext;
    const {error}=await sb.storage.from('dang-bai').upload(path,f,{contentType:f.type||undefined,upsert:false});if(error)throw error;
    media.push({duong_dan:path,loai:vid?'video':'anh',dung_luong:String(f.size)})}
   const {data:id,error}=await sb.rpc('tao_bai_dang',{p_noi_dung:t,p_loai:vid?'video':'bai_viet',p_kenh_ids:kids.map(k=>k.id),p_hen_gio:hen,p_media:media,p_hen_rieng:hr});if(error)throw error;
   busy(false);
-  if(w==='now')sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
+  if(w==='now'&&khac.length)sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
+  let ytOk=0;if(ytK.length){LIVE.busy=true;try{for(const k of ytK)if(await guiThangYt(id,k.id,files[0],ytHen[k.id]))ytOk++}finally{LIVE.busy=false}}
   if(others){_addPostMxh()}
   else{const ty=vid?'video':'bai';a.g.posts.push({t,pf:kids.map(k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt),at:w==='now'?'':'hẹn',d:today(),ty});
    U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
-  toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
+  if(!ytK.length||khac.length)toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
+  else if(ytOk)toast(w==='now'?'🎬 Video đã lên YouTube!':'🎬 Video đã lên YouTube, tới giờ hẹn YouTube tự công khai');
   await loadMxhBai()}
  catch(err){toast(/nội dung|ít nhất|không phải của bạn|không hợp lệ|Chỉ anh em/.test(err.message||'')?err.message:errVi(err))}
  finally{busy(false);render()}};
