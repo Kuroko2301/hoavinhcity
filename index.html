@@ -2728,9 +2728,13 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
    <div class="sub">📘 ${fb.link?`<a href="${esc(fb.link)}" target="_blank" rel="noopener">${esc(fb.ten||'Facebook')}</a>`:esc(fb.ten||'')}</div>
    <div class="sub">💬 ${zl?`<a href="https://zalo.me/${esc(zl.replace(/^\+?84/,'0'))}" target="_blank" rel="noopener">Zalo ${esc(zl)}</a>`:''}</div></div></div>
   ${(U.dl&&U.dl.da||{})[c.i]?'<div class="note ok" style="margin-top:12px;text-align:center">✅ Đã thêm vào Kho</div>':`<button class="btn gold full" style="margin-top:12px" data-a="dlAdd" data-v="${c.i}">➕ Thêm căn này vào Kho</button>`}`}};
+function dlNhanShare(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!f||!f.length)return '📲 Chia sẻ Zalo (bài viết + '+n+' hình)';
+ const lo=c.lo||10,i=c.shi||0,con=f.length-i;if(con<=0)return '📲 Gửi lại qua Zalo';
+ const k=Math.min(lo,con);if(f.length<=lo)return '📲 Gửi qua Zalo ngay ('+f.length+' hình + bài viết)';
+ return i===0?'📲 Gửi qua Zalo đợt 1 ('+k+'/'+f.length+' hình + bài viết)':'📲 Gửi tiếp '+k+' hình (còn '+con+'/'+f.length+')'}
 function dlNut(c,n){const s=c.shf&&c.shf.length;
  return `<div class="grid2" style="margin-top:8px"><button class="btn gold" data-a="dlCopy">📋 Copy nội dung</button><button class="btn" data-a="dlTaoMoi" ${c.taoMoi?'disabled':''}>${c.taoMoi?'✨ AI đang viết…':'✨ Tạo mới mô tả'}</button></div>
- <button class="btn full" style="margin-top:8px;background:#0068FF;color:#fff" data-a="dlShare" ${c.shDang?'disabled':''}>${c.shDang?'⏳ Đang chuẩn bị '+n+' hình…':s?'📲 Gửi qua Zalo ngay ('+s+' hình + bài viết)':'📲 Chia sẻ Zalo (bài viết + '+n+' hình)'}</button>
+ <button class="btn full" style="margin-top:8px;background:#0068FF;color:#fff" data-a="dlShare" ${c.shDang?'disabled':''}>${dlNhanShare(c,n)}</button>
  ${c.cu&&c.cu.length>1?`<p class="sub" style="margin-top:6px">Đã có ${c.cu.length} phiên bản mô tả. Bấm “Tạo mới” để AI viết thêm bản khác.</p>`:''}`}
 /* v53: Tạo mới mô tả. Bản thật: trạm dtk-tim-nha viec viet_lai (Gemini, góc nhìn ngẫu nhiên, tránh trùng các bản cũ) */
 const DL_TIEU_DE=['{Q}: CĂN NÀY LÀM NHIỀU NGƯỜI PHẢI TÍNH LẠI CHUYỆN MUA CHUNG CƯ?','AI NÓI {Q} HẾT NHÀ ĐẸP GIÁ HỢP LÝ? XEM CĂN NÀY RỒI HÃY KẾT LUẬN','ĐẦU TƯ HAY ĐỂ Ở? CĂN NÀY Ở {Q} TRẢ LỜI ĐƯỢC CẢ HAI','HIẾM LẮM MỚI CÓ MỘT CĂN NHƯ VẦY Ở {Q}','GIA ĐÌNH TRẺ Ở {Q} ĐANG TÌM CHÍNH LÀ CĂN NÀY?'];
@@ -2746,19 +2750,25 @@ A.dlTaoMoi=async()=>{const c=U.dlCt;if(!c||c.taoMoi)return;const bk=c.bk||c.it||
 /* v53: Chia sẻ Zalo: gửi bài viết + tất cả hình nhà trong 1 lần */
 A.dlShare=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const bk=c.bk||c.it||{};const text=c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n');
  try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
- const gui=async files=>{let d={files,text};try{if(!navigator.canShare(d))d={files}}catch(e){d={files}}await navigator.share(d);toast('Đã gửi. Nếu Zalo chưa hiện chữ, nhấn giữ ô viết rồi chọn Dán nhé')};
- if(c.shf&&c.shf.length){try{await gui(c.shf)}catch(e){if(e&&e.name!=='AbortError')toast('Chưa mở được bảng chia sẻ, bấm lại nhé')}return}
- const list=(bk.images||[]).map((im,i)=>({im,i})).filter(x=>!c.hn||c.hn[x.i]!==false).slice(0,20);
+ const guiDot=async tuDong=>{const f=c.shf;if((c.shi||0)>=f.length)c.shi=0;const i=c.shi||0,lo=c.lo||10;const dot=f.slice(i,i+lo);
+  let d=i===0?{files:dot,text}:{files:dot};try{if(!navigator.canShare(d))d={files:dot}}catch(e){d={files:dot}}
+  try{await navigator.share(d)}catch(e){if(e&&e.name==='AbortError')return;if(tuDong){render();toast('✅ '+f.length+' hình đã sẵn sàng. Bấm nút xanh để mở Zalo nhé');return}
+   if(lo>1&&dot.length>1){c.lo=Math.max(1,Math.floor(Math.min(lo,dot.length)/2));render();toast('Điện thoại chưa nhận '+dot.length+' hình một lúc. Bấm lại nút xanh, app gửi '+c.lo+' hình mỗi đợt nhé')}
+   else toast('Chưa mở được bảng chia sẻ ('+((e&&e.name)||'lỗi')+'), bấm lại nhé');return}
+  c.shi=i+dot.length;const con=f.length-c.shi;render();
+  toast(con>0?'Đã gửi '+c.shi+'/'+f.length+' hình. Bấm nút xanh để gửi tiếp '+con+' hình còn lại vào cùng chỗ nhé':'✅ Đã gửi đủ '+f.length+' hình. Nếu Zalo chưa hiện chữ, nhấn giữ ô viết rồi chọn Dán nhé')};
+ if(c.shf&&c.shf.length){await guiDot();return}
+ const list=(bk.images||[]).map((im,i)=>({im,i})).filter(x=>!c.hn||c.hn[x.i]!==false).slice(0,30);
  if(!list.length){if(navigator.share){navigator.share({text}).catch(()=>{})}else{copy(text)}return}
  c.shDang=true;render();const files=[];const ten=String(bk.id||'nha').slice(0,20);
- for(const x of list){try{const b=await dlBlob(dlImgUrl(x.im,true));const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');files.push(new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:b.type||'image/jpeg'}))}catch(e){}}
+ for(const x of list){try{const b=await dlBlob(dlImgUrl(x.im,true));const t=/^image\//.test(b.type)?b.type:'image/jpeg';const ext=(t.split('/')[1]||'jpg').replace('jpeg','jpg');
+  files.push(new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:t}))}catch(e){}}
  c.shDang=false;
  if(!files.length){render();toast('Chưa tải được hình, thử lại sau nha');return}
- let ok=false;try{ok=!!(navigator.canShare&&navigator.canShare({files}))}catch(e){}
- if(!ok){render();files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+files.length+' hình về máy và chép sẵn bài viết')
-  ;return}
- c.shf=files;render();
- try{await gui(files)}catch(e){if(e&&e.name==='AbortError')return;toast('✅ '+files.length+' hình đã sẵn sàng. Bấm nút xanh “Gửi qua Zalo ngay” để mở Zalo nhé')}};
+ let ok=false;try{ok=!!(navigator.canShare&&navigator.canShare({files:files.slice(0,1)}))}catch(e){}
+ if(!ok){render();files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+files.length+' hình về máy và chép sẵn bài viết');return}
+ c.shf=files;c.shi=0;c.lo=10;render();
+ try{await guiDot(true)}catch(e){toast('✅ Hình đã sẵn sàng. Bấm nút xanh để mở Zalo nhé')}};
 function sb_co(){try{return typeof sb!=='undefined'&&!!sb}catch(e){return false}}
 A.dlCopy=()=>{const c=U.dlCt;if(!c)return;const bk=c.bk||c.it||{};copy(c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n'))};
 A.dlXem=v=>{const c=U.dlCt;const im=c&&(c.bk||c.it).images[+v];if(im)window.open(dlImgUrl(im,true),'_blank','noopener')};
