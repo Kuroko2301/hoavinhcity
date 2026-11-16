@@ -3695,7 +3695,7 @@ async function guiThangTt(bai,kenh,f,tt){let wl=null;window._upTen='TikTok';ytTi
    const q=new URLSearchParams({action:'tt_khuc',bai_dang_id:bai,kenh_id:kenh,tu:String(tu),tong:String(f.size),type:ty,u:data.upload_url});
    const qq=q.toString();const qs=Object.assign(new String(qq),{_tk:tk});
    let lan=0;for(;;){try{await guiKhucTt(qs,f.slice(tu,den),tu,f);break}catch(e){if(++lan>=3)throw e;await new Promise(r=>setTimeout(r,2000*lan))}}}
-  ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,publish_id:data.publish_id,rieng:!!data.rieng,nhap:!!data.nhap}});ttTheoDoi(kenh,data.publish_id);return {ok:true,rieng:!!data.rieng,nhap:!!data.nhap}}
+  ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,publish_id:data.publish_id,rieng:!!data.rieng,nhap:!!data.nhap,ly_do:data.ly_do||''}});ttTheoDoi(kenh,data.publish_id);return {ok:true,rieng:!!data.rieng,nhap:!!data.nhap}}
  catch(e){try{await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,loi:String(e.message||e)}})}catch(x){}toast('TikTok: '+(e.message||e));return {ok:false}}
  finally{ytTien(-1);window._upTen='';try{wl&&wl.release()}catch(e){}}}
 /* v49: khung Đăng lên TikTok theo luật TikTok */
