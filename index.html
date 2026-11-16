@@ -3697,6 +3697,16 @@ async function guiThangTt(bai,kenh,f){let wl=null;window._upTen='TikTok';ytTien(
   ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,publish_id:data.publish_id,rieng:!!data.rieng}});return {ok:true,rieng:!!data.rieng}}
  catch(e){try{await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,loi:String(e.message||e)}})}catch(x){}toast('TikTok: '+(e.message||e));return {ok:false}}
  finally{ytTien(-1);window._upTen='';try{wl&&wl.release()}catch(e){}}}
+/* v46: chọn TikTok thì không hẹn giờ được */
+function ttKhoaGio(){const bt=[...document.querySelectorAll('[data-a="pwhen"]')];if(!bt.length)return;
+ const tt=!!document.querySelector('.pfk[data-nt="tiktok"]:checked');
+ if(tt&&(U.pwhen||'now')!=='now'){U.pdraft=val('pc');U.pwhen='now';render();return}
+ bt.forEach(b=>{if(b.dataset.v==='now')return;b.disabled=tt;b.style.opacity=tt?'.4':'';b.style.pointerEvents=tt?'none':''});
+ const box=bt[0].parentNode;let n=document.getElementById('ttgio');
+ if(tt&&!n){n=document.createElement('div');n.id='ttgio';n.className='sub';n.style.marginTop='6px';n.textContent='🎵 TikTok chưa cho lên lịch nên chỉ đăng ngay được. Muốn hẹn giờ thì bỏ chọn TikTok nhé.';box.after(n)}
+ else if(!tt&&n)n.remove()}
+document.addEventListener('change',e=>{if(e.target&&e.target.classList&&e.target.classList.contains('pfk'))ttKhoaGio()});
+{let ttRaf=0;new MutationObserver(()=>{if(ttRaf)return;ttRaf=requestAnimationFrame(()=>{ttRaf=0;ttKhoaGio()})}).observe(document.documentElement,{childList:true,subtree:true})}
 const _addPostMxh=A.addPost;
 A.addPost=async()=>{const a=me();const t=val('pc');
  const kids=[...document.querySelectorAll('.pfk:checked')].map(x=>({id:+x.value,nt:x.dataset.nt}));
