@@ -2349,14 +2349,16 @@ const CH=[
 const chOf=k=>CH.find(c=>c.k===k);
 /* ===== v30: Kết nối mạng xã hội (demo giả lập; bản thật nối Supabase: mxh-ket-noi, mxh-dang-bai) ===== */
 let mxhThat=false;
-const MXH=[{nt:'facebook_page',ic:'📘',n:'Trang Facebook của phòng',chung:1,dang:'chữ, ảnh, video'},
+const MXH=[{nt:'facebook_page',ic:'📘',n:'Trang Facebook của bạn',chung:0,dang:'chữ, ảnh, video (Trang/Fanpage bạn quản trị)'},
+ {nt:'instagram',ic:'📸',n:'Instagram của bạn',chung:0,dang:'ảnh, nhiều ảnh, video Reels (cần tài khoản Chuyên nghiệp)'},
+ {nt:'threads',ic:'🧵',n:'Threads của bạn',chung:0,dang:'chữ (tối đa 500 ký tự), ảnh, video'},
  {nt:'youtube',ic:'▶️',n:'YouTube của phòng',chung:1,dang:'video'},
  {nt:'zalo_oa',ic:'💬',n:'Zalo OA của phòng',chung:1,dang:'bài viết có ảnh bìa'},
  {nt:'tiktok',ic:'🎵',n:'TikTok của bạn',chung:0,dang:'video'},
  {nt:'youtube',ic:'▶️',n:'YouTube của bạn',chung:0,dang:'video'},
  {nt:'zalo_oa',ic:'💬',n:'Zalo OA của bạn',chung:0,dang:'bài viết có ảnh bìa'}];
-const MXH_CK={facebook_page:'fbpage',youtube:'youtube',zalo_oa:'zalooa',tiktok:'tiktok'};
-const MXH_IC={facebook_page:'📘',youtube:'▶️',zalo_oa:'💬',tiktok:'🎵'};
+const MXH_CK={facebook_page:'fbpage',youtube:'youtube',zalo_oa:'zalooa',tiktok:'tiktok',instagram:'insta',threads:'threads'};
+const MXH_IC={facebook_page:'📘',youtube:'▶️',zalo_oa:'💬',tiktok:'🎵',instagram:'📸',threads:'🧵'};
 let mxhKenh=a=>{S.mxhDemo=S.mxhDemo||[];return S.mxhDemo.filter(k=>k.chung||k.email===a.email)};
 let mxhCfg=()=>null;
 let postAutoPick=(a,chs,adm)=>`<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${chs.filter(c=>c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbpage'||c.k==='tiktok'?'checked':''}><span>${c.ic} ${c.n}${c.chung&&c.k!=='cong'&&!adm?' <em>cần duyệt</em>':''}</span></label>`).join('')}</div></div>`;
@@ -2371,8 +2373,8 @@ SH.mxh=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const ks=mxhKen
   ${can&&ok?`<button class="btn ${mine.length?'ghost':'gold'} sm" data-a="mxhKetNoi" data-v="${m.nt}|${m.chung?1:0}">${mine.length?'Kết nối lại':'Kết nối'}</button>`:''}</div>`};
  return {t:'Kết nối mạng xã hội',h:`<p class="sub">Kết nối một lần, robot tự đăng bài đúng giờ. Chìa khoá cất kín trên máy chủ, app và anh em không nhìn thấy.</p>
  <div class="card" style="margin-top:10px"><h2 class="h2">🙋 Kết nối tài khoản cá nhân</h2><p class="sub" style="margin:2px 0 4px">Mỗi anh em tự đăng nhập tài khoản mạng xã hội của riêng mình. AI soạn sẵn bài viết, video và robot đăng lên đúng tài khoản của bạn. Không ai khác thấy hay dùng được tài khoản này.</p>${MXH.filter(m=>!m.chung).map(row).join('')}
-  <div class="li" style="align-items:flex-start"><span class="chic">📲</span><div class="grow"><b>Facebook cá nhân, Zalo cá nhân</b><div class="sub">Đăng bằng Chia sẻ 1 chạm. Facebook và Zalo không cho app đăng thay vào trang cá nhân, Nhóm hay Messenger, nên AI soạn sẵn nội dung, bạn chỉ cần chạm chia sẻ là xong.</div></div></div></div>
- <div class="note">${mxhThat?'YouTube đăng Công khai ngay, hẹn giờ thì YouTube tự công khai đúng giờ. TikTok: khi TikTok chưa duyệt ứng dụng, video tạm đăng ở chế độ riêng tư.':'Bản demo: bấm Kết nối là giả lập. Bản thật mở trang đăng nhập của Facebook, Google, Zalo, TikTok.'}</div>`}};
+  <div class="li" style="align-items:flex-start"><span class="chic">📲</span><div class="grow"><b>Trang cá nhân Facebook, Nhóm, Zalo cá nhân</b><div class="sub">Đăng bằng Chia sẻ 1 chạm. Facebook và Zalo không cho app đăng thay vào trang cá nhân, Nhóm hay Messenger, nên AI soạn sẵn nội dung, bạn chỉ cần chạm chia sẻ là xong.</div></div></div></div>
+ <div class="note">${mxhThat?'YouTube đăng Công khai ngay, hẹn giờ thì YouTube tự công khai đúng giờ. TikTok: khi TikTok chưa duyệt ứng dụng, video tạm đăng ở chế độ riêng tư. Instagram cần kèm ảnh hoặc video. Threads chỉ nhận 500 ký tự đầu của bài.':'Bản demo: bấm Kết nối là giả lập. Bản thật mở trang đăng nhập của Facebook, Instagram, Threads, Google, Zalo, TikTok.'}</div>`}};
 A.mxhKetNoi=v=>{const a=me();const [nt,c]=String(v).split('|');const m=MXH.find(x=>x.nt===nt&&String(x.chung)===c);S.mxhDemo=S.mxhDemo||[];
  S.mxhDemo=S.mxhDemo.filter(k=>!(k.nt===nt&&String(k.chung)===c&&(k.chung||k.email===a.email)));
  S.mxhDemo.push({id:'d'+Date.now(),nt,chung:c==='1'?1:0,email:a.email,ten:(m?m.n:nt)+' (demo)',st:'hoat_dong'});save();render();toast('Đã kết nối (giả lập)')};
@@ -2382,7 +2384,7 @@ const CST={cho:['Chờ tới giờ',''],gui:['Đang gửi','warn'],ok:['Thành c
 const PST={duyet:['Chờ duyệt','warn'],tra:['Bị trả lại','bad'],hen:['Đã hẹn',''],dang:['Đang đăng','warn'],xong:['Xong','ok'],loi:['Có lỗi','bad'],go:['Đã gỡ','']};
 const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 (function migPost(){
-  S.gold=S.gold||{cong:'07:30',fbpage:'11:30',tiktok:'20:00',youtube:'19:00',zalooa:'08:00',insta:'12:00'};
+  S.gold=S.gold||{cong:'07:30',fbpage:'11:30',tiktok:'20:00',youtube:'19:00',zalooa:'08:00',insta:'12:00'};if(!S.gold.threads)S.gold.threads='21:00';
   S.media=S.media||[{id:'m1',link:'https://facebook.com/hoavinh/posts/demo-101',who:'Anh Huy',email:'',d:today(),st:'cho',why:''},{id:'m2',link:'https://tiktok.com/@hoavinh/video/demo-88',who:'Chị Thu Hương',email:'thuhuong.ctv@gmail.com',d:today(),st:'ok',why:''}];
   S.thuong=S.thuong||{};
   if(!S.bai){const n=Date.now();S.bai=[
@@ -3705,7 +3707,7 @@ afterLogin=async function(fresh){await _afterLoginMxh(fresh);
 const MXH_VID={youtube:1,tiktok:1};
 postAutoPick=(a,chs,adm)=>{const ks=mxhKenh(a).filter(k=>k.st==='hoat_dong');const vid=(U.ploai||'bai_viet')==='video';const cong=chs.some(c=>c.k==='cong');
  const ok=k=>vid||!MXH_VID[k.nt];
- return `<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${cong?'<label><input type="checkbox" class="pf" value="cong"><span>🏕️ Cổng trại</span></label>':''}${ks.map(k=>`<label${ok(k)?'':' style="opacity:.55"'}><input type="checkbox" class="pfk" value="${k.id}" data-nt="${k.nt}" ${ok(k)?'':'disabled'} ${ok(k)&&(k.nt==='facebook_page'||k.nt==='tiktok'||(vid&&k.nt==='youtube'))?'checked':''}><span>${MXH_IC[k.nt]||'🔗'} ${esc(k.ten)}${k.chung&&!adm?' <em>cần duyệt</em>':''}${ok(k)?'':' <em>chỉ đăng video</em>'}</span></label>`).join('')}</div>
+ return `<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${cong?'<label><input type="checkbox" class="pf" value="cong"><span>🏕️ Cổng trại</span></label>':''}${ks.map(k=>`<label${ok(k)?'':' style="opacity:.55"'}><input type="checkbox" class="pfk" value="${k.id}" data-nt="${k.nt}" ${ok(k)?'':'disabled'} ${ok(k)&&(k.nt==='facebook_page'||k.nt==='tiktok'||k.nt==='threads'||(vid&&(k.nt==='youtube'||k.nt==='instagram')))?'checked':''}><span>${MXH_IC[k.nt]||'🔗'} ${esc(k.ten)}${k.chung&&!adm?' <em>cần duyệt</em>':''}${ok(k)?'':' <em>chỉ đăng video</em>'}</span></label>`).join('')}</div>
  ${ks.length?'':'<div class="note" style="margin-top:6px">Chưa có kênh nào được kết nối. Bấm “🔌 Kết nối mạng xã hội” ở trên nhé.</div>'}</div>`};
 const LST={cho:['Chờ tới giờ',''],cho_duyet:['Chờ duyệt','warn'],dang_dang:['Đang đăng','warn'],gui_thang:['Đang gửi video','warn'],xong:['Đã đăng','ok'],loi:['Lỗi, robot sẽ thử lại','bad'],hong:['Lỗi 3 lần','bad'],huy:['Đã huỷ','']};
 const BST={cho_duyet:['Chờ duyệt','warn'],da_hen:['Đã hẹn',''],da_dang:['Đã đăng','ok'],loi:['Có lỗi','bad'],tra_lai:['Bị trả lại','bad']};
@@ -3852,6 +3854,7 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  if(w==='hen'){const v=val('pt2');if(!v){toast('Chọn giờ hẹn nhé');return}hen=new Date(v).toISOString()}
  const vid=(U.ploai||'bai_viet')==='video';const inp=document.getElementById('pv');const files=inp&&inp.files?[...inp.files]:[];
  if(vid&&!files.length){toast('Chọn video để robot đăng nhé');return}
+ if(!files.length&&kids.some(k=>k.nt==='instagram')){toast('Instagram cần kèm ít nhất 1 ảnh hoặc video. Thêm ảnh hoặc bỏ chọn Instagram nhé');return}
  const ytK=vid?kids.filter(k=>k.nt==='youtube'):[];const ttK=vid&&w==='now'?kids.filter(k=>k.nt==='tiktok'):[];const khac=kids.filter(k=>!ytK.includes(k)&&!ttK.includes(k));
  if(ttK.length){const l=ttLoiNut();if(l){toast(l);return}}
  const ttCai={title:TT.title||'',privacy:TT.privacy,comment:TT.cmt,duet:TT.duet,stitch:TT.stitch,own:TT.com&&TT.own,bc:TT.com&&TT.bc};
