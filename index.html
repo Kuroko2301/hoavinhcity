@@ -2420,7 +2420,7 @@ SH.post=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const seg=U.se
   <div class="picks">${[['bai_viet','📝 Bài viết'],['video','🎬 Video']].map(([k,l])=>`<button class="${(U.ploai||'bai_viet')===k?'on':''}" data-a="ploai" data-v="${k}">${l}</button>`).join('')}</div>
   <label class="f" for="pc">Nội dung<textarea class="in" id="pc" placeholder="Nhà phố hẻm xe hơi Tân Phú, 4x16m...">${esc(U.pdraft||'')}</textarea></label>
   <button class="btn ghost sm" data-a="pAi">✨ AI gợi ý viết lại</button>
-  <label class="f" for="pv">${(U.ploai||'bai_viet')==='video'?'Video (lưu Google Drive, app chỉ giữ link)':'Ảnh (không bắt buộc)'}<input class="in" id="pv" type="file" accept="${(U.ploai||'bai_viet')==='video'?'video/*':'image/*'}" ${(U.ploai||'bai_viet')==='video'?'':'multiple'}></label>
+  <label class="f" for="pv">${(U.ploai||'bai_viet')==='video'?'Video (gửi thẳng lên mạng xã hội, giữ nguyên độ nét)':'Ảnh (không bắt buộc)'}<input class="in" id="pv" type="file" accept="${(U.ploai||'bai_viet')==='video'?'video/*':'image/*'}" ${(U.ploai||'bai_viet')==='video'?'':'multiple'}></label>
   <label class="row sub" style="align-items:flex-start"><input type="checkbox" id="pmd" style="margin-top:3px"><span>Bài có dùng <b>Media của phòng</b> (link tự gửi Minh để tính điểm)</span></label>
   ${postAutoPick(a,chs,adm)}
   <div><div class="sub" style="font-weight:800;margin-bottom:6px">📲 Chia sẻ 1 chạm <span style="font-weight:600">(nền tảng không cho đăng tự động)</span></div><div class="chpick">${chs.filter(c=>!c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbme'?'checked':''}><span>${c.ic} ${c.n}</span></label>`).join('')}</div></div>
