@@ -3695,7 +3695,7 @@ async function guiThangTt(bai,kenh,f){let wl=null;window._upTen='TikTok';ytTien(
    const q=new URLSearchParams({action:'tt_khuc',bai_dang_id:bai,kenh_id:kenh,tu:String(tu),tong:String(f.size),type:ty,u:data.upload_url});
    const qq=q.toString();const qs=Object.assign(new String(qq),{_tk:tk});
    let lan=0;for(;;){try{await guiKhucTt(qs,f.slice(tu,den),tu,f);break}catch(e){if(++lan>=3)throw e;await new Promise(r=>setTimeout(r,2000*lan))}}}
-  ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,publish_id:data.publish_id,rieng:!!data.rieng}});return {ok:true,rieng:!!data.rieng}}
+  ytTien(1,f);await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,publish_id:data.publish_id,rieng:!!data.rieng,nhap:!!data.nhap}});return {ok:true,rieng:!!data.rieng,nhap:!!data.nhap}}
  catch(e){try{await sb.functions.invoke('mxh-gui-thang',{body:{action:'ghi',bai_dang_id:bai,kenh_id:kenh,loi:String(e.message||e)}})}catch(x){}toast('TikTok: '+(e.message||e));return {ok:false}}
  finally{ytTien(-1);window._upTen='';try{wl&&wl.release()}catch(e){}}}
 /* v46: chọn TikTok thì không hẹn giờ được */
@@ -3732,14 +3732,14 @@ A.addPost=async()=>{const a=me();const t=val('pc');
   busy(false);
   if(w==='now'&&khac.length)sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
   let ytOk=0;if(ytK.length){LIVE.busy=true;try{for(const k of ytK)if(await guiThangYt(id,k.id,files[0],ytHen[k.id]))ytOk++}finally{LIVE.busy=false}}
-  let ttOk=0,ttRieng=false;if(ttK.length){LIVE.busy=true;try{for(const k of ttK){const r=await guiThangTt(id,k.id,files[0]);if(r.ok){ttOk++;ttRieng=ttRieng||r.rieng}}}finally{LIVE.busy=false}}
+  let ttOk=0,ttRieng=false,ttNhap=false;if(ttK.length){LIVE.busy=true;try{for(const k of ttK){const r=await guiThangTt(id,k.id,files[0]);if(r.ok){ttOk++;ttRieng=ttRieng||r.rieng;ttNhap=ttNhap||r.nhap}}}finally{LIVE.busy=false}}
   if(others){_addPostMxh()}
   else{const ty=vid?'video':'bai';a.g.posts.push({t,pf:kids.map(k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt),at:w==='now'?'':'hẹn',d:today(),ty});
    U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
   const thang=[...ytK,...ttK];
   if(!thang.length||khac.length)toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
   else if(ytOk||ttOk){const ten=[ytOk?'YouTube':'',ttOk?'TikTok':''].filter(Boolean).join(' và ');
-   toast('🎬 Video đã lên '+ten+'!'+(ytOk&&w!=='now'?' Tới giờ hẹn YouTube tự công khai.':'')+(ttRieng?' TikTok đang để “Chỉ mình tôi” vì ứng dụng chưa được duyệt.':''))}
+   toast('🎬 Video đã lên '+ten+'!'+(ytOk&&w!=='now'?' Tới giờ hẹn YouTube tự công khai.':'')+(ttRieng?' TikTok đang để “Chỉ mình tôi” vì ứng dụng chưa được duyệt.':'')+(ttNhap?' 📥 TikTok: mở app TikTok, bấm thông báo video mới rồi bấm Đăng là công khai nha.':''))}
   await loadMxhBai()}
  catch(err){toast(/nội dung|ít nhất|không phải của bạn|không hợp lệ|Chỉ anh em/.test(err.message||'')?err.message:errVi(err))}
  finally{busy(false);render()}};
