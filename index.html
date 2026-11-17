@@ -282,7 +282,7 @@ main.enter .stack>*:nth-child(2){animation-delay:.04s}main.enter .stack>*:nth-ch
 .chpick input:focus-visible+span{outline:3px solid var(--gold);outline-offset:2px}
 .pcard{border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px;background:var(--card)}
 .chrow{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px dashed var(--line)}
-.chic{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:15px}
+.chic{width:30px;height:30px;border-radius:9px;background:var(--soft);display:grid;place-items:center;flex-shrink:0;font-size:15px}.mxlg{width:18px;height:18px;display:inline-block;vertical-align:-4px;flex-shrink:0}.chic .mxlg{width:22px;height:22px}
 .btn.mess{background:linear-gradient(135deg,#00B2FF,#A033FF);color:#fff}
 .campdots{display:flex;gap:8px;margin:10px 0 6px}.campdots i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:13px;background:rgba(255,255,255,.15);color:#F8E6D2;border:1.5px dashed rgba(255,255,255,.4)}
 .campdots i.on{background:var(--gold);color:var(--red2);border:none;animation:pop .35s ease}
@@ -2342,10 +2342,11 @@ document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.dtkanh||
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.tc||!el.files||!el.files[0])return;const file=el.files[0];loadXlsx(()=>{const fr=new FileReader();fr.onload=()=>{let rows=0;try{const wb=XLSX.read(fr.result,{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:''}).filter(r=>r.some(c=>String(c).trim())).length}catch(err){}S.thuchi={file:file.name,rows:rows,at:today()};save();render();toast('Đã nhập file thu chi vào máy này')};fr.readAsArrayBuffer(file)})});
 
 /* ===== v11: Đăng bài đa nền tảng (theo sơ đồ) ===== */
+const MXH_SVG={"fb": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"12\" fill=\"#1877F2\"/><path fill=\"#fff\" d=\"M13.4 24v-8.4h2.8l.4-3.3h-3.2v-2.1c0-.9.3-1.6 1.6-1.6h1.7V5.7c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.2v3.3H10V24z\"/></svg>", "ig": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><defs><radialGradient id=\"mxIg\" cx=\"30%\" cy=\"107%\" r=\"150%\"><stop offset=\"0\" stop-color=\"#fdf497\"/><stop offset=\".08\" stop-color=\"#fdf497\"/><stop offset=\".45\" stop-color=\"#fd5949\"/><stop offset=\".6\" stop-color=\"#d6249f\"/><stop offset=\".9\" stop-color=\"#285AEB\"/></radialGradient></defs><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"url(#mxIg)\"/><rect x=\"5\" y=\"5\" width=\"14\" height=\"14\" rx=\"4.2\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"12\" cy=\"12\" r=\"3.3\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.8\"/><circle cx=\"16.3\" cy=\"7.7\" r=\"1.05\" fill=\"#fff\"/></svg>", "th": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><path fill=\"none\" stroke=\"#fff\" stroke-width=\"1.9\" stroke-linecap=\"round\" d=\"M15.6 11.2c-.4-2.2-1.9-3.3-3.8-3.3-2.4 0-4 1.9-4 4.4 0 2.7 1.6 4.6 4.3 4.6 2.6 0 4.3-1.6 4.3-3.6 0-1.6-1.2-2.5-2.9-2.5-1.6 0-2.6.8-2.6 1.9 0 1 .8 1.6 1.9 1.6 1.6 0 2.3-1.3 2.3-3.4\"/></svg>", "tt": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#000\"/><path fill=\"#25F4EE\" d=\"M10.2 10.6v-.8a5 5 0 1 0 3.9 4.9V8.6a6 6 0 0 0 3.4 1.1V7.6a3.5 3.5 0 0 1-3.4-3.5h-2.2v10.4a2.1 2.1 0 1 1-1.7-2.1z\" transform=\"translate(-.6 -.4)\"/><path fill=\"#FE2C55\" d=\"M10.2 10.6v-.8a5 5 0 1 0 3.9 4.9V8.6a6 6 0 0 0 3.4 1.1V7.6a3.5 3.5 0 0 1-3.4-3.5h-2.2v10.4a2.1 2.1 0 1 1-1.7-2.1z\" transform=\"translate(.6 .4)\"/><path fill=\"#fff\" d=\"M10.2 10.6v-.8a5 5 0 1 0 3.9 4.9V8.6a6 6 0 0 0 3.4 1.1V7.6a3.5 3.5 0 0 1-3.4-3.5h-2.2v10.4a2.1 2.1 0 1 1-1.7-2.1z\"/></svg>", "yt": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><rect y=\"3.5\" width=\"24\" height=\"17\" rx=\"5\" fill=\"#FF0000\"/><path fill=\"#fff\" d=\"M9.6 8.4v7.2l6.2-3.6z\"/></svg>", "zl": "<svg class=\"mxlg\" viewBox=\"0 0 24 24\"><rect width=\"24\" height=\"24\" rx=\"6\" fill=\"#0068FF\"/><text x=\"12\" y=\"15.4\" text-anchor=\"middle\" font-family=\"Arial,Helvetica,sans-serif\" font-weight=\"700\" font-size=\"8.4\" fill=\"#fff\">Zalo</text></svg>"};
 const CH=[
- {k:'cong',n:'Cổng trại',ic:'🏕️',auto:1,chung:1},{k:'fbpage',n:'Trang FB chung',ic:'📘',auto:1,chung:1},{k:'tiktok',n:'TikTok của bạn',ic:'🎵',auto:1},
- {k:'youtube',n:'YouTube phòng',ic:'▶️',auto:1,chung:1},{k:'zalooa',n:'Zalo OA phòng',ic:'💬',auto:1,chung:1},{k:'insta',n:'Instagram',ic:'📸',auto:1},
- {k:'fbme',n:'FB cá nhân',ic:'👤',auto:0},{k:'fbgroup',n:'Nhóm Facebook',ic:'👥',auto:0},{k:'zalome',n:'Zalo cá nhân',ic:'🗨️',auto:0},{k:'mess',n:'Messenger',ic:'💌',auto:0}];
+ {k:'cong',n:'Cổng trại',ic:'🏕️',auto:1,chung:1},{k:'fbpage',n:'Trang FB chung',ic:MXH_SVG.fb,auto:1,chung:1},{k:'tiktok',n:'TikTok của bạn',ic:MXH_SVG.tt,auto:1},
+ {k:'youtube',n:'YouTube phòng',ic:MXH_SVG.yt,auto:1,chung:1},{k:'zalooa',n:'Zalo OA phòng',ic:MXH_SVG.zl,auto:1,chung:1},{k:'insta',n:'Instagram',ic:MXH_SVG.ig,auto:1},
+ {k:'fbme',n:'FB cá nhân',ic:MXH_SVG.fb,auto:0},{k:'fbgroup',n:'Nhóm Facebook',ic:'👥',auto:0},{k:'zalome',n:'Zalo cá nhân',ic:MXH_SVG.zl,auto:0},{k:'mess',n:'Messenger',ic:'💌',auto:0}];
 const chOf=k=>CH.find(c=>c.k===k);
 /* ===== v30: Kết nối mạng xã hội (demo giả lập; bản thật nối Supabase: mxh-ket-noi, mxh-dang-bai) ===== */
 let mxhThat=false;
@@ -2358,7 +2359,7 @@ const MXH=[{nt:'facebook_page',ic:'📘',n:'Trang Facebook của bạn',chung:0,
  {nt:'youtube',ic:'▶️',n:'YouTube của bạn',chung:0,dang:'video'},
  {nt:'zalo_oa',ic:'💬',n:'Zalo OA của bạn',chung:0,dang:'bài viết có ảnh bìa'}];
 const MXH_CK={facebook_page:'fbpage',youtube:'youtube',zalo_oa:'zalooa',tiktok:'tiktok',instagram:'insta',threads:'threads'};
-const MXH_IC={facebook_page:'📘',youtube:'▶️',zalo_oa:'💬',tiktok:'🎵',instagram:'📸',threads:'🧵'};
+const MXH_IC={facebook_page:MXH_SVG.fb,youtube:MXH_SVG.yt,zalo_oa:MXH_SVG.zl,tiktok:MXH_SVG.tt,instagram:MXH_SVG.ig,threads:MXH_SVG.th};
 let mxhKenh=a=>{S.mxhDemo=S.mxhDemo||[];return S.mxhDemo.filter(k=>k.chung||k.email===a.email)};
 let mxhCfg=()=>null;
 let postAutoPick=(a,chs,adm)=>`<div><div class="sub" style="font-weight:800;margin-bottom:6px">🤖 Robot tự đăng</div><div class="chpick">${chs.filter(c=>c.auto).map(c=>`<label><input type="checkbox" class="pf" value="${c.k}" ${c.k==='fbpage'||c.k==='tiktok'?'checked':''}><span>${c.ic} ${c.n}${c.chung&&c.k!=='cong'&&!adm?' <em>cần duyệt</em>':''}</span></label>`).join('')}</div></div>`;
@@ -2366,7 +2367,7 @@ let postServerMine=a=>'';
 let postServerQl=a=>'';
 SH.mxh=()=>{const a=me();const adm=a.role==='tl'||a.role==='sep';const ks=mxhKenh(a);const cfg=mxhCfg();
  const row=m=>{const mine=ks.filter(k=>k.nt===m.nt&&!!k.chung===!!m.chung);const ok=!cfg||!!cfg[m.nt];const can=m.chung?adm:true;
-  return `<div class="li" style="align-items:flex-start"><span class="chic">${m.ic}</span><div class="grow"><b>${m.n}</b><div class="sub">Robot đăng được: ${m.dang}</div>
+  return `<div class="li" style="align-items:flex-start"><span class="chic">${MXH_IC[m.nt]||m.ic}</span><div class="grow"><b>${m.n}</b><div class="sub">Robot đăng được: ${m.dang}</div>
   ${mine.map(k=>`<div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><span class="pill ${k.st==='hoat_dong'?'ok':'bad'}">${k.st==='hoat_dong'?'✓ '+esc(k.ten):'Cần kết nối lại · '+esc(k.ten)}</span>${can?`<button class="btn ghost sm" data-a="mxhNgat" data-v="${esc(String(k.id))}">Ngắt</button>`:''}</div>${k.loi?`<div class="sub" style="color:#B3261E;margin-top:4px">${esc(k.loi)}</div>`:''}`).join('')}
   ${!mine.length&&!can?'<div class="sub" style="margin-top:4px">Chưa kết nối. Sếp hoặc Trợ lý kết nối kênh chung.</div>':''}
   ${!ok?'<div class="sub" style="margin-top:4px">⚙️ Chưa cài khoá ứng dụng. Trợ lý làm theo hướng dẫn kết nối mạng xã hội.</div>':''}</div>
