@@ -3848,10 +3848,35 @@ function ttKhoaGio(){const bt=[...document.querySelectorAll('[data-a="pwhen"]')]
  else if(!tt&&n)n.remove()}
 document.addEventListener('change',e=>{if(e.target&&e.target.classList&&e.target.classList.contains('pfk')){ttKhoaGio();ttDam()}});
 {let ttRaf=0;new MutationObserver(()=>{if(ttRaf)return;ttRaf=requestAnimationFrame(()=>{ttRaf=0;ttKhoaGio();ttDam()})}).observe(document.documentElement,{childList:true,subtree:true})}
+/* v60: Bảng trạng thái đăng bài (từng bước, từng kênh) + khoá nút Đăng khi đang gửi */
+window.TDB=null;
+function tdbKhoaNut(){document.querySelectorAll('[data-a="addPost"]').forEach(b=>{if(LIVE.dangGui){if(!b.disabled){b.disabled=true;b.dataset.cu=b.textContent;b.textContent='⏳ Đang gửi bài…';b.style.opacity='.55'}}else if(b.disabled&&b.dataset.cu){b.disabled=false;b.textContent=b.dataset.cu;b.style.opacity=''}})}
+{let r=0;new MutationObserver(()=>{if(r)return;r=requestAnimationFrame(()=>{r=0;tdbKhoaNut()})}).observe(document.documentElement,{childList:true,subtree:true})}
+const TDB_ST={cho:['Chờ',''],dang:['Đang gửi','warn'],robot:['Robot đang đăng','warn'],xly:['Đang xử lý','warn'],hen:['Đã hẹn giờ','ok'],xong:['Đã đăng','ok'],kho:['Xong','ok'],loi:['Lỗi','bad'],thu:['Robot thử lại','bad']};
+function tdbVe(){const T=window.TDB;if(!T)return;let el=document.getElementById('tdb');
+ if(!el){el=document.createElement('div');el.id='tdb';el.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));width:min(94vw,440px);max-height:62vh;overflow:auto;z-index:61;padding:14px 14px 12px;border-radius:20px;background:rgba(30,20,16,.94);color:#fff;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 40px -12px rgba(0,0,0,.7);font-size:13px;line-height:1.4';document.body.appendChild(el)}
+ const mau={ok:'#7BD88F',warn:'#F3C24B',bad:'#FF8A80','':'rgba(255,255,255,.6)'};
+ el.innerHTML=`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><b style="font-size:14.5px;flex:1">${T.xong?(T.coLoi?'⚠️ Gửi xong, có kênh cần xem lại':'✅ Đã gửi bài xong'):'📤 Đang gửi bài…'}</b>${T.xong?'<button id="tdbX" style="border:0;border-radius:12px;padding:6px 12px;background:rgba(255,255,255,.16);color:#fff;font-weight:700">Đóng</button>':''}</div>`
+ +T.buoc.map(b=>{const st=TDB_ST[b.st]||[b.st,''];const pc=b.st==='dang'&&b.p!=null?Math.round(b.p*100):null;
+  return `<div style="display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid rgba(255,255,255,.08)"><span style="width:24px;height:24px;display:grid;place-items:center;flex-shrink:0">${b.ic||'•'}</span><div style="flex:1;min-width:0"><div style="display:flex;gap:8px"><b style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.ten)}</b><span style="color:${mau[st[1]]};font-weight:700;white-space:nowrap">${b.st==='xong'||b.st==='kho'||b.st==='hen'?'✓ ':''}${st[0]}${pc!=null?' '+pc+'%':''}</span></div>${pc!=null?`<div style="height:6px;border-radius:5px;background:rgba(255,255,255,.16);margin-top:5px;overflow:hidden"><i style="display:block;height:100%;width:${pc}%;background:linear-gradient(90deg,#F3C24B,#FF6B6B);transition:width .3s"></i></div>`:''}${b.ghi?`<div style="opacity:.75;font-size:12px;margin-top:2px">${esc(b.ghi)}</div>`:''}</div></div>`}).join('')
+ +`<div style="opacity:.75;font-size:12px;margin-top:8px">${T.xong?'Robot vẫn tự làm tiếp các kênh đang xử lý. Xem kết quả ở “Bài của tôi”.':'Giữ màn hình app mở, <b>đừng bấm Đăng lần nữa</b> nha. App sẽ báo khi xong.'}</div>`;
+ const x=document.getElementById('tdbX');if(x)x.onclick=()=>{window.TDB=null;el.remove()}}
+function tdbMo(buoc){window.TDB={buoc,xong:false,coLoi:false};LIVE.dangGui=true;tdbKhoaNut();window.onbeforeunload=e=>{e.preventDefault();e.returnValue='';return ''};tdbVe()}
+function tdbSet(k,st,p,ghi){const T=window.TDB;if(!T)return;const b=T.buoc.find(x=>x.k===k);if(!b)return;b.st=st;b.p=p==null?null:p;if(ghi!==undefined)b.ghi=ghi;tdbVe()}
+function tdbXong(){const T=window.TDB;LIVE.dangGui=false;tdbKhoaNut();window.onbeforeunload=null;if(!T)return;T.xong=true;T.coLoi=T.buoc.some(b=>b.st==='loi'||b.st==='thu');tdbVe()}
+async function tdbRobot(bai){const T=window.TDB;if(!T||!sb)return;try{const {data}=await sb.from('dang_len_kenh').select('kenh_id,trang_thai,loi_gan_nhat,hen_gio').eq('bai_dang_id',bai);
+ for(const r of data||[]){const k='k'+r.kenh_id;if(!T.buoc.some(b=>b.k===k))continue;
+  if(r.trang_thai==='xong')tdbSet(k,'xong',null,'');
+  else if(r.trang_thai==='loi'&&/đang xử lý video/i.test(r.loi_gan_nhat||''))tdbSet(k,'xly',null,'Nền tảng đang xử lý video, robot tự đăng tiếp, không cần bấm lại');
+  else if(r.trang_thai==='loi'||r.trang_thai==='hong')tdbSet(k,'thu',null,r.loi_gan_nhat||'');
+  else if(r.trang_thai==='cho'&&Date.parse(r.hen_gio)>Date.now()+60e3)tdbSet(k,'hen',null,'Đăng lúc '+tgVi(r.hen_gio));
+  else tdbSet(k,'robot',null,'')}}catch(e){console.warn(e)}}
+const _ytTienCu=ytTien;ytTien=function(p,f){if(window.TDB&&window._upK){if(p>=0)tdbSet(window._upK,'dang',p,f?(f.size/1048576*p).toFixed(0)+' / '+(f.size/1048576).toFixed(0)+' MB':'');return}return _ytTienCu(p,f)};
 const _addPostMxh=A.addPost;
 A.addPost=async()=>{const a=me();const t=val('pc');
  const kids=[...document.querySelectorAll('.pfk:checked')].map(x=>({id:+x.value,nt:x.dataset.nt}));
  if(!t||!kids.length)return _addPostMxh();
+ if(LIVE.dangGui){toast('Bài đang được gửi, đợi xíu nha. Đừng bấm lần nữa nhé');return}
  if(LIVE.busy)return;const w=U.pwhen||'now';let hen=null;
  if(w==='hen'){const v=val('pt2');if(!v){toast('Chọn giờ hẹn nhé');return}hen=new Date(v).toISOString()}
  const vid=(U.ploai||'bai_viet')==='video';const inp=document.getElementById('pv');const files=inp&&inp.files?[...inp.files]:[];
@@ -3865,22 +3890,32 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  const ytHen={};ytK.forEach(k=>{ytHen[k.id]=hr[k.id]||hen;hr[k.id]='2999-01-01T00:00:00Z'});ttK.forEach(k=>{hr[k.id]='2999-01-01T00:00:00Z'});const luuKho=!vid||khac.length>0;
  const adm=a.role==='tl'||a.role==='sep';const ch=mxhKenh(a);const need=!adm&&kids.some(k=>(ch.find(x=>x.id===k.id)||{}).chung);
  const others=[...document.querySelectorAll('.pf:checked')].length;
- busy(true,files.length?'Đang tải '+files.length+' file lên…':'Đang gửi bài…');
+ const tenK=k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt;const icK=k=>MXH_IC[k.nt]||'🔗';
+ const kho=luuKho&&files.length>0;const tong=files.reduce((x,f)=>x+f.size,0)||1;let daTai=0;
+ tdbMo([...(kho?[{k:'kho',ten:vid?'Tải video lên kho của app':'Tải '+files.length+' ảnh lên kho',ic:'📦',st:'dang',p:0}]:[]),
+  ...ytK.map(k=>({k:'yt'+k.id,ten:tenK(k),ic:icK(k),st:'cho',ghi:'Gửi thẳng từ điện thoại'})),
+  ...ttK.map(k=>({k:'tt'+k.id,ten:tenK(k),ic:icK(k),st:'cho',ghi:'Gửi thẳng từ điện thoại'})),
+  ...khac.map(k=>({k:'k'+k.id,ten:tenK(k),ic:icK(k),st:'cho',ghi:kho?'Chờ tải xong rồi robot đăng':''}))]);
+ busy(true);
  try{const media=[];let i=0;
   for(const f of (luuKho?files:[])){const ext=((f.name.split('.').pop()||'').toLowerCase().replace(/[^a-z0-9]/g,''))||(vid?'mp4':'jpg');
    const path=LIVE.me.id+'/'+Date.now()+'-'+(i++)+'.'+ext;
    // v59: video trên 50MB chia thành nhiều phần 45MB (kho miễn phí chỉ nhận ≤50MB/file); máy chủ ráp lại khi Facebook, Instagram, Threads tải
    if(vid&&f.size>50*1024*1024){const C=45*1024*1024,n=Math.ceil(f.size/C);
-    for(let j=0;j<n;j++){busy(true,'Đang tải video lên kho… phần '+(j+1)+'/'+n);
-     const {error}=await sb.storage.from('dang-bai').upload(path+'.p'+j,f.slice(j*C,Math.min(f.size,(j+1)*C)),{contentType:'application/octet-stream',upsert:true});if(error)throw error}
+    for(let j=0;j<n;j++){tdbSet('kho','dang',daTai/tong,'Phần '+(j+1)+'/'+n+' · '+(daTai/1048576).toFixed(0)+' / '+(tong/1048576).toFixed(0)+' MB');
+     const bl=f.slice(j*C,Math.min(f.size,(j+1)*C));const {error}=await sb.storage.from('dang-bai').upload(path+'.p'+j,bl,{contentType:'application/octet-stream',upsert:true});if(error)throw error;daTai+=bl.size}
+    tdbSet('kho','dang',daTai/tong,'');
     media.push({duong_dan:path+'#phan='+n+'&s='+f.size+'&c='+C,loai:'video',dung_luong:String(f.size)});continue}
-   const {error}=await sb.storage.from('dang-bai').upload(path,f,{contentType:f.type||undefined,upsert:false});if(error)throw error;
+   tdbSet('kho','dang',daTai/tong,(daTai/1048576).toFixed(0)+' / '+(tong/1048576).toFixed(0)+' MB');
+   const {error}=await sb.storage.from('dang-bai').upload(path,f,{contentType:f.type||undefined,upsert:false});if(error)throw error;daTai+=f.size;
    media.push({duong_dan:path,loai:vid?'video':'anh',dung_luong:String(f.size)})}
+  if(kho)tdbSet('kho','kho',null,'');
   const {data:id,error}=await sb.rpc('tao_bai_dang',{p_noi_dung:t,p_loai:vid?'video':'bai_viet',p_kenh_ids:kids.map(k=>k.id),p_hen_gio:hen,p_media:media,p_hen_rieng:hr});if(error)throw error;
   busy(false);
-  if(w==='now'&&khac.length)sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>mxhLamMoi(true)).catch(()=>{});
-  let ytOk=0;if(ytK.length){LIVE.busy=true;try{for(const k of ytK)if(await guiThangYt(id,k.id,files[0],ytHen[k.id]))ytOk++}finally{LIVE.busy=false}}
-  let ttOk=0,ttRieng=false,ttNhap=false;if(ttK.length){LIVE.busy=true;try{for(const k of ttK){const r=await guiThangTt(id,k.id,files[0],ttCai);if(r.ok){ttOk++;ttRieng=ttRieng||r.rieng;ttNhap=ttNhap||r.nhap}}}finally{LIVE.busy=false}if(ttOk)Object.assign(TT,{privacy:'',cmt:false,duet:false,stitch:false,com:false,own:false,bc:false,title:null,sua:false})}
+  if(w==='now'&&khac.length){khac.forEach(k=>tdbSet('k'+k.id,'robot',null,''));sb.functions.invoke('mxh-dang-bai',{body:{bai_dang_id:id}}).then(()=>{mxhLamMoi(true);return tdbRobot(id)}).catch(()=>tdbRobot(id))}
+  else if(khac.length)await tdbRobot(id);
+  let ytOk=0;if(ytK.length){LIVE.busy=true;try{for(const k of ytK){window._upK='yt'+k.id;tdbSet(window._upK,'dang',0);const ok=await guiThangYt(id,k.id,files[0],ytHen[k.id]);tdbSet('yt'+k.id,ok?(ytHen[k.id]?'hen':'xong'):'loi',null,ok?(ytHen[k.id]?'YouTube tự công khai đúng giờ':''):'Xem lý do ở “Bài của tôi”');if(ok)ytOk++}}finally{LIVE.busy=false;window._upK=null}}
+  let ttOk=0,ttRieng=false,ttNhap=false;if(ttK.length){LIVE.busy=true;try{for(const k of ttK){window._upK='tt'+k.id;tdbSet(window._upK,'dang',0);const r=await guiThangTt(id,k.id,files[0],ttCai);tdbSet('tt'+k.id,r.ok?'xong':'loi',null,r.ok?(r.nhap?'Vào hộp thư TikTok, bấm Đăng là công khai':r.rieng?'Đang để Chỉ mình tôi':''):'Xem lý do ở “Bài của tôi”');window._upK=null;if(r.ok){ttOk++;ttRieng=ttRieng||r.rieng;ttNhap=ttNhap||r.nhap}}}finally{LIVE.busy=false}if(ttOk)Object.assign(TT,{privacy:'',cmt:false,duet:false,stitch:false,com:false,own:false,bc:false,title:null,sua:false})}
   if(others){_addPostMxh()}
   else{const ty=vid?'video':'bai';a.g.posts.push({t,pf:kids.map(k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt),at:w==='now'?'':'hẹn',d:today(),ty});
    U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
@@ -3888,9 +3923,9 @@ A.addPost=async()=>{const a=me();const t=val('pc');
   if(!thang.length||khac.length)toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
   else if(ytOk||ttOk){const ten=[ytOk?'YouTube':'',ttOk?'TikTok':''].filter(Boolean).join(' và ');
    toast('🎬 Video đã lên '+ten+'!'+(ytOk&&w!=='now'?' Tới giờ hẹn YouTube tự công khai.':'')+(ttRieng?' TikTok đang để “Chỉ mình tôi” vì ứng dụng chưa được duyệt.':'')+(ttNhap?' 📥 TikTok: mở app TikTok, bấm thông báo video mới rồi bấm Đăng là công khai nha.':''))}
-  await loadMxhBai()}
- catch(err){toast(/nội dung|ít nhất|không phải của bạn|không hợp lệ|Chỉ anh em/.test(err.message||'')?err.message:errVi(err))}
- finally{busy(false);render()}};
+  tdbXong();await loadMxhBai()}
+ catch(err){if(window.TDB){window.TDB.buoc.forEach(b=>{if(b.st==='dang'||b.st==='cho')b.st='loi'});tdbXong()}toast(/nội dung|ít nhất|không phải của bạn|không hợp lệ|Chỉ anh em/.test(err.message||'')?err.message:errVi(err))}
+ finally{busy(false);if(LIVE.dangGui){LIVE.dangGui=false;window.onbeforeunload=null}window._upK=null;render()}};
 /* ---- v31: Khảo sát nhà thật: bảng khao_sat_nha, hình ở kho khao-sat, sổ ở kho so-nha (chỉ người đăng + Sếp/Trợ lý),
    sao lưu Google Drive chính qua Edge Function khao-sat-drive (Drive kết nối qua mxh-ket-noi, nen_tang google_drive) ---- */
 ksPrepMax=1600;ksSoMax=2000;
