@@ -3990,7 +3990,46 @@ async function ksDongBoCho(){let vong=0;
  await loadKs();render()}
 const _afterLoginKs=afterLogin;
 afterLogin=async function(fresh){await _afterLoginKs(fresh);if(LIVE.me&&S.me)ksLamMoi(true)};
+/* v61: Đăng nhập cho người duyệt (Meta App Review): email + mật khẩu. Mật khẩu do chủ tài khoản tự đặt
+   khi đang đăng nhập, qua đường dẫn ...#dat-mat-khau. Tài khoản nào chưa đặt mật khẩu thì cách này không vào được. */
+const _renderAuthPw=renderAuth;
+renderAuth=function(){const A2=U.auth;
+ if(A2.step==='pw'){
+  $('#app').innerHTML=`<div class="auth-hero gut"><div class="kicker">Phòng Hoa Vinh · Tân Phú, Tân Bình</div><h1>Hoa Vinh City</h1><p>Mỗi ngày làm việc là một viên gạch xây nhà</p></div><main class="gut" style="padding-block:16px 40px"><div class="stack"><div class="card stack"><div><h2 class="h2">Đăng nhập cho người duyệt</h2><p class="sub">Reviewer login · Email + password</p></div>
+  <label class="f" for="pwem">Email<input class="in" id="pwem" type="email" inputmode="email" autocomplete="username" value="${esc(A2.email||'')}"></label>
+  <label class="f" for="pwmk">Mật khẩu (Password)<input class="in" id="pwmk" type="password" autocomplete="current-password"></label>
+  ${A2.err?`<div class="err">${A2.err}</div>`:''}
+  <button class="btn full" data-a="pwDang">Đăng nhập (Log in)</button>
+  <button class="link" data-a="authBack">← Đăng nhập bằng Gmail</button></div></div></main>`;return}
+ _renderAuthPw();
+ if(A2.step==='email'&&A2.mode!=='reg'){const st=document.querySelector('#app main .stack');if(st&&!document.getElementById('pwlink')){const d=document.createElement('div');d.id='pwlink';d.style.textAlign='center';d.innerHTML='<button class="link sub" data-a="pwMo" style="font-size:12.5px">Đăng nhập cho người duyệt (Reviewer login)</button>';st.appendChild(d)}}};
+A.pwMo=()=>{U.auth.step='pw';U.auth.err='';render()};
+A.pwDang=async()=>{const A2=U.auth;const e=(val('pwem')||'').toLowerCase().trim(),p=val('pwmk')||'';
+ if(!e||!p){A2.err='Nhập email và mật khẩu nhé (Enter email and password).';render();return}
+ if(!sb||LIVE.busy)return;A2.email=e;busy(true,'Đang đăng nhập…');
+ try{const {error}=await sb.auth.signInWithPassword({email:e,password:p});
+  if(error){A2.err='Email hoặc mật khẩu chưa đúng (Wrong email or password).';return}
+  A2.err='';await afterLogin(true)}
+ catch(err){A2.err=errVi(err)}finally{busy(false);render()}};
+function datMkMo(){if(location.hash!=='#dat-mat-khau'||!sb||!LIVE.me||document.getElementById('datmk'))return;
+ const el=document.createElement('div');el.id='datmk';el.style.cssText='position:fixed;inset:0;z-index:70;display:grid;place-items:center;background:rgba(0,0,0,.55);padding:16px';
+ el.innerHTML=`<div class="card stack" style="width:min(92vw,380px)"><div><h2 class="h2">Đặt mật khẩu đăng nhập</h2><p class="sub">Cho tài khoản <b>${esc(LIVE.me.gmail||'')}</b>. Dùng cho Đăng nhập cho người duyệt. Ít nhất 8 ký tự.</p></div>
+ <label class="f" for="mk1">Mật khẩu mới<input class="in" id="mk1" type="password" autocomplete="new-password"></label>
+ <label class="f" for="mk2">Nhập lại<input class="in" id="mk2" type="password" autocomplete="new-password"></label>
+ <div class="err" id="mkerr" style="display:none"></div>
+ <div class="row"><button class="btn grow" id="mkok">Lưu mật khẩu</button><button class="btn ghost" id="mkhuy">Huỷ</button></div></div>`;
+ document.body.appendChild(el);const dong=()=>{el.remove();history.replaceState(null,'',location.pathname+location.search)};
+ el.querySelector('#mkhuy').onclick=dong;
+ el.querySelector('#mkok').onclick=async()=>{const a=el.querySelector('#mk1').value,b=el.querySelector('#mk2').value,er=el.querySelector('#mkerr');
+  const bao=t=>{er.textContent=t;er.style.display=''};
+  if(a.length<8)return bao('Mật khẩu cần ít nhất 8 ký tự.');if(a!==b)return bao('Hai lần nhập chưa giống nhau.');
+  const {error}=await sb.auth.updateUser({password:a});if(error)return bao(errVi(error));
+  dong();toast('Đã đặt mật khẩu. Tài khoản này giờ đăng nhập được bằng email + mật khẩu.')}}
+window.addEventListener('hashchange',datMkMo);
+const _afterLoginMk=afterLogin;
+afterLogin=async function(fresh){await _afterLoginMk(fresh);setTimeout(datMkMo,300)};
 /* ===================== HẾT PHẦN NỐI SUPABASE ===================== */
+
 
 render();
 })();
