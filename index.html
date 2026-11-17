@@ -3860,7 +3860,7 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  const ytK=vid?kids.filter(k=>k.nt==='youtube'):[];const ttK=vid&&w==='now'?kids.filter(k=>k.nt==='tiktok'):[];const khac=kids.filter(k=>!ytK.includes(k)&&!ttK.includes(k));
  if(ttK.length){const l=ttLoiNut();if(l){toast(l);return}}
  const ttCai={title:TT.title||'',privacy:TT.privacy,comment:TT.cmt,duet:TT.duet,stitch:TT.stitch,own:TT.com&&TT.own,bc:TT.com&&TT.bc};
- const big=files.find(f=>f.size>50*1024*1024);if(big&&(!vid||khac.length)){toast(!vid?'File “'+big.name+'” lớn hơn 50MB nhé':khac.some(k=>k.nt==='tiktok')?'TikTok chưa hẹn giờ được với video trên 50MB. Chọn “Đăng ngay” hoặc video dưới 50MB nhé':'Video trên 50MB chỉ gửi thẳng được lên YouTube, TikTok. Bỏ chọn kênh khác hoặc chọn video dưới 50MB nhé');return}
+ const big=files.find(f=>f.size>50*1024*1024);if(big&&(!vid||khac.some(k=>k.nt==='tiktok'||k.nt==='zalo_oa'))){toast(!vid?'File “'+big.name+'” lớn hơn 50MB nhé':khac.some(k=>k.nt==='tiktok')?'TikTok chưa hẹn giờ được với video trên 50MB. Chọn “Đăng ngay” hoặc video dưới 50MB nhé':'Zalo OA chưa nhận video trên 50MB. Bỏ chọn Zalo OA hoặc chọn video dưới 50MB nhé');return}
  const hr={};if(w==='gold')kids.forEach(k=>{const ck=MXH_CK[k.nt];if(S.gold[ck])hr[k.id]=new Date(nextGold(ck)).toISOString()});
  const ytHen={};ytK.forEach(k=>{ytHen[k.id]=hr[k.id]||hen;hr[k.id]='2999-01-01T00:00:00Z'});ttK.forEach(k=>{hr[k.id]='2999-01-01T00:00:00Z'});const luuKho=!vid||khac.length>0;
  const adm=a.role==='tl'||a.role==='sep';const ch=mxhKenh(a);const need=!adm&&kids.some(k=>(ch.find(x=>x.id===k.id)||{}).chung);
@@ -3869,6 +3869,11 @@ A.addPost=async()=>{const a=me();const t=val('pc');
  try{const media=[];let i=0;
   for(const f of (luuKho?files:[])){const ext=((f.name.split('.').pop()||'').toLowerCase().replace(/[^a-z0-9]/g,''))||(vid?'mp4':'jpg');
    const path=LIVE.me.id+'/'+Date.now()+'-'+(i++)+'.'+ext;
+   // v59: video trên 50MB chia thành nhiều phần 45MB (kho miễn phí chỉ nhận ≤50MB/file); máy chủ ráp lại khi Facebook, Instagram, Threads tải
+   if(vid&&f.size>50*1024*1024){const C=45*1024*1024,n=Math.ceil(f.size/C);
+    for(let j=0;j<n;j++){busy(true,'Đang tải video lên kho… phần '+(j+1)+'/'+n);
+     const {error}=await sb.storage.from('dang-bai').upload(path+'.p'+j,f.slice(j*C,Math.min(f.size,(j+1)*C)),{contentType:'application/octet-stream',upsert:true});if(error)throw error}
+    media.push({duong_dan:path+'#phan='+n+'&s='+f.size+'&c='+C,loai:'video',dung_luong:String(f.size)});continue}
    const {error}=await sb.storage.from('dang-bai').upload(path,f,{contentType:f.type||undefined,upsert:false});if(error)throw error;
    media.push({duong_dan:path,loai:vid?'video':'anh',dung_luong:String(f.size)})}
   const {data:id,error}=await sb.rpc('tao_bai_dang',{p_noi_dung:t,p_loai:vid?'video':'bai_viet',p_kenh_ids:kids.map(k=>k.id),p_hen_gio:hen,p_media:media,p_hen_rieng:hr});if(error)throw error;
