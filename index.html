@@ -542,6 +542,18 @@ html.lite body :is(.btn.ghost,.x,.qgrid button,.bldbtn,.chips button,.musc,.seg,
 html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 @media (prefers-reduced-transparency:reduce){html body :is(.btn.ghost,.x,.qgrid button,.bldbtn,.chips button,.musc,.seg,.mem,nav.tabs,.sheet,.fab){-webkit-backdrop-filter:none;backdrop-filter:none}html body nav.tabs{background:var(--card)}html body .sheet{background:var(--paper)}}
 @media (prefers-reduced-motion:reduce){html body :is(.btn,.x,.qgrid button,.chips button,.musc,.seg button,.rolebtn,.mem,.fab,nav.tabs button):active{transform:none}}
+
+/*v59 van dong truong*/
+.vdc{display:flex;gap:12px;align-items:flex-start}
+.vdi{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:25px;flex-shrink:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 6px 14px -8px rgba(0,0,0,.45)}
+.vd-da_banh{background:linear-gradient(160deg,#8fdc8a,#2f9e55)}.vd-chay_bo{background:linear-gradient(160deg,#ffc58a,#e8772e)}
+.vd-dap_xe{background:linear-gradient(160deg,#9cd2ff,#1f6fbf)}.vd-cau_long{background:linear-gradient(160deg,#f6a8d6,#b23d8a)}
+.vd-pickleball{background:linear-gradient(160deg,#e9f58a,#9fb51f)}
+.vdppl{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.vdppl .pill{padding:2px 8px 2px 2px}.vdppl .av{width:20px;height:20px;font-size:9px;border-width:1px}
+.vdmon{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.vdmon button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px;border-radius:12px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer}
+.vdmon button span{font-size:22px}.vdmon button.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(224,167,46,.28);background:color-mix(in srgb,var(--gold) 22%,var(--card))}
+.vdbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 </style>
 
 <div id="app"></div>
@@ -763,7 +775,7 @@ function daysSince(s){return Math.max(0,Math.round((new Date(today())-new Date(s
 const HOP_CO_DINH='Thông báo họp sáng 8h ngày Thứ 2 và Thứ 6 tại văn phòng 219 Thạch Lam và 110 Cao Thắng';
 function hopCard(){const t=new Date(),d=t.getDay(),hr=t.getHours(),hn=(d===1||d===5)&&hr<10,mai=(d===0||d===4)&&hr>=12;
  return `<div class="card hop"><div class="between"><div class="kicker" style="color:var(--gold2)">📣 Họp định kỳ</div><span class="pill ${hn?'warn':mai?'gold':''}">${hn?'Hôm nay họp':mai?'Sáng mai họp':'Thứ 2 · Thứ 6'}</span></div><div class="h3" style="margin-top:4px;line-height:1.45">${HOP_CO_DINH}</div><div class="hop-row"><span>🕗 8:00 sáng</span><span>📍 219 Thạch Lam</span><span>📍 110 Cao Thắng</span></div></div>`}
-function noticeCard(){const h=bangRonStrip()+phaoCard()+hopCard();if(!S.notice||S.notice.t==='Họp toàn phòng đầu tuần')return h;return h+`<div class="card hl"><div class="between"><div class="kicker" style="color:var(--gold2)">Triệu tập họp</div><span class="pill warn">Mới</span></div><div class="h3" style="margin-top:4px">${esc(S.notice.t)}</div><div class="sub">${esc(S.notice.when)} · ${esc(S.notice.place)}</div></div>`}
+function noticeCard(){const h=bangRonStrip()+phaoCard()+hopCard()+vdHomeCard();if(!S.notice||S.notice.t==='Họp toàn phòng đầu tuần')return h;return h+`<div class="card hl"><div class="between"><div class="kicker" style="color:var(--gold2)">Triệu tập họp</div><span class="pill warn">Mới</span></div><div class="h3" style="margin-top:4px">${esc(S.notice.t)}</div><div class="sub">${esc(S.notice.when)} · ${esc(S.notice.place)}</div></div>`}
 function checkinCard(a,label){
   const done=a.g.lastCheck===today();const n=a.g.streak%7;
   return `<div class="card"><div class="between"><div><div class="h3">${label||'Điểm danh hôm nay'}</div><div class="sub">Chuỗi ${a.g.streak} ngày · đủ 7 ngày thưởng 1 💎</div></div><button class="btn ${done?'ghost':'gold'} sm" data-a="checkin" ${done?'disabled':''}>${done?'Đã điểm danh':'Điểm danh'}</button></div><div class="days">${[1,2,3,4,5,6,7].map(i=>`<span class="${i<=(done?(n||7):n)?'on':''}">N${i}</span>`).join('')}</div></div>`;
@@ -809,10 +821,11 @@ const FEATS=[
  {k:'hocvien',em:'🎓',t:'Học viện Hoa Vinh',s:'Video và điểm danh Zoom'},
  {k:'dealreport',em:'💎',t:'Báo vụ chốt',s:'Xét duyệt theo hệ số T'},
  {k:'muctieu',em:'⭐',t:'Sản phẩm mục tiêu',s:'Căn ngon bạn đã chọn lọc'},
- {k:'hoitruong',em:'🏛️',t:'Hội Trường',s:'Nhà khảo sát, giá chốt, nhà ngon, trò chuyện'}
+ {k:'hoitruong',em:'🏛️',t:'Hội Trường',s:'Nhà khảo sát, giá chốt, nhà ngon, trò chuyện'},
+ {k:'vandong',em:'🏅',t:'Vận động trường',s:'Đá banh, chạy bộ, đạp xe, cầu lông, pickleball'}
 ];
 function featGrid(a){
-  return `<div class="grid2">${FEATS.filter(f=>(f.k!=='lochang'&&f.k!=='muctieu')||hasCtv(a)).map(f=>`<div class="tile"><button class="bell ${a.g.rem[f.k]?'on':''}" data-a="bell" data-v="${f.k}" aria-label="Nhắc nhở ${f.t}" aria-pressed="${!!a.g.rem[f.k]}">🔔</button><span class="em">${f.em}</span><b>${f.t}</b><span class="sub">${f.s}</span><button class="btn ghost sm" style="margin-top:auto" data-a="sheet" data-v="${f.k}">Mở</button></div>`).join('')}</div>`;
+  return `<div class="grid2">${FEATS.filter(f=>(f.k!=='lochang'&&f.k!=='muctieu'&&f.k!=='vandong')||hasCtv(a)).map(f=>`<div class="tile"><button class="bell ${a.g.rem[f.k]?'on':''}" data-a="bell" data-v="${f.k}" aria-label="Nhắc nhở ${f.t}" aria-pressed="${!!a.g.rem[f.k]}">🔔</button><span class="em">${f.em}</span><b>${f.t}</b><span class="sub">${f.s}</span><button class="btn ghost sm" style="margin-top:auto" data-a="sheet" data-v="${f.k}">Mở</button></div>`).join('')}</div>`;
 }
 
 /* ========== TAB renderers ========== */
@@ -3241,7 +3254,79 @@ A.vvAsk=async()=>{const q=val('vvq');if(!q){toast('Nhập câu hỏi nha');retur
 A.vvAnswer=async q=>vvLocal(q);
 A.vvClear=()=>{U.vv=[];render()};
 
-SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát nhà'],['clients','🤝','Thêm khách'],['dealreport','💎','Báo vụ chốt'],['lochang','🔎','Lọc hàng'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
+
+/* ===== v59: Vận động trường (đá banh, chạy bộ, đạp xe, cầu lông, pickleball) ===== */
+const VD_MON=[['da_banh','⚽','Đá banh'],['chay_bo','🏃','Chạy bộ'],['dap_xe','🚴','Đạp xe'],['cau_long','🏸','Cầu lông'],['pickleball','🏓','Pickleball']];
+const VD_THU=['Chủ nhật','Thứ Hai','Thứ Ba','Thứ Tư','Thứ Năm','Thứ Sáu','Thứ Bảy'];
+const vdMon=k=>VD_MON.find(x=>x[0]===k)||VD_MON[0];
+const vdLoc=d=>isoD(d)+'T'+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+if(!S.vanDong){const t=new Date(),o=(dd,h,m)=>{const d=new Date(t);d.setDate(d.getDate()+dd);d.setHours(h,m,0,0);return vdLoc(d)};
+ const AE=S.accts.filter(hasCtv),id=i=>(AE[i%(AE.length||1)]||{}).email;
+ S.vanDong={lich:[{id:1,mon:'da_banh',at:o(2,19,30),wk:true,place:'Sân bóng Chảo Lửa, Tân Bình',note:'Sân 7 người, chia tiền sân. Mang áo đỏ nha!',cho:14,by:id(0)},
+  {id:2,mon:'chay_bo',at:o(1,5,30),wk:true,place:'Công viên Gia Định, Gò Vấp',note:'Chạy nhẹ 5km, xong đi cà phê',cho:null,by:id(1)},
+  {id:3,mon:'cau_long',at:o(3,18,0),wk:false,place:'Nhà thi đấu Tân Bình',note:'',cho:8,by:id(2)},
+  {id:4,mon:'pickleball',at:o(5,7,0),wk:true,place:'Sân pickleball Phú Nhuận',note:'Người mới có người kèm, có vợt cho mượn',cho:8,by:id(2)},
+  {id:5,mon:'dap_xe',at:o(6,6,0),wk:false,place:'Xuất phát cầu Phú Mỹ, đạp đi Cần Giờ',note:'Khoảng 40km, mang nước',cho:12,by:id(0)}],tg:[]};
+ S.vanDong.lich.forEach((l,i)=>{AE.slice(0,i%3+2).forEach(u=>{if(u.email!==S.me)S.vanDong.tg.push({lich:l.id,ngay:l.at.slice(0,10),who:u.email})})})}
+function vdNext(l){const d=new Date(l.at);if(isNaN(d))return null;if(!l.wk)return d;const now=Date.now()-3*36e5;while(d.getTime()<now)d.setDate(d.getDate()+7);return d}
+function vdItems(){const V=S.vanDong||{lich:[],tg:[]};const lim=Date.now()-3*36e5;
+ return (V.lich||[]).map(l=>{const d=vdNext(l);if(!d)return null;const ngay=isoD(d);const ppl=(V.tg||[]).filter(t=>t.lich===l.id&&t.ngay===ngay).map(t=>t.who);return {l,d,ngay,ppl}}).filter(x=>x&&x.d.getTime()>=lim).sort((a,b)=>a.d-b.d)}
+function vdKhi(d){const t=new Date();t.setHours(0,0,0,0);const x=new Date(d);x.setHours(0,0,0,0);const n=Math.round((x-t)/864e5);
+ const hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+ return {txt:VD_THU[d.getDay()]+' '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' · '+hm,tag:n===0?'Hôm nay':n===1?'Ngày mai':n>1&&n<7?'Còn '+n+' ngày':''}}
+function vdCard(it,a){const {l,d,ppl}=it;const [k,ic,ten]=vdMon(l.mon);const w=vdKhi(d);const joined=ppl.includes(a.email);const full=l.cho&&ppl.length>=l.cho&&!joined;
+ const by=S.accts.find(x=>x.email===l.by);const canDel=l.by===a.email||a.role==='sep'||a.role==='tl';
+ const people=ppl.map(e=>S.accts.find(x=>x.email===e)).filter(Boolean);
+ return `<div class="card"><div class="vdc"><div class="vdi vd-${k}" aria-hidden="true">${ic}</div><div class="grow" style="min-width:0">
+  <div class="between"><b>${ten}</b>${w.tag?`<span class="pill ${w.tag==='Hôm nay'?'warn':'gold'}">${w.tag}</span>`:''}</div>
+  <div class="sub" style="font-weight:700;color:var(--ink)">🕒 ${w.txt}${l.wk?' · <span class="pill ok">Hằng tuần</span>':''}</div>
+  ${l.place?`<div class="sub">📍 <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.place)}" target="_blank" rel="noopener">${esc(l.place)}</a></div>`:''}
+  ${l.note?`<div class="sub">📝 ${esc(l.note)}</div>`:''}
+  <div class="sub">👤 Tạo bởi ${esc(by?by.name:'Anh em')} · <b>${ppl.length}${l.cho?'/'+l.cho:''}</b> người tham gia</div>
+  ${people.length?`<div class="vdppl">${people.map(p=>`<span class="pill">${avatar(p)}${esc(p.name)}</span>`).join('')}</div>`:''}
+  <div class="vdbar"><button class="btn ${joined?'green':'gold'} sm" data-a="vdJoin" data-v="${l.id}|${it.ngay}" ${full?'disabled':''}>${joined?'✓ Đã tham gia':full?'Đã đủ người':'🙋 Tham gia'}</button>
+  <button class="btn ghost sm" data-a="vdIcs" data-v="${l.id}">📅 Lưu lịch</button>
+  ${canDel?`<button class="btn ghost sm" data-a="vdDel" data-v="${l.id}" aria-label="Xoá lịch">🗑️</button>`:''}</div>
+ </div></div></div>`}
+SH.vandong=()=>{const a=me();const V=S.vanDong||{lich:[],tg:[]};const f=U.vdF||'';const all=vdItems();const L=all.filter(x=>!f||x.l.mon===f);
+ const mine=all.filter(x=>x.ppl.includes(a.email)).length;const wkEnd=Date.now()+7*864e5;const wk=all.filter(x=>x.d.getTime()<=wkEnd).length;
+ const m=U.vdMon||'da_banh';const t=new Date();t.setDate(t.getDate()+1);
+ const form=U.vdForm?`<div class="card stack" style="gap:10px"><div class="sub" style="font-weight:800">Tạo lịch vận động mới</div>
+  <div class="vdmon">${VD_MON.map(([k,ic,ten])=>`<button class="${m===k?'on':''}" data-a="vdPick" data-v="${k}" aria-pressed="${m===k}"><span>${ic}</span>${ten}</button>`).join('')}</div>
+  <div class="grid2"><label class="f" for="vdNgay">Ngày<input class="in" type="date" id="vdNgay" value="${isoD(t)}"></label><label class="f" for="vdGio">Giờ<input class="in" type="time" id="vdGio" value="${m==='chay_bo'||m==='dap_xe'?'05:30':'19:00'}"></label></div>
+  <label class="row" style="padding:2px 0"><input type="checkbox" id="vdWk" checked> <span class="sub">Lặp lại hằng tuần (cùng thứ, cùng giờ)</span></label>
+  <input class="in" id="vdNoi" placeholder="Địa điểm (sân, công viên, điểm hẹn…)">
+  <div class="grid2"><input class="in" id="vdCho" type="number" min="1" max="200" inputmode="numeric" placeholder="Số người tối đa (bỏ trống = không giới hạn)"><input class="in" id="vdNote" placeholder="Ghi chú (chia tiền sân, mang gì…)"></div>
+  <div class="row" style="gap:8px"><button class="btn gold grow" data-a="vdAdd">Tạo lịch</button><button class="btn ghost" data-a="vdForm">Huỷ</button></div></div>`
+  :`<button class="btn gold full" data-a="vdForm">＋ Tạo lịch vận động</button>`;
+ return {t:'🏅 Vận động trường',h:`<p class="sub" style="margin-top:0">Khỏe để chạy việc! Anh em hẹn nhau đá banh, chạy bộ, đạp xe, cầu lông, pickleball. Bấm <b>Tham gia</b> để cả phòng biết bạn đi.</p>
+  <div class="grid2" style="margin-bottom:10px"><div class="card" style="text-align:center"><b class="num" style="font-size:22px">${wk}</b><div class="sub">buổi trong 7 ngày tới</div></div><div class="card" style="text-align:center"><b class="num" style="font-size:22px">${mine}</b><div class="sub">buổi bạn tham gia</div></div></div>
+  ${V.off?`<div class="note">Vận động trường chưa được bật trên máy chủ. Trưởng phòng hoặc Trợ lý chạy đoạn SQL “van-dong-bang.sql” một lần là dùng được nha.</div>`:form}
+  <div class="chips" style="margin:12px 0 4px"><button class="${!f?'on':''}" data-a="vdFilter" data-v="">Tất cả</button>${VD_MON.map(([k,ic,ten])=>`<button class="${f===k?'on':''}" data-a="vdFilter" data-v="${k}">${ic} ${ten}</button>`).join('')}</div>
+  ${L.map(x=>vdCard(x,a)).join('')||`<div class="note">Chưa có lịch ${f?vdMon(f)[2].toLowerCase()+' ':''}nào sắp tới. Tạo lịch đầu tiên rủ anh em nha! 💪</div>`}`}};
+function vdHomeCard(){const a=me();if(!hasCtv(a))return '';const it=vdItems().find(x=>x.ppl.includes(a.email)&&x.d.getTime()-Date.now()<36*36e5);if(!it)return '';
+ const [k,ic,ten]=vdMon(it.l.mon);const w=vdKhi(it.d);
+ return `<div class="card hl"><div class="vdc"><div class="vdi vd-${k}" aria-hidden="true">${ic}</div><div class="grow"><div class="between"><div class="kicker">Vận động trường</div><span class="pill warn">${w.tag||'Sắp tới'}</span></div><b>${ten} · ${w.txt}</b>${it.l.place?`<div class="sub">📍 ${esc(it.l.place)}</div>`:''}<button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="vandong">Xem lịch</button></div></div></div>`}
+A.vdFilter=v=>{U.vdF=v;render()};
+A.vdForm=()=>{U.vdForm=!U.vdForm;render()};
+A.vdPick=v=>{const keep={};['vdNgay','vdNoi','vdCho','vdNote'].forEach(i=>keep[i]=val(i));const wk=(document.getElementById('vdWk')||{}).checked;U.vdMon=v;render();for(const i in keep){const e=document.getElementById(i);if(e&&keep[i])e.value=keep[i]}const w=document.getElementById('vdWk');if(w&&wk===false)w.checked=false};
+function vdRead(){const ng=val('vdNgay'),gio=val('vdGio');if(!ng||!gio){toast('Chọn ngày và giờ nhé');return null}const at=ng+'T'+gio;if(isNaN(new Date(at))){toast('Ngày giờ chưa đúng');return null}
+ const wk=!!(document.getElementById('vdWk')||{}).checked;if(!wk&&new Date(at).getTime()<Date.now()){toast('Giờ này đã qua rồi, chọn giờ sắp tới nha');return null}
+ const c=parseInt(val('vdCho'),10);return {mon:U.vdMon||'da_banh',at,wk,place:val('vdNoi').slice(0,200),note:val('vdNote').slice(0,300),cho:c>0?Math.min(c,200):null}}
+A.vdAdd=()=>{const a=me();const r=vdRead();if(!r)return;const V=S.vanDong;const id=Math.max(0,...V.lich.map(x=>x.id))+1;V.lich.push(Object.assign({id,by:a.email},r));
+ const d=vdNext(V.lich[V.lich.length-1]);V.tg.push({lich:id,ngay:isoD(d),who:a.email});U.vdForm=false;save();render();toast('Đã tạo lịch '+vdMon(r.mon)[2].toLowerCase()+', bạn đã tự tham gia 💪')};
+A.vdJoin=v=>{const a=me();const [id,ngay]=v.split('|');const V=S.vanDong;const i=V.tg.findIndex(t=>t.lich===+id&&t.ngay===ngay&&t.who===a.email);
+ if(i>=0){V.tg.splice(i,1);toast('Đã huỷ tham gia buổi này')}else{V.tg.push({lich:+id,ngay,who:a.email});toast('Đã tham gia, hẹn gặp ở sân nha! 🙌')}save();render()};
+A.vdDel=v=>{const V=S.vanDong;V.lich=V.lich.filter(l=>l.id!==+v);V.tg=V.tg.filter(t=>t.lich!==+v);save();render();toast('Đã xoá lịch')};
+A.vdIcs=v=>{const l=(S.vanDong.lich||[]).find(x=>x.id===+v);if(!l)return;const d=vdNext(l);const [,ic,ten]=vdMon(l.mon);
+ const z=x=>x.toISOString().replace(/[-:]/g,'').replace(/\.\d+/,'');const e=new Date(d.getTime()+(l.mon==='dap_xe'?3:l.mon==='chay_bo'?1.5:2)*36e5);
+ const tx=s=>String(s||'').replace(/([,;\\])/g,'\\$1').replace(/\n/g,'\\n');
+ const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Hoa Vinh City//Van dong truong//VI','BEGIN:VEVENT','UID:vd-'+l.id+'-'+isoD(d)+'@hoavinhcity','DTSTAMP:'+z(new Date()),'DTSTART:'+z(d),'DTEND:'+z(e),
+  ...(l.wk?['RRULE:FREQ=WEEKLY']:[]),'SUMMARY:'+tx(ic+' '+ten+' cùng Team Hoa Vinh'),'LOCATION:'+tx(l.place),'DESCRIPTION:'+tx(l.note),
+  'BEGIN:VALARM','TRIGGER:-PT60M','ACTION:DISPLAY','DESCRIPTION:'+tx(ten+' sau 1 tiếng nữa'),'END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const url=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));const el=document.createElement('a');el.href=url;el.download='hoa-vinh-'+l.mon+'.ics';document.body.appendChild(el);el.click();setTimeout(()=>{URL.revokeObjectURL(url);el.remove()},4000);toast('Mở file vừa tải để thêm vào lịch, có nhắc trước 1 tiếng')};
+
+SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát nhà'],['clients','🤝','Thêm khách'],['dealreport','💎','Báo vụ chốt'],['lochang','🔎','Lọc hàng'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],...(hasCtv(me())?[['vandong','🏅','Vận động']]:[]),['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
 
 /* ===== v13: Văn hoá mở đầu, Học viện anh em + Zoom, Kỷ niệm, Nhà Truyền Thống ===== */
 const VANHOA=[['Chữ tín trước hợp đồng','Nói đúng thông tin nhà, đúng giá, đúng pháp lý. Khách tin mình thì mới quay lại.'],['Người đi trước dắt người đi sau','Ai mới vào đều có người dẫn đường. Hỗ trợ anh em là nhiệm vụ, có thưởng kim cương.'],['Mỗi ngày một viên gạch','Điểm danh, đăng tin, khảo sát, dẫn khách. Đều đặn mỗi ngày thì nhà sẽ cao.'],['Biết ơn và báo hiếu','Một phần hoa hồng mỗi vụ chốt dành cho báo hiếu và cầu cảm ơn.']];
@@ -3376,6 +3461,7 @@ async function sbLoad(){
  await loadKho(mine);
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadMauBai().catch(()=>{});
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadHoiTruong().catch(()=>{});
+ if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadVanDong().catch(e=>console.warn('[Hoa Vinh] van dong',e));
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadQuangCao().catch(()=>{});
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadHvVideo().catch(()=>{});
  return mine;
@@ -4030,6 +4116,30 @@ const _afterLoginMk=afterLogin;
 afterLogin=async function(fresh){await _afterLoginMk(fresh);setTimeout(datMkMo,300)};
 /* ===================== HẾT PHẦN NỐI SUPABASE ===================== */
 
+
+/* ---- v59 Vận động trường (bảng van_dong_lich + van_dong_tham_gia, file van-dong/van-dong-bang.sql) ---- */
+S.vanDong={lich:[],tg:[]};
+const vdEmail=id=>{const u=S.accts.find(x=>x.id===id);return u?u.email:''};
+async function loadVanDong(){
+ const [l,t]=await Promise.all([sb.from('van_dong_lich').select('*').order('bat_dau').limit(300),
+   sb.from('van_dong_tham_gia').select('lich_id,ngay,nguoi_id').gte('ngay',isoD(new Date(Date.now()-2*864e5))).limit(5000)]);
+ if(l.error){const m=(l.error.message||'')+' '+(l.error.code||'');if(/van_dong|schema cache|does not exist|42P01|PGRST20/i.test(m)){S.vanDong={lich:[],tg:[],off:true};return}throw l.error}
+ S.vanDong={lich:(l.data||[]).map(r=>({id:r.id,mon:r.mon,at:vdLoc(new Date(r.bat_dau)),wk:!!r.hang_tuan,place:r.dia_diem||'',note:r.ghi_chu||'',cho:r.so_cho,by:vdEmail(r.nguoi_tao_id)})),
+  tg:(t.error?[]:(t.data||[])).map(r=>({lich:r.lich_id,ngay:r.ngay,who:vdEmail(r.nguoi_id)}))}}
+A.vdAdd=async()=>{const r=vdRead();if(!r||LIVE.busy)return;busy(true,'Đang tạo lịch…');
+ try{const {data,error}=await sb.from('van_dong_lich').insert({mon:r.mon,bat_dau:new Date(r.at).toISOString(),hang_tuan:r.wk,dia_diem:r.place,ghi_chu:r.note,so_cho:r.cho}).select('id').single();if(error)throw error;
+  const d=vdNext({at:r.at,wk:r.wk});await sb.from('van_dong_tham_gia').insert({lich_id:data.id,ngay:isoD(d)});
+  U.vdForm=false;await loadVanDong();_save();toast('Đã tạo lịch '+vdMon(r.mon)[2].toLowerCase()+', bạn đã tự tham gia 💪')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+A.vdJoin=async v=>{const a=me();if(!a||!LIVE.me||LIVE.busy)return;const [id,ngay]=v.split('|');
+ const on=(S.vanDong.tg||[]).some(t=>t.lich===+id&&t.ngay===ngay&&t.who===a.email);busy(true);
+ try{const q=on?sb.from('van_dong_tham_gia').delete().eq('lich_id',+id).eq('ngay',ngay).eq('nguoi_id',LIVE.me.id):sb.from('van_dong_tham_gia').insert({lich_id:+id,ngay});
+  const {error}=await q;if(error&&!(error.code==='23505'))throw error;await loadVanDong();_save();toast(on?'Đã huỷ tham gia buổi này':'Đã tham gia, hẹn gặp ở sân nha! 🙌')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+A.vdDel=async v=>{if(LIVE.busy)return;busy(true,'Đang xoá…');
+ try{const {error}=await sb.from('van_dong_lich').delete().eq('id',+v);if(error)throw error;await loadVanDong();_save();toast('Đã xoá lịch')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+{const _shVd=A.sheet;A.sheet=v=>{_shVd(v);if(v==='vandong'&&LIVE.me&&LIVE.me.trang_thai==='hoat_dong')loadVanDong().then(()=>{if(U.sheet==='vandong')render()}).catch(()=>{})}}
 
 render();
 })();
