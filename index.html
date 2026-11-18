@@ -6,7 +6,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>.dlkho{display:flex;justify-content:space-between;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 12px;padding:10px 12px;border:1.5px solid #C9A24A;border-radius:12px;background:#FFF8E8;color:inherit;text-align:left;cursor:pointer}.dlkho small{display:block;color:var(--muted,#8a7f76);font-size:12px;margin-top:2px}.dlkho>b{font-size:20px;color:#8E1B1B}
+<style>.lockeo{padding:12px 14px;margin:0}.lockeo #locGia{color:#8E1B1B}.lockeo .dlrange input{accent-color:#8E1B1B}.lockeo .dlrange::before{background:#8E1B1B}
+.dlkho{display:flex;justify-content:space-between;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 12px;padding:10px 12px;border:1.5px solid #C9A24A;border-radius:12px;background:#FFF8E8;color:inherit;text-align:left;cursor:pointer}.dlkho small{display:block;color:var(--muted,#8a7f76);font-size:12px;margin-top:2px}.dlkho>b{font-size:20px;color:#8E1B1B}
 .dltag{display:inline-block;padding:1px 9px;border-radius:999px;font-size:12.5px;font-weight:800}.dltag.manh{background:#E3F4EA;color:#1F7A47}.dltag.coc{background:#FFEBD6;color:#B4531A}.dltag.xong{background:#EEE;color:#666}
 .khoit{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;border:0;cursor:pointer;color:inherit;margin-bottom:8px}.khoit img,.khoic{width:76px;height:76px;border-radius:10px;object-fit:cover;flex-shrink:0;background:#EDE3D3}.khoic{display:grid;place-items:center;font-size:30px}.khoit .grow{display:flex;flex-direction:column;gap:2px}.khoad{display:block;font-size:14px}.khonote{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;color:#5b4b3a;background:#FFF8E8;border-radius:8px;padding:4px 8px;margin:3px 0}
 .dlcard{padding:0;overflow:visible}.dlhead{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:0;padding:14px;color:inherit;text-align:left;cursor:pointer}.dlhead small{display:block;color:var(--muted,#8a7f76);font-size:12px;margin-top:2px}
@@ -1768,12 +1769,15 @@ SHB.vanhanh=()=>({t:'Phòng vận hành',h:`<div class="card"><h2 class="h2">Đ�
  <div class="card" style="margin-top:10px"><h2 class="h2">Hệ số T của vụ chốt</h2>${tierTable()}</div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Nguyên liệu xây nhà</h2><p class="sub" style="line-height:1.55">Gạch, gỗ, thép, kính có được từ điểm danh, quà sinh nhật và mua ở Siêu thị. Mỗi cấp nhà cần nhiều nguyên liệu hơn cấp trước.</p></div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Thể lệ thi đua</h2><p style="margin:0;line-height:1.55">${esc(S.rules)}</p></div>`});
-SHB.loc=()=>{const f=U.loc||(U.loc={area:'all',seg:-1});
+SHB.loc=()=>{const f=U.loc||(U.loc={area:'all',seg:-1});const GM=DL_GIA.length-1;if(f.pi0==null){f.pi0=0;f.pi1=GM}const g0=DL_GIA[f.pi0],g1=DL_GIA[f.pi1];
  const items=S.hang.map(h=>({addr:h[0],area:h[1],type:h[2],p:h[3],dt:h[4],ex:true}));
  S.accts.forEach(x=>(x.g.camp||[]).forEach(c=>{const p=parseFloat(String(c.price||'').replace(',','.'));if(p)items.push({addr:c.addr,area:/tân bình/i.test(c.addr)?'Tân Bình':'Tân Phú',type:'Cổng trại · '+x.name,p,dt:c.note||''})}));
- const L=items.filter(h=>(f.area==='all'||h.area===f.area)&&(f.seg<0||tierIdx(h.p)===f.seg)).sort((x,y)=>x.p-y.p);
+ const L=items.filter(h=>(f.area==='all'||h.area===f.area)&&(f.seg>=0?tierIdx(h.p)===f.seg:(h.p>=g0-1e-9&&(f.pi1>=GM||h.p<=g1+1e-9)))).sort((x,y)=>x.p-y.p);
  const me_=me();return {t:'Phòng lọc hàng',h:`<div class="stack">${hasCtv(me_)?`<button class="btn gold full" data-a="sheet" data-v="lochang">🔎 Đăng ký lọc hàng theo yêu cầu (còn ${3-lhUsed(me_)}/3 lượt)</button>`:''}<div class="picks">${[['all','Tất cả'],['Tân Phú','Tân Phú'],['Tân Bình','Tân Bình']].map(([k,l])=>`<button class="${f.area===k?'on':''}" data-a="loc" data-v="area:${k}">${l}</button>`).join('')}</div>
- <div class="picks"><button class="${f.seg<0?'on':''}" data-a="loc" data-v="seg:-1">Mọi tầm giá</button>${TIERS.map((t,i)=>`<button class="${f.seg===i?'on':''}" data-a="loc" data-v="seg:${i}">${t[1]}</button>`).join('')}</div>
+ <div class="picks"><button class="${f.seg===-1&&f.pi0===0&&f.pi1===GM?'on':''}" data-a="loc" data-v="seg:-1">Mọi tầm giá</button>${TIERS.map((t,i)=>`<button class="${f.seg===i?'on':''}" data-a="loc" data-v="seg:${i}">${t[1]}</button>`).join('')}</div>
+ <div class="card lockeo"><div class="between"><span class="sub">✋ Tự chọn khoảng giá</span><b id="locGia" class="num">${dlGiaTxt(f.pi0)} – ${dlGiaTxt(f.pi1)}</b></div>
+  <div class="dlrange"><input type="range" min="0" max="${GM}" step="1" value="${f.pi0}" data-loc="pi0" aria-label="Giá từ"><input type="range" min="0" max="${GM}" step="1" value="${f.pi1}" data-loc="pi1" aria-label="Giá đến"></div>
+  <div class="dlgb"><span>Từ <button data-a="locGiaB" data-v="pi0:-1" aria-label="Giảm giá từ">−</button><button data-a="locGiaB" data-v="pi0:1" aria-label="Tăng giá từ">+</button></span><span>Đến <button data-a="locGiaB" data-v="pi1:-1" aria-label="Giảm giá đến">−</button><button data-a="locGiaB" data-v="pi1:1" aria-label="Tăng giá đến">+</button></span></div></div>
  <div class="sub">${L.length} căn phù hợp</div>${L.map(h=>`<div class="li"><div class="grow"><b>${esc(h.addr)}</b>${h.ex?' <span class="pill">Ví dụ</span>':''}<div class="sub">${esc(h.area)} · ${esc(h.type)}${h.dt?' · '+esc(h.dt):''}</div></div><div style="text-align:right"><b class="num">${ty(h.p*1e9)}</b><div class="rw">chốt +${tierT(h.p)} 💎</div></div></div>`).join('')||'<p class="sub">Không có căn nào.</p>'}</div>`}};
 SHB.nhatho=()=>relRoom('nhatho');SHB.chua=()=>relRoom('chua');SHB.hoahao=()=>relRoom('hoahao');SHB.hoigiao=()=>relRoom('hoigiao');
 SHB.chuong=()=>({t:'Chuông Nhà Thờ',h:`<div class="card tet"><div class="kicker">Nhắc mỗi ngày</div><div class="big num" style="margin-top:6px">6:00</div><div class="sub" style="margin-top:6px">Mỗi sáng từ 6 giờ, lần đầu anh em mở app, chuông sẽ rung để nhắc việc hôm nay, số tuần còn lại tới Tết và một câu động lực.</div></div><button class="btn gold full" style="margin-top:10px" data-a="sheet" data-v="bell">Rung chuông thử</button>`});
@@ -2096,7 +2100,13 @@ A.ch=v=>{const a=me();const i=v.indexOf('=');const k=v.slice(0,i),x=v.slice(i+1)
 A.buy=k=>{const a=me();const it=SHOP.find(x=>x.k===k);for(const c in it.price)if((a.g[c]||0)<it.price[c]){toast('Chưa đủ '+MATS.find(m=>m[0]===c)[1]);return}
   for(const c in it.price)a.g[c]=Math.round((a.g[c]-it.price[c])*10)/10;
   if(it.give){for(const g in it.give)a.g[g]=(a.g[g]||0)+it.give[g];toast('Đã mua '+it.n)}else{a.g.inv.push(k);if(it.slot)a.g.char[it.slot]=k;toast('Đã mua '+it.n+(it.slot?', đã mặc cho nhân vật':', đã đặt trước nhà'))}save();render()};
-A.loc=v=>{const i=v.indexOf(':');const k=v.slice(0,i),x=v.slice(i+1);U.loc[k]=k==='seg'?+x:x;render()};
+A.loc=v=>{const i=v.indexOf(':');const k=v.slice(0,i),x=v.slice(i+1);U.loc[k]=k==='seg'?+x:x;if(k==='seg')locSegGia(U.loc);render()};
+/* v64: thanh kéo khoảng giá ở Phòng lọc hàng */
+const LOC_BIEN=[[0,3],[3,6],[6,10],[10,20],[20,null]];
+function locSegGia(f){const GM=DL_GIA.length-1;const b=LOC_BIEN[f.seg];if(!b){f.pi0=0;f.pi1=GM;return}f.pi0=dlGiaIdx(b[0]);f.pi1=b[1]==null?GM:dlGiaIdx(b[1])}
+A.locGiaB=v=>{const f=U.loc;if(!f)return;const GM=DL_GIA.length-1;const [k,st]=v.split(':');let x=f[k]+(+st);x=Math.max(0,Math.min(GM,x));if(k==='pi0')x=Math.min(x,f.pi1);else x=Math.max(x,f.pi0);f[k]=x;f.seg=-1;render()};
+document.addEventListener('input',e=>{const k=e.target&&e.target.dataset&&e.target.dataset.loc;if(!k||!U.loc)return;const f=U.loc;let v=+e.target.value;if(k==='pi0'&&v>f.pi1){v=f.pi1;e.target.value=v}if(k==='pi1'&&v<f.pi0){v=f.pi0;e.target.value=v}f[k]=v;f.seg=-1;const o=document.getElementById('locGia');if(o)o.textContent=dlGiaTxt(f.pi0)+' – '+dlGiaTxt(f.pi1)});
+document.addEventListener('change',e=>{if(e.target&&e.target.dataset&&e.target.dataset.loc&&U.loc)render()});
 A.sendMsg=v=>{const t=val('msg');if(!t){toast('Viết lời nhắn nhé');return}S.msgs.push({to:v,from:me().name,text:t,d:today()});save();render();toast('Đã gửi tới '+acct(v).name)};
 A.firePost=()=>{const t=val('fx');if(!t){toast('Viết vài dòng nhé');return}S.fire.unshift({name:document.getElementById('fan').checked?null:me().name,text:t,d:today(),hearts:0,rep:[]});save();render();toast('Anh em sẽ tiếp lửa cho bạn')};
 A.fireHeart=v=>{S.fire[+v].hearts++;save();render()};
