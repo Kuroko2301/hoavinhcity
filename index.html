@@ -2805,7 +2805,14 @@ SH.khoXem=(id)=>{const h=(S.kho||[]).find(x=>x.id===id);if(!h)return {t:'📦 Kh
  <div class="card ksblk"><div class="sub" style="font-weight:800">📝 Ghi chú</div><p>${h.note?esc(h.note):'<span class="sub">Chưa có ghi chú.</span>'}</p></div>
  <div class="sub" style="margin-top:8px">Người lưu: <b>${esc(h.by||'Anh em')}</b> · ${esc(fmtD(h.d))}</div>
  ${mine?`<button class="btn gold full" style="margin-top:12px" data-a="khoSua" data-v="${esc(h.id)}">✏️ Sửa ghi chú & hình</button>`:`<div class="note" style="margin-top:12px">🔒 Chỉ ${esc(h.by||'người lưu')} được sửa ghi chú và hình căn này.</div>`}
- <button class="btn ghost full" style="margin-top:8px" data-a="sheet" data-v="house:${esc(h.id)}">🏠 Mở trang căn (bài đăng, khách, khảo sát…)</button>`}};
+ <button class="btn ghost full" style="margin-top:8px" data-a="sheet" data-v="house:${esc(h.id)}">🏠 Mở trang căn (bài đăng, khách, khảo sát…)</button>
+ ${khoXoaDuoc(h)?`<button class="btn full" style="margin-top:8px;background:${U.khoXoa===h.id?'#B3261E':'#fff'};color:${U.khoXoa===h.id?'#fff':'#B3261E'};border:1.5px solid #B3261E" data-a="khoXoa" data-v="${esc(h.id)}" ${U.khoXoaDang?'disabled':''}>${U.khoXoaDang?'Đang xoá…':U.khoXoa===h.id?'⚠️ Bấm lần nữa để xoá hẳn khỏi Kho':'🗑️ Xoá căn khỏi Kho'}</button>`:''}`}};
+const khoXoaDuoc=h=>{const a=me();return !!a&&(khoCuaToi(h)||a.role==='tl'||a.role==='sep')};
+async function khoXoaCan(h){S.kho=(S.kho||[]).filter(x=>x.id!==h.id);save()}
+A.khoXoa=async id=>{const h=(S.kho||[]).find(x=>x.id===id);if(!h||!khoXoaDuoc(h)||U.khoXoaDang)return;
+ if(U.khoXoa!==id){U.khoXoa=id;render();setTimeout(()=>{if(U.khoXoa===id&&!U.khoXoaDang){U.khoXoa=null;render()}},5000);return}
+ U.khoXoaDang=true;render();try{await khoXoaCan(h);U.khoXoa=null;toast('Đã xoá căn khỏi Kho 🗑️');A.sheet('dlKho:'+(h.src==='dtk'?'dtk':'all'))}
+ catch(e){toast((e&&e.message)||'Chưa xoá được, thử lại nhé')}finally{U.khoXoaDang=false;render()}};
 A.khoSua=id=>{const h=(S.kho||[]).find(x=>x.id===id);if(!h||!khoCuaToi(h))return;U.khoSua={id,note:h.note||'',anh:khoAnhCua(h).map(x=>Object.assign({},x))};render()};
 A.khoSuaHuy=()=>{U.khoSua=null;render()};
 A.khoSuaLuu=async()=>{const d=U.khoSua;if(!d||d.busy)return;khoGiuChu('sua');const h=(S.kho||[]).find(x=>x.id===d.id);if(!h)return;d.busy=true;render();
@@ -2813,7 +2820,7 @@ A.khoSuaLuu=async()=>{const d=U.khoSua;if(!d||d.busy)return;khoGiuChu('sua');con
 async function khoLuuSua(h,d){h.note=String(d.note||'').trim().slice(0,1500);h.hinh=d.anh.map(x=>({url:x.url}));save()}
 /* ---- Chi tiết căn ---- */
 A.dlCt=async v=>{const d=dlS();const it=d.list[+v];if(!it)return;const ct=U.dlCt={i:+v,it,loading:true};A.sheet('dlCt');
- try{const id=it.id||it._id;const r=await dtkApi('chi_tiet',{id,it});if(U.dlCt!==ct)return;ct.bk=Object.assign({},it,(r&&r.bk)||{});ct.bai=dlDep((r&&r.bai_ai)||'');ct.hn=r&&r.hinh_nha}
+ try{const id=it.id||it._id;const r=await dtkApi('chi_tiet',{id,it});if(U.dlCt!==ct)return;ct.bk=Object.assign({},it,(r&&r.bk)||{});ct.bai=dlDep((r&&r.bai_ai)||'');ct.hn=r&&r.hinh_nha;ct.nhanh=!!(r&&r.loc_nhanh&&ct.bai)}
  catch(e){ct.bk=it;ct.err=e.message}ct.loading=false;if(U.sheet==='dlCt')render()};
 function dlFb(bk){const u=dlUser(bk);const t=String(bk.description||'')+'\n'+String(bk.title||'');let link=u.facebook||'';const m=t.match(/https?:\/\/(?:www\.|m\.)?(?:facebook\.com|fb\.com|fb\.me)\/[^\s)]+/i);if(!link&&m)link=m[0];
  const n=t.match(/facebook\s*[:：-]\s*([^\n]{2,60})/i);let ten=n?n[1].replace(/https?:\/\/\S+/,'').trim():'';if(/^https?:/i.test(ten))ten='';
@@ -2823,9 +2830,9 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
  const imgs=(Array.isArray(bk.images)?bk.images:[]).map((im,i)=>({im,i,ok:!c.hn||c.hn[i]!==false}));const nha=imgs.filter(x=>x.ok);const an=imgs.length-nha.length;
  const loc=[dtkField(bk.location&&bk.location.district)||dtkField(bk.district),dlTc('zone_group',bk.zone_group)||dtkField(bk.agency)].filter(Boolean).join(' - ');
  const fb=dlFb(bk),zl=dlZalo(bk);const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
- const nd=c.loading?`<p class="sub">✨ AI đang đọc tin, lọc nội dung và hình…</p>`:c.bai?`<div class="dlnd">${esc(c.bai)}</div>${dlNut(c,nha.length)}`:`<div class="note">${c.err?esc(c.err)+'. ':''}Chưa có nội dung AI${sb_co()?'':' (bản demo)'}, đang hiện tin gốc.</div><div class="dlnd">${esc(goc)}</div>${dlNut(c,nha.length)}`;
+ const nd=c.loading?`<p class="sub">✨ AI đang đọc tin, lọc nội dung và hình…</p>`:c.bai?`${c.nhanh?'<div class="note">⚡ AI đang quá tải nên app lọc nhanh tin gốc (đã bỏ SĐT, số nhà, hoa hồng, tên team). Bấm <b>✨ Tạo mới mô tả</b> sau ít phút để AI viết bài hay hơn nha.</div>':''}<div class="dlnd">${esc(c.bai)}</div>${dlNut(c,nha.length)}`:`<div class="note">${c.err?esc(c.err)+'. ':''}Chưa có nội dung AI${sb_co()?'':' (bản demo)'}, đang hiện tin gốc.</div><div class="dlnd">${esc(goc)}</div>${dlNut(c,nha.length)}`;
  return {t:'🏠 Chi tiết nhà',h:`<b class="dlt" style="display:block">${esc(dtkField(bk.title)||'Tin nhà')}</b>
-  <div class="kicker" style="margin:14px 0 6px">Mô tả chi tiết · AI đã lọc</div>${nd}
+  <div class="kicker" style="margin:14px 0 6px">Mô tả chi tiết · ${c.nhanh?'lọc nhanh':'AI đã lọc'}</div>${nd}
   ${!c.loading&&c.bai?`<details style="margin-top:8px"><summary class="sub">Xem tin gốc</summary><div class="dlnd sub">${esc(goc)}</div></details>`:''}
   <div class="kicker" style="margin:16px 0 6px">Hình ảnh nhà ${nha.length?'('+nha.length+')':''}</div>
   ${c.loading?'<p class="sub">⏳ Đang lọc hình…</p>':nha.length?`<div class="dlgal">${nha.map(x=>`<div><img src="${esc(dlImgUrl(x.im))}" alt="Hình nhà" loading="lazy" data-a="dlXem" data-v="${x.i}"><button data-a="dlTai" data-v="${x.i}" aria-label="Tải hình">⬇️</button></div>`).join('')}</div>${an?`<p class="sub">Đã ẩn ${an} hình có mặt người (selfie).</p>`:''}<button class="btn full" style="margin-top:8px;background:#2E8B57;color:#fff" data-a="dlTaiHet" ${c.shDang?'disabled':''}>${dlNhanTai(c,nha.length)}</button>`:'<p class="sub">Tin này chưa có hình nhà.</p>'}
@@ -2840,7 +2847,7 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
 function dlDep(t){t=String(t||'').replace(/\r/g,'').trim();if(!t)return t;
  if((t.match(/\n/g)||[]).length<3){t=t.replace(/[ \t]*(?:[.;,]\s*)?(?=(?:\p{Extended_Pictographic}|[\u2600-\u27BF])\uFE0F?\s*[A-ZĐÀ-Ỹa-zđà-ỹ0-9])/gu,(m,o)=>o===0?'':'\n').replace(/\n\s*\n/g,'\n')}
  return t.replace(/^([^\n]+)\n(?!\n)/,'$1\n\n').replace(/\n{3,}/g,'\n\n')}
-function dlNhanTai(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!f||!f.length||!c.taiSan)return '⬇️ Tải tất cả '+n+' hình về máy';
+function dlNhanTai(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!laIOS())return '⬇️ Tải tất cả '+n+' hình về máy';if(!f||!f.length||!c.taiSan)return '⬇️ Tải tất cả '+n+' hình về máy';
  const lo=c.lo||10,i=c.ti||0,con=f.length-i;if(con<=0)return '⬇️ Lưu lại '+f.length+' hình';const k=Math.min(lo,con);
  return f.length<=lo?'📥 Lưu '+f.length+' hình vào máy (bấm để mở)':(i===0?'📥 Lưu đợt 1 ('+k+'/'+f.length+' hình)':'📥 Lưu tiếp '+k+' hình (còn '+con+'/'+f.length+')')}
 function dlNhanShare(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!f||!f.length)return '📲 Chia sẻ Zalo (bài viết + '+n+' hình)';
@@ -2859,9 +2866,9 @@ function dlVietLaiDemo(bai,cu){const ls=String(bai||'').split('\n');const than=l
  const da=new Set((cu||[]).map(x=>String(x).split('\n')[0]));const ds=DL_TIEU_DE.map(t=>t.replace('{Q}',q.toUpperCase())).filter(t=>!da.has(t));
  return (ds[Math.floor(Math.random()*ds.length)]||DL_TIEU_DE[0].replace('{Q}',q.toUpperCase()))+'\n'+than}
 A.dlTaoMoi=async()=>{const c=U.dlCt;if(!c||c.taoMoi)return;const bk=c.bk||c.it||{};const goc=[bk.title,bk.description].filter(Boolean).join('\n\n');
- c.cu=c.cu||[c.bai||goc];c.taoMoi=true;render();
+ c.cu=c.cu||[c.nhanh?goc:(c.bai||goc)];c.taoMoi=true;render();
  try{const r=await dtkApi('viet_lai',{id:bk.id||bk._id,cu:c.cu});let moi=r&&r.bai_ai;if(!moi)moi=dlVietLaiDemo(c.bai||goc,c.cu);
-  if(U.dlCt!==c)return;moi=dlDep(moi);c.bai=moi;c.cu.push(moi);toast('✨ Đã có mô tả mới')}
+  if(U.dlCt!==c)return;moi=dlDep(moi);c.bai=moi;c.nhanh=false;c.cu.push(moi);toast('✨ Đã có mô tả mới')}
  catch(e){toast(e.message||'AI đang bận, thử lại nha')}
  finally{c.taoMoi=false;if(U.sheet==='dlCt')render()}};
 /* v53: Chia sẻ Zalo: gửi bài viết + tất cả hình nhà trong 1 lần */
@@ -2871,6 +2878,7 @@ async function dlChuanBi(c){if(c.shf&&c.shf.length)return c.shf;const bk=c.bk||c
  await Promise.all(list.map(async(x,k)=>{try{const b=await dlBlob(dlImgUrl(x.im,true));const t=/^image\//.test(b.type)?b.type:'image/jpeg';const ext=(t.split('/')[1]||'jpg').replace('jpeg','jpg');
   files[k]=new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:t})}catch(e){}}));
  c.shDang=false;c.shf=files.filter(Boolean);c.shi=0;c.ti=0;c.lo=c.lo||(/iP(hone|ad|od)/.test(navigator.userAgent)?30:10);render();return c.shf}
+const laIOS=()=>{try{return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}catch(e){return false}};
 function dlCoChiaSeTep(f){try{return !!(navigator.share&&navigator.canShare&&navigator.canShare({files:f.slice(0,1)}))}catch(e){return false}}
 /* gửi 1 đợt hình qua bảng chia sẻ; key = 'shi' (Zalo) hoặc 'ti' (lưu máy). Trả 'xong' | 'cho' (cần bấm lại) | 'huy' */
 async function dlGuiDot(c,key,text,tuDong){const f=c.shf;if((c[key]||0)>=f.length)c[key]=0;const i=c[key]||0,lo=c.lo||10;const dot=f.slice(i,i+lo);
@@ -2893,7 +2901,7 @@ A.dlShareChu=()=>{const c=U.dlCt;if(!c)return;const bk=c.bk||c.it||{};const text
  if(navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy(text)});else copy(text)};
 A.dlTaiHet=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const daCo=!!(c.shf&&c.shf.length);const f=await dlChuanBi(c);
  if(!f.length){toast('Chưa tải được hình, thử lại sau nha');return}
- if(!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Đã tải '+f.length+' hình về máy 📥');return}
+ if(!laIOS()||!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Đã tải '+f.length+' hình về máy 📥');return}
  c.taiSan=true;const kq=await dlGuiDot(c,'ti','',!daCo);
  if(kq==='cho')toast('✅ '+f.length+' hình đã sẵn sàng. Bấm nút xanh lá lần nữa, chọn “Lưu '+f.length+' hình ảnh” nhé');
  else if(kq==='con')toast('Đã lưu '+c.ti+'/'+f.length+' hình. Bấm tiếp để lưu phần còn lại nhé');
@@ -2908,7 +2916,7 @@ async function dlTaiNhieu(list){const c=U.dlCt;const bk=(c&&(c.bk||c.it))||{};co
  toast('⏳ Đang tải '+list.length+' hình…');const files=[];
  for(const x of list){try{const b=await dlBlob(dlImgUrl(x.im,true));const ext=(b.type.split('/')[1]||'jpg').replace('jpeg','jpg');files.push(new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:b.type||'image/jpeg'}))}catch(e){}}
  if(!files.length){toast('Chưa tải được hình, thử lại sau nha');return}
- try{if(navigator.canShare&&navigator.canShare({files})){await navigator.share({files});return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{if(laIOS()&&navigator.canShare&&navigator.canShare({files})){await navigator.share({files});return}}catch(e){if(e&&e.name==='AbortError')return}
  files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Đã tải '+files.length+' hình về máy 📥')}
 A.dlTai=v=>{const c=U.dlCt;const im=c&&(c.bk||c.it).images[+v];if(im)dlTaiNhieu([{im,i:+v}])};
 
@@ -4299,6 +4307,13 @@ khoLuuSua=async(h,d)=>{if(!h.dbId)throw new Error('Căn này chưa có trên má
   const bo=(h.hinh||[]).map(x=>x.path).filter(p=>p&&!giu.includes(p)&&p.startsWith(LIVE.me.id+'/'));if(bo.length)await sb.storage.from('khao-sat').remove(bo).catch(()=>{});
   h.note=note;h.hinh=out;_save();if(hong)toast(hong+' hình chưa tải lên được, thử lại nha')}
  finally{busy(false)}};
+
+/* ---- v66: Xoá căn khỏi Kho — đánh dấu trang_thai='da_go' (người lưu hoặc Sếp/Trợ lý), xoá hình của chính mình ---- */
+khoXoaCan=async h=>{if(!h.dbId)throw new Error('Căn này chưa có trên máy chủ');busy(true,'Đang xoá…');
+ try{const {error}=await sb.from('nha').update({trang_thai:'da_go'}).eq('id',h.dbId);if(error)throw error;
+  if(h.byId===LIVE.me.id){const thu=LIVE.me.id+'/kho/'+h.dbId;try{const {data}=await sb.storage.from('khao-sat').list(thu,{limit:50});const ps=(data||[]).filter(f=>f&&f.name).map(f=>thu+'/'+f.name);if(ps.length)await sb.storage.from('khao-sat').remove(ps)}catch(e){console.warn('kho xoa hinh',e)}}
+  S.kho=(S.kho||[]).filter(x=>x.id!==h.id);await loadKho(LIVE.me).catch(()=>{});_save()}
+ catch(e){throw new Error(errVi(e))}finally{busy(false)}};
 
 /* ---- v65: Chi phí phòng — bảng nhat_ky (loai='chi_phi'); RLS: người ghi + Sếp/Trợ lý xem, chỉ Trợ lý ghi ---- */
 LIVE.cp={ds:[],luc:0,dang:false};
