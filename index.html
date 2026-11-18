@@ -2752,7 +2752,7 @@ function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';if(d.loading&
   (!d.het?`<button class="btn ghost full" data-a="dlSearch" data-v="more" ${d.loading?'disabled':''}>${d.loading?'Đang tải…':'Xem thêm '+d.size+' căn'}</button>`:'')}
 /* v63: tình trạng tin đúng chữ ĐTK ghi (transfer_status → tên trong cấu hình ĐTK), trạm gắn sẵn transfer_title */
 function dlTT(it){return String((it&&it.transfer_title)||dlTc('transfer_status',it&&it.transfer_status)||'').trim()}
-function dlTTLoai(t){const k=String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toLowerCase();return /coc/.test(k)?'coc':/da ban|ngung|het/.test(k)?'xong':'manh'}
+function dlTTLoai(t){const k=String(t).normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/gi,'d').toLowerCase();return /coc/.test(k)?'coc':/da ban|dung|ngung|het|da chot/.test(k)?'xong':'manh'}
 A.dlAdd=v=>{const d=dlS();U.dtkTong={list:d.list,da:d.da||(d.da={}),inline:'dl'};A.dtkTongAdd(v)};
 
 /* ===== v63: Kho đã lưu (từ Lọc nhà ĐTK) · ghi chú + hình khi lưu · chỉ người lưu được sửa ===== */
