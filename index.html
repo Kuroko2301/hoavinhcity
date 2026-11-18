@@ -2844,7 +2844,7 @@ SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.b
    <div class="sub">💬 ${zl?`<a href="https://zalo.me/${esc(zl.replace(/^\+?84/,'0'))}" target="_blank" rel="noopener">Zalo ${esc(zl)}</a>`:''}</div></div></div>
   ${(U.dl&&U.dl.da||{})[c.i]?'<div class="note ok" style="margin-top:12px;text-align:center">✅ Đã thêm vào Kho</div>':`<button class="btn gold full" style="margin-top:12px" data-a="dlAdd" data-v="${c.i}">➕ Thêm căn này vào Kho</button>`}`}};
 /* v55: tách dòng bài AI bị dính liền */
-function dlDep(t){t=String(t||'').replace(/\r/g,'').trim();if(!t)return t;
+function dlDep(t){t=String(t||'').replace(/\\r\\n|\\n|\\r/g,'\n').replace(/\\t/g,' ').replace(/\r/g,'').trim();if(!t)return t;
  if((t.match(/\n/g)||[]).length<3){t=t.replace(/[ \t]*(?:[.;,]\s*)?(?=(?:\p{Extended_Pictographic}|[\u2600-\u27BF])\uFE0F?\s*[A-ZĐÀ-Ỹa-zđà-ỹ0-9])/gu,(m,o)=>o===0?'':'\n').replace(/\n\s*\n/g,'\n')}
  return t.replace(/^([^\n]+)\n(?!\n)/,'$1\n\n').replace(/\n{3,}/g,'\n\n')}
 function dlNhanTai(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!laIOS())return '⬇️ Tải tất cả '+n+' hình về máy';if(!f||!f.length||!c.taiSan)return '⬇️ Tải tất cả '+n+' hình về máy';
