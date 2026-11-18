@@ -2726,7 +2726,7 @@ function dlAgo(t){const x=dlMs(t);if(!x)return '';const dt=new Date(x);const p=n
 function dlTc(kind,v){const L=((dlS().tc||{})[kind])||[];const o=L.find(x=>String(x.value)===String(v));return o?o.title:''}
 function dlImgUrl(im,big){if(!im)return '';if(typeof im==='string')return im;return big?(im.image||im.medium||im.big||im.url||im.thumb||''):(im.thumb||im.medium||im.image||im.url||'')}
 function dlUser(it){const o=it.owner&&typeof it.owner==='object'?it.owner:{};const u=Object.assign({},o,it.user||{});if(!u.full_name)u.full_name=o.full_name||o.name||o.fullname||'';if(!u.avatar)u.avatar=(typeof it.avatar==='string'?it.avatar:(it.avatar&&it.avatar.url))||o.avatar||'';return u}
-function dlCreated(it){return it.published||it.created||it.created_at||it.createdAt||it.modified||''}
+function dlCreated(it){return it.created||it.created_at||it.createdAt||it.published||it.modified||''}
 function dlTimGi(f){const H=(f.hg||[]).map(id=>(DL_HUONG.find(x=>x.id===id)||{}).name).filter(Boolean);return [String(f.kw||'').trim(),H.length?'hướng '+H.join('/'):''].filter(Boolean).join(' · ')}
 function dlBuoc(g){return g<2?['🤖','Đang hiểu yêu cầu của bạn…']:g<6?['📥','Đang lấy tin mới nhất từ Đại Thế Kỷ…']:g<25?['🔎','Đang đọc từng tin để lọc đúng căn…']:['⏳','Sắp xong rồi, nhiều tin quá nên hơi lâu xíu…']}
 let dlTimer=null;function dlDongHo(on){clearInterval(dlTimer);dlTimer=null;if(!on)return;dlTimer=setInterval(()=>{const d=U.dl;const el=document.getElementById('dlTt');if(!d||!d.loading||!el){if(!d||!d.loading){clearInterval(dlTimer);dlTimer=null}return}
