@@ -561,6 +561,15 @@ html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px)
 .dlgy{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;scrollbar-width:none}.dlgy::-webkit-scrollbar{display:none}
 .dlgy button{flex:none;border:1px solid rgba(46,139,87,.55);background:rgba(46,139,87,.12);color:inherit;font:inherit;font-size:12.5px;font-weight:600;border-radius:999px;padding:5px 11px;cursor:pointer}
 .dlhieu{margin-top:4px;font-size:12.5px;line-height:1.4;opacity:.92}.dlhieu b{color:#2E8B57}
+
+/*v61 trang thai tim*/
+.dltt{border:1.5px solid rgba(46,139,87,.55)}.dltt-h{display:flex;gap:12px;align-items:center}.dltt-ic{font-size:26px;animation:dlttN 1.2s ease-in-out infinite}
+.dltt-tx{display:block;line-height:1.35}.dltt-s{font-variant-numeric:tabular-nums;font-weight:700;color:#2E8B57;white-space:nowrap}
+.dltt-bar{height:6px;border-radius:9px;background:rgba(46,139,87,.18);overflow:hidden;margin:12px 0 10px}.dltt-bar i{display:block;height:100%;width:35%;border-radius:9px;background:#2E8B57;animation:dlttC 1.4s ease-in-out infinite}
+.dltt-b{list-style:none;margin:0;padding:0;display:flex;gap:6px;font-size:12.5px}.dltt-b li{flex:1;text-align:center;padding:6px 4px;border-radius:10px;border:1px solid rgba(127,127,127,.3);opacity:.55}
+.dltt-b li.dang{opacity:1;border-color:#2E8B57;font-weight:700}.dltt-b li.xong{opacity:1;background:rgba(46,139,87,.16);border-color:transparent}.dltt-b li.xong::before{content:'✓ ';color:#2E8B57}
+@keyframes dlttC{0%{transform:translateX(-110%)}100%{transform:translateX(310%)}}@keyframes dlttN{50%{transform:scale(1.15)}}
+@media (prefers-reduced-motion:reduce){.dltt-ic,.dltt-bar i{animation:none}}
 </style>
 
 <div id="app"></div>
@@ -2676,7 +2685,7 @@ function dlBody(d,offset){const f=d.f,tc=d.tc||{};const Q=dlQuanAll(tc);let dist
  const s=(tc.sort||[])[+(f.sort||0)];const sorts=s?{[s.field]:s.value}:undefined;
  const segV=f.seg!==''&&f.seg!=null?((tc.segment||[]).find(x=>String(x.value)===String(f.seg))||{}).value:undefined;
  return {size:d.size,offset:offset||0,keyword:f.kw||'',sorts,location:{province,district,ward:f.d1?(f.wd||[]):[]},area,price,segment:segV,attribute:f.attr?(isNaN(+f.attr)?f.attr:+f.attr):undefined,approval_house_label:f.label||undefined,thong_minh:f.kw||'',huong:(f.hg||[]).slice()}}
-A.dlSearch=async(more)=>{const d=dlS();if(!dtkTok()){A.dtkLoginOpen();return}const add=more==='more';const off=add?(d.nextOff!=null?d.nextOff:d.list.length):0;d.loading=true;d.err=null;d.searched=true;render();
+A.dlSearch=async(more)=>{const d=dlS();if(d.loading)return;if(!dtkTok()){A.dtkLoginOpen();return}const add=more==='more';const off=add?(d.nextOff!=null?d.nextOff:d.list.length):0;if(!add){d.list=[];d.total=null;d.hieu='';d.da={};d.het=false;d.tim=dlTimGi(d.f)}d.loading=true;d.err=null;d.searched=true;d.t0=Date.now();dlDongHo(true);render();
  if(!add)setTimeout(()=>{const e=document.getElementById('dlKq');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},60);
  try{const body=dlBody(d,off);let j;try{j=await dtkApi('tim',body)}catch(e1){if(e1.status===401||!(body.location&&body.location.district&&body.location.district.length))throw e1;
    /* ĐTK chưa nhận lọc theo mã quận → tìm theo tên quận/phường */const Q=dlQuanAll(d.tc);const ten=body.location.district.map(id=>{const q=Q.find(x=>String(x.id)===String(id));return q?q.name.split(' · ')[0]:''}).filter(Boolean);
@@ -2684,7 +2693,7 @@ A.dlSearch=async(more)=>{const d=dlS();if(!dtkTok()){A.dtkLoginOpen();return}con
    const b2=Object.assign({},body,{keyword:[body.keyword,tp.join(' ')||ten.join(' ')].filter(Boolean).join(' ')});delete b2.location;j=await dtkApi('tim',b2);d.theoTen=true}if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};let list=dd.data||(j&&j.data)||[];if(!Array.isArray(list))list=[];
   if(!add)d.hieu=dd.hieu||'';d.list=add?d.list.concat(list):list;d.total=dd.total!=null?dd.total:(j&&j.total);d.nextOff=dd.next_offset!=null?dd.next_offset:d.list.length;d.du=dd.du;d.het=dd.het!=null?!!dd.het:(d.total!=null&&d.list.length>=d.total);d.da=add?d.da:{}}
  catch(e){if(e.status===401){dtkSetTok('');toast('Phiên Đại Thế Kỷ hết hạn, đăng nhập lại nha');A.dtkLoginOpen()}else d.err=e.message}
- d.loading=false;render()};
+ d.loading=false;dlDongHo(false);render()};
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.dl;if(!k)return;const d=dlS(),f=d.f;
  if(k==='pi0'||k==='pi1'){let v=+e.target.value;if(k==='pi0'&&v>f.pi1)v=f.pi1;if(k==='pi1'&&v<f.pi0)v=f.pi0;f[k]=v}else f[k]=e.target.value;
  if(k==='kw')return;if(k==='d1'){f.wd=[];if(f.d1)f.dm=[]}if(k==='seg')dlSegGia(f,d.tc);if(k==='sort'&&d.searched){A.dlSearch();return}render()});
@@ -2710,7 +2719,7 @@ function dlFormPart(){const d=dlS(),f=d.f,tc=d.tc;dlTcLoad();
   <div><div class="sub">Giá: <b id="dlGia" style="color:var(--green,#2E8B57)">${dlGiaTxt(f.pi0)} – ${dlGiaTxt(f.pi1)}</b></div>
    <div class="dlrange"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi0}" data-dl="pi0" aria-label="Giá từ"><input type="range" min="0" max="${DL_GIA.length-1}" step="1" value="${f.pi1}" data-dl="pi1" aria-label="Giá đến"></div>
    <div class="dlgb"><span>Từ <button data-a="dlGiaB" data-v="pi0:-1" aria-label="Giảm giá từ">−</button><button data-a="dlGiaB" data-v="pi0:1" aria-label="Tăng giá từ">+</button></span><span>Đến <button data-a="dlGiaB" data-v="pi1:-1" aria-label="Giảm giá đến">−</button><button data-a="dlGiaB" data-v="pi1:1" aria-label="Tăng giá đến">+</button></span></div></div>
-  <div class="grid2"><button class="btn ghost" data-a="dlReset">Xoá lọc</button><button class="btn" style="background:#2E8B57;color:#fff" data-a="dlSearch">🔍 Tìm kiếm</button></div>
+  <div class="grid2"><button class="btn ghost" data-a="dlReset">Xoá lọc</button><button class="btn" style="background:#2E8B57;color:#fff" data-a="dlSearch" ${d.loading?'disabled':''}>${d.loading?'⏳ Đang tìm…':'🔍 Tìm kiếm'}</button></div>
   ${d.tcErr?`<p class="sub">Bộ lọc đang dùng bản rút gọn (${esc(d.tcErr)}).</p>`:''}</div></div>`}
 function dlMs(t){if(t==null||t==='')return 0;if(typeof t==='number'||/^\d+$/.test(String(t))){const n=+t;return n<1e12?n*1000:n}const x=Date.parse(t);return isNaN(x)?0:x}
 function dlAgo(t){const x=dlMs(t);if(!x)return '';const dt=new Date(x);const p=n=>String(n).padStart(2,'0');return `${p(dt.getHours())}:${p(dt.getMinutes())}:${p(dt.getSeconds())} ${p(dt.getDate())}/${p(dt.getMonth()+1)}/${dt.getFullYear()}`}
@@ -2718,7 +2727,16 @@ function dlTc(kind,v){const L=((dlS().tc||{})[kind])||[];const o=L.find(x=>Strin
 function dlImgUrl(im,big){if(!im)return '';if(typeof im==='string')return im;return big?(im.image||im.medium||im.big||im.url||im.thumb||''):(im.thumb||im.medium||im.image||im.url||'')}
 function dlUser(it){const o=it.owner&&typeof it.owner==='object'?it.owner:{};const u=Object.assign({},o,it.user||{});if(!u.full_name)u.full_name=o.full_name||o.name||o.fullname||'';if(!u.avatar)u.avatar=(typeof it.avatar==='string'?it.avatar:(it.avatar&&it.avatar.url))||o.avatar||'';return u}
 function dlCreated(it){return it.published||it.created||it.created_at||it.createdAt||it.modified||''}
-function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';const tc=d.tc||{};const s=tc.sort||[];
+function dlTimGi(f){const H=(f.hg||[]).map(id=>(DL_HUONG.find(x=>x.id===id)||{}).name).filter(Boolean);return [String(f.kw||'').trim(),H.length?'hướng '+H.join('/'):''].filter(Boolean).join(' · ')}
+function dlBuoc(g){return g<2?['🤖','Đang hiểu yêu cầu của bạn…']:g<6?['📥','Đang lấy tin mới nhất từ Đại Thế Kỷ…']:g<25?['🔎','Đang đọc từng tin để lọc đúng căn…']:['⏳','Sắp xong rồi, nhiều tin quá nên hơi lâu xíu…']}
+let dlTimer=null;function dlDongHo(on){clearInterval(dlTimer);dlTimer=null;if(!on)return;dlTimer=setInterval(()=>{const d=U.dl;const el=document.getElementById('dlTt');if(!d||!d.loading||!el){if(!d||!d.loading){clearInterval(dlTimer);dlTimer=null}return}
+ const g=Math.floor((Date.now()-d.t0)/1000);const [ic,tx]=dlBuoc(g);el.querySelector('.dltt-ic').textContent=ic;el.querySelector('.dltt-tx').textContent=tx;el.querySelector('.dltt-s').textContent=g+' giây';
+ el.querySelectorAll('.dltt-b li').forEach((li,i)=>{const mo=[0,2,6][i];li.className=g>=([2,6,1e9][i])?'xong':g>=mo?'dang':''})},500)}
+function dlTrangThai(d){const g=Math.floor((Date.now()-(d.t0||Date.now()))/1000);const [ic,tx]=dlBuoc(g);const st=(i)=>g>=[2,6,1e9][i]?'xong':g>=[0,2,6][i]?'dang':'';
+ return `<div class="card dltt" id="dlTt" role="status" aria-live="polite"><div class="dltt-h"><span class="dltt-ic">${ic}</span><div class="grow"><b class="dltt-tx">${tx}</b>${d.tim?`<div class="sub">Đang tìm: ${esc(d.tim)}</div>`:''}</div><span class="dltt-s">${g} giây</span></div>
+ <div class="dltt-bar"><i></i></div><ol class="dltt-b"><li class="${st(0)}">Hiểu yêu cầu</li><li class="${st(1)}">Lấy tin Đại Thế Kỷ</li><li class="${st(2)}">Lọc đúng căn</li></ol>
+ <p class="sub" style="margin:8px 0 0">Lần tìm đầu có thể mất 20 đến 40 giây. Bạn cứ để màn hình mở nha.</p></div>`}
+function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';if(d.loading&&!d.list.length)return dlTrangThai(d);const tc=d.tc||{};const s=tc.sort||[];
  const head=`<div class="card between dlres" id="dlKq"><div><b class="num" style="font-size:22px;color:#2E8B57">${d.loading&&!d.list.length?'…':(d.total!=null?Number(d.total).toLocaleString('vi-VN')+(d.du===false?'+':''):d.list.length+(d.het?'':'+'))}</b><div class="sub">căn từ Đại Thế Kỷ</div>${d.hieu?`<div class="dlhieu">🤖 Đã hiểu: <b>${esc(d.hieu)}</b></div>`:''}</div>${s.length?`<select class="in" style="width:auto" data-dl="sort">${s.map((o,i)=>`<option value="${i}" ${String(d.f.sort||0)===String(i)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`:''}</div>`;
  if(d.err)return head+`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" data-a="dlSearch">Thử lại</button>`;
  if(!d.list.length)return head+(d.loading?`<p class="sub" style="text-align:center">⏳ Đang lọc nhà trên Đại Thế Kỷ…</p>`:`<p class="sub">Không có căn nào khớp bộ lọc, thử bỏ bớt điều kiện nha.${d.hieu?' Lưu ý: chỉ hiện căn mà tin đăng có ghi rõ thông số bạn tìm.':''}</p>`);
