@@ -949,7 +949,7 @@ function renderAuth(){
     ${A.err?`<div class="err">${A.err}</div>`:''}
     <button class="btn full" data-a="submitReg">Gửi đăng ký</button></div>`;
   }
-  $('#app').innerHTML=`<div class="auth-hero gut"><div class="kicker">Phòng Hoa Vinh · Tân Phú, Tân Bình</div><h1>Hoa Vinh City</h1><p>Mỗi ngày làm việc là một viên gạch xây nhà</p></div><main class="gut" style="padding-block:16px 40px"><div class="stack">${body}<p class="sub" style="text-align:center">Đăng nhập bằng mã gửi về Gmail, không cần mật khẩu.</p></div></main>`;
+  $('#app').innerHTML=`<div class="auth-hero gut"><div class="kicker">Team Hoa Vinh</div><h1>Hoa Vinh City</h1><p>Mỗi ngày làm việc là một viên gạch xây nhà</p></div><main class="gut" style="padding-block:16px 40px"><div class="stack">${body}<p class="sub" style="text-align:center">Đăng nhập bằng mã gửi về Gmail, không cần mật khẩu.</p></div></main>`;
   if(lk){clearInterval(renderAuth._t);renderAuth._t=setInterval(()=>{const l=lockLeft(A.email);if(!l){clearInterval(renderAuth._t);render();return}const el=$('#lockclock');if(el)el.textContent=String(Math.floor(l/60000)).padStart(2,'0')+':'+String(Math.floor(l%60000/1000)).padStart(2,'0')},1000)}
   if(A.step==='otp'){const o=$('#otp');if(o)o.focus();clearInterval(renderAuth._r);renderAuth._r=setInterval(()=>{const b=document.getElementById('resendBtn');if(!b||S.me||U.auth.step!=='otp'){clearInterval(renderAuth._r);return}const cd=60-Math.floor((Date.now()-U.auth.sentAt)/1000);if(cd>0)b.textContent='Gửi lại sau '+cd+'s';else{b.textContent='Gửi lại mã';b.disabled=false;b.style.opacity='';b.style.textDecoration='';clearInterval(renderAuth._r)}},1000)}
 }
@@ -5384,7 +5384,7 @@ afterLogin=async function(fresh){await _afterLoginKs(fresh);if(LIVE.me&&S.me)ksL
 const _renderAuthPw=renderAuth;
 renderAuth=function(){const A2=U.auth;
  if(A2.step==='pw'){
-  $('#app').innerHTML=`<div class="auth-hero gut"><div class="kicker">Phòng Hoa Vinh · Tân Phú, Tân Bình</div><h1>Hoa Vinh City</h1><p>Mỗi ngày làm việc là một viên gạch xây nhà</p></div><main class="gut" style="padding-block:16px 40px"><div class="stack"><div class="card stack"><div><h2 class="h2">Đăng nhập cho người duyệt</h2><p class="sub">Reviewer login · Email + password</p></div>
+  $('#app').innerHTML=`<div class="auth-hero gut"><div class="kicker">Team Hoa Vinh</div><h1>Hoa Vinh City</h1><p>Mỗi ngày làm việc là một viên gạch xây nhà</p></div><main class="gut" style="padding-block:16px 40px"><div class="stack"><div class="card stack"><div><h2 class="h2">Đăng nhập cho người duyệt</h2><p class="sub">Reviewer login · Email + password</p></div>
   <label class="f" for="pwem">Email<input class="in" id="pwem" type="email" inputmode="email" autocomplete="username" value="${esc(A2.email||'')}"></label>
   <label class="f" for="pwmk">Mật khẩu (Password)<input class="in" id="pwmk" type="password" autocomplete="current-password"></label>
   ${A2.err?`<div class="err">${A2.err}</div>`:''}
