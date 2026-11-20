@@ -6,7 +6,19 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v87 mini game*/
+<style>/*v88 cg dc*/
+.seg88{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
+.seg88 button{border:none;background:none;border-radius:10px;padding:7px 2px;font:inherit;font-weight:700;font-size:11px;line-height:1.2;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.seg88 button .i{font-size:18px}.seg88 button.on{background:var(--bg2,rgba(0,0,0,.06));color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.ct88 .li{flex-wrap:wrap;align-items:flex-start}.ct88 .bai{white-space:pre-line;font-size:13.5px;line-height:1.5;margin-top:4px}
+.ct88 .tk{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:8px 0}.ct88 .tk div{border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center}.ct88 .tk b{display:block;font-size:20px}
+.ql88f{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}
+.ql88anh{display:flex;align-items:center;gap:8px;margin-top:8px}.ql88anh img{width:54px;height:86px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.ql88i{margin-top:12px;border:1px solid var(--line);border-radius:16px;padding:12px}
+.ql88h{display:flex;gap:6px;overflow-x:auto;margin:8px 0;scroll-snap-type:x mandatory}.ql88h img{flex:0 0 46%;height:120px;object-fit:cover;border-radius:10px;scroll-snap-align:start;background:#ddd}
+.ql88i details summary{cursor:pointer;font-weight:700;font-size:13px;margin-top:6px}.ql88i .mo{white-space:pre-line;font-size:13px;line-height:1.5;margin-top:6px}
+.nh88 .li{align-items:flex-start}
+</style><style>/*v87 mini game*/
 .mg87n{margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.18);display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));background:linear-gradient(135deg,#2A1A14,#4A1E18);color:#fff;border-radius:18px;padding:14px 16px;cursor:pointer;font:inherit}
 .mg87n .em{font-size:30px}.mg87n b{font-size:16px;display:block}.mg87n .sub{color:#E9D9C4}.mg87n .go{margin-left:auto;font-size:22px;color:var(--gold)}
 .tim87{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}.tim87 .in{width:100%}
@@ -2789,9 +2801,7 @@ TAB.camp=a=>{const n=campToday(a),all=campAll(),late=new Date().getHours()>=16&&
   <div class="grid2"><label class="f" for="cn">Mô tả ngắn<input class="in" id="cn" placeholder="4x18m, hẻm xe hơi"></label><label class="f" for="cp">Giá<input class="in" id="cp" placeholder="7,2 tỷ"></label></div>
   <label class="row sub"><input type="checkbox" id="cfb"> Đẩy tiếp lên Trang Facebook chung</label>
   <button class="btn full" data-a="addCamp">Đăng lên cổng trại</button></div>
-  <div class="card"><div class="between"><h2 class="h2" style="margin:0">Số nhà đã ký</h2><span class="big num" style="font-size:30px">${a.g.signed}</span></div><p class="sub">Cập nhật "đã ký" là app tự <b>Chạy ngang</b>: lên Cổng trại, báo cả phòng, 15 phút sau robot đẩy lên Trang FB, Zalo OA, YouTube phòng.</p><div class="row" style="margin-top:8px"><input class="in grow" id="sg" placeholder="Địa chỉ căn mới ký"><button class="btn gold sm" data-a="addSigned">Đã ký</button></div>
-   ${chay.map(p=>`<div class="li"><span class="chic">📣</span><div class="grow"><b style="font-size:13px">${esc(p.nd)}</b><div class="sub">${p.ch.map(c=>chOf(c.k).ic+' '+(CST[c.st]||[''])[0]).join(' · ')}</div></div></div>`).join('')}</div>
-  <div class="card"><h2 class="h2">Bảng cổng trại</h2>${all.map((c,i)=>`<div class="li" style="flex-wrap:wrap"><div class="grow"><b>${esc(c.addr)}</b><div class="sub">${esc(c.note||'')}${c.price?' · '+esc(c.price):''}</div><div class="sub">${esc(c.who)} · ${fmtD(c.d)}</div></div><div class="row" style="gap:6px;width:100%"><button class="btn ghost sm grow" data-a="campShare" data-v="${i}|fbme">📲 Chia sẻ 1 chạm</button><button class="btn sm grow mess" data-a="campShare" data-v="${i}|mess">💌 Messenger</button></div></div>`).join('')||'<p class="sub">Chưa có bài nào.</p>'}</div>`;
+  ${ct88Card(a)}${ql88Card(a,chay)}`;
 };
 
 /* ===== v12: học tính năng từ ảnh tham khảo, theo luật Hoa Vinh ===== */
@@ -2854,7 +2864,7 @@ A.tab2kho=v=>{U.tab='viec';U.seg.viec='kho';U.kf=U.kf||{};U.kf.cl=v;window.scrol
 /* --- Công việc: Kho nhà / Khách / Công cụ --- */
 TAB.ql=a=>{const L=QL[a.role]||[];const k=L.some(x=>x[0]===U.seg.ql)?U.seg.ql:L[0][0];
  return `<div class="seg big">${L.map(([x,l])=>`<button class="${k===x?'on':''}" data-a="seg" data-v="ql:${x}">${l}</button>`).join('')}</div>`+TAB[k](a)};
-TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const seg=U.seg.viec||'kho';return `<div class="seg big">${[['kho','🏠 Kho nhà'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
+TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const cg88=a.role==='cg';let seg=U.seg.viec||'kho';if(!cg88&&(seg==='chu'||seg==='ctv'))seg='kho';if(cg88&&(seg==='chu'||seg==='ctv'))return seg88Nav(seg)+(seg==='chu'?chu88Part(a):ctv88Part(a));return (cg88?seg88Nav(seg):`<div class="seg big">${[['kho','🏠 Kho nhà'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`)+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
 const gcOn=h=>!!(h&&h.gc&&h.gc.from>h.p&&daysSince2(h.gc.d)<=30);
 const gcAmt=(h,sh)=>{const d=Math.round((h.gc.from-h.p)*1000)/1000;return d<1?Math.round(d*1000)+(sh?'tr':' triệu'):nf(Math.round(d*100)/100)+' tỷ'};
 const khuList=()=>[...new Set(QUAN.concat((S.kho||[]).map(h=>h.q).filter(Boolean)))];
@@ -4602,6 +4612,104 @@ A.bau87=v=>{const m=me();const i=v.lastIndexOf('|');const em=v.slice(0,i),d=+v.s
  save();render();toast(d===1?'Đã đồng ý':'Đã ghi ý kiến')};
 {const _j=A.joinGroup;A.joinGroup=v=>{const g=S.groups.find(q=>q.id===v);if(g&&g.members.length>=DOI87_MAX){toast('Đội đã đủ 6 người');return}return _j(v)}}
 
+/* ===== v88 CG-ĐC: tin đã lên Cổng trại, Kho nhà CG-ĐC quản lý (AI tìm căn trên ĐTK), Chủ, Cộng tác viên ===== */
+function seg88Nav(seg){return `<div class="seg88">${[['kho','🏠','Kho nhà'],['khach','🤝','Khách'],['chu','🔑','Chủ'],['ctv','🙋','Cộng tác viên'],['cc','🧰','Công cụ']].map(([k,i,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="viec:${k}"><span class="i">${i}</span>${l}</button>`).join('')}</div>`}
+const hs88=t=>{let h=0;for(const ch of String(t))h=(h*31+ch.charCodeAt(0))>>>0;return h};const gio88=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+function ngay88(c){return c.t?gio88(c.t)+' · '+fmtD(c.d):fmtD(c.d)}
+function hqua88(){const y=new Date();y.setDate(y.getDate()-1);return y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
+function baiCt88(c){return [c.mo88||'',c.addr+(c.note?' · '+c.note:'')+(c.price?' · Giá '+c.price:''),c.ket88||''].filter(Boolean).join('\n')}
+const MO88=['🔥 Hàng ngon vừa lên kệ','🏡 Căn đẹp cho khách ở thực','💎 Cơ hội tốt trong tuần','📍 Chủ gửi bán trực tiếp','✨ Nhà đẹp, giá hợp lý','🚀 Hàng mới, xem ngay kẻo lỡ','🌿 Không gian sống đáng tiền','🎯 Đúng tầm tài chính khách tìm'];
+const KET88=['Anh em có khách inbox mình nha.','Xem nhà được ngay trong ngày.','Có khách hợp gọi mình dẫn xem liền.','Chia sẻ giúp mình cho khách nha anh em.','Thương lượng thiện chí, chủ nhiệt tình.','Hồ sơ rõ ràng, anh em yên tâm dẫn khách.'];
+const DOI88=[[/hẻm xe hơi/gi,'hẻm ô tô'],[/hẻm ô tô/gi,'hẻm xe hơi'],[/\bHXH\b/g,'hẻm xe hơi'],[/sổ hồng/gi,'sổ hồng riêng'],[/kinh doanh/gi,'buôn bán tốt']];
+A.lm88=v=>{const a=me();const c=a.g.camp[+v];if(!c)return;if(c.goc88==null)c.goc88=c.note||'';c.lm88=(c.lm88||0)+1;const n=c.lm88;
+ let ph=String(c.goc88).split(/\s*[,;·]\s*/).filter(Boolean);if(ph.length>1)ph=ph.slice(n%ph.length).concat(ph.slice(0,n%ph.length));let nt=ph.join(', ');
+ const dd=DOI88[n%DOI88.length];if(n%2)nt=nt.replace(dd[0],dd[1]);c.note=nt;c.mo88=MO88[(n+hs88(c.addr))%MO88.length];c.ket88=KET88[(n*3+hs88(c.addr))%KET88.length];save();render();toast('✨ Đã làm mới nội dung bài')};
+A.dl88=v=>{const a=me();const c=a.g.camp[+v];if(!c)return;if(c.d===today()||c.d===hqua88()){toast('Căn này mới lên '+(c.d===today()?'hôm nay':'hôm qua')+', ngày mốt đăng lại được nha');return}
+ const set=(id,x)=>{const el=document.getElementById(id);if(el)el.value=x||''};set('ca',c.addr);set('cn',c.note);set('cp',c.price);
+ const n=a.g.camp.length;A.addCamp();const m=a.g.camp[a.g.camp.length-1];if(a.g.camp.length>n&&m){m.mo88=c.mo88;m.ket88=c.ket88;m.goc88=c.goc88;m.lm88=c.lm88;m.lai88=1;save();render()}};
+A.chep88=async v=>{const c=me().g.camp[+v];if(!c)return;try{await navigator.clipboard.writeText(baiCt88(c));toast('📋 Đã chép bài')}catch(e){toast('Máy chưa cho chép, giữ tay vào chữ để chép nha')}};
+{const _ac=A.addCamp;A.addCamp=function(){const a=me();const n=(a.g.camp||[]).length;const r=_ac.apply(this,arguments);if(a.g.camp.length>n){const c=a.g.camp[a.g.camp.length-1];if(!c.t){c.t=Date.now();save();render()}}return r}}
+function ct88Card(a){const L=(a.g.camp||[]).map((c,i)=>Object.assign({i},c)).reverse();const dem={};(a.g.camp||[]).forEach(c=>{const k=noDau(c.addr);dem[k]=(dem[k]||0)+1});
+ const soNha=Object.keys(dem).length,moi=L[0];const xem=U.ct88all?L:L.slice(0,8);
+ return `<div class="card ct88"><div class="between"><h2 class="h2" style="margin:0">📚 Tin đã lên Cổng trại</h2><span class="pill gold">${L.length} lượt</span></div>
+  <div class="tk"><div><b class="num">${soNha}</b><span class="sub">căn nhà</span></div><div><b class="num">${L.length}</b><span class="sub">lượt đăng</span></div><div><b class="num" style="font-size:14px;line-height:1.9">${moi?ngay88(moi):'–'}</b><span class="sub">lần gần nhất</span></div></div>
+  ${xem.map(c=>{const kh=c.d===today()||c.d===hqua88();const lan=dem[noDau(c.addr)];return `<div class="li"><div class="grow"><div class="between"><b>${esc(c.addr)}</b><span class="sub">🕒 ${ngay88(c)}</span></div><div class="bai">${esc(baiCt88(c))}</div><div class="sub" style="margin-top:4px">${lan>1?'Đã lên '+lan+' lần':'Lên lần đầu'}${c.lm88?' · đã làm mới '+c.lm88+' lần':''}</div></div>
+   <div class="row" style="gap:6px;width:100%;margin-top:6px"><button class="btn ghost sm grow" data-a="lm88" data-v="${c.i}">✨ Làm mới nội dung</button><button class="btn sm grow${kh?' ghost':''}" data-a="dl88" data-v="${c.i}">${kh?'⏳ Ngày mốt đăng lại':'🔁 Đăng lại'}</button><button class="btn ghost sm" data-a="chep88" data-v="${c.i}" aria-label="Chép bài">📋</button></div></div>`}).join('')||'<p class="sub">Chưa đăng căn nào. Đăng căn đầu tiên ở ô trên nha.</p>'}
+  ${L.length>8?`<button class="btn ghost full sm" data-a="ct88all">${U.ct88all?'Thu gọn':'Xem hết '+L.length+' lượt'}</button>`:''}</div>`}
+A.ct88all=()=>{U.ct88all=!U.ct88all;render()};
+
+/* Kho nhà CG-ĐC quản lý: địa chỉ + hình app ĐTK → AI tìm đúng căn trên ĐTK */
+function ql88Card(a,chay){const L=a.g.ql88||[];const im=U.ql88anh;
+ return `<div class="card"><div class="between"><h2 class="h2" style="margin:0">🗂️ Kho nhà của CG - ĐC quản lý</h2><span class="big num" style="font-size:30px">${a.g.signed}</span></div>
+  <p class="sub">Nhập địa chỉ căn mới ký, thêm hình chụp tin trên app Đại Thế Kỷ (không bắt buộc). AI sẽ tìm đúng căn trên ĐTK, lấy thông tin + hình về hiện bên dưới. Căn mới ký cũng tự <b>Chạy ngang</b> báo cả phòng.</p>
+  <label class="f" for="sg">Địa chỉ nhà<input class="in" id="sg" placeholder="373/1/139 Lý Thường Kiệt, Tân Bình"></label>
+  <div class="ql88anh">${im?`<img src="${im}" alt="Hình app"><span class="sub grow">Đã chọn hình app</span><button class="btn ghost sm" data-a="ql88BoAnh">✕ Bỏ hình</button>`:`<label class="btn ghost sm" style="cursor:pointer;margin:0">📷 Thêm hình app ĐTK<input type="file" accept="image/*" data-ql88anh="1" hidden></label><span class="sub">Hình chụp màn hình Chi tiết nhà</span>`}</div>
+  <button class="btn gold full" style="margin-top:10px" data-a="ql88Them">🔎 Lưu căn & AI tìm trên ĐTK</button>
+  ${chay.map(p=>`<div class="li"><span class="chic">📣</span><div class="grow"><b style="font-size:13px">${esc(p.nd)}</b><div class="sub">${p.ch.map(c=>chOf(c.k).ic+' '+(CST[c.st]||[''])[0]).join(' · ')}</div></div></div>`).join('')}
+  ${L.slice().reverse().map(ql88It).join('')}</div>`}
+function ql88It(x){const c=x.can;const tt=x.st==='tim'?'<span class="pill warn">⏳ AI đang tìm…</span>':x.st==='ok'?'<span class="pill ok">✓ Đã thấy trên ĐTK</span>':x.st==='loi'?'<span class="pill">⚠️ Lỗi</span>':'<span class="pill">Chưa thấy trên ĐTK</span>';
+ return `<div class="ql88i"><div class="between"><b>${esc(x.addr)}</b>${tt}</div><div class="sub">Thêm lúc ${gio88(x.t)} · ${fmtD(x.d)}</div>
+  ${c?`${c.img&&c.img.length?`<div class="ql88h">${c.img.map(u=>`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.remove()">`).join('')}</div>`:''}
+   <b style="display:block;font-size:13.5px;line-height:1.45">${esc(c.ti)}</b><div class="row wrap" style="gap:6px;margin-top:6px">${c.gia?`<span class="pill gold">💰 ${esc(c.gia)}</span>`:''}${c.dt?`<span class="pill">📐 ${esc(c.dt)}</span>`:''}${c.q?`<span class="pill">📍 ${esc(c.q)}</span>`:''}</div>
+   ${c.mo?`<details data-k="ql88-${x.id}"><summary>Mô tả chi tiết</summary><div class="mo">${esc(c.mo)}</div></details>`:''}`:x.st==='khong'?`<div class="note" style="margin-top:8px">AI chưa tìm thấy căn này trên ĐTK. Thử ghi rõ tên đường + quận, hoặc thêm hình app rồi bấm Tìm lại nha.</div>`:x.st==='loi'?`<div class="note" style="margin-top:8px">${esc(x.loi||'Chưa tìm được')}</div>`:''}
+  <div class="row" style="gap:6px;margin-top:8px">${x.khac&&x.khac.length>1?`<button class="btn ghost sm grow" data-a="ql88Doi" data-v="${x.id}">🔀 Không phải căn này (${x.khac.length-1} căn khác)</button>`:''}<button class="btn ghost sm grow" data-a="ql88Lai" data-v="${x.id}">🔄 Tìm lại</button><button class="btn ghost sm" data-a="ql88Xoa" data-v="${x.id}">${U.ql88xoa===x.id?'Bấm lần nữa để xoá':'🗑'}</button></div></div>`}
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!el.dataset.ql88anh||!el.files||!el.files[0])return;const fr=new FileReader();fr.onload=async()=>{U.ql88anh=await thuNhoAnh(fr.result,1200,2600);render()};fr.readAsDataURL(el.files[0]);el.value=''});
+A.ql88BoAnh=()=>{U.ql88anh=null;render()};
+/* Điểm nối: demo giả lập; bản thật ghi đè doc88 (AI đọc ảnh) + tim88Goi (trạm dtk-tim-nha, lọc trong Kho chung) */
+async function doc88(img){await new Promise(r=>setTimeout(r,500));return {addr:'',q:'Tân Bình',p:13.3,dt:'4x19.5'}}
+async function tim88Goi(kw){await new Promise(r=>setTimeout(r,700));const k=noDau(kw);const H=(S.kho||[]).filter(h=>h.img||h.imgs);const pic=H.length?(H[0].imgs||[H[0].img]):[];
+ return [{id:'demo1',title:kw+' 110 5 4/8 19.5 13.3 tỷ Phường 9 Tân Bình (tin mẫu demo)',price:{value:13.3,unit:'tỷ'},area:78,district:'Tân Bình',images:pic,description:'HẺM XE HƠI NÉ NHAU, THÔNG TỨ TUNG, KINH DOANH ĐỈNH, GIÁP QUẬN 10.\n\n* Kết cấu trệt, lửng, 2 lầu, sân thượng. 5PN, 5WC.\n* Pháp lý sổ hồng, hoàn công đủ.\n(Bản thật lấy đúng tin trên Đại Thế Kỷ)'},{id:'demo2',title:kw+' 4x15 3 tầng 9.8 tỷ (tin mẫu demo)',price:{value:9.8,unit:'tỷ'},area:60,district:'Tân Bình',images:[],description:'Tin mẫu thứ hai.'}]}
+function duong88(ad){return String(ad||'').replace(/^\s*(?:số\s*)?[\d][\dA-Za-z\/.\-]*\s*/i,'').split(',').map(x=>x.trim()).filter(x=>x&&!/^(p\.?|phường|f\.?)\s*\d+/i.test(x))}
+function so88(ad){const m=String(ad||'').match(/^\s*(?:số\s*)?(\d[\dA-Za-z\/.\-]*)/i);return m?m[1].replace(/[\/\-]/g,'.').toLowerCase():''}
+function diem88(it,ad,nha){const ti=noDau(dtkField(it.title)+' '+dtkField(it.address));let d=0;const so=so88(ad);if(so&&(' '+ti.replace(/\//g,'.')+' ').includes(' '+so+' '))d+=6;
+ const pd=duong88(ad);if(pd[0]&&ti.includes(noDau(pd[0])))d+=3;const g=(it.price&&+it.price.value)||+it.price||0;const gT=g>1000?g/1000:g;
+ if(nha&&nha.p&&gT&&Math.abs(gT-nha.p)/nha.p<=0.04)d+=3;const q=(nha&&nha.q)||pd[pd.length-1]||'';if(q&&noDau(dtkField(it.district)+' '+ti).includes(noDau(q)))d+=1;return d}
+function can88(it){const g=(it.price&&typeof it.price==='object'&&+it.price.value)||+it.price||0;const gt=g>1000?nf(Math.round(g/100)/10)+' tỷ':g?nf(g)+' tỷ':'';
+ const ar=dtkField(it.area);const im=(Array.isArray(it.images)?it.images:[]).map(x=>typeof x==='string'?x:(x&&(x.medium||x.image||x.thumb||x.url))).filter(Boolean).slice(0,8);
+ return {id:String(it.id||''),ti:sach74(dtkField(it.title)).slice(0,220),gia:gt,dt:ar?(String(ar).replace('.',',')+(/m/.test(ar)?'':' m²')):'',q:dtkField(it.district).split(' - ')[0],img:im,mo:sach74(String(it.description||'')).slice(0,2500)}}
+async function chi88(id){return null}
+async function ct88Lay(c){if(!c||c.ct)return;try{const r=await chi88(c.id);if(!r)return;const bk=r.bk||{};const hn=r.hinh_nha||[];
+ const im=(Array.isArray(bk.images)?bk.images:[]).map((x,i)=>hn[i]===false?null:(typeof x==='string'?x:(x&&(x.medium||x.image||x.thumb||x.url)))).filter(Boolean).slice(0,10);if(im.length)c.img=im;
+ if(r.bai_ai)c.mo=sach74(String(r.bai_ai)).slice(0,2500);else if(bk.description)c.mo=sach74(String(bk.description)).slice(0,2500);c.ct=1}catch(e){}}
+async function ql88Tim(x,img){const a=me();x.st='tim';x.loi='';save();render();
+ try{let nha=null;if(img){try{nha=await doc88(img)}catch(e){nha=null}}
+  const ad=x.addr||(nha&&nha.addr)||'';const pd=duong88(ad);const dg=pd[0]||'';const q=(nha&&nha.q)||(pd.length>1?pd[pd.length-1]:'');
+  const kw=[dg,q&&!noDau(dg).includes(noDau(q))?q:''].filter(Boolean).join(' ').trim();if(!kw){x.st='loi';x.loi='Ghi tên đường (và quận) để AI tìm nha';save();render();return}
+  x.nha=nha?{p:nha.p||0,q:nha.q||'',dt:nha.dt||''}:x.nha||null;
+  const so=so88(ad);let ds=so&&dg?await tim88Goi(so+' '+dg):[];if(!ds||!ds.length)ds=await tim88Goi(kw);if((!ds||!ds.length)&&q){ds=await tim88Goi(dg)}
+  const xep=(ds||[]).map(it=>({it,d:diem88(it,ad,x.nha)})).sort((p,q2)=>q2.d-p.d).filter(p=>p.d>=3).slice(0,4);
+  if(!xep.length){x.st='khong';x.can=null;x.khac=[]}else{x.khac=xep.map(p=>can88(p.it));x.can=x.khac[0];x.st='ok';await ct88Lay(x.can)}}
+ catch(e){x.st='loi';x.loi=(e&&e.message)||'Chưa tìm được'}
+ save();render();if(x.st==='ok')toast('✅ AI đã tìm thấy căn trên ĐTK')}
+A.ql88Them=()=>{const a=me();const ad=val('sg').trim();const img=U.ql88anh;if(!ad&&!img){toast('Nhập địa chỉ nhà hoặc thêm hình app nha');return}
+ a.g.ql88=a.g.ql88||[];const x={id:'q'+Date.now().toString(36),addr:ad||'Căn theo hình app',d:today(),t:Date.now(),st:'tim'};a.g.ql88.push(x);if(a.g.ql88.length>60)a.g.ql88.shift();
+ if(ad)A.addSigned();U.ql88anh=null;ql88Tim(x,img)};
+A.ql88Lai=v=>{const x=(me().g.ql88||[]).find(q=>q.id===v);if(x)ql88Tim(x,null)};
+A.ql88Doi=v=>{const x=(me().g.ql88||[]).find(q=>q.id===v);if(!x||!x.khac||x.khac.length<2)return;const i=x.khac.findIndex(c=>c.id===(x.can&&x.can.id));x.can=x.khac[(i+1)%x.khac.length];save();render();if(!x.can.ct)ct88Lay(x.can).then(()=>{save();render()})};
+A.ql88Xoa=v=>{if(U.ql88xoa!==v){U.ql88xoa=v;render();setTimeout(()=>{if(U.ql88xoa===v){U.ql88xoa=null;render()}},4000);return}U.ql88xoa=null;const a=me();a.g.ql88=(a.g.ql88||[]).filter(q=>q.id!==v);save();render();toast('Đã xoá căn khỏi danh sách')};
+
+/* Chủ nhà */
+function chu88Part(a){const L=(a.g.chu88||[]).slice().reverse();return `<div class="card stack nh88"><h2 class="h2" style="margin:0">🔑 Chủ nhà</h2><p class="sub" style="margin:0">Ghi chú về chủ nhà để chăm chủ tốt hơn. 4 số cuối SĐT không bắt buộc.</p>
+  <label class="f" for="ch88g">Ghi chú<textarea class="in" id="ch88g" rows="3" placeholder="VD: Chú Tư, nhà 45 Âu Cơ, chủ dễ tính, muốn bán trước Tết"></textarea></label>
+  <label class="f" for="ch88s">4 số cuối SĐT chủ (không bắt buộc)<input class="in" id="ch88s" inputmode="numeric" maxlength="4" placeholder="VD: 5678"></label>
+  <button class="btn full" data-a="ch88Luu">Lưu chủ nhà</button></div>
+  <div class="card nh88"><div class="between"><h2 class="h2" style="margin:0">Danh sách chủ</h2><span class="pill">${L.length} chủ</span></div>
+  ${L.map(c=>`<div class="li"><span class="chic">🔑</span><div class="grow"><div style="white-space:pre-line">${esc(c.g)}</div><div class="sub">${c.s?'📞 ••• '+esc(c.s)+' · ':''}${fmtD(c.d)}</div></div><button class="btn ghost sm" data-a="ch88Xoa" data-v="${c.id}">${U.x88===c.id?'Xoá?':'🗑'}</button></div>`).join('')||'<p class="sub">Chưa có chủ nào.</p>'}</div>`}
+A.ch88Luu=()=>{const a=me();const g=val('ch88g').trim();const s=val('ch88s').replace(/\D/g,'');if(!g){toast('Ghi chú về chủ nhà nha');return}if(s&&s.length!==4){toast('SĐT chỉ cần đúng 4 số cuối nha');return}
+ a.g.chu88=(a.g.chu88||[]).concat([{id:'c'+Date.now().toString(36),g:g.slice(0,600),s,d:today()}]);save();render();toast('Đã lưu chủ nhà 🔑')};
+A.ch88Xoa=v=>{if(U.x88!==v){U.x88=v;render();setTimeout(()=>{if(U.x88===v){U.x88=null;render()}},4000);return}U.x88=null;const a=me();a.g.chu88=(a.g.chu88||[]).filter(c=>c.id!==v);a.g.ctv88=(a.g.ctv88||[]).filter(c=>c.id!==v);save();render();toast('Đã xoá')};
+/* Cộng tác viên của CG-ĐC */
+function ctv88Part(a){const L=(a.g.ctv88||[]).slice().reverse();const lk=t=>/^https?:\/\//i.test(t)?`<a href="${esc(t)}" target="_blank" rel="noopener">${/facebook|fb\./i.test(t)?'Facebook':'Mở link'} ↗</a>`:'Zalo: '+esc(t);
+ return `<div class="card stack nh88"><h2 class="h2" style="margin:0">🙋 Cộng tác viên</h2><p class="sub" style="margin:0">Lưu các cộng tác viên làm cùng bạn.</p>
+  <label class="f" for="cv88t">Tên<input class="in" id="cv88t" placeholder="VD: Anh Tuấn"></label>
+  <label class="f" for="cv88k">Khối / Phòng<input class="in" id="cv88k" placeholder="VD: Khối Kim Cương · Phòng Hoa Vinh"></label>
+  <label class="f" for="cv88l">Link Facebook hoặc Tên Zalo<input class="in" id="cv88l" placeholder="https://facebook.com/… hoặc tên Zalo"></label>
+  <button class="btn full" data-a="cv88Luu">Lưu cộng tác viên</button></div>
+  <div class="card nh88"><div class="between"><h2 class="h2" style="margin:0">Danh sách cộng tác viên</h2><span class="pill">${L.length} người</span></div>
+  ${L.map(c=>`<div class="li">${face({name:c.t},'sm')}<div class="grow"><b>${esc(c.t)}</b><div class="sub">${esc(c.k||'')}${c.k&&c.l?' · ':''}${c.l?lk(c.l):''}</div></div><button class="btn ghost sm" data-a="ch88Xoa" data-v="${c.id}">${U.x88===c.id?'Xoá?':'🗑'}</button></div>`).join('')||'<p class="sub">Chưa có cộng tác viên nào.</p>'}</div>`}
+A.cv88Luu=()=>{const a=me();const t=val('cv88t').trim(),k=val('cv88k').trim(),l=val('cv88l').trim();if(!t){toast('Nhập tên cộng tác viên nha');return}
+ a.g.ctv88=(a.g.ctv88||[]).concat([{id:'v'+Date.now().toString(36),t:t.slice(0,60),k:k.slice(0,80),l:l.slice(0,200),d:today()}]);save();render();toast('Đã lưu cộng tác viên 🙋')};
+
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
    Trợ lý/Sếp duyệt + chọn vai trò, danh bạ anh em, game của từng người,
@@ -5468,6 +5576,12 @@ ch84Luu=async anh=>{const uid=LIVE.me&&LIVE.me.id;if(!uid)throw new Error('Cần
 async function ch84Tai(){try{const a=me();if(!a||!a.g||!a.g.deals)return;const can=[];a.g.deals.forEach(d=>(d.anh||[]).forEach(p=>{if(p&&!/^(data:|https?:)/.test(p)&&!window.CH84U[p])can.push(p)}));if(!can.length)return;
  for(let i=0;i<can.length;i+=100){const {data}=await sb.storage.from('khao-sat').createSignedUrls(can.slice(i,i+100),60*60*24);(data||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)window.CH84U[x.path]=x.signedUrl})}render()}catch(e){console.warn('[Hoa Vinh] hinh ky niem',e)}}
 setTimeout(ch84Tai,4000);setInterval(()=>{if(U.tab==='nk')ch84Tai()},20000);
+
+/* ---- v88 Kho nhà CG-ĐC quản lý: AI đọc hình app (doc-nha-tu-anh) + tìm căn trong Kho chung ĐTK (dtk-tim-nha) ---- */
+doc88=async function(img){const hetGio=new Promise((_,rej)=>setTimeout(()=>rej(new Error('AI đọc hình quá lâu')),75000));
+ const {data,error}=await Promise.race([sb.functions.invoke('doc-nha-tu-anh',{body:{anh_base64:img}}),hetGio]);if(error||!data||!data.nha)return null;return data.nha};
+tim88Goi=async function(kw){const r=await dtkApi('tim',{size:40,offset:0,keyword:kw});const d=(r&&r.detail&&r.detail.data)||(r&&r.data)||[];return Array.isArray(d)?d:[]};
+chi88=async function(id){if(!id)return null;try{return await dtkApi('chi_tiet',{id})}catch(e){return null}};
 
 render();
 })();
