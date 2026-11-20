@@ -6,7 +6,19 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v81*/.splash.vh81bg{background:radial-gradient(120% 60% at 50% 0%,#7A1418 0%,#5A0D12 50%,#3A070B 100%)}
+<style>/*v82 van hoa gon*/.splash.vh82{padding:max(12px,env(safe-area-inset-top)) 10px 12px;align-items:flex-start}
+.vh82 .vh82hd{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px}
+.vh82 .vh81logo{width:48px;height:48px;margin:0;border-width:2px;box-shadow:0 0 0 2px rgba(226,185,90,.25)}.vh82 .vh81logo b{font-size:18px}.vh82 .vh81logo small{font-size:4.5px;letter-spacing:.6px;margin-top:1px}
+.vh82 .vh81h1{font-size:21px!important;margin:0!important;text-align:left}.vh82 .vh81sub{font-size:8.5px;letter-spacing:1.2px;margin:2px 0 0;justify-content:flex-start}
+.vh82 .vh81{gap:14px}.vh82 .vh81s{padding:14px 8px 7px;border-radius:10px}
+.vh82 .vh81tag{font-size:10.5px;top:-9px;padding:2px 10px;border-radius:4px}
+.vh82 .vh81gt{display:grid;grid-template-columns:1fr 1fr;gap:0 8px}.vh82 .vh81g{padding:4px 2px;gap:6px;border-bottom:1px solid rgba(226,185,90,.15)}.vh82 .vh81g:nth-last-child(-n+2){border-bottom:none}
+.vh82 .vh81n{font-size:14px;min-width:18px}.vh82 .vh81g b,.vh82 .vh81p b,.vh82 .vh81d b{font-size:11.5px;line-height:1.25}.vh82 .vh81g small,.vh82 .vh81p small,.vh82 .vh81d small{font-size:9.5px;line-height:1.25}
+.vh82 .vh81pc{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.vh82 .vh81p{padding:5px 6px;border-radius:7px}.vh82 .vh81la{font-size:10px}
+.vh82 .vh81dv{grid-template-columns:repeat(3,1fr);gap:5px}.vh82 .vh81d{padding:5px 6px;border-radius:7px}
+.vh82 .vh81sl p{font-size:12px;line-height:1.35;gap:0}
+.vh82 .sp-go{margin-top:12px;min-height:44px;font-size:15px}
+/*v81*/.splash.vh81bg{background:radial-gradient(120% 60% at 50% 0%,#7A1418 0%,#5A0D12 50%,#3A070B 100%)}
 .vh81logo{width:92px;height:92px;margin:6px auto 10px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#3A0A0D,#14040A);border:3px solid #E2B95A;box-shadow:0 0 0 4px rgba(226,185,90,.25),0 8px 24px rgba(0,0,0,.4)}
 .vh81logo b{font-family:var(--f-disp);font-size:34px;line-height:1;background:linear-gradient(180deg,#FBE7A6,#D9A93F);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px}.vh81logo small{font-size:7.5px;letter-spacing:1.5px;color:#E2B95A;font-weight:800;text-align:center;line-height:1.2;margin-top:3px}
 .vh81h1{font-family:var(--f-disp);font-size:31px!important;text-transform:uppercase;letter-spacing:1px;margin:4px 0!important;background:linear-gradient(180deg,#FBE7A6,#D9A93F);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -3734,9 +3746,8 @@ function vh81Body(){return `<div class="vh81">
  <section class="vh81s"><h2 class="vh81tag">3 Phương châm</h2><div class="vh81pc">${VH81_PC.map(([t,d],i)=>`<div class="vh81p"><span class="vh81la">${VH81_LA[i]}</span><b>${t}</b><small>${d}</small></div>`).join('')}</div></section>
  <section class="vh81s"><h2 class="vh81tag">12 Đầu việc trọng tâm</h2><div class="vh81dv">${VH81_DV.map(([t,d])=>`<div class="vh81d"><b>${t}</b><small>${d}</small></div>`).join('')}</div></section>
  <section class="vh81s vh81sl"><h2 class="vh81tag">Slogan Hoa Vinh</h2><p>${VH81_SLOGAN.split(' · ').map(x=>`<span>${x}</span>`).join('')}</p></section></div>`}
-function splashHtml(){return `<div class="splash vh81bg"><div class="sp-in vh81in">
- <div class="vh81logo" aria-hidden="true"><b>HV</b><small>HOA VINH<br>TEAM</small></div>
- <h1 class="vh81h1">Văn hóa Hoa Vinh</h1><div class="vh81sub"><span></span>6 giá trị · 3 phương châm · 12 đầu việc<span></span></div>
+function splashHtml(){return `<div class="splash vh81bg vh82"><div class="sp-in vh81in">
+ <div class="vh82hd"><div class="vh81logo" aria-hidden="true"><b>HV</b><small>HOA VINH<br>TEAM</small></div><div><h1 class="vh81h1">Văn hóa Hoa Vinh</h1><div class="vh81sub">6 giá trị · 3 phương châm · 12 đầu việc</div></div></div>
  ${vh81Body()}
  <button class="btn gold full sp-go" data-a="enterApp">Bước vào Hoa Vinh City</button></div></div>`}
 A.enterApp=()=>{U.splashDone=true;render()};
