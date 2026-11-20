@@ -6,7 +6,11 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v73*/.k73top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.k73st{display:flex;flex-direction:column;align-items:stretch;gap:6px;flex:0 0 auto;max-width:46%}
+<style>/*v74*/.tep74{margin-top:8px;width:auto!important;box-sizing:border-box;padding-left:12px!important;padding-right:10px!important;display:flex!important;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,#1F6F4A,#14533A)!important;color:#fff!important;border:none!important}.tep74 span{white-space:nowrap;flex:0 0 auto}.tep74 span{background:rgba(255,255,255,.2);border-radius:999px;padding:2px 9px;font-size:12px}
+.tep74k{display:flex;gap:10px;align-items:center;width:100%;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;color:var(--ink)}.tep74k.on{border-color:#1F6F4A;background:#EAF6EF}.tep74c{width:26px;height:26px;border-radius:8px;border:2px solid #1F6F4A;display:grid;place-items:center;color:#fff;font-weight:900;flex:0 0 auto}.tep74k.on .tep74c{background:#1F6F4A}
+.k73btn .gui74b{grid-column:1/-1;border-color:#1F6F4A!important;color:#1F6F4A!important}.gui74n{background:#1F6F4A;color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:4px}
+.gui74 img{width:100%;height:170px;object-fit:cover;border-radius:12px}.gui74nd{margin-top:6px;font-size:13.5px;line-height:1.55;white-space:pre-wrap;max-height:220px;overflow:auto;background:var(--bg2,#F8F3EC);border-radius:10px;padding:8px 10px}
+/*v73*/.k73top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}.k73st{display:flex;flex-direction:column;align-items:stretch;gap:6px;flex:0 0 auto;max-width:46%}
 .v73{border:1.5px solid #F3C24B;background:#FFF8E6;border-radius:12px;padding:5px 10px;text-align:center;cursor:pointer;color:#6E1212;line-height:1.2}.v73 small{display:block;font-size:10px;font-weight:900;letter-spacing:.05em;color:#8E1B1B}.v73 b{font-size:12.5px}
 .k73next{min-height:36px!important;font-size:12.5px!important;padding:0 10px!important;white-space:nowrap}
 .tt73{border:none;border-radius:999px;font-weight:800;font-size:12.5px;padding:4px 10px;cursor:pointer;min-height:28px}.tt73.nong{background:#FDE3DE;color:#B3261E}.tt73.nguoi{background:#FFF1D6;color:#8A5A00}.tt73.lanh{background:#E3EEF9;color:#1F5A96}
@@ -4023,7 +4027,7 @@ function pk72It(it,i){const gm=(it._giam&&it._giam.moi)||pk72Gia(it);const cu=it
   <button class="dlt" data-a="pk72Ct" data-v="${i}">${esc(tt)}</button>
   <div class="pkmeta">${q?`<span>📍 ${esc(q)}</span>`:''}${dt?`<span>📐 ${nf(dt)} m²</span>`:''}${c?`<span>📅 ${esc(dlAgo(c))}</span>`:''}${ttg?`<b class="dltag ${dlTTLoai(ttg)}">${esc(ttg)}</b>`:''}</div>
   ${it._giam&&it._giam.txt?`<div class="pkghi">🔻 Tin ghi: “${esc(it._giam.txt)}”</div>`:''}${mo&&mo!==tt?`<p class="dlmo">${esc(mo.slice(0,220))}</p>`:''}
-  <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="pk72Ct" data-v="${i}">📄 Xem đầy đủ</button>${it._kho?'<div class="note ok" style="margin:0;text-align:center">📦 Đã có trong Kho</div>':da?'<div class="note ok" style="margin:0;text-align:center">✅ Đã thêm</div>':`<button class="btn gold sm" data-a="pk72Add" data-v="${i}">➕ Thêm vào Kho</button>`}</div></div>`}
+  <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="pk72Ct" data-v="${i}">📄 Xem đầy đủ</button>${it._kho?'<div class="note ok" style="margin:0;text-align:center">📦 Đã có trong Kho</div>':da?'<div class="note ok" style="margin:0;text-align:center">✅ Đã thêm</div>':`<button class="btn gold sm" data-a="pk72Add" data-v="${i}">➕ Thêm vào Kho</button>`}</div>${tep74Nut('pk|'+i)}</div>`}
 function pk72Card(a){const p=pk72S(a);const Q=pk72Q();const loi=pk72Loi(p);const r=U.pk72;const xong=!loi;
  if(xong&&(!r||r.key!==pk72Key(p))&&!(r&&r.loading))setTimeout(()=>pk72Tim(),0);
  const chon=p.q.map(x=>x.id);
@@ -4115,7 +4119,7 @@ function ds73(src,ten){const r=U.l73[src];if(!r)return '';if(r.loading)return `<
  const c=kh73(ten);const co=new Set(((c&&c.lt)||[]).map(x=>String(x.k)));
  return `<div class="sub" style="margin:8px 0 6px"><b>${r.list.length}</b> căn${r.hieu?' · 🤖 Đã hiểu: '+esc(r.hieu):''}</div>${r.list.slice(0,r.hien||5).map((it,i)=>{const g=pk72Gia(it);const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const q=pk72Quan(it);const dt=Number(it.area)||0;const id=String(it.id||it._id||'');
   return `<div class="it73">${img?`<img src="${esc(img)}" alt="" loading="lazy">`:'<span class="it73ic">🏠</span>'}<div class="grow" style="min-width:0"><b class="num" style="color:var(--red)">${g?tyTxt(g):'Giá liên hệ'}</b><button class="dlt" style="font-size:13.5px" data-a="it73Ct" data-v="${src}|${i}">${esc(dtkField(it.title)||'Tin nhà')}</button><div class="sub">${[q?'📍 '+q:'',dt?'📐 '+nf(dt)+' m²':''].filter(Boolean).map(esc).join(' · ')}</div>
-   <div class="row" style="gap:6px;margin-top:6px">${co.has(id)?'<span class="pill ok">✓ Đã vào lộ trình</span>':`<button class="btn gold sm" data-a="lt73Add" data-v="${esc(ten)}|${src}|${i}">➕ Thêm vào lộ trình</button>`}<button class="btn ghost sm" data-a="it73Ct" data-v="${src}|${i}">📄 Xem</button></div></div></div>`}).join('')||'<p class="sub">Chưa thấy căn nào khớp, thử nới tầm giá hoặc bớt ghi chú nha.</p>'}${r.list.length>(r.hien||5)?`<button class="btn ghost full sm" data-a="ds73Them" data-v="${src}">Xem thêm ${r.list.length-(r.hien||5)} căn</button>`:''}`}
+   <div class="row" style="gap:6px;margin-top:6px">${co.has(id)?'<span class="pill ok">✓ Đã vào lộ trình</span>':`<button class="btn gold sm" data-a="lt73Add" data-v="${esc(ten)}|${src}|${i}">➕ Thêm vào lộ trình</button>`}<button class="btn ghost sm" data-a="it73Ct" data-v="${src}|${i}">📄 Xem</button></div>${tep74Nut(src+'|'+i,1)}</div></div>`}).join('')||'<p class="sub">Chưa thấy căn nào khớp, thử nới tầm giá hoặc bớt ghi chú nha.</p>'}${r.list.length>(r.hien||5)?`<button class="btn ghost full sm" data-a="ds73Them" data-v="${src}">Xem thêm ${r.list.length-(r.hien||5)} căn</button>`:''}`}
 A.ds73Them=v=>{const r=U.l73[v];if(r){r.hien=(r.hien||5)+10;render()}};
 A.it73Ct=async v=>{const [src,i]=v.split('|');const r=U.l73[src];const it=r&&r.list[+i];if(!it)return;if(it._kho){A.sheet('house:'+it._kho);return}
  const ct=U.dlCt={i:-1,l73:src,pi:+i,it,loading:true};A.sheet('dlCt');
@@ -4201,12 +4205,53 @@ function khachPart(a){khMig(a);const st=U.kst||'all';const cs=a.g.clients.filter
    <div class="row wrap" style="gap:6px;margin-top:8px;align-items:center">${c.stage==='coc'?'':`<span class="pill ${can?'warn':''}">${can?'⏰ Đến hẹn chăm · '+ds+' ngày':ds?ds+' ngày chưa liên hệ':'Đã liên hệ hôm nay'}</span>${ds?`<button class="link" data-a="careOk" data-v="${v}">💛 Đã chăm hôm nay</button>`:''}`}${c.stage==='tl'?`<button class="link" data-a="sheet" data-v="tluong:${v}">⚖️ Đàm phán</button>`:''}</div>
    ${c.nhac?`<div class="nh73n">🔔 ${esc(c.nhac)}</div>`:''}
    <div class="k73btn"><button class="btn ghost sm" data-a="sheet" data-v="can73:${v}">🏠 ${c.can1?'Căn khách hỏi ✓':'Căn đầu tiên khách hỏi'}</button><button class="btn ghost sm" data-a="sheet" data-v="cv73:${v}">🤖 Cố vấn chăm khách</button>
-    <button class="btn sm ${dk?'on73':''}" data-a="dk73" data-v="${v}">🚶 Dẫn khách ${dk?'▲':'▼'}</button><button class="btn ghost sm ${nh?'on73g':''}" data-a="nh73" data-v="${v}">🔔 Nhắc nhở${c.nhac?' ✓':''}</button></div>
+    <button class="btn sm ${dk?'on73':''}" data-a="dk73" data-v="${v}">🚶 Dẫn khách ${dk?'▲':'▼'}</button><button class="btn ghost sm ${nh?'on73g':''}" data-a="nh73" data-v="${v}">🔔 Nhắc nhở${c.nhac?' ✓':''}</button><button class="btn ghost sm gui74b" data-a="sheet" data-v="gui74:${v}">📨 Nhà gửi khách${(c.gui||[]).length?` <b class="gui74n">${c.gui.length}</b>`:''}</button></div>
    ${nh?`<div class="nh73"><textarea class="in" id="nh73_${c.name.length}" rows="3" maxlength="600" placeholder="Lưu ý về khách này: thích hẻm rộng, gọi sau 18h, vợ quyết định…">${esc(c.nhac||'')}</textarea><button class="btn full sm" style="margin-top:6px" data-a="nh73Luu" data-v="${v}">💾 Lưu nhắc nhở</button></div>`:''}
    ${dk?dk73Part(c):''}${cocNhac(c)}</div>`}).join('')||'<p class="sub">Chưa có khách ở bước này.</p>'}`}
 {const o=remindersCard;remindersCard=function(a){let h=o.apply(this,arguments);const L=(a.g.clients||[]).filter(c=>c.nhac);if(!L.length)return h;
  return h.replace(/<\/div>$/,`<div class="list" style="margin-top:6px">${L.slice(0,4).map(c=>`<div class="li"><span class="pill gold">🔔</span><div class="grow"><div style="font-weight:700;font-size:13.5px">${esc(c.name)}</div><div class="sub">${esc(c.nhac)}</div></div></div>`).join('')}</div></div>`)}}
 /* ===== /v73 ===== */
+
+;/* ===== v74 nha gui khach ===== */
+const GUI74_MAX=20;
+function it74(v){const k=String(v).lastIndexOf('|');const src=v.slice(0,k),i=+v.slice(k+1);const L=src==='pk'?(U.pk72&&U.pk72.list):(U.l73[src]&&U.l73[src].list);return L&&L[i]}
+function tep74Nut(v,nho){const a=me();const n=a?(a.g.clients||[]).length:0;const it=it74(v);const id=it&&String(it.id||it._id||'');const co=id?(a.g.clients||[]).filter(c=>(c.gui||[]).some(x=>String(x.k)===id)).length:0;
+ return `<button class="btn full tep74${nho?' sm':''}" data-a="sheet" data-v="tep74:${esc(v)}">👥 Cho vào Kho theo tệp khách <span>${co?co+'/':''}${n} khách</span></button>`}
+/* làm sạch tin trước khi gửi khách: bỏ SĐT, số nhà, hoa hồng, tên chuyên gia, mã nội bộ */
+function sach74(t){return String(t||'').replace(/(?:\+?84|0)(?:[\s.\-]?\d){8,10}/g,'').replace(/https?:\/\/\S+|www\.\S+/gi,'').replace(/\bH\s?\d+(?:[.,]\d+)?\s?%|\bH\s?\d{2,3}\b|HĐMG\w*|\bHĐ\b|\bNNP\b|hoa h[ồo]ng[^\n.,]*/gi,'').replace(/[Cc]huy[êe]n [Gg]ia:?\s+[\p{Lu}][\p{L}]*(?:\s+[\p{Lu}][\p{L}]*)?/gu,'')
+ .replace(/^\s*\d+[\dA-Za-z.\/\-]*\s+(?=\p{L})/u,'').replace(/(zalo|inbox|li[êe]n h[ệe])[^\n]*/gi,'').replace(/[ \t]{2,}/g,' ').replace(/\s+([.,])/g,'$1').replace(/\n{3,}/g,'\n\n').trim()}
+SH.tep74=v=>{const a=me();const it=it74(v);if(!it)return {t:'Cho vào Kho theo tệp khách',h:'<p class="sub">Không tìm thấy căn này, lọc lại rồi thử nha.</p>'};const id=String(it.id||it._id||'');const L=(a.g.clients||[]).map((c,i)=>[c,i]);
+ const g=pk72Gia(it);const q=pk72Quan(it);
+ return {t:'👥 Cho vào Kho theo tệp khách',h:`<div class="note" style="margin-top:0">🏠 <b>${g?tyTxt(g):''}</b> ${(t=>esc(t)+(q&&!t.includes(q)?' · '+esc(q):''))(sach74(dtkField(it.title)).slice(0,110))}</div>
+ <p class="sub">Bạn có <b>${L.length} khách</b>. Chạm vào khách để thêm căn này vào <b>📨 Nhà gửi khách</b> của khách đó (chạm lần nữa để bỏ).</p>
+ <div class="list">${L.map(([c,i])=>{const co=(c.gui||[]).some(x=>String(x.k)===id);const tt=tt73(c);return `<button class="tep74k${co?' on':''}" data-a="tep74Chon" data-v="${esc(v)}|${i}"><span class="tep74c">${co?'✓':''}</span><div class="grow" style="text-align:left;min-width:0"><b>${esc(c.name)}</b> <span class="tt73 ${tt}" style="font-size:11px;padding:2px 8px">${TT73[tt][0]} ${TT73[tt][1]}</span><div class="sub">📍 ${esc(c.q||c.need||'')} · Vòng ${c.vong||1} · ${(c.gui||[]).length} căn đã gửi</div></div></button>`}).join('')||'<p class="sub">Chưa có khách nào. Bấm ＋ Thêm khách ở tab Khách trước nha.</p>'}</div>
+ <button class="btn ghost full" style="margin-top:12px" data-a="sheet" data-v="">Xong</button>`}};
+A.tep74Chon=v=>{const k=v.lastIndexOf('|');const src=v.slice(0,k),ci=+v.slice(k+1);const a=me();const c=a.g.clients[ci];const it=it74(src);if(!c||!it)return;c.gui=c.gui||[];const id=String(it.id||it._id||('x'+Date.now()));const j=c.gui.findIndex(x=>String(x.k)===id);
+ if(j>=0){c.gui.splice(j,1);toast('Đã bỏ khỏi Nhà gửi '+c.name)}else{if(c.gui.length>=GUI74_MAX){toast('Mỗi khách tối đa '+GUI74_MAX+' căn, bỏ bớt căn cũ nha');return}
+  c.gui.unshift({k:id,kho:it._kho||'',t:sach74(dtkField(it.title)||'Tin nhà').slice(0,160),mo:sach74(it.description||'').slice(0,600),g:pk72Gia(it),q:pk72Quan(it),dt:Number(it.area)||0,img:dlImgUrl(Array.isArray(it.images)&&it.images[0])||'',anh:(Array.isArray(it.images)?it.images.slice(0,8).map(x=>dlImgUrl(x,1)).filter(Boolean):[]),bai:'',luc:today()});toast('📨 Đã thêm vào Nhà gửi '+c.name)}
+ save();render()};
+/* Nhà gửi khách: tin AI lọc sạch, chép / gửi khách */
+let gui74Dang=0;
+function gui74Nap(c){if(pk72Demo&&!dtkTok())return;(c.gui||[]).filter(x=>!x.bai&&!x.kho&&!x.dang&&!x.loi).slice(0,3-gui74Dang).forEach(x=>{x.dang=1;gui74Dang++;
+ dtkApi('chi_tiet',{id:x.k}).then(r=>{const b=String((r&&r.bai_ai)||'').trim();if(b){x.bai=dlDep(b).slice(0,1500);save()}else x.loi=1}).catch(()=>{x.loi=1}).finally(()=>{x.dang=0;gui74Dang--;if(/^gui74:/.test(U.sheet||''))render()})})}
+function gui74Chu(x){const nd=x.bai||[x.t,x.mo].filter(Boolean).join('\n');return (nd+(x.bai?'':`\n💰 Giá: ${x.g?tyTxt(x.g):'liên hệ'}${x.dt?' · '+nf(x.dt)+' m²':''}${x.q?'\n📍 '+x.q:''}`)).trim()}
+SH.gui74=v=>{const c=kh73(v);if(!c)return {t:'Nhà gửi khách',h:''};const L=c.gui||[];setTimeout(()=>gui74Nap(c),0);
+ return {t:'📨 Nhà gửi khách',h:`<p class="sub" style="margin-top:0">Những căn gửi cho <b>${esc(c.name)}</b>. Tin đã được lọc sạch (bỏ số điện thoại, số nhà, hoa hồng, tên chuyên gia), chép hoặc gửi thẳng cho khách.</p>
+ ${L.map((x,i)=>{const dang=x.dang||(!x.bai&&!x.kho&&!x.loi&&!(pk72Demo&&!dtkTok()));return `<div class="card gui74">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:''}<div class="between" style="gap:6px;margin-top:${x.img?'8px':'0'}"><b class="num" style="color:var(--red);font-size:18px">${x.g?tyTxt(x.g):'Giá liên hệ'}</b><span class="sub">${esc([x.q,x.dt?nf(x.dt)+' m²':''].filter(Boolean).join(' · '))}</span></div>
+  ${dang?'<div class="sub" style="margin:6px 0">✨ AI đang lọc tin cho đẹp…</div>':''}<div class="gui74nd">${esc(gui74Chu(x))}</div>
+  <div class="grid3" style="margin-top:8px"><button class="btn ghost sm" data-a="gui74Chep" data-v="${esc(c.name)}|${i}">📋 Chép</button><button class="btn sm" data-a="gui74Gui" data-v="${esc(c.name)}|${i}">📲 Gửi khách</button><button class="btn ghost sm" data-a="gui74Bo" data-v="${esc(c.name)}|${i}">✕ Bỏ</button></div>
+  <button class="link" style="margin-top:6px" data-a="gui74Lt" data-v="${esc(c.name)}|${i}">🚶 Thêm vào lộ trình dẫn khách</button></div>`}).join('')||'<div class="note">Chưa có căn nào. Ở danh sách nhà (ô Lựa chọn phân khúc, Gợi ý dẫn nhà…), bấm <b>👥 Cho vào Kho theo tệp khách</b> rồi chọn khách này.</div>'}
+ ${L.length>1?`<button class="btn gold full" style="margin-top:8px" data-a="gui74Het" data-v="${esc(c.name)}">📋 Chép tất cả ${L.length} căn</button>`:''}`}};
+const gui74X=v=>{const k=v.lastIndexOf('|');const c=kh73(v.slice(0,k));return [c,c&&(c.gui||[])[+v.slice(k+1)]]};
+A.gui74Chep=v=>{const [c,x]=gui74X(v);if(x){copy(gui74Chu(x));c.last=today();save()}};
+A.gui74Het=v=>{const c=kh73(v);if(c){copy((c.gui||[]).map((x,i)=>(i+1)+'. '+gui74Chu(x)).join('\n\n———\n\n'));c.last=today();save()}};
+A.gui74Gui=async v=>{const [c,x]=gui74X(v);if(!x)return;const t=gui74Chu(x);c.last=today();save();
+ if(navigator.share){try{await navigator.share({text:t});return}catch(e){if(e&&e.name==='AbortError')return}}copy(t)};
+A.gui74Bo=v=>{const [c,x]=gui74X(v);if(!x)return;c.gui=c.gui.filter(y=>y!==x);save();render()};
+A.gui74Lt=v=>{const [c,x]=gui74X(v);if(!x)return;c.lt=c.lt||[];if(c.lt.some(y=>String(y.k)===String(x.k))){toast('Căn này đã có trong lộ trình');return}c.lt.push({k:x.k,kho:x.kho,t:x.t,q:x.q,g:x.g,dt:x.dt,img:x.img,xem:false,sao:0,ghi:''});c.ltSx=false;save();render();toast('🚶 Đã thêm vào lộ trình dẫn '+c.name)};
+/* chi tiết căn mở từ ô Lựa chọn phân khúc cũng có nút tệp khách */
+{const o=SH.dlCt;SH.dlCt=function(){const x=o.apply(this,arguments);const c=U.dlCt;if(c&&(c.pk||c.l73)&&x&&x.h&&c.pi!=null&&c.pi>=0){x.h+=tep74Nut((c.pk?'pk':c.l73)+'|'+c.pi)}return x}}
+/* ===== /v74 ===== */
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
