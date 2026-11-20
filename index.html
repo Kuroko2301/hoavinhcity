@@ -6,6 +6,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
+<style>/*v85 game*/.ct85 .li{align-items:center}.ct85 .num{font-size:13px}.vu85{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}.vu85 div{aspect-ratio:1;border-radius:12px;background:linear-gradient(180deg,rgba(80,150,90,.12),rgba(120,80,40,.18));display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;line-height:1}.vu85 div small{font-size:9.5px;color:var(--muted);margin-top:3px;text-align:center;line-height:1.25}.vu85 .trong{font-size:14px;color:var(--muted);border:1.5px dashed var(--line);background:none}.lt85{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}.lt85 td,.lt85 th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}.lt85 .r{text-align:right}</style>
 <style>/*v84 chot hinh*/.ch84{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.ch84 .t{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--line)}.ch84 .t img{width:100%;height:100%;object-fit:cover;display:block}.ch84 .t button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.ch84 label.add{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--muted);cursor:pointer}.ch84 label.add span{font-size:24px}.ch84v{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.ch84v a{aspect-ratio:1;border-radius:9px;overflow:hidden;display:block;background:var(--line)}.ch84v img{width:100%;height:100%;object-fit:cover;display:block}</style>
 <style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
 nav.tabs button{min-width:0}nav.tabs button{padding:0 1px}nav.tabs button span{white-space:nowrap;font-size:9.6px;letter-spacing:-.2px}nav.tabs svg{width:21px;height:21px}</style>
@@ -761,9 +762,11 @@ const MATS=[['bac','Bạc','🥈'],['vang','Vàng','🥇'],['kc','Kim cương','
 const TIERS=[[1,'Dưới 3 tỷ'],[2,'3 – 6 tỷ'],[3,'6 – 10 tỷ'],[5,'10 – 20 tỷ'],[9,'Trên 20 tỷ']];
 const tierIdx=p=>p<3?0:p<6?1:p<10?2:p<=20?3:4;
 const tierT=p=>TIERS[tierIdx(p)][0];
-const HOUSE_NAMES=['','Nhà cấp 4','Nhà gác lửng','Nhà phố 1 trệt 1 lầu','Nhà phố 2 lầu hiện đại','Nhà phố 3 tầng sân vườn','Nhà phố hoa giấy','Biệt thự Hoa Vinh'];
-const houseName=lv=>HOUSE_NAMES[Math.min(lv,7)]||'Biệt thự Hoa Vinh';
-const cost=lv=>({gach:8*lv,go:5*lv,thep:3*lv,kinh:2*lv});
+const HOUSE_NAMES=['','Nhà cấp 4','Nhà 1 lầu','Nhà 2 lầu','Nhà 3 lầu','Nhà 4 lầu','Biệt thự Hoa Vinh','Lâu đài Hoa Vinh'];
+const houseName=lv=>HOUSE_NAMES[Math.min(lv,7)]||'Lâu đài Hoa Vinh';
+/* v85: mỗi lầu = 1/4 chỉ tiêu năm (2.160 bài, 200 khảo sát, 45 điểm T) */
+const CT85={gach:2160,thep:200,kc:45};
+const cost=lv=>({gach:540,thep:50,kc:lv%4===0?12:11});
 const TET=new Date(2027,1,6);
 const WHEEL=['Sự nghiệp','Tài chính','Sức khoẻ','Gia đình','Tình cảm','Bạn bè','Phát triển bản thân','Vui chơi'];
 
@@ -951,11 +954,11 @@ function journeyCard(a){
 function daysSince(s){return Math.max(0,Math.round((new Date(today())-new Date(s))/864e5))}
 const HOP_CO_DINH='Thông báo họp sáng 8h ngày Thứ 2 và Thứ 6 tại văn phòng 219 Thạch Lam và 110 Cao Thắng';
 function hopCard(){const t=new Date(),d=t.getDay(),hr=t.getHours(),hn=(d===1||d===5)&&hr<10,mai=(d===0||d===4)&&hr>=12;
- return `<div class="card hop"><div class="between"><div class="kicker" style="color:var(--gold2)">📣 Họp định kỳ</div><span class="pill ${hn?'warn':mai?'gold':''}">${hn?'Hôm nay họp':mai?'Sáng mai họp':'Thứ 2 · Thứ 6'}</span></div><div class="h3" style="margin-top:4px;line-height:1.45">${HOP_CO_DINH}</div><div class="hop-row"><span>🕗 8:00 sáng</span><span>📍 219 Thạch Lam</span><span>📍 110 Cao Thắng</span></div></div>`}
+ return `<div class="card hop"><div class="between"><div class="kicker" style="color:var(--gold2)">📣 Họp định kỳ</div><span class="pill ${hn?'warn':mai?'gold':''}">${hn?'Hôm nay họp':mai?'Sáng mai họp':'Thứ 2 · Thứ 6'}</span></div><div class="h3" style="margin-top:4px;line-height:1.45">${HOP_CO_DINH}</div><div class="hop-row"><span>🕗 8:00 sáng</span><span>📍 219 Thạch Lam</span><span>📍 110 Cao Thắng</span></div>${hop85Nut()}</div>`}
 function noticeCard(){const h=bangRonStrip()+phaoCard()+hopCard()+vdHomeCard();if(!S.notice||S.notice.t==='Họp toàn phòng đầu tuần')return h;return h+`<div class="card hl"><div class="between"><div class="kicker" style="color:var(--gold2)">Triệu tập họp</div><span class="pill warn">Mới</span></div><div class="h3" style="margin-top:4px">${esc(S.notice.t)}</div><div class="sub">${esc(S.notice.when)} · ${esc(S.notice.place)}</div></div>`}
 function checkinCard(a,label){
   const done=a.g.lastCheck===today();const n=a.g.streak%7;
-  return `<div class="card"><div class="between"><div><div class="h3">${label||'Điểm danh hôm nay'}</div><div class="sub">Chuỗi ${a.g.streak} ngày · đủ 7 ngày thưởng 1 💎</div></div><button class="btn ${done?'ghost':'gold'} sm" data-a="checkin" ${done?'disabled':''}>${done?'Đã điểm danh':'Điểm danh'}</button></div><div class="days">${[1,2,3,4,5,6,7].map(i=>`<span class="${i<=(done?(n||7):n)?'on':''}">N${i}</span>`).join('')}</div></div>`;
+  return `<div class="card"><div class="between"><div><div class="h3">${label||'Điểm danh hôm nay'}</div><div class="sub">Chuỗi ${a.g.streak} ngày · +2 🥈 mỗi ngày, đủ 7 ngày thưởng 1 🥇</div></div><button class="btn ${done?'ghost':'gold'} sm" data-a="checkin" ${done?'disabled':''}>${done?'Đã điểm danh':'Điểm danh'}</button></div><div class="days">${[1,2,3,4,5,6,7].map(i=>`<span class="${i<=(done?(n||7):n)?'on':''}">N${i}</span>`).join('')}</div></div>`;
 }
 const DAILY=[
  {id:'tin',t:'Đăng tin',r:{bac:2},go:'post'},
@@ -1024,11 +1027,11 @@ TAB.nha=a=>{
   const fl=a.g.flag,sf=a.g.selfie;
   const seller=a.role==='tl'||a.role==='sep';
   return `<div class="card" style="text-align:center"><div id="v3host" class="v3" data-v3="home">${houseSvg(a)}</div><div class="sub">Kéo ngang để xoay nhà</div><div class="kicker" style="color:var(--gold2);margin-top:6px">Cấp ${a.g.lv} · ${esc(a.g.gameRole||'')}</div><div class="h2" style="margin:2px 0 0">${houseName(a.g.lv)} của ${esc(a.brand||a.name)}</div></div>
-  <div class="card"><h2 class="h2">Xây lên cấp ${a.g.lv+1}: ${houseName(a.g.lv+1)}</h2><p class="sub">Luật xây nhà: mỗi cấp cần thêm gạch, gỗ, thép, kính. Nguyên liệu có được từ điểm danh và nhiệm vụ.</p>
+  <div class="card"><h2 class="h2">Xây lên cấp ${a.g.lv+1}: ${houseName(a.g.lv+1)}</h2><p class="sub">Mỗi lầu cần 540 🧱 gạch (1 bài đăng = 1 gạch), 50 🔩 thép (1 căn khảo sát = 1 thép) và 11–12 💎 kim cương (1 điểm hệ số T = 1 kim cương). Làm đủ chỉ tiêu 1 năm là lên Nhà 4 lầu.</p>
   <div class="list" style="margin-top:6px">${Object.entries(c).map(([k,v])=>{const m=MATS.find(x=>x[0]===k);const have=a.g[k]||0;return `<div class="li"><span style="width:26px">${m[2]}</span><div class="grow"><div class="between"><b>${m[1]}</b><span class="num ${have>=v?'':'muted'}">${have}/${v}</span></div><div class="bar" style="margin-top:4px"><i style="width:${Math.min(100,have/v*100)}%"></i></div></div></div>`}).join('')}</div>
   <button class="btn full" style="margin-top:10px" data-a="build" ${ok?'':'disabled'}>${ok?'Xây nhà':'Chưa đủ nguyên liệu'}</button>
   ${seller?`<button class="btn ghost full" style="margin-top:8px" data-a="sellAsk" ${a.g.lv<2?'disabled':''}>Bán nhà lấy ${a.g.lv} Vàng</button>${U.sellAsk?`<div class="note" style="margin-top:8px">Bán ${houseName(a.g.lv)} sẽ về lại Nhà cấp 4 và nhận ${a.g.lv} Vàng. <div class="row" style="margin-top:8px"><button class="btn sm" data-a="sell">Bán</button><button class="btn ghost sm" data-a="sellCancel">Thôi</button></div></div>`:''}`:''}</div>
-  <div class="card stack"><h2 class="h2" style="margin:0">Cá nhân hoá</h2>
+  ${chiTieu85(a)}${vuon85(a)}<div class="card stack"><h2 class="h2" style="margin:0">Cá nhân hoá</h2>
    <div><div class="between"><b>Treo cờ trước nhà</b>${fl?`<span class="pill ${fl.status==='ok'?'ok':fl.status==='no'?'bad':'warn'}">${fl.status==='ok'?'Đã duyệt':fl.status==='no'?'Chưa duyệt':'Chờ duyệt'}</span>`:''}</div>
    <p class="sub">Cờ ghi tên hoặc khẩu hiệu của bạn, Trưởng phòng hoặc Trợ lý duyệt rồi mới treo.</p>
    <div class="row wrap" style="margin-top:6px"><input class="in grow" id="flagt" maxlength="14" placeholder="Chữ trên cờ" value="${esc(fl?fl.text:'')}" style="flex:1 1 140px">${['#8E1B1B','#2F6B3A','#1F4E8C','#B8862A'].map((c,i)=>`<button class="sw ${(U.flagColor||(fl&&fl.color)||'#8E1B1B')===c?'on':''}" style="background:${c}" data-a="flagColor" data-v="${c}" aria-label="Màu cờ ${i+1}"></button>`).join('')}</div>
@@ -1396,10 +1399,6 @@ function charPart(a){const c=a.g.char;const inv=a.g.inv||[];
    <div><div class="sub" style="font-weight:700;margin-bottom:6px">Đồ đã mua ở Siêu thị</div><div class="picks">${pick('outfit','','Áo thường',!c.outfit)}${own('outfit').map(it=>pick('outfit',it.k,it.em+' '+it.n,c.outfit===it.k)).join('')}${pick('acc','','Không phụ kiện',!c.acc)}${own('acc').map(it=>pick('acc',it.k,it.em+' '+it.n,c.acc===it.k)).join('')}${own('ride').map(it=>pick('ride',c.ride===it.k?'':it.k,it.em+' '+it.n,c.ride===it.k)).join('')}</div></div>
    <button class="btn gold full" data-a="sheet" data-v="bld:sieuthi">Đi Siêu thị mua thêm đồ</button></div>`}
 const SHOP=[
- {k:'p_gach',n:'Gói 10 gạch',em:'🧱',price:{bac:5},give:{gach:10}},
- {k:'p_go',n:'Gói 6 gỗ',em:'🪵',price:{bac:5},give:{go:6}},
- {k:'p_thep',n:'Gói 4 thép',em:'🔩',price:{vang:1},give:{thep:4}},
- {k:'p_kinh',n:'Gói 3 kính',em:'🪟',price:{vang:1},give:{kinh:3}},
  {k:'nonla',n:'Nón lá',em:'👒',price:{bac:8},slot:'acc'},
  {k:'kinhram',n:'Kính râm',em:'🕶️',price:{vang:2},slot:'acc'},
  {k:'aodai',n:'Áo dài đỏ',em:'👘',price:{vang:3},slot:'outfit'},
@@ -1922,9 +1921,9 @@ function tlRoom(email,ten){const t=tlFind(email,ten);email=t.email||email;const 
  return {t:'Phòng '+t.name,h:`<div class="card"><div class="row">${avatar(t)}<div class="grow"><b>${esc(t.name)}</b><div class="sub">Nhận lịch, duyệt, hỗ trợ anh em</div></div></div><label class="f" for="msg" style="margin-top:10px">Gửi lời nhắn<textarea class="in" id="msg" placeholder="Xin lịch đi khảo sát cùng, hỏi thủ tục, báo việc..."></textarea></label><button class="btn full" style="margin-top:8px" data-a="sendMsg" data-v="${esc(email)}">Gửi cho ${esc(t.name)}</button>${mine.map(m=>`<div class="li"><span class="sub">${fmtD(m.d)}</span><div class="grow" style="font-size:13px">${esc(m.text)}</div><span class="pill ok">Đã gửi</span></div>`).join('')}</div>`}}
 SHB.tlthuy=()=>tlRoom('troly.thuy@gmail.com','Thủy');
 SHB.tldi=()=>tlRoom('troly.di@gmail.com','Di');
-SHB.vanhanh=()=>({t:'Phòng vận hành',h:`<div class="card"><h2 class="h2">Đơn vị tiền trong game</h2><p class="sub">Xếp từ rẻ tới đắt.</p><table class="tbl"><tr><th>Tiền</th><th>Kiếm bằng cách</th></tr><tr><td>🥈 Bạc</td><td>Nhiệm vụ hằng ngày: đăng tin, quay video, đăng bài, đăng video (+2 mỗi việc)</td></tr><tr><td>🥇 Vàng</td><td>Khảo sát nhà (+1 mỗi căn), mỗi hình dẫn khách +1 (che mặt khách vẫn được), nhiệm vụ khảo sát</td></tr><tr><td>💎 Kim cương</td><td>Vụ chốt được xét duyệt, tính theo hệ số T</td></tr></table></div>
+SHB.vanhanh=()=>({t:'Phòng vận hành',h:`<div class="card"><h2 class="h2">Đơn vị tiền trong game</h2><p class="sub">Xếp từ rẻ tới đắt.</p><table class="tbl"><tr><th>Tiền</th><th>Kiếm bằng cách</th></tr><tr><td>🥈 Bạc</td><td>Nhiệm vụ hằng ngày, điểm danh, học video, quà sinh nhật</td></tr><tr><td>🥇 Vàng</td><td>Khảo sát nhà (+1), hình dẫn khách (+1), thử thách tuần, Top tháng (+10)</td></tr><tr><td>💎 Kim cương</td><td>Vụ chốt được duyệt (1 điểm hệ số T = 1 💎), Top tháng (+1)</td></tr></table></div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Hệ số T của vụ chốt</h2>${tierTable()}</div>
- <div class="card" style="margin-top:10px"><h2 class="h2">Nguyên liệu xây nhà</h2><p class="sub" style="line-height:1.55">Gạch, gỗ, thép, kính có được từ điểm danh, quà sinh nhật và mua ở Siêu thị. Mỗi cấp nhà cần nhiều nguyên liệu hơn cấp trước.</p></div>
+ <div class="card" style="margin-top:10px"><h2 class="h2">Luật xây nhà: đủ chỉ tiêu năm = Nhà 4 lầu</h2>${luat85()}</div>
  <div class="card" style="margin-top:10px"><h2 class="h2">Thể lệ thi đua</h2><p style="margin:0;line-height:1.55">${esc(S.rules)}</p></div>`});
 SHB.loc=()=>{const f=U.loc||(U.loc={area:'all',seg:-1});const GM=DL_GIA.length-1;if(f.pi0==null){f.pi0=0;f.pi1=GM}const g0=DL_GIA[f.pi0],g1=DL_GIA[f.pi1];
  const items=S.hang.map(h=>({addr:h[0],area:h[1],type:h[2],p:h[3],dt:h[4],ex:true}));
@@ -1963,7 +1962,7 @@ function bellGoals(a){const G_=a.g.goals||[];const open=G_.map((g,gi)=>[g,gi]).f
  ${open.length&&!U.bellAdd?`<button class="link" style="margin-top:8px" data-a="bellAdd">+ Thêm mục tiêu</button>`:form}
  <p class="sub" style="margin-top:6px">Bấm vào từng bước để đánh dấu đã làm. Hoàn thành cả mục tiêu sẽ được ghi vào Nhìn lại chặng đường.</p>`}
 SH.bday=()=>{const a=me();const got=a.g.bday===today();return {t:'🎂 Chúc mừng sinh nhật',h:`<div class="card tet" style="text-align:center"><div class="big">🎂</div><div class="h2" style="color:#fff;margin:8px 0 4px">Sinh nhật vui vẻ, ${esc(a.name)}!</div><div class="sub">Cả phòng Hoa Vinh chúc bạn tuổi mới thật khoẻ, chốt thật nhiều căn.</div></div>
- <div class="card" style="margin-top:10px"><b>Quà sinh nhật: nguyên liệu xây nhà</b><div class="sub" style="margin-top:4px">20 🧱 gạch · 12 🪵 gỗ · 6 🔩 thép · 4 🪟 kính</div><button class="btn gold full" style="margin-top:10px" data-a="bdayGet" ${got?'disabled':''}>${got?'Đã nhận quà':'Nhận quà'}</button></div>`}};
+ <div class="card" style="margin-top:10px"><b>Quà sinh nhật của cả phòng</b><div class="sub" style="margin-top:4px">20 🥈 Bạc · 5 🥇 Vàng để mua đồ ở Siêu thị</div><button class="btn gold full" style="margin-top:10px" data-a="bdayGet" ${got?'disabled':''}>${got?'Đã nhận quà':'Nhận quà'}</button></div>`}};
 SH.dealreport=()=>({t:'Báo vụ chốt',h:`<p class="sub">Báo vụ chốt để Trợ lý xét duyệt. Duyệt xong bạn nhận Kim cương theo hệ số T.</p>${tierTable()}<div class="stack" style="margin-top:10px"><input class="in" id="drh" placeholder="Căn nào, ví dụ: Nhà 4x16 Tân Sơn Nhì"><input class="in num" id="drp" type="number" step="0.1" placeholder="Giá bán (tỷ)"><button class="btn full" data-a="dealReport">Gửi xét duyệt</button></div>`});
 
 /* ========== Sheets ========== */
@@ -2086,7 +2085,7 @@ A.reset=()=>{S=seed();save();U.sheet=null;U.resetAsk=false;U.tab=null;U.test=nul
 /* common */
 A.checkin=()=>{const a=me();if(a.g.lastCheck===today())return;const y=new Date();y.setDate(y.getDate()-1);
   a.g.streak=(a.g.lastCheck&&a.g.lastCheck>=y.toISOString().slice(0,10))||a.g.streak?a.g.streak+1:1;a.g.lastCheck=today();
-  const r={gach:2};if(a.g.streak%7===0)r.kc=1;if(a.g.streak===1)journey(a,'Điểm danh ngày đầu tiên');give(a,r,'Điểm danh');save();render()};
+  const r={bac:2};if(a.g.streak%7===0)r.vang=1;if(a.g.streak===1)journey(a,'Điểm danh ngày đầu tiên');give(a,r,'Điểm danh');save();render()};
 A.goTask=v=>{if(v==='diary'){U.tab='nk';render();return}if(v==='camp'){U.tab='camp';render();return}A.sheet(v)};
 A.bell=v=>{const a=me();a.g.rem[v]=!a.g.rem[v];save();render();toast(a.g.rem[v]?'Đã bật nhắc nhở':'Đã tắt nhắc nhở')};
 A.build=()=>{const a=me();const c=cost(a.g.lv);for(const k in c)a.g[k]-=c[k];a.g.lv++;journey(a,'Lên '+houseName(a.g.lv),'Cấp '+a.g.lv);save();render();toast('Xây xong '+houseName(a.g.lv)+'!')};
@@ -2104,7 +2103,7 @@ A.addClient=()=>{const a=me();const n=val('kn').trim();if(!n){toast('Nhập tên
 A.addSurvey=async()=>{const a=me();const d=ksKeep();if(!(d.addr||'').trim()){toast('Nhập địa chỉ nhé');return}
  if(!d.anh.length&&!(d.dac||'').trim()&&!(d.manh||'').trim()&&!(d.yeu||'').trim()){toast('Thêm hình hoặc vài dòng đặc điểm nha');return}
  if(U.ksBusy)return;U.ksBusy=true;const moi=!d.id;
- try{await ksSave(a,d);U.ksD=null;if(moi)give(a,{vang:1},'Khảo sát nhà');else toast('Đã lưu thay đổi');save()}
+ try{await ksSave(a,d);U.ksD=null;if(moi)give(a,{thep:1,vang:1},'Khảo sát nhà');else toast('Đã lưu thay đổi');save()}
  catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}};
 /* ===== v31: Khảo sát nhà (hình, đặc điểm, điểm mạnh, điểm yếu · ai cũng xem, chỉ người đăng sửa) ===== */
 const KS_MAX=10;let ksPrepMax=480;
@@ -2282,7 +2281,7 @@ A.sendMsg=v=>{const t=val('msg');if(!t){toast('Viết lời nhắn nhé');return
 A.firePost=()=>{const t=val('fx');if(!t){toast('Viết vài dòng nhé');return}S.fire.unshift({name:document.getElementById('fan').checked?null:me().name,text:t,d:today(),hearts:0,rep:[]});save();render();toast('Anh em sẽ tiếp lửa cho bạn')};
 A.fireHeart=v=>{S.fire[+v].hearts++;save();render()};
 A.fireQuick=v=>{const i=v.indexOf('|');S.fire[+v.slice(0,i)].rep.push({n:me().name,t:v.slice(i+1)});save();render();toast('Đã gửi lời động viên')};
-A.bdayGet=()=>{const a=me();a.g.bday=today();const gift={gach:20,go:12,thep:6,kinh:4};for(const g in gift)a.g[g]=(a.g[g]||0)+gift[g];journey(a,'Nhận quà sinh nhật','Từ cả phòng Hoa Vinh');save();render();toast('Đã nhận quà sinh nhật!')};
+A.bdayGet=()=>{const a=me();a.g.bday=today();const gift={bac:20,vang:5};for(const g in gift)a.g[g]=(a.g[g]||0)+gift[g];journey(a,'Nhận quà sinh nhật','Từ cả phòng Hoa Vinh');save();render();toast('Đã nhận quà sinh nhật!')};
 A.dealReport=()=>{const a=me();const h=val('drh'),p=parseFloat(val('drp').replace(',','.'));if(!h||!p){toast('Nhập căn và giá bán nhé');return}S.dealQueue.push({who:a.name,email:a.email,home:h,p,done:false});U.sheet=null;save();render();toast('Đã gửi Trợ lý xét duyệt, dự kiến +'+tierT(p)+' 💎')};
 A.dealOk=v=>{const d=S.dealQueue[+v];d.done=true;const n=tierT(d.p);const x=d.email&&acct(d.email);const mm=!x&&S.members.find(q=>q.name===d.who);if(mm){mm.T=(mm.T||0)+n;mm.vuM=(mm.vuM||0)+1}
   if(x){x.g.T=(x.g.T||0)+n;x.g.kc=Math.round(((x.g.kc||0)+n)*10)/10;x.g.log.push({d:today(),o:{kc:n}});x.g.deals.push({d:today(),home:d.home,feel:'Vụ chốt được duyệt, +'+n+' kim cương',ok:1});x.g.journey.push({d:today(),t:'Vụ chốt được duyệt',s:d.home+' · +'+n+' 💎'})}
@@ -2290,7 +2289,7 @@ A.dealOk=v=>{const d=S.dealQueue[+v];d.done=true;const n=tierT(d.p);const x=d.em
   S.ticker='Chúc mừng '+d.who+' chốt '+d.home+' ('+ty(d.p*1e9)+')!  ·  '+S.ticker;save();render();toast('Đã duyệt, '+d.who+' nhận '+n+' kim cương')};
 A.quayVideo=()=>{const a=me();if((a.g.tasks[today()]||[]).includes('quay')){toast('Hôm nay đã nhận Bạc quay video rồi');return}doneTask(a,'quay');save();render()};
 A.stTake=v=>{const t=S.surveyTasks.find(x=>x.id===v);t.taken=me().name;save();render();toast('Đã nhận nhiệm vụ khảo sát')};
-A.stDone=v=>{const a=me();const t=S.surveyTasks.find(x=>x.id===v);t.done=true;a.g.surveys.push({addr:t.addr,alley:'',dir:'Chưa ghi',so:false,note:t.note,d:today(),shared:true});give(a,{vang:t.reward},'Nhiệm vụ khảo sát');save();render()};
+A.stDone=v=>{const a=me();const t=S.surveyTasks.find(x=>x.id===v);t.done=true;a.g.surveys.push({addr:t.addr,alley:'',dir:'Chưa ghi',so:false,note:t.note,d:today(),shared:true});give(a,{thep:1,vang:t.reward},'Nhiệm vụ khảo sát');save();render()};
 A.stNew=()=>{const ad=val('sta');if(!ad){toast('Nhập địa chỉ nhé');return}S.surveyTasks.unshift({id:'st'+Date.now(),addr:ad,note:val('stn')||'Khảo sát và chụp hình',due:val('std')||'Trong tuần',reward:Math.max(1,+val('str')||1),by:me().name,taken:'',done:false});save();render();toast('Đã giao nhiệm vụ cho anh em')};
 
 /* ========== Events ========== */
@@ -2743,7 +2742,7 @@ A.addPost=()=>{const a=me();const t=val('pc');if(!t){toast('Viết nội dung nh
  const adm=a.role==='tl'||a.role==='sep',need=!adm&&ks.some(k=>chOf(k).chung&&k!=='cong');const loai=U.ploai||'bai_viet';const shId='b'+Date.now();{const inp=document.getElementById('pv');const fs=inp&&inp.files?[...inp.files].slice(0,10):[];if(fs.length&&ks.some(k=>!chOf(k).auto))shLuu(shId,fs)}
  S.bai.push({id:shId,by:a.name,email:a.email,role:a.role,loai,nd:t,media:!!(document.getElementById('pmd')||{}).checked,d:today(),st:need?'duyet':'hen',appr:adm?a.name:'',ch:ks.map(k=>({k,st:'cho',hen:w==='gold'&&chOf(k).auto?nextGold(k):hen,tries:0}))});
  a.g.posts.push({t,pf:ks.map(k=>chOf(k).n),at:w==='now'?'':'hẹn',d:today(),ty:loai==='video'?'video':'bai'});
- U.pdraft='';U.seg.post='mine';const ty2=loai==='video'?'video':'bai';if(!(a.g.tasks[today()]||[]).includes(ty2))doneTask(a,ty2);else toast(need?'Đã gửi, chờ Trợ lý duyệt kênh chung':'Đã gửi robot đăng bài');save();render()};
+ baiDang85(a);U.pdraft='';U.seg.post='mine';const ty2=loai==='video'?'video':'bai';if(!(a.g.tasks[today()]||[]).includes(ty2))doneTask(a,ty2);else toast(need?'Đã gửi, chờ Trợ lý duyệt kênh chung':'Đã gửi robot đăng bài');save();render()};
 A.ffwd=()=>{const a=me();S.bai.forEach(p=>{if(p.email===a.email||p.by===a.name)p.ch.forEach(c=>{if(c.st==='cho')c.hen=Date.now();if(c.st==='loi')c.next=Date.now()})});save();robot();render()};
 A.shareCh=v=>{const [id,i]=v.split('|');const p=S.bai.find(x=>x.id===id);const c=p.ch[+i];const xong=()=>{c.st='da';save();render()};
  if(SHF[id]){share1(p.nd,c.k,SHF[id]);xong()}else shLay(id).then(fs=>{share1(p.nd,c.k,fs);xong()})};
@@ -2762,11 +2761,11 @@ A.addCamp=()=>{const a=me();const ad=val('ca');if(!ad){toast('Nhập địa ch�
  if(!/^\s*\d+[0-9A-Za-z\/]*\s+[^,]+,\s*\S/.test(ad)){toast('Sai cú pháp. Viết: Số nhà Tên đường, phường/quận');return}
  const y=new Date();y.setDate(y.getDate()-1);const ys=y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0');
  if(a.g.camp.some(c=>noDau(c.addr)===noDau(ad)&&(c.d===ys||c.d===today()))){toast('Căn này hôm qua hoặc hôm nay đã lên rồi, chọn căn khác nha');return}
- a.g.camp.push({d:today(),addr:ad,note:val('cn'),price:val('cp')});
+ a.g.camp.push({d:today(),addr:ad,note:val('cn'),price:val('cp')});baiDang85(a);
  const fb=(document.getElementById('cfb')||{}).checked;S.bai.push({id:'b'+Date.now(),by:a.name,email:a.email,role:a.role,loai:'cong_trai',nd:ad+(val('cn')?' · '+val('cn'):'')+(val('cp')?' · '+val('cp'):''),media:false,d:today(),st:'hen',appr:'Mẫu Cổng trại',ch:[{k:'cong',st:'ok',hen:Date.now(),tries:0,link:'demo',views:0,at:Date.now()}].concat(fb?[{k:'fbpage',st:'cho',hen:Date.now(),tries:0}]:[])});
  if(campToday(a)>=3&&!(a.g.tasks[today()]||[]).includes('camp'))doneTask(a,'camp');else toast('Đã lên Cổng trại, còn '+Math.max(0,3-campToday(a))+' căn nữa');save();render()};
 A.addSigned=()=>{const a=me();const ad=val('sg');if(!ad){toast('Nhập địa chỉ căn mới ký nhé');return}const late=new Date().getDate()===monthEnd().getDate()&&new Date().getHours()>=18;
- a.g.signed++;a.g.lastSigned=ad;a.g.signLog=(a.g.signLog||[]).concat([{d:today(),addr:ad,late}]);journey(a,'Ký thêm căn',ad);give(a,{gach:2,thep:1},'Chúc mừng ký căn mới');
+ a.g.signed++;a.g.lastSigned=ad;a.g.signLog=(a.g.signLog||[]).concat([{d:today(),addr:ad,late}]);journey(a,'Ký thêm căn',ad);give(a,{vang:2},'Chúc mừng ký căn mới');
  const hen=Date.now()+15*6e4;S.bai.push({id:'b'+Date.now(),by:a.name,email:a.email,role:a.role,loai:'chay_ngang',nd:'🎉 Căn mới ký: '+ad+'. Anh em chia sẻ giúp nha!',media:false,d:today(),st:'hen',appr:'Mẫu Căn mới ký',ch:[{k:'cong',st:'ok',hen:Date.now(),tries:0,link:'demo',views:0,at:Date.now()},{k:'fbpage',st:'cho',hen,tries:0},{k:'zalooa',st:'cho',hen,tries:0},{k:'youtube',st:'cho',hen,tries:0}]});
  save();render();confetti();toast(late?'Đã lưu, nhưng quá 18h cuối tháng nên không tính giải tháng này':'🔔 Căn mới ký đã chạy ngang tới cả phòng!')};
 A.campShare=v=>{const [i,via]=v.split('|');const all=campAll();const c=all[+i];if(c)share1(c.addr+(c.note?' · '+c.note:'')+(c.price?' · '+c.price:'')+' · Liên hệ '+c.who+' (Hoa Vinh)',via)};
@@ -3308,7 +3307,7 @@ A.hAiImg=()=>toast('Bản thật: AI chỉnh sáng, thẳng góc, làm trời xa
 A.hSend=v=>{const [id,n]=v.split('|');const a=me();const c=a.g.clients.find(x=>x.name===n);if(c){if(c.stage==='moi')c.stage='gui';c.last=today()}wk(a).gui++;save();render();toast('Đã gửi căn cho '+n+' (+1 thử thách tuần)')};
 A.hKs=v=>{const a=me();const h=S.kho.find(x=>x.id===v);const p1=val('kp1'),p2=val('kp2'),f=document.getElementById('kph');const n=f?f.files.length:0;if(!p1&&!p2&&!n){toast('Thêm điểm cộng, điểm trừ hoặc ảnh nha');return}
  if(p1)h.plus.push(p1);if(p2)h.minus.push(p2);h.anh+=n;const first=!h.ks||h.ks.by!==a.name;h.ks={by:a.name,d:today()};
- if(first){a.g.surveys.push({addr:h.addr+', '+h.q,alley:h.hem,dir:h.dir,so:h.so,note:[p1,p2].filter(Boolean).join('; '),d:today(),shared:true});if(n>=3)wk(a).ks++;give(a,{vang:1},'Khảo sát '+h.addr)}else toast('Đã cập nhật khảo sát');save();render()};
+ if(first){a.g.surveys.push({addr:h.addr+', '+h.q,alley:h.hem,dir:h.dir,so:h.so,note:[p1,p2].filter(Boolean).join('; '),d:today(),shared:true});if(n>=3)wk(a).ks++;give(a,{thep:1,vang:1},'Khảo sát '+h.addr)}else toast('Đã cập nhật khảo sát');save();render()};
 A.kf=v=>{const [k,x]=v.split(/:(.*)/);const f=U.kf||(U.kf={});if(k==='q'){f.q=f.q||[];f.q=f.q.includes(x)?f.q.filter(y=>y!==x):f.q.concat([x])}else if(k==='seg')f.seg=+x;else if(k==='loai')f.loai=x||null;else if(k==='cl')f.cl=x||null;else if(k==='gc')f.gc=!f.gc;render()};
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.kf;if(!k||k==='kw')return;const f=U.kf||(U.kf={});const v=e.target.value;f[k]=k==='min'?+v:k==='seg'?(v===''?-1:+v):k==='loai'?(v||null):v;render()});
 document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.kf==='kw'){const f=U.kf||(U.kf={});f.kw=e.target.value;clearTimeout(U._kwT);U._kwT=setTimeout(()=>{const p=e.target.selectionStart;render();const el=document.getElementById('kkw');if(el){el.focus();try{el.setSelectionRange(p,p)}catch(_){}}},250)}});
@@ -3766,7 +3765,7 @@ const HV_MAU=[{t:'Đào tạo Hoa Vinh buổi 1',u:''},{t:'Buổi chia sẻ củ
 function hvNguon(u){return /drive\.google/.test(u||'')?'Google Drive':/youtu/.test(u||'')?'YouTube':''}
 function hvVideoList(a){const ds=S.hvLinks||HV_MAU;a.g.hvXem=a.g.hvXem||{};const q=(U.hvQ||'').trim().toLowerCase();const n=ds.filter((v,i)=>a.g.hvXem[v.u||i]).length;
  return `<div class="between"><div class="sub">${ds.length} video · đã xem ${n}</div></div><input class="in" id="hvq" placeholder="🔎 Tìm video (VD: Sếp Vinh, Triệu Đô…)" value="${esc(U.hvQ||'')}" style="margin-top:8px">
- <div class="list" style="margin-top:6px">${ds.map((v,i)=>({v,i})).filter(x=>!q||x.v.t.toLowerCase().includes(q)).map(({v,i})=>{const da=a.g.hvXem[v.u||i];const ng=hvNguon(v.u);return `<div class="li" style="align-items:center"><span class="pill ${da?'ok':''}" style="min-width:34px;text-align:center">${da?'✓':i+1}</span><div class="grow"><b>${esc(v.t)}</b>${ng?`<div class="sub">${ng==='YouTube'?'▶️':'📁'} ${ng}</div>`:''}</div><button class="btn sm ${da?'ghost':'gold'}" data-a="hvXem" data-v="${i}">${da?'Xem lại':'▶ Xem'}</button></div>`}).join('')||'<p class="sub">Không có video nào khớp.</p>'}</div>
+ <div class="list" style="margin-top:6px">${ds.map((v,i)=>({v,i})).filter(x=>!q||x.v.t.toLowerCase().includes(q)).map(({v,i})=>{const da=a.g.hvXem[v.u||i];const ng=hvNguon(v.u);return `<div class="li" style="align-items:center"><span class="pill ${da?'ok':''}" style="min-width:34px;text-align:center">${da?'✓':i+1}</span><div class="grow"><b>${esc(v.t)}</b>${ng?`<div class="sub">${ng==='YouTube'?'▶️':'📁'} ${ng}</div>`:''}</div><div class="row" style="gap:6px"><button class="btn sm ${da?'ghost':'gold'}" data-a="hvXem" data-v="${i}">${da?'Xem lại':'▶ Xem'}</button>${da&&!(a.g.hvXong||{})[v.u||i]?`<button class="btn sm" data-a="hvXong85" data-v="${i}">✅ Xem xong</button>`:''}</div></div>`}).join('')||'<p class="sub">Không có video nào khớp.</p>'}</div>
  ${S.hvLinks?'':'<p class="sub">Bản demo chỉ có tên mẫu. App thật hiện đủ danh sách video và link của phòng.</p>'}`}
 A.hvXem=v=>{const ds=S.hvLinks||HV_MAU;const x=ds[+v];if(!x)return;const a=me();a.g.hvXem=a.g.hvXem||{};if(x.u)window.open(x.u,'_blank','noopener');else toast('Bản demo chưa có link video');a.g.hvXem[x.u||+v]=1;save();render()};
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='hvq'){U.hvQ=e.target.value;const pos=e.target.selectionStart;render();const el=document.getElementById('hvq');if(el){el.focus();try{el.setSelectionRange(pos,pos)}catch(_){}}}});
@@ -3775,9 +3774,9 @@ SH.hocvien=()=>{const a=me();a.g.vid2=a.g.vid2||{};const seg=U.seg.hv2||'video';
  ${seg==='video'?hvVideoList(a):
   zoomCard(a)+`<h3 class="h3">Các buổi Zoom</h3>${S.zoom.slice().sort((x,y)=>y.d.localeCompare(x.d)).map(z=>`<div class="li"><span class="pill ${z.att.includes(a.name)?'ok':''}">${z.att.includes(a.name)?'✓':'○'}</span><div class="grow"><b>${esc(z.t)}</b><div class="sub">${fmtD(z.d)} ${esc(z.tm)} · ${z.att.length} người điểm danh</div></div></div>`).join('')}`}</div>`}};
 A.play2=v=>{const i=+v;const a=me();a.g.vid2=a.g.vid2||{};if(U.vid2===i){U.vid2=null;clearInterval(A._v2);render();return}clearInterval(A._v2);U.vid2=i;render();
- A._v2=setInterval(()=>{const b=document.getElementById('v2_'+i);a.g.vid2[i]=Math.min(100,(a.g.vid2[i]||0)+1);if(a.g.vid2[i]>=100){clearInterval(A._v2);U.vid2=null;give(a,{bac:2},'Học xong video');save();render();return}if(b){b.querySelector('.vbar').style.width=a.g.vid2[i]+'%';b.querySelector('.vt').textContent=fmtMin(a.g.vid2[i])+' / 20:00'}else{clearInterval(A._v2);U.vid2=null}},100)};
+ A._v2=setInterval(()=>{const b=document.getElementById('v2_'+i);a.g.vid2[i]=Math.min(100,(a.g.vid2[i]||0)+1);if(a.g.vid2[i]>=100){clearInterval(A._v2);U.vid2=null;give(a,{bac:2},'Học xong video');bon85(a);save();render();return}if(b){b.querySelector('.vbar').style.width=a.g.vid2[i]+'%';b.querySelector('.vt').textContent=fmtMin(a.g.vid2[i])+' / 20:00'}else{clearInterval(A._v2);U.vid2=null}},100)};
 A.zoomJoin=v=>{const z=S.zoom.find(x=>x.id===v);if(z.link)window.open(z.link,'_blank','noopener');else toast('Trợ lý chưa dán link Zoom cho buổi này')};
-A.zoomCheck=v=>{const a=me();const z=S.zoom.find(x=>x.id===v);if(z.att.includes(a.name))return;z.att.push(a.name);give(a,{bac:1},'Điểm danh Zoom');save();render()};
+A.zoomCheck=v=>{const a=me();const z=S.zoom.find(x=>x.id===v);if(z.att.includes(a.name))return;z.att.push(a.name);give(a,{bac:1},'Điểm danh Zoom');trong85(a,'Zoom Học viện');save();render()};
 function zoomAdmin(){return `<div class="card"><h2 class="h2">🎥 Lịch Zoom Học viện</h2>${S.zoom.slice().sort((x,y)=>y.d.localeCompare(x.d)).map(z=>`<div class="li"><div class="grow"><b>${esc(z.t)}</b><div class="sub">${fmtD(z.d)} ${esc(z.tm)} · điểm danh: ${z.att.length?z.att.map(esc).join(', '):'chưa ai'}</div></div></div>`).join('')}
  <div class="stack" style="margin-top:10px"><input class="in" id="zt" placeholder="Chủ đề buổi học"><div class="grid2"><input class="in" id="zd" type="date" value="${today()}"><input class="in" id="ztm" type="time" value="20:00"></div><input class="in" id="zl" placeholder="Link Zoom https://zoom.us/j/..."><button class="btn full" data-a="zoomAdd">Tạo buổi Zoom</button></div></div>`}
 A.zoomAdd=()=>{const t=val('zt');if(!t){toast('Nhập chủ đề buổi học nhé');return}const l=val('zl');S.zoom.push({id:'z'+Date.now(),t,d:val('zd')||today(),tm:val('ztm')||'20:00',link:/^https:\/\//.test(l)?l:'',by:me().name,att:[]});save();render();toast('Đã tạo buổi Zoom, anh em sẽ thấy ở Học viện')};
@@ -4411,7 +4410,7 @@ A.ks75St=async v=>{const i=v.lastIndexOf('|');const k=v.slice(0,i),st=v.slice(i+
  if(st==='mt'){x.st='mt';if(!g.mt.some(y=>y.k===x.k))g.mt.unshift(Object.assign({},x,{luc:today()}));save();render();toast('🎯 Đã lưu vào Nhà Mục tiêu');return}
  if(st==='ks'){if(U.ksBusy)return;U.ksBusy=true;const addr=ks75Dc(x).replace(', TP. Hồ Chí Minh','');
   const dac=[sach74(x.t),[x.g?'Giá chào '+tyTxt(x.g):'',x.dt?nf(x.dt)+' m²':''].filter(Boolean).join(' · '),sach74(String(x.mo||'').startsWith(x.t)?String(x.mo).slice(x.t.length).replace(/^[\s.,]+/,''):x.mo).slice(0,300)].filter(Boolean).join('\n');
-  try{await ksSave(a,{addr,dir:'',anh:[],so:[],dac,manh:'',yeu:'',ghi:''});x.st='ks';x.ksAddr=addr;give(a,{vang:1},'Khảo sát nhà');save();toast('✅ Đã lưu vào Nhà Đã Khảo sát · về nhà bổ sung hình sổ ở bước 4 nha')}
+  try{await ksSave(a,{addr,dir:'',anh:[],so:[],dac,manh:'',yeu:'',ghi:''});x.st='ks';x.ksAddr=addr;give(a,{thep:1,vang:1},'Khảo sát nhà');save();toast('✅ Đã lưu vào Nhà Đã Khảo sát · về nhà bổ sung hình sổ ở bước 4 nha')}
   catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}}};
 /* Nhà mục tiêu (riêng) */
 SH.ks75mt=()=>{const g=ks75S();return {t:'🎯 Nhà Mục tiêu',h:`${ks75Back()}<p class="sub" style="margin-top:4px">🔒 Chỉ mình bạn xem. Những căn bạn đánh dấu Nhà mục tiêu khi đi khảo sát.</p>
@@ -4499,6 +4498,49 @@ let ch84Luu=async anh=>Promise.all(anh.map(x=>thuNhoAnh(x.url,640,640)));
 {const o=A.addDeal;A.addDeal=async()=>{const d=ch84Keep();const h=(d.h||'').trim();if(!h){toast('Nhập căn nhà nhé');return}
  let anh=[];if(d.anh.length){try{anh=await ch84Luu(d.anh)}catch(e){toast('Chưa lưu được hình: '+(e.message||e));return}}
  const a=me();a.g.deals.push({d:today(),home:h,feel:(d.f||'').trim(),anh});journey(a,'Kỷ niệm vụ chốt',h);U.ch84={anh:[]};save();render();toast('Đã lưu kỷ niệm. Nhớ bấm Báo vụ chốt để nhận Kim cương nhé')}}
+
+/* ===== v85: Thuật toán game Hoa Vinh — đủ chỉ tiêu 1 năm = Nhà 4 lầu ===== */
+const nam85=()=>today().slice(0,4);
+function dem85(a){const y=nam85();const L=(a.g.log||[]).filter(x=>String(x.d||'').startsWith(y));const s=k=>Math.round(L.reduce((t,x)=>t+(+((x.o||{})[k])||0),0)*10)/10;
+ return {bai:s('gach'),ks:s('thep'),t:Math.round(tNamOf(a)*10)/10}}
+function baiDang85(a){give(a,{gach:1},'Đăng bài')}
+function vuon85Of(a){const v=a.g.vuon||(a.g.vuon={nuoc:0,phan:0,cay:[]});if(!v.cay)v.cay=[];return v}
+const CAY85=[['🌱','Mầm'],['🌿','Cây non'],['🌳','Cây lớn'],['🌸','Ra hoa']];
+function lon85(v){for(const c of v.cay){while(c.b<3&&(c.n<3||c.p<1)&&(v.nuoc>0||v.phan>0)){if(c.n<3&&v.nuoc>0){v.nuoc--;c.n++}else if(c.p<1&&v.phan>0){v.phan--;c.p++}else break}
+ if(c.b<3&&c.n>=3&&c.p>=1){c.b++;c.n=0;c.p=0}}}
+function tuoi85(a){const v=vuon85Of(a);v.nuoc++;lon85(v);toast('💧 Tưới cây 1 lần nhờ học Học viện')}
+function bon85(a){const v=vuon85Of(a);v.phan++;lon85(v);toast('🌿 Bón phân 1 lần nhờ xem xong video')}
+function trong85(a,vi){const v=vuon85Of(a);v.cay.push({d:today(),b:0,n:0,p:0,vi:vi||''});lon85(v);journey(a,'Mang 1 cây về trồng',vi||'');toast('🌳 Mang 1 cây về trồng trong vườn')}
+{const o=A.hvXem;A.hvXem=v=>{const ds=S.hvLinks||HV_MAU;const x=ds[+v];const a=me();const k=(x&&(x.u||+v))+'|'+today();a.g.hvTuoi=a.g.hvTuoi||{};const moi=x&&!a.g.hvTuoi[k];o(v);if(moi){a.g.hvTuoi[k]=1;tuoi85(a);save();render()}}}
+A.hvXong85=v=>{const ds=S.hvLinks||HV_MAU;const x=ds[+v];if(!x)return;const a=me();a.g.hvXong=a.g.hvXong||{};const k=x.u||+v;if(a.g.hvXong[k])return;a.g.hvXong[k]=today();bon85(a);save();render()};
+function hop85Nut(){const a=me();if(!a||!hasCtv(a))return '';const t=new Date(),d=t.getDay(),m=t.getHours()*60+t.getMinutes();const gio=(d===1||d===5)&&m>=7*60+30&&m<=11*60;const da=(a.g.hop85||'')===today();
+ if(!gio&&!da)return '<div class="sub" style="margin-top:6px">🌳 Có mặt họp phòng là được mang 1 cây về trồng (điểm danh 7:30–11:00 sáng Thứ 2, Thứ 6)</div>';
+ return `<button class="btn ${da?'ghost':'gold'} full sm" style="margin-top:8px" data-a="hop85" ${da?'disabled':''}>${da?'✓ Đã điểm danh họp, đã trồng 1 cây':'✋ Tôi có mặt họp · mang 1 cây về trồng'}</button>`}
+A.hop85=()=>{const a=me();if((a.g.hop85||'')===today())return;a.g.hop85=today();trong85(a,'Họp phòng');save();render()};
+function chiTieu85(a){if(!hasCtv(a))return '';const c=dem85(a);const thang=Math.max(1,+today().slice(5,7));
+ const dong=(em,t,co,ct,dv)=>{const k=Math.round(ct*thang/12);return `<div class="li"><span style="width:26px">${em}</span><div class="grow"><div class="between"><b>${t}</b><span class="num">${String(co).replace('.',',')}/${ct} ${dv}</span></div><div class="bar" style="margin-top:4px"><i style="width:${Math.min(100,co/ct*100)}%"></i></div><div class="sub" style="font-size:11.5px;margin-top:2px">${co>=k?'✅ Đúng tiến độ':'Tới tháng '+thang+' nên đạt '+k+' '+dv}</div></div></div>`};
+ return `<div class="card ct85"><h2 class="h2">🎯 Chỉ tiêu năm ${nam85()}</h2><p class="sub" style="margin:-2px 0 4px">Đủ cả 3 chỉ tiêu là lên được Nhà 4 lầu. Mỗi quý lên 1 lầu.</p><div class="list">
+ ${dong('🧱','Đăng bài (6 bài/ngày)',c.bai,CT85.gach,'bài')}${dong('🔩','Khảo sát nhà',c.ks,CT85.thep,'căn')}${dong('💎','Hệ số T vụ chốt',c.t,CT85.kc,'điểm')}</div>
+ <div class="note" style="margin-top:8px">🏆 Đứng Top thi đua tháng: +1 💎 và +10 🥇</div></div>`}
+function vuon85(a){if(!hasCtv(a))return '';const v=vuon85Of(a);
+ const o=v.cay.map(c=>{const [e,t]=CAY85[c.b];return `<div title="${esc(c.vi)}">${e}<small>${c.b<3?t+'<br>'+c.n+'/3💧 '+c.p+'/1🌿':t}</small></div>`}).join('');
+ return `<div class="card"><div class="between"><h2 class="h2" style="margin:0">🌳 Vườn cây Học viện</h2><span class="pill">${v.cay.length} cây</span></div>
+ <p class="sub" style="margin:4px 0 0">Học 1 video = 💧 tưới 1 lần · Xem xong 1 video = 🌿 bón 1 lần · Zoom hoặc họp phòng = 🌳 mang 1 cây về trồng. Mỗi bậc cây cần 3 lần tưới và 1 lần bón.</p>
+ <div class="vu85">${o}${v.cay.length?'':'<div class="trong">Chưa có cây</div>'}</div>
+ ${v.nuoc||v.phan?`<div class="sub" style="margin-top:6px">Đang để dành: ${v.nuoc} 💧 · ${v.phan} 🌿 (dùng khi có cây mới)</div>`:''}
+ <button class="btn ghost sm full" style="margin-top:8px" data-a="sheet" data-v="hocvien">🎓 Vào Học viện</button></div>`}
+function luat85(){return `<table class="lt85"><tr><th>Đầu việc</th><th>Nguyên liệu</th><th class="r">Chỉ tiêu năm</th><th class="r">Mỗi lầu</th></tr>
+ <tr><td>Đăng bài</td><td>1 bài = 1 🧱</td><td class="r">2.160</td><td class="r">540</td></tr>
+ <tr><td>Khảo sát nhà</td><td>1 căn = 1 🔩</td><td class="r">200</td><td class="r">50</td></tr>
+ <tr><td>Vụ chốt</td><td>1 điểm T = 1 💎</td><td class="r">45</td><td class="r">11–12</td></tr></table>
+ <p class="sub" style="line-height:1.55;margin-top:8px">Nhà cấp 4 → 1 lầu → 2 lầu → 3 lầu → <b>4 lầu</b> (đủ chỉ tiêu năm) → Biệt thự → Lâu đài Hoa Vinh. Top thi đua tháng +1 💎 +10 🥇. Điểm danh, sinh nhật, Siêu thị cho Bạc và Vàng, không thay được gạch, thép, kim cương.</p>`}
+/* Top thi đua tháng: Trợ lý/Sếp trao +1 KC +10 Vàng cho người đứng đầu */
+function top85Card(){const a=me();if(!a||!(a.role==='tl'||a.role==='sep'))return '';const n=new Date();const mk=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');const dx=S.accts.find(x=>x.g&&x.g.top85===mk);const da=dx?{who:dx.name,d:dx.g.top85d||today()}:null;
+ const top=leaderboard().find(p=>S.accts.some(x=>x.name===p.name&&x.status==='active'));
+ return `<div class="card"><div class="between"><h2 class="h2" style="margin:0">🏆 Thưởng Top tháng ${n.getMonth()+1}</h2>${da?'<span class="pill ok">Đã trao</span>':''}</div><p class="sub" style="margin:4px 0 8px">${da?'Đã trao cho '+esc(da.who)+' ngày '+fmtD(da.d):top?'Đang đứng đầu: <b>'+esc(top.name)+'</b> · '+top.pts+' điểm':'Chưa có ai'}. Thưởng +1 💎 và +10 🥇.</p>${da||!top?'':`<button class="btn gold full" data-a="top85" data-v="${esc(top.name)}">Trao thưởng Top tháng</button>`}</div>`}
+A.top85=v=>{const n=new Date();const mk=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');if(S.accts.some(p=>p.g&&p.g.top85===mk))return;const x=S.accts.find(p=>p.name===v);if(!x)return;x.g.top85=mk;x.g.top85d=today();
+ give(x,{kc:1,vang:10},'Top thi đua tháng');journey(x,'Đứng Top thi đua tháng '+(n.getMonth()+1),'+1 💎 +10 🥇');save();render();confetti()};
+{const o=TAB.td;TAB.td=a=>top85Card()+o(a)}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -5096,7 +5138,7 @@ A.addPost=async()=>{const a=me();const t=val('pc');
   let ttOk=0,ttRieng=false,ttNhap=false;if(ttK.length){LIVE.busy=true;try{for(const k of ttK){window._upK='tt'+k.id;tdbSet(window._upK,'dang',0);const r=await guiThangTt(id,k.id,files[0],ttCai);tdbSet('tt'+k.id,r.ok?'xong':'loi',null,r.ok?(r.nhap?'Vào hộp thư TikTok, bấm Đăng là công khai':r.rieng?'Đang để Chỉ mình tôi':''):'Xem lý do ở “Bài của tôi”');window._upK=null;if(r.ok){ttOk++;ttRieng=ttRieng||r.rieng;ttNhap=ttNhap||r.nhap}}}finally{LIVE.busy=false}if(ttOk)Object.assign(TT,{privacy:'',cmt:false,duet:false,stitch:false,com:false,own:false,bc:false,title:null,sua:false})}
   if(others){_addPostMxh()}
   else{const ty=vid?'video':'bai';a.g.posts.push({t,pf:kids.map(k=>(ch.find(x=>x.id===k.id)||{}).ten||k.nt),at:w==='now'?'':'hẹn',d:today(),ty});
-   U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
+   baiDang85(a);U.pdraft='';U.seg.post='mine';if(!(a.g.tasks[today()]||[]).includes(ty))doneTask(a,ty);save()}
   const thang=[...ytK,...ttK];
   if(!thang.length||khac.length)toast(need?'Đã gửi. Kênh chung chờ Trợ lý hoặc Sếp duyệt':w==='now'?'🤖 Robot đang đăng bài, xem ở “Bài của tôi”':'Đã hẹn giờ, robot sẽ đăng đúng giờ');
   else if(ytOk||ttOk){const ten=[ytOk?'YouTube':'',ttOk?'TikTok':''].filter(Boolean).join(' và ');
