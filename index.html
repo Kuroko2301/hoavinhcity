@@ -6,7 +6,12 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v75*/.ks75{display:flex;flex-direction:column;gap:10px}.ks75 .grid2{margin:0}
+<style>/*v78*/.pk78{display:flex;align-items:center;gap:6px}.pk78 .in{min-width:0;flex:1}.pk78 span{font-weight:800;color:var(--muted,#888)}
+.ql78row{margin:0}.ql78b b{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:4px}
+.ql78g{margin-bottom:8px}.ql78t{font-weight:800;margin-bottom:4px}.ql78r{display:flex;gap:6px;flex-wrap:wrap}
+.ql78c{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}.ql78c.on{background:var(--red);border-color:var(--red);color:#fff}
+.ql78it{display:flex;gap:10px;align-items:center;padding:12px!important}.btn.ql78ok{background:linear-gradient(135deg,#1F6F4A,#14533A)!important;color:#fff!important;white-space:nowrap;flex:0 0 auto}
+/*v75*/.ks75{display:flex;flex-direction:column;gap:10px}.ks75 .grid2{margin:0}
 .btn.ks75tao{background:linear-gradient(135deg,#E02A3B,#B5121F)!important;color:#fff!important;font-size:17px;padding:16px;border-radius:16px}
 .ks75o{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:52px;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:10px;font-weight:800;font-size:14px;color:var(--ink);cursor:pointer}
 .ks75o b{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px}.ks75o.full{justify-content:flex-start}
@@ -3275,11 +3280,11 @@ A.hKs=v=>{const a=me();const h=S.kho.find(x=>x.id===v);const p1=val('kp1'),p2=va
 A.kf=v=>{const [k,x]=v.split(/:(.*)/);const f=U.kf||(U.kf={});if(k==='q'){f.q=f.q||[];f.q=f.q.includes(x)?f.q.filter(y=>y!==x):f.q.concat([x])}else if(k==='seg')f.seg=+x;else if(k==='loai')f.loai=x||null;else if(k==='cl')f.cl=x||null;else if(k==='gc')f.gc=!f.gc;render()};
 document.addEventListener('change',e=>{const k=e.target.dataset&&e.target.dataset.kf;if(!k||k==='kw')return;const f=U.kf||(U.kf={});const v=e.target.value;f[k]=k==='min'?+v:k==='seg'?(v===''?-1:+v):k==='loai'?(v||null):v;render()});
 document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.kf==='kw'){const f=U.kf||(U.kf={});f.kw=e.target.value;clearTimeout(U._kwT);U._kwT=setTimeout(()=>{const p=e.target.selectionStart;render();const el=document.getElementById('kkw');if(el){el.focus();try{el.setSelectionRange(p,p)}catch(_){}}},250)}});
-function khachPart(a){khMig(a);const st=U.kst||'all';const cs=a.g.clients.filter(c=>st==='all'||c.stage===st);const care=careList(a);
+function khachPart(a){khMig(a);const st=U.kst||'all';const cs=a.g.clients.filter(c=>!c.chot&&(st==='all'||c.stage===st));const care=careList(a);
  return `<div class="funnel">${STG.map(([k,l],i)=>{const n=a.g.clients.filter(c=>c.stage===k).length;return `<button class="${st===k?'on':''}" data-a="kst" data-v="${k}"><b class="num">${n}</b><span>${STG_GON[k]}</span></button>`}).join('')}<button class="tong ${st==='all'?'on':''}" data-a="kst" data-v="all"><b class="num">${a.g.clients.length}</b><span>Tổng khách</span></button></div>
   ${nhacQuyen()!=='granted'?nhacNut():''}
   ${care.length?`<div class="note warn" style="margin:0">💛 <b>${care.length} khách đến hẹn chăm</b> (${CHAM_NGAY} ngày chưa liên hệ): ${care.slice(0,3).map(c=>esc(c.name)).join(', ')}${care.length>3?'…':''}</div>`:''}
-  <div class="row"><button class="btn full" data-a="sheet" data-v="clients">＋ Thêm khách</button>${st!=='all'?'<button class="btn ghost sm" data-a="kst" data-v="all">Tất cả</button>':''}</div>
+  <div class="grid2 ql78row"><button class="btn" data-a="sheet" data-v="clients">＋ Thêm khách</button><button class="btn ghost ql78b" data-a="sheet" data-v="qlk78">📋 Quản lý khách${(a.g.clients||[]).some(c=>c.chot)?` <b>🎉 ${(a.g.clients||[]).filter(c=>c.chot).length}</b>`:''}</button></div>${st!=='all'?'<button class="btn ghost sm" data-a="kst" data-v="all">Xem tất cả giai đoạn</button>':''}
   ${cs.map(c=>{const i=Math.max(0,STG.findIndex(s=>s[0]===c.stage)),hs=housesFor(c),nw=hs.filter(h=>daysSince2(h.d)<=3).length,ds=c.last?daysSince2(c.last):0,can=c.stage!=='coc'&&ds>=CHAM_NGAY,so=khSo(c);
    return `<div class="card kcard${can?' kcham':''}"><div class="between" style="gap:8px"><div class="row" style="gap:4px 6px;min-width:0;flex:1;flex-wrap:wrap">${c.hot&&c.stage!=='coc'?'<span class="pill bad">Nóng</span>':''}<b style="white-space:nowrap">${esc(c.name)}</b>${c.vong?`<span class="pill gold" style="white-space:nowrap">Vòng ${c.vong}</span>`:''}${so?`<span class="sub num" style="white-space:nowrap">📱 ···${esc(so)}</span>`:''}</div><span class="pill ${c.stage==='coc'?'ok':''}" style="white-space:nowrap">${i+1}. ${STG_GON[STG[i][0]]}</span></div>
    <div class="sub" style="margin-top:4px">${esc(c.need)}${c.date&&c.date>=today()?` · 📅 dẫn ${esc(fmtD(c.date))} ${esc(c.time||'')}`:''}</div><div class="stepline">${STG.map((s,j)=>`<i class="${j<=i?'on':''}"></i>`).join('')}</div>
@@ -3686,7 +3691,7 @@ A.cpChep=()=>{const T=U.cp.t;const L=cpDs().filter(x=>String(x.ngay).slice(0,7)=
  const t='💸 CHI PHÍ PHÒNG HOA VINH · '+cpTenThang(T).toUpperCase()+'\n'+L.map((x,i)=>(i+1)+'. '+fmtD(x.ngay)+' · '+x.nd+': '+cpTien(x.tien)+' ('+(x.by||'Trợ lý')+')').join('\n')+'\n— TỔNG: '+cpTien(tong)+' ('+L.length+' khoản)';
  try{navigator.clipboard.writeText(t)}catch(e){}toast('Đã chép bảng tổng')};
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='cp_tien'){const o=document.getElementById('cp_xem');const n=cpDoc(e.target.value);if(o)o.textContent=e.target.value?'= '+cpTien(n):'Gõ 150k = 150.000đ, 1,2tr = 1.200.000đ'}});
-SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát nhà'],['clients','🤝','Thêm khách'],['dealreport','💎','Báo vụ chốt'],['lochang','🔎','Lọc hàng'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],...(hasCtv(me())?[['vandong','🏅','Vận động trường']]:[]),...(cpXem(me())?[['chiphi','💸','Chi phí']]:[]),['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
+SH.quick=()=>({t:'Làm nhanh',h:`<div class="qgrid">${[['post','📣','Đăng bài'],['survey','📍','Khảo sát nhà'],['clients','🤝','Thêm khách'],['hoc','🧠','Học tình huống'],['vinvilla','🤖','Trợ lý VinViLLa'],...(hasCtv(me())?[['vandong','🏅','Vận động trường']]:[]),...(cpXem(me())?[['chiphi','💸','Chi phí']]:[]),['nhac','🎵','Nhạc nền']].map(([k,i,l])=>`<button data-a="sheet" data-v="${k}"><span>${i}</span>${l}</button>`).join('')}</div>`});
 
 /* ===== v13: Văn hoá mở đầu, Học viện anh em + Zoom, Kỷ niệm, Nhà Truyền Thống ===== */
 const VANHOA=[['Chữ tín trước hợp đồng','Nói đúng thông tin nhà, đúng giá, đúng pháp lý. Khách tin mình thì mới quay lại.'],['Người đi trước dắt người đi sau','Ai mới vào đều có người dẫn đường. Hỗ trợ anh em là nhiệm vụ, có thưởng kim cương.'],['Mỗi ngày một viên gạch','Điểm danh, đăng tin, khảo sát, dẫn khách. Đều đặn mỗi ngày thì nhà sẽ cao.'],['Biết ơn và báo hiếu','Một phần hoa hồng mỗi vụ chốt dành cho báo hiếu và cầu cảm ơn.']];
@@ -4101,18 +4106,19 @@ SH.clients=()=>{const a=me();const L=a.g.clients.map((c,i)=>[c,i]).reverse();con
  <label class="f" for="kqq">Khu vực<select class="in" id="kqq">${kv72Ds(a).map(q=>`<option ${q===kv?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
  <div class="kv72note">💡 Khu vực đã chọn sẵn theo khu vực bạn làm (${esc(kv)}). Khách tìm khu khác thì bấm vào ô để đổi nha.</div>
  <div class="grid2" style="margin:0"><label class="f" for="kp">📱 4 số cuối SĐT<input class="in num" id="kp" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Không bắt buộc" autocomplete="off"></label>
- <label class="f" for="kpk">💰 Phân khúc khách<select class="in" id="kpk"><option value="">Chưa rõ</option>${TIERS.map((t,i)=>`<option value="${i}">${t[1]}</option>`).join('')}</select></label></div>
+ <label class="f" for="kpt">💰 Phân khúc khách (tỷ)<div class="pk78"><input class="in num" id="kpt" inputmode="decimal" placeholder="Từ" aria-label="Phân khúc từ (tỷ)" autocomplete="off"><span>–</span><input class="in num" id="kpd" inputmode="decimal" placeholder="Đến" aria-label="Phân khúc đến (tỷ)" autocomplete="off"></div></label></div>
  <div><div class="sub" style="font-weight:800;margin-bottom:6px">🚶 Vòng dẫn khách</div><div class="v72pick">${[1,2,3,4,5].map(n=>`<button class="${vg===n?'on':''}" data-a="vong72" data-v="${n}" aria-pressed="${vg===n}"><b>Vòng ${n}</b><small>${VONG72_GON[n]}</small></button>`).join('')}</div></div>
  <div class="sub">🕒 Thời gian thêm khách tự ghi lúc bấm Lưu (bây giờ là ${esc(tgVi72(Date.now()))}).</div>
  <button class="btn full" data-a="addClient">Lưu khách</button></div>
  <div style="margin-top:12px">${vong72Note(false)}</div>
- <h3 class="h3" style="margin:16px 0 4px">Khách đã thêm (${L.length})</h3>${L.map(([c,i])=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">V${c.vong||1}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · 🕒 ${esc(c.them?tgVi72(c.them):fmtD(c.date||c.last||today()))}</div><div class="sub">Vòng ${c.vong||1}: ${VONG72_GON[c.vong||1]}${String(c.phone||'').replace(/\D/g,'')?' · 📱 ···'+esc(String(c.phone).replace(/\D/g,'').slice(-4)):''}${c.pk>=0&&TIERS[c.pk]?' · 💰 '+TIERS[c.pk][1]:''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap;width:100%;padding-left:46px">${(c.vong||1)<5?`<button class="btn ghost sm" data-a="vong72Len" data-v="${i}">Lên vòng ${(c.vong||1)+1} ›</button>`:'<span class="pill ok">Vòng cuối</span>'}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`).join('')||'<p class="sub">Chưa có khách nào.</p>'}<p class="sub" style="margin-top:6px">Mỗi hình dẫn khách được 1 Vàng. Che mặt khách vẫn được tính.</p>`}};
-A.vong72=v=>{U.vong72=+v;const n=val('kn'),q=val('kqq'),p=val('kp'),pk=val('kpk');render();setTimeout(()=>{const e=document.getElementById('kn');if(e)e.value=n;const s=document.getElementById('kqq');if(s&&q)s.value=q;const ep=document.getElementById('kp');if(ep)ep.value=p;const ek=document.getElementById('kpk');if(ek)ek.value=pk},0)};/*v76 sdt phan khuc*/
+ <h3 class="h3" style="margin:16px 0 4px">Khách đã thêm (${L.length})</h3>${L.map(([c,i])=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">V${c.vong||1}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · 🕒 ${esc(c.them?tgVi72(c.them):fmtD(c.date||c.last||today()))}</div><div class="sub">Vòng ${c.vong||1}: ${VONG72_GON[c.vong||1]}${String(c.phone||'').replace(/\D/g,'')?' · 📱 ···'+esc(String(c.phone).replace(/\D/g,'').slice(-4)):''}${pk78(c)?' · 💰 '+pk78(c):''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap;width:100%;padding-left:46px">${(c.vong||1)<5?`<button class="btn ghost sm" data-a="vong72Len" data-v="${i}">Lên vòng ${(c.vong||1)+1} ›</button>`:'<span class="pill ok">Vòng cuối</span>'}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`).join('')||'<p class="sub">Chưa có khách nào.</p>'}<p class="sub" style="margin-top:6px">Mỗi hình dẫn khách được 1 Vàng. Che mặt khách vẫn được tính.</p>`}};
+A.vong72=v=>{U.vong72=+v;const n=val('kn'),q=val('kqq'),p=val('kp'),pk=val('kpt'),pd=val('kpd');render();setTimeout(()=>{const e=document.getElementById('kn');if(e)e.value=n;const s=document.getElementById('kqq');if(s&&q)s.value=q;const ep=document.getElementById('kp');if(ep)ep.value=p;const ek=document.getElementById('kpt');if(ek)ek.value=pk;const ed=document.getElementById('kpd');if(ed)ed.value=pd},0)};/*v76 sdt phan khuc*/
 A.vong72Len=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;c.vong=Math.min(5,(c.vong||1)+1);c.last=today();save();render();toast('👏 '+c.name+' lên Vòng '+c.vong+': '+VONG72_GON[c.vong])};
 A.addClient=()=>{const a=me();const n=val('kn').trim();if(!n){toast('Nhập tên khách nhé');return}const q=val('kqq')||kv72MacDinh(a);const vg=U.vong72||1;
  const so=String(val('kp')||'').replace(/\D/g,'');if(so&&so.length!==4){toast('Số điện thoại chỉ cần đúng 4 số cuối nha');return}
- const pki=val('kpk')===''?-1:+val('kpk');const PK76=[[0,3],[3,6],[6,10],[10,20],[20,99]];const [mn,mx]=pki>=0?PK76[pki]:[0,99];
- a.g.kv72=q;a.g.clients.push({name:n,phone:so,pk:pki,need:[q,pki>=0?TIERS[pki][1]:''].filter(Boolean).join(', '),q,min:mn,max:mx,stage:'gui',last:today(),hot:false,tt:'nguoi',vong:vg,them:new Date().toISOString(),date:'',time:'',remind:false});
+ const t1=parseFloat(String(val('kpt')).replace(',','.'))||0,t2=parseFloat(String(val('kpd')).replace(',','.'))||0;if(t1&&t2&&t2<t1){toast('Ô "Đến" phải lớn hơn ô "Từ" nha');return}
+ const mn=t1||0,mx=t2||99;const pkt=pk78({min:mn,max:mx});
+ a.g.kv72=q;a.g.clients.push({name:n,phone:so,need:[q,pkt].filter(Boolean).join(', '),q,min:mn,max:mx,stage:'gui',last:today(),hot:false,tt:'nguoi',vong:vg,them:new Date().toISOString(),date:'',time:'',remind:false});
  U.vong72=1;toast('Đã lưu khách '+n+' · Vòng '+vg);save();render()};
 /* ===== /v72 ===== */
 
@@ -4215,11 +4221,11 @@ function dk73Part(c){const o=U.dk73&&U.dk73.ten===c.name?U.dk73.o:0;const n=c.na
    <input class="in" style="margin-top:6px;min-height:40px;font-size:13px" data-lt73ghi="${v}|${esc(x.k)}" value="${esc(x.ghi||'')}" placeholder="Ghi chú: khách thích gì, chê gì ở căn này"></div>`).join('')+
    `<button class="btn full" style="margin-top:8px" data-a="tt73Tim" data-v="${v}" ${nam?'':'disabled'}>🤖 AI tìm nhà tương tự căn 5 sao${nam?'':' (chưa có căn 5 sao)'}</button>${ds73('ts:'+c.name,c.name)}`:'<p class="sub" style="margin:0">Chưa có căn nào khách đã xem.</p>'}</div>`:''}</div>`;
  return `<div class="dk73">${o1}${o2}${o3}</div>`}
-function khachPart(a){khMig(a);const st=U.kst||'all';const cs=a.g.clients.filter(c=>st==='all'||c.stage===st);const care=careList(a);
+function khachPart(a){khMig(a);const st=U.kst||'all';const cs=a.g.clients.filter(c=>!c.chot&&(st==='all'||c.stage===st));const care=careList(a);
  return `<div class="funnel">${STG.map(([k,l],i)=>{const n=a.g.clients.filter(c=>c.stage===k).length;return `<button class="${st===k?'on':''}" data-a="kst" data-v="${k}"><b class="num">${n}</b><span>${STG_GON[k]}</span></button>`}).join('')}<button class="tong ${st==='all'?'on':''}" data-a="kst" data-v="all"><b class="num">${a.g.clients.length}</b><span>Tổng khách</span></button></div>
   ${nhacQuyen()!=='granted'?nhacNut():''}
   ${care.length?`<div class="note warn" style="margin:0">💛 <b>${care.length} khách đến hẹn chăm</b> (${CHAM_NGAY} ngày chưa liên hệ): ${care.slice(0,3).map(c=>esc(c.name)).join(', ')}${care.length>3?'…':''}</div>`:''}
-  <div class="row"><button class="btn full" data-a="sheet" data-v="clients">＋ Thêm khách</button>${st!=='all'?'<button class="btn ghost sm" data-a="kst" data-v="all">Tất cả</button>':''}</div>
+  <div class="grid2 ql78row"><button class="btn" data-a="sheet" data-v="clients">＋ Thêm khách</button><button class="btn ghost ql78b" data-a="sheet" data-v="qlk78">📋 Quản lý khách${(a.g.clients||[]).some(c=>c.chot)?` <b>🎉 ${(a.g.clients||[]).filter(c=>c.chot).length}</b>`:''}</button></div>${st!=='all'?'<button class="btn ghost sm" data-a="kst" data-v="all">Xem tất cả giai đoạn</button>':''}
   ${cs.map(c=>{const i=Math.max(0,STG.findIndex(s=>s[0]===c.stage)),ds=c.last?daysSince2(c.last):0,can=c.stage!=='coc'&&ds>=CHAM_NGAY,so=khSo(c),tt=tt73(c),vg=c.vong||1,v=esc(c.name),dk=U.dk73&&U.dk73.ten===c.name,nh=U.nh73===c.name;
    return `<div class="card kcard k73${can?' kcham':''}"><div class="k73top"><div style="min-width:0;flex:1"><div class="row" style="gap:4px 6px;flex-wrap:wrap"><button class="tt73 ${tt}" data-a="tt73" data-v="${v}" title="Chạm để đổi trạng thái">${TT73[tt][0]} ${TT73[tt][1]}</button><b style="font-size:16px">${esc(c.name)}</b>${so?`<span class="sub num" style="white-space:nowrap">📱 ···${esc(so)}</span>`:''}</div>
     <div class="sub" style="margin-top:4px">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · Bước ${i+1}/5: ${STG_GON[STG[i][0]]}</div></div>
@@ -4383,6 +4389,29 @@ SH.ks75bs=key=>{const a=me();const s=ksGet(key);if(!s)return {t:'Bổ sung',h:ks
 A.ks75BsLuu=async()=>{const a=me();const d=ksKeep();if(U.ksBusy)return;U.ksBusy=true;render();
  try{await ksSave(a,d);U.ksD=null;U.sheet='ks75da';save();toast('💾 Đã lưu hình sổ và ghi chú')}catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}};
 /* ===== /v75 ===== */
+
+;/* ===== v78 quan ly khach ===== */
+function pk78(c){const a=+c.min||0,b=+c.max||99;if(a&&b<99)return nf(a)+' – '+nf(b)+' tỷ';if(b<99)return 'dưới '+nf(b)+' tỷ';if(a)return 'từ '+nf(a)+' tỷ';return ''}
+const PK78=[[0,3],[3,6],[6,10],[10,20],[20,99]];
+function pk78Khop(c,i){const [x,y]=PK78[i];const a=+c.min||0,b=+c.max||99;if(!a&&b>=99)return false;return a<y&&b>x}
+function ql78S(){return U.ql78||(U.ql78={tab:'cham',tt:'',pk:-1,q:''})}
+SH.qlk78=()=>{const a=me();const f=ql78S();const all=(a.g.clients||[]).map((c,i)=>[c,i]);const chot=all.filter(([c])=>c.chot);const dang=all.filter(([c])=>!c.chot);
+ const src=f.tab==='chot'?chot:dang;const Q=[...new Set(all.map(([c])=>c.q||'').filter(Boolean))];
+ const L=src.filter(([c])=>(f.tab==='chot'||!f.tt||tt73(c)===f.tt)&&(f.pk<0||pk78Khop(c,f.pk))&&(!f.q||c.q===f.q));
+ if(f.tab==='chot')L.sort((x,y)=>String(y[0].chot).localeCompare(String(x[0].chot)));
+ const chip=(k,v,l,on)=>`<button class="ql78c${on?' on':''}" data-a="ql78f" data-v="${k}|${v}">${l}</button>`;
+ const dem=t=>dang.filter(([c])=>tt73(c)===t).length;
+ return {t:'📋 Quản lý khách',h:`<div class="seg big" style="margin-bottom:10px"><button class="${f.tab==='cham'?'on':''}" data-a="ql78f" data-v="tab|cham">🤝 Đang chăm (${dang.length})</button><button class="${f.tab==='chot'?'on':''}" data-a="ql78f" data-v="tab|chot">🎉 Khách đã chốt (${chot.length})</button></div>
+ ${f.tab==='cham'?`<div class="ql78g"><div class="sub ql78t">Trạng thái</div><div class="ql78r">${chip('tt','','Tất cả',!f.tt)}${['nong','nguoi','lanh'].map(t=>chip('tt',t,TT73[t][0]+' '+TT73[t][1]+' ('+dem(t)+')',f.tt===t)).join('')}</div></div>`:''}
+ <div class="ql78g"><div class="sub ql78t">Phân khúc</div><div class="ql78r">${chip('pk',-1,'Tất cả',f.pk<0)}${TIERS.map((t,i)=>chip('pk',i,t[1],f.pk===i)).join('')}</div></div>
+ <div class="ql78g"><div class="sub ql78t">Khu vực</div><div class="ql78r">${chip('q','','Tất cả',!f.q)}${Q.map(q=>chip('q',esc(q),'📍 '+esc(q),f.q===q)).join('')}</div></div>
+ <p class="sub" style="margin:8px 0">${L.length} khách${f.tab==='cham'?' đang chăm':' đã chốt'}</p>
+ ${L.map(([c,i])=>{const tt=tt73(c);const so=String(c.phone||'').replace(/\D/g,'').slice(-4);return `<div class="card ql78it"><div class="grow" style="min-width:0"><div class="row" style="gap:4px 6px;flex-wrap:wrap">${f.tab==='cham'?`<span class="tt73 ${tt}" style="font-size:12px;padding:2px 8px">${TT73[tt][0]} ${TT73[tt][1]}</span>`:'<span class="pill ok">🎉 Đã chốt</span>'}<b>${esc(c.name)}</b>${so?`<span class="sub num">📱 ···${esc(so)}</span>`:''}</div>
+  <div class="sub">📍 ${esc(c.q||'Chưa ghi khu vực')}${pk78(c)?' · 💰 '+pk78(c):''} · Vòng ${c.vong||1}</div>${c.chot?`<div class="sub">🎉 Chốt ngày ${esc(fmtD(c.chot))}</div>`:''}</div>
+  ${c.chot?`<button class="btn ghost sm" data-a="ql78Chot" data-v="${i}">↩ Bỏ chốt</button>`:`<button class="btn sm ql78ok" data-a="ql78Chot" data-v="${i}">✅ Đã chốt</button>`}</div>`}).join('')||`<div class="note">${f.tab==='chot'?'Chưa có khách nào chốt. Cố lên nha, vụ chốt đầu tiên đang tới gần rồi! 💪':'Không có khách nào khớp bộ lọc.'}</div>`}`}};
+A.ql78f=v=>{const i=v.indexOf('|');const k=v.slice(0,i),x=v.slice(i+1);const f=ql78S();if(k==='pk')f.pk=+x;else f[k]=x;if(k==='tab'){f.tt='';}render()};
+A.ql78Chot=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;if(c.chot){c.chot='';toast('Đã đưa '+c.name+' về danh sách đang chăm')}else{c.chot=today();c.last=today();confetti();toast('🎉 Chúc mừng! '+c.name+' đã vào Khách đã chốt')}save();render()};
+/* ===== /v78 quan ly khach ===== */
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
