@@ -6,6 +6,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
+<style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
+nav.tabs button{min-width:0}nav.tabs button{padding:0 1px}nav.tabs button span{white-space:nowrap;font-size:9.6px;letter-spacing:-.2px}nav.tabs svg{width:21px;height:21px}</style>
 <style>/*v82 van hoa gon*/.splash.vh82{padding:max(12px,env(safe-area-inset-top)) 10px 12px;align-items:flex-start}
 .vh82 .vh82hd{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px}
 .vh82 .vh81logo{width:48px;height:48px;margin:0;border-width:2px;box-shadow:0 0 0 2px rgba(226,185,90,.25)}.vh82 .vh81logo b{font-size:18px}.vh82 .vh81logo small{font-size:4.5px;letter-spacing:.6px;margin-top:1px}
@@ -823,6 +825,7 @@ const IC={
  nha:'M4 21V10l8-6 8 6v11M9 21v-5h6v5M2 21h20',
  viec:'M3 8h18v12H3zM8 8V5h8v3M3 13h18',
  nk:'M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11',
+ ptt:'M4 21h16M5 21V10M19 21V10M9 21v-7M15 21v-7M3 10l9-6 9 6z',
  td:'M8 4h8v5a4 4 0 0 1-8 0zM8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 13v4M8 21h8M10 17h4v4',
  camp:'M5 21V4M5 4h12l-2.5 4L17 12H5',
  ae:'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 7.5M22 21a7 7 0 0 0-4-6.3',
@@ -842,7 +845,7 @@ const icon=k=>`<svg viewBox="0 0 24 24" class="ic" aria-hidden="true"><path d="$
 /* Luật (Di, 14/11/2026): Sếp, Trợ lý, CG-ĐC có đủ chức năng CTV. Sửa CTV_TABS / hasCtv là cả 4 vai đổi theo. */
 const CTV_ROLES=['ctv','cg','tl','sep'];
 const hasCtv=a=>!!a&&CTV_ROLES.includes(a.role);
-const CTV_TABS=[['home','Trang chủ'],['city','Thành phố'],['viec','Công việc'],['nk','Nhật ký'],['td','Thi đua']];
+const CTV_TABS=[['home','Trang chủ'],['city','Thành phố'],['viec','Công việc'],['nk','Nhật ký'],['ptt','Truyền thống'],['td','Thi đua']];
 const QL={tl:[['duyet','Duyệt'],['ae','Anh em'],['ts','Thiết lập']],sep:[['vh','Vận hành'],['ae','Anh em'],['kt','Kinh Thành']]};
 const TABS={
  ctv:CTV_TABS,
@@ -4469,6 +4472,15 @@ function bd80(c){if(c.bd)return c.bd;if(c.them){const d=new Date(c.them);if(!isN
 function ngay80(c){const t=Date.parse(bd80(c)+'T00:00:00');const den=c.chot?Date.parse(c.chot+'T00:00:00'):Date.parse(today()+'T00:00:00');const n=Math.max(0,Math.round((den-t)/864e5));if(n<1)return c.chot?'chốt ngay trong ngày':'mới bắt đầu chăm hôm nay';const tx=n<1?'mới chăm hôm nay':n<30?n+' ngày':n<365?Math.floor(n/30)+' tháng '+(n%30?n%30+' ngày':''):Math.floor(n/365)+' năm '+Math.floor(n%365/30)+' tháng';return c.chot?'chăm '+tx.trim()+' thì chốt':'đã chăm '+tx.trim()}
 document.addEventListener('change',e=>{const el=e.target;if(el.dataset&&el.dataset.ql80){ql78S().th=el.value;render()}});
 /* ===== /v80 ===== */
+
+/* v83: Phòng truyền thống cho mọi vai có chức năng CTV */
+TAB.ptt=a=>{
+  let jr=[];try{jr=acct('sep.hoavinh@gmail.com').g.journey||[]}catch(e){}
+  return `<div class="card"><div class="ptt83hd"><span>🏛️</span><div><div class="kicker" style="color:var(--gold2)">Phòng truyền thống</div><h2 class="h2" style="margin-top:2px">Nơi lưu giữ văn hoá Hoa Vinh</h2></div></div></div>
+  <div class="card vh81card vh82 ptt83"><div class="kicker" style="color:var(--gold2)">Văn hoá Hoa Vinh</div><h2 class="h2" style="margin-top:4px">6 giá trị · 3 phương châm · 12 đầu việc</h2>${vh81Body()}</div>
+  ${memoryCard(a)}
+  ${jr.length?`<div class="card"><div class="kicker" style="color:var(--gold2)">Chặng đường</div><h2 class="h2" style="margin-top:4px">Chặng đường Phòng Hoa Vinh</h2><div class="tl">${jr.map(e=>`<div class="ev"><span class="sub">${fmtD(e.d)}</span><b>${esc(e.t)}</b><span class="sub">${esc(e.s)}</span></div>`).join('')}</div></div>`:''}`;
+};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
