@@ -6,7 +6,11 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v89 ban do loc*/
+<style>/*v90 ql khach*/
+.ql78b{white-space:nowrap;position:relative;overflow:visible;padding-left:6px;padding-right:6px}
+.ql78b b{position:absolute;top:-9px;right:-4px;font-size:11.5px;padding:2px 7px;margin:0;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:1}
+@media(max-width:370px){.ql78b{font-size:13.5px;letter-spacing:-.2px}}
+</style><style>/*v89 ban do loc*/
 .dl89{padding:0;overflow:hidden}.dl89 .hd{padding:12px 14px 8px}.dl89ho{height:300px;background:#E8E4DA;position:relative;isolation:isolate;z-index:0}
 .dl89el{position:absolute;inset:0}.dl89 .ft{padding:8px 14px 12px}
 .dl89pop b{display:block;font-size:12.5px;line-height:1.35;margin-bottom:4px}.dl89pop .bt{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
@@ -4748,6 +4752,15 @@ function dl89Ve(){const d=U.dl;if(!DL89MAP||!d||!window.L)return;const LF=window
  if(pts.length>1)DL89MAP.fitBounds(pts,{padding:[30,30],maxZoom:16});else if(pts.length)DL89MAP.setView(pts[0],15);
  const sub=document.querySelector('.dl89 .hd .sub');if(sub){const all=dl89Ds(d);const cho=all.filter(p=>p.cho&&p.st).length;sub.textContent=all.filter(p=>p.lat).length+'/'+all.length+' căn đã ghim'+(cho?' · ⏳ đang định vị '+cho+' căn…':'')}}
 A.dl89Toi=()=>{if(!DL89MAP||!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}navigator.geolocation.getCurrentPosition(ps=>{const c=[ps.coords.latitude,ps.coords.longitude];window.L.circleMarker(c,{radius:9,color:'#fff',weight:3,fillColor:'#1A73E8',fillOpacity:1}).addTo(DL89MAP).bindPopup('Bạn đang ở đây');DL89MAP.setView(c,15)},()=>toast('Chưa lấy được vị trí. Cho phép trình duyệt dùng vị trí nha'),{enableHighAccuracy:true,timeout:15000,maximumAge:60000})};
+
+/* v90: tải danh sách quận ĐTK trước khi lọc, để gửi đúng mã quận */
+async function q90Nap(){const d=dlS();if(d.tc&&!d.tcErr)return;if(pk72Demo&&!dtkTok())return;if(!dtkTok())return;
+ try{d.tc=await dtkApi('tuy_chon');d.tcErr=''}catch(e){}}
+const tim73_90=tim73;tim73=async function(src,f){await q90Nap();f=Object.assign({},f);
+ const ten=(f.q||[]).filter(q=>{const id=q73Id(q);return id==null||isNaN(+id)});
+ if(ten.length){f.q=(f.q||[]).filter(q=>!ten.includes(q));f.tm=(ten.join(', ')+(f.tm?', '+f.tm:'')).slice(0,190)}
+ return tim73_90(src,f)};
+const pk72Tim_90=pk72Tim;pk72Tim=async function(){await q90Nap();return pk72Tim_90()};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
