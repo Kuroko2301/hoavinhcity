@@ -6,7 +6,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v78*/.pk78{display:flex;align-items:center;gap:6px}.pk78 .in{min-width:0;flex:1}.pk78 span{font-weight:800;color:var(--muted,#888)}
+<style>/*v79*/.ql79v{color:var(--red);font-size:14px}.ql79r{margin-top:2px}.dlrange.ql79r input{accent-color:#B5121F}.dlrange.ql79r::before{background:#E8B4B4}.ql79m{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted,#888);margin-top:-4px}
+.btn.ql78ok.ql79do{background:linear-gradient(135deg,#D3263A,#A3111E)!important;color:#fff!important}
+/*v78*/.pk78{display:flex;align-items:center;gap:6px}.pk78 .in{min-width:0;flex:1}.pk78 span{font-weight:800;color:var(--muted,#888)}
 .ql78row{margin:0}.ql78b b{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:4px}
 .ql78g{margin-bottom:8px}.ql78t{font-weight:800;margin-bottom:4px}.ql78r{display:flex;gap:6px;flex-wrap:wrap}
 .ql78c{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;cursor:pointer}.ql78c.on{background:var(--red);border-color:var(--red);color:#fff}
@@ -4394,24 +4396,34 @@ A.ks75BsLuu=async()=>{const a=me();const d=ksKeep();if(U.ksBusy)return;U.ksBusy=
 function pk78(c){const a=+c.min||0,b=+c.max||99;if(a&&b<99)return nf(a)+' – '+nf(b)+' tỷ';if(b<99)return 'dưới '+nf(b)+' tỷ';if(a)return 'từ '+nf(a)+' tỷ';return ''}
 const PK78=[[0,3],[3,6],[6,10],[10,20],[20,99]];
 function pk78Khop(c,i){const [x,y]=PK78[i];const a=+c.min||0,b=+c.max||99;if(!a&&b>=99)return false;return a<y&&b>x}
-function ql78S(){return U.ql78||(U.ql78={tab:'cham',tt:'',pk:-1,q:''})}
+function ql78S(){const f=U.ql78||(U.ql78={tab:'cham',tt:'',pk:-1,q:''});if(f.tu==null){f.tu=0;f.den=QL79_MAX}return f}
+const QL79_MAX=30;/*v79 thanh gia*/
+function ql79Txt(f){return (f.tu<=0&&f.den>=QL79_MAX)?'Mọi mức giá':(f.tu<=0?'Dưới '+nf(f.den)+' tỷ':f.den>=QL79_MAX?'Từ '+nf(f.tu)+' tỷ trở lên':nf(f.tu)+' – '+nf(f.den)+' tỷ')}
+function ql79Khop(c,f){if(f.tu<=0&&f.den>=QL79_MAX)return true;const a=+c.min||0,b=+c.max||99;if(!a&&b>=99)return false;const den=f.den>=QL79_MAX?999:f.den;return a<=den&&b>=f.tu}
 SH.qlk78=()=>{const a=me();const f=ql78S();const all=(a.g.clients||[]).map((c,i)=>[c,i]);const chot=all.filter(([c])=>c.chot);const dang=all.filter(([c])=>!c.chot);
  const src=f.tab==='chot'?chot:dang;const Q=[...new Set(all.map(([c])=>c.q||'').filter(Boolean))];
- const L=src.filter(([c])=>(f.tab==='chot'||!f.tt||tt73(c)===f.tt)&&(f.pk<0||pk78Khop(c,f.pk))&&(!f.q||c.q===f.q));
+ const L=src.filter(([c])=>(f.tab==='chot'||!f.tt||tt73(c)===f.tt)&&ql79Khop(c,f)&&(!f.q||noDau72(c.q)===noDau72(f.q)));
  if(f.tab==='chot')L.sort((x,y)=>String(y[0].chot).localeCompare(String(x[0].chot)));
  const chip=(k,v,l,on)=>`<button class="ql78c${on?' on':''}" data-a="ql78f" data-v="${k}|${v}">${l}</button>`;
  const dem=t=>dang.filter(([c])=>tt73(c)===t).length;
  return {t:'📋 Quản lý khách',h:`<div class="seg big" style="margin-bottom:10px"><button class="${f.tab==='cham'?'on':''}" data-a="ql78f" data-v="tab|cham">🤝 Đang chăm (${dang.length})</button><button class="${f.tab==='chot'?'on':''}" data-a="ql78f" data-v="tab|chot">🎉 Khách đã chốt (${chot.length})</button></div>
  ${f.tab==='cham'?`<div class="ql78g"><div class="sub ql78t">Trạng thái</div><div class="ql78r">${chip('tt','','Tất cả',!f.tt)}${['nong','nguoi','lanh'].map(t=>chip('tt',t,TT73[t][0]+' '+TT73[t][1]+' ('+dem(t)+')',f.tt===t)).join('')}</div></div>`:''}
- <div class="ql78g"><div class="sub ql78t">Phân khúc</div><div class="ql78r">${chip('pk',-1,'Tất cả',f.pk<0)}${TIERS.map((t,i)=>chip('pk',i,t[1],f.pk===i)).join('')}</div></div>
- <div class="ql78g"><div class="sub ql78t">Khu vực</div><div class="ql78r">${chip('q','','Tất cả',!f.q)}${Q.map(q=>chip('q',esc(q),'📍 '+esc(q),f.q===q)).join('')}</div></div>
+ <div class="ql78g"><div class="between"><div class="sub ql78t">💰 Phân khúc</div><b class="ql79v" id="ql79v">${ql79Txt(f)}</b></div>
+  <div class="dlrange ql79r"><input type="range" min="0" max="${QL79_MAX}" step="0.5" value="${f.tu}" data-ql79="tu" aria-label="Giá từ (tỷ)"><input type="range" min="0" max="${QL79_MAX}" step="0.5" value="${f.den}" data-ql79="den" aria-label="Giá đến (tỷ)"></div>
+  <div class="ql79m"><span>0 tỷ</span><span>${QL79_MAX} tỷ+</span></div></div>
+ <div class="ql78g"><div class="sub ql78t">📍 Khu vực</div><select class="in" data-ql79q="1" aria-label="Chọn khu vực"><option value="">Tất cả khu vực</option>${[...new Set(Q.concat(kv72Ds(a)))].map(q=>`<option ${f.q===q?'selected':''}>${esc(q)}</option>`).join('')}</select></div>
  <p class="sub" style="margin:8px 0">${L.length} khách${f.tab==='cham'?' đang chăm':' đã chốt'}</p>
  ${L.map(([c,i])=>{const tt=tt73(c);const so=String(c.phone||'').replace(/\D/g,'').slice(-4);return `<div class="card ql78it"><div class="grow" style="min-width:0"><div class="row" style="gap:4px 6px;flex-wrap:wrap">${f.tab==='cham'?`<span class="tt73 ${tt}" style="font-size:12px;padding:2px 8px">${TT73[tt][0]} ${TT73[tt][1]}</span>`:'<span class="pill ok">🎉 Đã chốt</span>'}<b>${esc(c.name)}</b>${so?`<span class="sub num">📱 ···${esc(so)}</span>`:''}</div>
   <div class="sub">📍 ${esc(c.q||'Chưa ghi khu vực')}${pk78(c)?' · 💰 '+pk78(c):''} · Vòng ${c.vong||1}</div>${c.chot?`<div class="sub">🎉 Chốt ngày ${esc(fmtD(c.chot))}</div>`:''}</div>
-  ${c.chot?`<button class="btn ghost sm" data-a="ql78Chot" data-v="${i}">↩ Bỏ chốt</button>`:`<button class="btn sm ql78ok" data-a="ql78Chot" data-v="${i}">✅ Đã chốt</button>`}</div>`}).join('')||`<div class="note">${f.tab==='chot'?'Chưa có khách nào chốt. Cố lên nha, vụ chốt đầu tiên đang tới gần rồi! 💪':'Không có khách nào khớp bộ lọc.'}</div>`}`}};
+  ${c.chot?`<button class="btn ghost sm" data-a="ql78Chot" data-v="${i}">↩ Bỏ chốt</button>`:`<button class="btn sm ql78ok ql79do" data-a="ql78Chot" data-v="${i}">✅ Đã chốt</button>`}</div>`}).join('')||`<div class="note">${f.tab==='chot'?'Chưa có khách nào chốt. Cố lên nha, vụ chốt đầu tiên đang tới gần rồi! 💪':'Không có khách nào khớp bộ lọc.'}</div>`}`}};
 A.ql78f=v=>{const i=v.indexOf('|');const k=v.slice(0,i),x=v.slice(i+1);const f=ql78S();if(k==='pk')f.pk=+x;else f[k]=x;if(k==='tab'){f.tt='';}render()};
 A.ql78Chot=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;if(c.chot){c.chot='';toast('Đã đưa '+c.name+' về danh sách đang chăm')}else{c.chot=today();c.last=today();confetti();toast('🎉 Chúc mừng! '+c.name+' đã vào Khách đã chốt')}save();render()};
 /* ===== /v78 quan ly khach ===== */
+
+;/* ===== v79 thanh gia ===== */
+document.addEventListener('input',e=>{const el=e.target;if(!el.dataset||!el.dataset.ql79)return;const f=ql78S();let v=+el.value;if(el.dataset.ql79==='tu'){if(v>f.den){v=f.den;el.value=v}f.tu=v}else{if(v<f.tu){v=f.tu;el.value=v}f.den=v}const t=document.getElementById('ql79v');if(t)t.textContent=ql79Txt(f)});
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset)return;if(el.dataset.ql79){render();return}if(el.dataset.ql79q){ql78S().q=el.value;render()}});
+/* ===== /v79 ===== */
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
