@@ -6,7 +6,21 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v79*/.ql79v{color:var(--red);font-size:14px}.ql79r{margin-top:2px}.dlrange.ql79r input{accent-color:#B5121F}.dlrange.ql79r::before{background:#E8B4B4}.ql79m{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted,#888);margin-top:-4px}
+<style>/*v81*/.splash.vh81bg{background:radial-gradient(120% 60% at 50% 0%,#7A1418 0%,#5A0D12 50%,#3A070B 100%)}
+.vh81logo{width:92px;height:92px;margin:6px auto 10px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 35%,#3A0A0D,#14040A);border:3px solid #E2B95A;box-shadow:0 0 0 4px rgba(226,185,90,.25),0 8px 24px rgba(0,0,0,.4)}
+.vh81logo b{font-family:var(--f-disp);font-size:34px;line-height:1;background:linear-gradient(180deg,#FBE7A6,#D9A93F);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-1px}.vh81logo small{font-size:7.5px;letter-spacing:1.5px;color:#E2B95A;font-weight:800;text-align:center;line-height:1.2;margin-top:3px}
+.vh81h1{font-family:var(--f-disp);font-size:31px!important;text-transform:uppercase;letter-spacing:1px;margin:4px 0!important;background:linear-gradient(180deg,#FBE7A6,#D9A93F);-webkit-background-clip:text;background-clip:text;color:transparent}
+.vh81sub{display:flex;align-items:center;gap:8px;justify-content:center;color:#E9CF94;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:28px}.vh81sub span{flex:1;max-width:44px;height:1px;background:#C9A24C}
+.vh81{display:flex;flex-direction:column;gap:24px;text-align:left}
+.vh81s{border:1px solid rgba(226,185,90,.45);border-radius:14px;padding:22px 12px 12px;position:relative;background:rgba(0,0,0,.12)}
+.vh81tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);margin:0;white-space:nowrap;font-family:var(--f-disp);font-size:14px;text-transform:uppercase;letter-spacing:1px;color:#5A0D12;background:linear-gradient(180deg,#F8DC8A,#D9A93F);padding:4px 14px;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.35)}
+.vh81g{display:flex;gap:12px;align-items:center;padding:9px 4px;border-bottom:1px solid rgba(226,185,90,.18)}.vh81g:last-child{border-bottom:none}
+.vh81n{font-family:var(--f-disp);font-size:22px;color:#E2B95A;min-width:32px}.vh81g b,.vh81p b,.vh81d b{display:block;color:#fff;font-size:15px}.vh81g small,.vh81p small,.vh81d small{display:block;color:#E7CBB8;font-size:12.5px;line-height:1.4;margin-top:1px}
+.vh81pc{display:flex;flex-direction:column;gap:8px}.vh81p{border:1px solid rgba(226,185,90,.35);border-radius:10px;padding:10px 12px;background:rgba(255,255,255,.04)}.vh81la{font-family:var(--f-disp);color:#E2B95A;font-size:13px;font-weight:800}
+.vh81dv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.vh81d{border:1px solid rgba(226,185,90,.35);border-radius:10px;padding:9px 10px;background:rgba(255,255,255,.04)}.vh81d b{font-size:14px}.vh81d small{font-size:12px}
+.vh81sl p{margin:0;text-align:center;font-family:var(--f-disp);font-style:italic;color:#F3D27A;font-size:17px;line-height:1.5;display:flex;flex-direction:column;gap:2px}
+.vh81card .vh81{margin-top:18px}.vh81card .vh81s{background:#5A0D12}
+/*v79*/.ql79v{color:var(--red);font-size:14px}.ql79r{margin-top:2px}.dlrange.ql79r input{accent-color:#B5121F}.dlrange.ql79r::before{background:#E8B4B4}.ql79m{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted,#888);margin-top:-4px}
 .btn.ql78ok.ql79do{background:linear-gradient(135deg,#D3263A,#A3111E)!important;color:#fff!important}
 /*v78*/.pk78{display:flex;align-items:center;gap:6px}.pk78 .in{min-width:0;flex:1}.pk78 span{font-weight:800;color:var(--muted,#888)}
 .ql78row{margin:0}.ql78b b{background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;margin-left:4px}
@@ -1270,8 +1284,8 @@ TAB.tt=a=>{
   return memoryCard(a)+`<div class="card"><div class="kicker" style="color:var(--gold2)">Phòng Truyền thống</div><h2 class="h2" style="margin-top:4px">Chặng đường Phòng Hoa Vinh</h2><div class="tl">${acct('sep.hoavinh@gmail.com').g.journey.map(e=>`<div class="ev"><span class="sub">${fmtD(e.d)}</span><b>${esc(e.t)}</b><span class="sub">${esc(e.s)}</span></div>`).join('')}</div>
   <h3 class="h3" style="margin-top:10px">Vinh danh</h3><div class="list">${leaderboard().slice(0,3).map((p,i)=>`<div class="li"><span class="pill gold">${['🥇','🥈','💎'][i]}</span><b class="grow">${esc(p.name)}</b><span class="sub">${p.pts} điểm</span></div>`).join('')}</div>
   <button class="btn ${h.tt?'ghost':''} full" style="margin-top:10px" data-a="hvMark" data-v="tt" ${h.tt?'disabled':''}>${h.tt?'Đã xem Phòng Truyền thống':'Tôi đã xem xong'}</button></div>
-  <div class="card"><div class="kicker" style="color:var(--gold2)">Văn hoá Hoa Vinh</div><h2 class="h2" style="margin-top:4px">Những điều anh em Hoa Vinh giữ</h2>
-  ${[['Chữ tín trước hợp đồng','Nói đúng thông tin nhà, đúng giá, đúng pháp lý. Khách tin mình thì mới quay lại.'],['Người đi trước dắt người đi sau','Ai mới vào đều có người dẫn đường. Hỗ trợ anh em là nhiệm vụ, có thưởng kim cương.'],['Mỗi ngày một viên gạch','Điểm danh, đăng tin, khảo sát, dẫn khách. Đều đặn mỗi ngày thì nhà sẽ cao.'],['Biết ơn và báo hiếu','Một phần hoa hồng mỗi vụ chốt dành cho báo hiếu và cầu cảm ơn.']].map(([t,s],i)=>`<div class="li" style="align-items:flex-start"><span class="pill gold num">${i+1}</span><div class="grow"><b>${t}</b><div class="sub">${s}</div></div></div>`).join('')}
+  <div class="card vh81card"><div class="kicker" style="color:var(--gold2)">Văn hoá Hoa Vinh</div><h2 class="h2" style="margin-top:4px">6 giá trị · 3 phương châm · 12 đầu việc</h2>
+  ${vh81Body()}
   <button class="btn ${h.vh?'ghost':''} full" style="margin-top:8px" data-a="hvMark" data-v="vh" ${h.vh?'disabled':''}>${h.vh?'Đã đọc Văn hoá':'Tôi đã đọc và hiểu'}</button></div>`;
 };
 TAB.hoc=a=>{
@@ -3709,8 +3723,21 @@ const VANHOA=[['Chữ tín trước hợp đồng','Nói đúng thông tin nhà,
    dl:[{t:'Vũng Tàu, biển gọi anh em',d:'2025-06-14',em:'🏖️',hue:190,media:['🏖️','🌅','🦀','🚌','📸']},{t:'Đà Lạt mùa hoa dã quỳ',d:'2025-12-06',em:'🌼',hue:50,media:['🌼','🌲','☕','🔥']},{t:'Phan Thiết team building',d:'2026-07-19',em:'🏝️',hue:170,media:['🏝️','🏐','🍤']}]};
 })();
 /* Mở đầu: Văn hoá Hoa Vinh */
-function splashHtml(){return `<div class="splash"><div class="sp-in"><div class="sp-logo">🌸</div><div class="kicker" style="color:var(--gold)">Hoa Vinh City</div><h1>Văn hoá Hoa Vinh</h1><p class="sp-sub">Những điều anh em Hoa Vinh cùng giữ</p>
- <div class="sp-list">${VANHOA.map(([t,s],i)=>`<div class="sp-item" style="animation-delay:${.15+i*.12}s"><span>${i+1}</span><div><b>${t}</b><p>${s}</p></div></div>`).join('')}</div>
+/*v81 van hoa*/
+const VH81_GT=[['Chữ Tín','Nói thật, không giành khách'],['Hiếu – Ơn','Biết ơn cha mẹ, người dẫn đường'],['Kỷ luật số liệu','Ghi đúng, báo đủ'],['Cùng thắng','Vụ chốt là thành tích chung'],['Học thực chiến','Học để chốt được vụ'],['Lửa nghề','Vụ hỏng thì đứng dậy']];
+const VH81_PC=[['Thành bại tại kỹ năng','Rèn tay nghề mỗi ngày'],['Kỷ luật là sức mạnh','Đúng giờ, đúng quy trình, đúng cam kết'],['Đúng – Đủ – Đều','Đúng thông tin, đủ bước, đều mỗi ngày']];
+const VH81_DV=[['Làm nghiêm túc','Kỷ luật hôm nay'],['Đoàn kết','Cùng nhau đi xa hơn'],['Giữ sức khỏe','Nền tảng thành công'],['Ăn mặc đẹp','Chỉn chu, tôn trọng'],['Làm nhiều','Hành động tạo kết quả'],['Khiêm nhường','Biết mình để vươn xa'],['Nói ít','Làm nhiều, hiệu quả'],['Kiên định','Bền bỉ với mục tiêu'],['Biết ơn','Khởi đầu hạnh phúc'],['Dám bứt phá','Rời vùng an toàn'],['Học mỗi ngày','Dẫn lối ngày mai'],['Đúng – Đủ – Đều','Mỗi ngày một bước']];
+const VH81_SLOGAN='Kỷ luật để dẫn đầu · Đoàn kết để phát triển · Đồng hành để chinh phục mục tiêu lớn hơn!';
+const VH81_LA=['I','II','III'];
+function vh81Body(){return `<div class="vh81">
+ <section class="vh81s"><h2 class="vh81tag">6 Giá trị cốt lõi</h2><div class="vh81gt">${VH81_GT.map(([t,d],i)=>`<div class="vh81g" style="animation-delay:${.1+i*.06}s"><span class="vh81n">0${i+1}</span><div><b>${t}</b><small>${d}</small></div></div>`).join('')}</div></section>
+ <section class="vh81s"><h2 class="vh81tag">3 Phương châm</h2><div class="vh81pc">${VH81_PC.map(([t,d],i)=>`<div class="vh81p"><span class="vh81la">${VH81_LA[i]}</span><b>${t}</b><small>${d}</small></div>`).join('')}</div></section>
+ <section class="vh81s"><h2 class="vh81tag">12 Đầu việc trọng tâm</h2><div class="vh81dv">${VH81_DV.map(([t,d])=>`<div class="vh81d"><b>${t}</b><small>${d}</small></div>`).join('')}</div></section>
+ <section class="vh81s vh81sl"><h2 class="vh81tag">Slogan Hoa Vinh</h2><p>${VH81_SLOGAN.split(' · ').map(x=>`<span>${x}</span>`).join('')}</p></section></div>`}
+function splashHtml(){return `<div class="splash vh81bg"><div class="sp-in vh81in">
+ <div class="vh81logo" aria-hidden="true"><b>HV</b><small>HOA VINH<br>TEAM</small></div>
+ <h1 class="vh81h1">Văn hóa Hoa Vinh</h1><div class="vh81sub"><span></span>6 giá trị · 3 phương châm · 12 đầu việc<span></span></div>
+ ${vh81Body()}
  <button class="btn gold full sp-go" data-a="enterApp">Bước vào Hoa Vinh City</button></div></div>`}
 A.enterApp=()=>{U.splashDone=true;render()};
 /* Học viện anh em (CTV, CG-ĐC) + điểm danh Zoom */
