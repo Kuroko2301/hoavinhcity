@@ -3775,9 +3775,9 @@ FEATS.push({k:'khohem',em:'🛣️',t:'Kho hẻm',s:'Tên đường, hình hẻm
 const boDau69=x=>String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
 const laQL69=a=>!!a&&(a.role==='tl'||a.role==='sep');
 /* ---- Công cụ: ô icon theo nhóm, chạm cả ô để mở ---- */
-const CC69=[['🏠 Bán hàng',['post','clients','survey','khohem','ai','muctieu','dealreport','lochang','seg']],['📚 Học và lịch',['tgb','qa','hoc','hocvien']],['🎉 Anh em',['game','hoitruong','vandong']]];
+const CC69=[['🏠 Bán hàng',['post','clients','survey','khohem','ai','muctieu']],['📚 Học và lịch',['tgb','qa','hoc','hocvien']],['🎉 Chia sẻ hoạt động của Hoa Vinh',['game','hoitruong','vandong']]];/*v77*/
 featGrid=function(a){const ok=f=>(!['lochang','muctieu','vandong','khohem'].includes(f.k))||hasCtv(a);const da=new Set(CC69.flatMap(x=>x[1]));
- const nhom=CC69.map(([t,ks])=>[t,ks.map(k=>FEATS.find(f=>f.k===k))]);const con=FEATS.filter(f=>!da.has(f.k));if(con.length)nhom[nhom.length-1][1].push(...con);
+ const nhom=CC69.map(([t,ks])=>[t,ks.map(k=>FEATS.find(f=>f.k===k))]);const con=FEATS.filter(f=>!da.has(f.k)&&!['dealreport','lochang','seg'].includes(f.k));if(con.length)nhom[nhom.length-1][1].push(...con);
  return nhom.map(([t,L])=>{L=L.filter(f=>f&&ok(f));if(!L.length)return'';return `<div class="kicker cc69h">${t}</div><div class="cc69">${L.map(f=>`<div class="cc69t"><button class="cc69o" data-a="sheet" data-v="${f.k}"><span class="em">${f.em}</span><b>${esc(f.t)}</b></button>${f.k==='tgb'?'':`<button class="cc69b${a.g.rem[f.k]?' on':''}" data-a="bell" data-v="${f.k}" aria-label="Nhắc nhở ${esc(f.t)}" aria-pressed="${!!a.g.rem[f.k]}">🔔</button>`}</div>`).join('')}</div>`}).join('')+'<p class="sub" style="margin:10px 2px 0">Chạm vào ô để mở. Bấm 🔔 ở góc ô để bật nhắc cho mục đó.</p>'};
 A.hMore=v=>{U.hMore=U.hMore||{};U.hMore[v]=!U.hMore[v];render()};
 /* ---- Trang chủ: lối tắt to dễ bấm, gấp bớt thẻ phụ ---- */
