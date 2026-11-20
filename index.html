@@ -6,7 +6,14 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v69*/.ticker{font-size:16px!important;padding-block:9px!important;letter-spacing:.2px;line-height:1.3}.ticker span{animation-duration:34s!important}
+<style>/*v71*/.bd71wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line)}.bd71{height:min(58vh,440px);background:#E8E4DA}.bd71cho{display:grid;place-items:center;height:100%;color:var(--muted);font-weight:700}
+.bd71me{position:absolute;right:10px;bottom:22px;z-index:500;min-height:40px;padding:0 14px;border-radius:999px;border:none;background:#fff;color:#1A73E8;font-weight:800;font-size:13px;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer}
+.bd71pin{background:none;border:none}.bd71pin i{position:absolute;left:1px;top:0;width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:linear-gradient(135deg,#C0392B,#8E1B1B);border:3px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.35);box-sizing:border-box}
+.bd71pin span{position:absolute;left:1px;top:0;width:40px;height:40px;display:grid;place-items:center;font-size:19px;line-height:1}.bd71pin b{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;border-radius:999px;background:#F3C24B;color:#6E1212;font-size:11px;font-weight:900;display:grid;place-items:center;border:2px solid #fff;padding:0 4px;box-sizing:border-box}
+.bd71pop{font:13px/1.45 inherit;color:#231A17}.bd71pop img{width:100%;height:110px;object-fit:cover;border-radius:10px;margin-bottom:6px}.bd71pop b{display:block;font-size:14px}.bd71pop .sub{color:#6B5B53}
+.bd71btn{display:flex;gap:6px;margin-top:8px}.bd71btn button,.bd71btn a{flex:1;min-height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid #EADFCB;background:#FFF8EC;color:#8E1B1B!important;font-weight:800;font-size:12px;text-decoration:none;cursor:pointer;padding:0 6px}
+a.bd71a{text-decoration:none;display:inline-flex;align-items:center;color:var(--ink)}.leaflet-popup-content{margin:10px 12px}
+/*v69*/.ticker{font-size:16px!important;padding-block:9px!important;letter-spacing:.2px;line-height:1.3}.ticker span{animation-duration:34s!important}
 .qk69{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.qk69 button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:84px;padding:10px 4px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 2px 8px rgba(60,30,10,.06)}
 .qk69 button span{font-size:30px;line-height:1}.qk69 button b{font-size:13px;line-height:1.2;text-align:center}.qk69 button:active{transform:scale(.96)}
 .fold69{margin-top:12px}.fold69>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:48px;border:1.5px dashed var(--line);border-radius:16px;font-weight:800;font-size:14px;color:var(--muted);background:var(--card);padding:8px 12px;text-align:center}.fold69>summary::-webkit-details-marker{display:none}.fold69[open]>summary{margin-bottom:10px;color:var(--red)}
@@ -3899,6 +3906,48 @@ A.fireXoa=async v=>{const i=+v;if(U.fireXoa!==i){U.fireXoa=i;render();setTimeout
 {const o=SH.quick;SH.quick=()=>{const q=o();if(hasCtv(me()))q.h=q.h.replace('<button data-a="sheet" data-v="vinvilla">','<button data-a="sheet" data-v="khohem"><span>🛣️</span>Kho hẻm</button><button data-a="sheet" data-v="tgb"><span>⏰</span>Thời gian biểu</button><button data-a="sheet" data-v="vinvilla">');return q}}
 /* ===== /v69 ===== */
 
+;/* ===== v71 ban do that: bản đồ thật, ghim nhà khảo sát theo GPS ===== */
+FEATS.push({k:'bando',em:'🗺️',t:'Bản đồ nhà khảo sát',s:'Ghim đúng vị trí từng căn'});
+CC69[0][1].splice(3,0,'bando');
+SH.bando=()=>SHB.bando();
+const BD_MAU={'Hẻm Tân Hương, Tân Phú':[10.79055,106.62818],'Hẻm Cộng Hòa, Tân Bình':[10.80142,106.65118],'Hẻm Lũy Bán Bích, Tân Phú':[10.78312,106.63562]};
+let bdThem=()=>(S.pins||[]).map(p=>({...p,demo:true}));
+let bdMau=p=>BD_MAU[p.addr]||null;
+function bdDs(){const L=htKsAll().map(s=>({key:s.key,addr:s.addr,who:s.by,dir:s.dir,lat:+s.lat||0,lng:+s.lng||0,img:(s.anh&&s.anh[0]&&s.anh[0].url)||'',ks:true}));
+ bdThem().forEach((p,i)=>L.push({key:'pin'+i,addr:p.addr,who:p.who,dir:p.dir,lat:+p.lat||0,lng:+p.lng||0,img:'',ks:false}));
+ L.forEach((p,i)=>{p.n=i+1;if(!p.lat||!p.lng){const c=bdMau(p);if(c){p.lat=c[0];p.lng=c[1]}}});return L}
+let bdLib=null,bdMap=null,bdToiMk=null;
+function bdNap(){if(window.L&&window.L.map)return Promise.resolve();if(bdLib)return bdLib;
+ bdLib=new Promise((ok,no)=>{const c=document.createElement('link');c.rel='stylesheet';c.href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';document.head.appendChild(c);
+  const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';sc.onload=()=>ok();sc.onerror=()=>{bdLib=null;no(new Error('Chưa tải được bản đồ'))};document.head.appendChild(sc)});return bdLib}
+const bdDuong=p=>'https://www.google.com/maps/dir/?api=1&destination='+p.lat+','+p.lng;
+const bdGg=p=>p.lat?'https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(p.addr);
+function bdPopup(p){return `<div class="bd71pop">${p.img?`<img src="${esc(p.img)}" alt="">`:''}<b>${p.n}. ${esc(p.addr)}</b><div class="sub">${esc(p.who||'Anh em')} khảo sát${p.dir?' · hướng '+esc(p.dir):''}</div>
+ <div class="bd71btn">${p.ks?`<button type="button" data-bdxem="${esc(p.key)}">📋 Xem khảo sát</button>`:''}<a href="${bdDuong(p)}" target="_blank" rel="noopener">🧭 Chỉ đường</a></div></div>`}
+function bdGan(){const el=document.getElementById('bdMap');if(!el||el._gan)return;el._gan=1;
+ bdNap().then(()=>{if(!document.body.contains(el))return;const LF=window.L;const ds=bdDs().filter(p=>p.lat&&p.lng);
+  if(bdMap){try{bdMap.remove()}catch(e){}}bdToiMk=null;const m=LF.map(el,{zoomControl:true,attributionControl:true});bdMap=m;
+  LF.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(m);
+  const ic=n=>LF.divIcon({className:'bd71pin',html:`<i></i><span>🏠</span><b>${n}</b>`,iconSize:[42,48],iconAnchor:[21,46],popupAnchor:[0,-42]});
+  const pts=[];ds.forEach(p=>{const mk=LF.marker([p.lat,p.lng],{icon:ic(p.n),title:p.addr}).addTo(m);mk.bindPopup(bdPopup(p),{maxWidth:240,minWidth:200});pts.push([p.lat,p.lng]);if(U.bdMo===p.key)setTimeout(()=>mk.openPopup(),300)});
+  if(U.bdView)m.setView(U.bdView.c,U.bdView.z);else if(pts.length>1)m.fitBounds(pts,{padding:[36,36],maxZoom:17});else if(pts.length)m.setView(pts[0],16);else m.setView([10.795,106.64],13);
+  m.on('moveend',()=>{const c=m.getCenter();U.bdView={c:[c.lat,c.lng],z:m.getZoom()}});
+  m.on('popupopen',e=>{const b=e.popup.getElement&&e.popup.getElement();if(!b)return;b.querySelectorAll('[data-bdxem]').forEach(x=>x.onclick=ev=>{ev.preventDefault();ev.stopPropagation();A.ksXem(x.getAttribute('data-bdxem'))})});
+  setTimeout(()=>{try{m.invalidateSize()}catch(e){}},250)})
+ .catch(e=>{el.innerHTML='<div class="note" style="margin:12px">'+esc(e.message)+'. Kiểm tra mạng rồi mở lại nha.</div>'})}
+A.bdToi=()=>{if(!bdMap||!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}toast('📍 Đang tìm vị trí của bạn…');
+ navigator.geolocation.getCurrentPosition(ps=>{const LF=window.L;const c=[ps.coords.latitude,ps.coords.longitude];if(bdToiMk)bdToiMk.setLatLng(c);else bdToiMk=LF.circleMarker(c,{radius:9,color:'#fff',weight:3,fillColor:'#1A73E8',fillOpacity:1}).addTo(bdMap).bindPopup('Bạn đang ở đây');bdMap.setView(c,16)},
+  ()=>toast('Chưa lấy được vị trí. Cho phép trình duyệt dùng vị trí nha'),{enableHighAccuracy:true,timeout:15000,maximumAge:60000})};
+A.bdDen=v=>{const p=bdDs().find(x=>x.key===v);if(!p||!p.lat||!bdMap)return;U.bdMo=v;bdMap.setView([p.lat,p.lng],17);bdMap.eachLayer(l=>{if(l.getLatLng&&l.getPopup&&l.getPopup()){const q=l.getLatLng();if(Math.abs(q.lat-p.lat)<1e-7&&Math.abs(q.lng-p.lng)<1e-7)l.openPopup()}});
+ const el=document.getElementById('bdMap');if(el)el.scrollIntoView({behavior:'smooth',block:'center'})};
+SHB.bando=()=>{const L=bdDs();const co=L.filter(p=>p.lat&&p.lng);setTimeout(bdGan,0);
+ return {t:'Phòng bản đồ Hoa Vinh',h:`<div class="bd71wrap"><div id="bdMap" class="bd71" aria-label="Bản đồ nhà đã khảo sát"><div class="bd71cho">🗺️ Đang mở bản đồ…</div></div><button class="bd71me" data-a="bdToi">📍 Tôi ở đâu</button></div>
+ <p class="sub" style="margin:8px 2px">🏠 <b>${co.length}</b> căn đã ghim đúng vị trí${L.length>co.length?` · ${L.length-co.length} căn chưa có vị trí (mở khảo sát, bấm “Lấy vị trí” để ghim)`:''}. Chạm icon căn nhà để xem.</p>
+ <div class="list">${L.map(p=>`<div class="li"><span class="pill gold num">${p.n}</span><div class="grow" style="min-width:0"><b>${esc(p.addr)}</b><div class="sub">${esc(p.who||'Anh em')} khảo sát${p.dir?' · hướng '+esc(p.dir):''}${p.lat?'':' · chưa có vị trí'}</div>
+  <div class="row wrap" style="gap:6px;margin-top:6px">${p.lat?`<button class="btn ghost sm" data-a="bdDen" data-v="${esc(p.key)}">🏠 Xem trên bản đồ</button>`:''}${p.ks?`<button class="btn ghost sm" data-a="ksXem" data-v="${esc(p.key)}">📋 Khảo sát</button>`:''}<a class="btn ghost sm bd71a" href="${p.lat?bdDuong(p):bdGg(p)}" target="_blank" rel="noopener">🧭 Google Maps</a></div></div></div>`).join('')||'<p class="sub">Chưa có căn nào được khảo sát.</p>'}</div>
+ <button class="btn full" style="margin-top:10px" data-a="sheet" data-v="survey">Khảo sát căn mới và chia sẻ lên bản đồ</button>`}};
+/* ===== /v71 ===== */
+
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
    Trợ lý/Sếp duyệt + chọn vai trò, danh bạ anh em, game của từng người,
@@ -4749,6 +4798,10 @@ fireApi.loi=async(i,t)=>{const f=fireCan69(i);busy(true);
  try{const {error}=await sb.from('tram_tiep_lua_phan_hoi').insert({bai_id:f.dbId,loai:'loi',noi_dung:String(t).slice(0,300)});if(error)throw error;await loadFire()}catch(e){throw new Error(errVi(e))}finally{busy(false)}};
 fireApi.xoa=async i=>{const f=fireCan69(i);busy(true,'Đang xoá…');
  try{const {error}=await sb.from('tram_tiep_lua').delete().eq('id',f.dbId);if(error)throw error;await loadFire()}catch(e){throw new Error(errVi(e))}finally{busy(false)}};
+
+/* ---- v71 Bản đồ thật: chỉ ghim căn khảo sát thật (bỏ ghim mẫu), tự làm mới khảo sát khi mở bản đồ ---- */
+bdThem=()=>[];bdMau=()=>null;
+{const _bd71=SHB.bando;SHB.bando=()=>{if(Date.now()-LIVE.ks.t>20000)loadKs().then(()=>{if(/bando/.test(String(U.sheet||'')))render()}).catch(e=>console.warn('[Hoa Vinh] ban do',e));return _bd71()}}
 
 render();
 })();
