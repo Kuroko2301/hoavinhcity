@@ -6,6 +6,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
+<style>/*v84 chot hinh*/.ch84{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.ch84 .t{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--line)}.ch84 .t img{width:100%;height:100%;object-fit:cover;display:block}.ch84 .t button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.ch84 label.add{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--muted);cursor:pointer}.ch84 label.add span{font-size:24px}.ch84v{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.ch84v a{aspect-ratio:1;border-radius:9px;overflow:hidden;display:block;background:var(--line)}.ch84v img{width:100%;height:100%;object-fit:cover;display:block}</style>
 <style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
 nav.tabs button{min-width:0}nav.tabs button{padding:0 1px}nav.tabs button span{white-space:nowrap;font-size:9.6px;letter-spacing:-.2px}nav.tabs svg{width:21px;height:21px}</style>
 <style>/*v82 van hoa gon*/.splash.vh82{padding:max(12px,env(safe-area-inset-top)) 10px 12px;align-items:flex-start}
@@ -1071,8 +1072,8 @@ function diaryPart(a,seg){
    <button class="btn full" style="margin-top:10px" data-a="saveWheel">Lưu bánh xe</button></div>`;
   if(seg==='goal')return `<div class="card"><h2 class="h2">Đặt và chia nhỏ mục tiêu</h2><p class="sub" style="margin:-4px 0 8px">Bạn đặt được nhiều mục tiêu cùng lúc. Lưu xong có thể đặt tiếp mục tiêu mới.</p><label class="f" for="gt">Mục tiêu lớn<input class="in" id="gt" placeholder="Ví dụ: Chốt 2 căn trước Tết"></label><label class="f" for="gs" style="margin-top:8px">Chia nhỏ (mỗi dòng 1 bước)<textarea class="in" id="gs" placeholder="Dẫn 10 khách&#10;Khảo sát 15 căn&#10;Chốt căn đầu tiên"></textarea></label><button class="btn full" style="margin-top:8px" data-a="addGoal">Lưu mục tiêu</button></div>`+
    a.g.goals.map((g,gi)=>{const d=g.steps.filter(s=>s.done).length;return `<div class="card"><div class="between"><b>${esc(g.t)}</b><div class="row" style="gap:6px;align-items:center"><span class="pill ${d===g.steps.length?'ok':''}">${d}/${g.steps.length}</span><button class="btn ghost sm" data-a="delGoal" data-v="${gi}" aria-label="Xoá mục tiêu">Xoá</button></div></div><div class="bar" style="margin:8px 0"><i style="width:${g.steps.length?d/g.steps.length*100:0}%"></i></div>${g.steps.map((s,si)=>`<label class="row" style="padding:6px 0"><input type="checkbox" data-a="step" data-v="${gi}:${si}" ${s.done?'checked':''}> <span style="${s.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(s.t)}</span></label>`).join('')}</div>`}).join('');
-  return `<div class="card"><h2 class="h2">Kỷ niệm vụ chốt</h2><p class="sub">Ghi lại khoảnh khắc chốt căn để sau này nhìn lại.</p><label class="f" for="dh" style="margin-top:8px">Căn nhà<input class="in" id="dh" placeholder="Nhà 4x16 Tân Sơn Nhì"></label><label class="f" for="df" style="margin-top:8px">Cảm xúc, câu chuyện<textarea class="in" id="df"></textarea></label><button class="btn full" style="margin-top:8px" data-a="addDeal">Lưu kỷ niệm</button></div>`+
-   a.g.deals.slice().reverse().map(d=>`<div class="card"><div class="between"><b>🏠 ${esc(d.home)}</b><span class="sub">${fmtD(d.d)}</span></div><p class="sub" style="margin:6px 0 0">${esc(d.feel)}</p></div>`).join('');
+  return `<div class="card"><h2 class="h2">Kỷ niệm vụ chốt</h2><p class="sub">Ghi lại khoảnh khắc chốt căn để sau này nhìn lại.</p><label class="f" for="dh" style="margin-top:8px">Căn nhà<input class="in" id="dh" placeholder="Nhà 4x16 Tân Sơn Nhì" value="${esc((U.ch84||{}).h||'')}"></label><label class="f" for="df" style="margin-top:8px">Cảm xúc, câu chuyện<textarea class="in" id="df">${esc((U.ch84||{}).f||'')}</textarea></label>${ch84Form()}<button class="btn full" style="margin-top:8px" data-a="addDeal">Lưu kỷ niệm</button></div>`+
+   a.g.deals.slice().reverse().map(d=>`<div class="card"><div class="between"><b>🏠 ${esc(d.home)}</b><span class="sub">${fmtD(d.d)}</span></div><p class="sub" style="margin:6px 0 0">${esc(d.feel)}</p>${ch84Xem(d)}</div>`).join('');
 }
 function wheelSvg(v){
   const c=110,R=90,n=8;let s='';
@@ -4482,6 +4483,23 @@ TAB.ptt=a=>{
   ${jr.length?`<div class="card"><div class="kicker" style="color:var(--gold2)">Chặng đường</div><h2 class="h2" style="margin-top:4px">Chặng đường Phòng Hoa Vinh</h2><div class="tl">${jr.map(e=>`<div class="ev"><span class="sub">${fmtD(e.d)}</span><b>${esc(e.t)}</b><span class="sub">${esc(e.s)}</span></div>`).join('')}</div></div>`:''}`;
 };
 
+/* v84: Kỷ niệm vụ chốt có hình ảnh */
+const CH84_MAX=6;
+function ch84Keep(){const d=U.ch84||(U.ch84={anh:[]});if(!d.anh)d.anh=[];const h=document.getElementById('dh'),f=document.getElementById('df');if(h)d.h=h.value;if(f)d.f=f.value;return d}
+function ch84Form(){const d=U.ch84||{anh:[]};const L=d.anh||[];
+ return `<div class="f" style="margin-top:8px">📷 Hình ảnh vụ chốt <span class="sub">(không bắt buộc, tối đa ${CH84_MAX} hình)</span></div><div class="ch84">${L.map((x,i)=>`<div class="t"><img src="${x.url}" alt="Hình ${i+1}"><button data-a="ch84Bo" data-v="${i}" aria-label="Bỏ hình">✕</button></div>`).join('')}${L.length<CH84_MAX?`<label class="add"><span>＋</span>Thêm hình<input type="file" accept="image/*" multiple data-ch84="1" hidden></label>`:''}</div>`}
+function ch84Url(p){if(!p)return '';if(/^(data:|https?:|blob:)/.test(p))return p;return (window.CH84U||{})[p]||''}
+function ch84Xem(d){const L=(d.anh||[]).map(ch84Url).filter(Boolean);if(!L.length)return (d.anh||[]).length?'<div class="sub" style="margin-top:6px">📷 Đang tải hình…</div>':'';return `<div class="ch84v">${L.map((u,i)=>`<a href="${u}" target="_blank" rel="noopener" aria-label="Xem hình ${i+1}"><img src="${u}" alt="" loading="lazy"></a>`).join('')}</div>`}
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!el.dataset.ch84||!el.files||!el.files.length)return;const d=ch84Keep();const fs=[...el.files].slice(0,CH84_MAX-d.anh.length);el.value='';
+ if([...el.files].length>fs.length)toast('Tối đa '+CH84_MAX+' hình nha');
+ Promise.all(fs.map(f=>ksImgResize(f,1280,.78).catch(()=>null))).then(xs=>{xs.filter(Boolean).forEach(x=>d.anh.push(x));render()})});
+A.ch84Bo=v=>{const d=ch84Keep();d.anh.splice(+v,1);render()};
+// Demo: lưu hình nhỏ ngay trong máy. Bản thật thay hàm này để tải hình lên kho.
+let ch84Luu=async anh=>Promise.all(anh.map(x=>thuNhoAnh(x.url,640,640)));
+{const o=A.addDeal;A.addDeal=async()=>{const d=ch84Keep();const h=(d.h||'').trim();if(!h){toast('Nhập căn nhà nhé');return}
+ let anh=[];if(d.anh.length){try{anh=await ch84Luu(d.anh)}catch(e){toast('Chưa lưu được hình: '+(e.message||e));return}}
+ const a=me();a.g.deals.push({d:today(),home:h,feel:(d.f||'').trim(),anh});journey(a,'Kỷ niệm vụ chốt',h);U.ch84={anh:[]};save();render();toast('Đã lưu kỷ niệm. Nhớ bấm Báo vụ chốt để nhận Kim cương nhé')}}
+
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
    Trợ lý/Sếp duyệt + chọn vai trò, danh bạ anh em, game của từng người,
@@ -5340,6 +5358,14 @@ bdThem=()=>[];bdMau=()=>null;
 ;/* v72 (20/11/2026): bản thật bỏ bài trong app (chỉ còn bài robot), Lựa chọn phân khúc gọi trạm dtk-tim-nha chế độ giảm giá */
 bai72Local=false;pk72Demo=false;
 {const o=postServerMine;postServerMine=function(){return o.apply(this,arguments).replace(/\s*<h3 class="h3" style="margin:14px 0 4px">Bài trong app \(Cổng trại, chia sẻ 1 chạm\)<\/h3>/,'').replace('🤖 Bài robot đăng lên mạng xã hội','📋 Bài bạn đã đăng')}}
+
+;/* v84 (20/11/2026): hình Kỷ niệm vụ chốt tải lên kho khao-sat <uid>/chot/, xem bằng link ký 1 ngày */
+window.CH84U=window.CH84U||{};
+ch84Luu=async anh=>{const uid=LIVE.me&&LIVE.me.id;if(!uid)throw new Error('Cần đăng nhập');busy(true,'Đang tải hình kỷ niệm…');
+ try{const out=[];const st=Date.now();let i=0;for(const x of anh){const p=uid+'/chot/'+st+'-'+(i++)+'.jpg';const {error}=await sb.storage.from('khao-sat').upload(p,x.blob,{contentType:'image/jpeg',upsert:false});if(error)throw new Error(errVi(error));out.push(p);window.CH84U[p]=x.url}return out}finally{busy(false)}};
+async function ch84Tai(){try{const a=me();if(!a||!a.g||!a.g.deals)return;const can=[];a.g.deals.forEach(d=>(d.anh||[]).forEach(p=>{if(p&&!/^(data:|https?:)/.test(p)&&!window.CH84U[p])can.push(p)}));if(!can.length)return;
+ for(let i=0;i<can.length;i+=100){const {data}=await sb.storage.from('khao-sat').createSignedUrls(can.slice(i,i+100),60*60*24);(data||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)window.CH84U[x.path]=x.signedUrl})}render()}catch(e){console.warn('[Hoa Vinh] hinh ky niem',e)}}
+setTimeout(ch84Tai,4000);setInterval(()=>{if(U.tab==='nk')ch84Tai()},20000);
 
 render();
 })();
