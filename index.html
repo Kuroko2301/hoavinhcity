@@ -6,7 +6,13 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v88 cg dc*/
+<style>/*v89 ban do loc*/
+.dl89{padding:0;overflow:hidden}.dl89 .hd{padding:12px 14px 8px}.dl89ho{height:300px;background:#E8E4DA;position:relative;isolation:isolate;z-index:0}
+.dl89el{position:absolute;inset:0}.dl89 .ft{padding:8px 14px 12px}
+.dl89pop b{display:block;font-size:12.5px;line-height:1.35;margin-bottom:4px}.dl89pop .bt{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+.dl89pop .bt a,.dl89pop .bt button{flex:1;border:1px solid #ccc;border-radius:8px;padding:5px 6px;font-size:12px;font-weight:700;background:#fff;color:#222;text-decoration:none;text-align:center;cursor:pointer}
+.dl89pin i{background:linear-gradient(135deg,#2E8B57,#1D5E3A)!important}
+</style><style>/*v88 cg dc*/
 .seg88{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:4px;border-radius:14px;background:var(--card);border:1px solid var(--line)}
 .seg88 button{border:none;background:none;border-radius:10px;padding:7px 2px;font:inherit;font-weight:700;font-size:11px;line-height:1.2;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
 .seg88 button .i{font-size:18px}.seg88 button.on{background:var(--bg2,rgba(0,0,0,.06));color:var(--ink);box-shadow:0 1px 4px rgba(0,0,0,.12)}
@@ -2976,7 +2982,7 @@ function dlResultsPart(){const d=U.dl;if(!d||!d.searched)return '';if(d.loading&
  const head=`<div class="card between dlres" id="dlKq"><div><b class="num" style="font-size:22px;color:#2E8B57">${d.loading&&!d.list.length?'…':(d.total!=null?Number(d.total).toLocaleString('vi-VN')+(d.du===false?'+':''):d.list.length+(d.het?'':'+'))}</b><div class="sub">căn từ Đại Thế Kỷ</div>${d.hieu?`<div class="dlhieu">🤖 Đã hiểu: <b>${esc(d.hieu)}</b></div>`:''}</div>${s.length?`<select class="in" style="width:auto" data-dl="sort">${s.map((o,i)=>`<option value="${i}" ${String(d.f.sort||0)===String(i)?'selected':''}>${esc(o.title)}</option>`).join('')}</select>`:''}</div>`;
  if(d.err)return head+`<div class="note bad">${esc(d.err)}</div><button class="btn ghost full" data-a="dlSearch">Thử lại</button>`;
  if(!d.list.length)return head+(d.loading?`<p class="sub" style="text-align:center">⏳ Đang lọc nhà trên Đại Thế Kỷ…</p>`:`<p class="sub">Không có căn nào khớp bộ lọc, thử bỏ bớt điều kiện nha.${d.hieu?' Lưu ý: chỉ hiện căn mà tin đăng có ghi rõ thông số bạn tìm.':''}</p>`);
- return head+d.list.map((it,i)=>{const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const c=dlCreated(it);const moi=it.newly===true||it.newly===1||(dlMs(c)&&Date.now()-dlMs(c)<864e5);const u=dlUser(it);
+ return head+dl89Card(d)+d.list.map((it,i)=>{const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const c=dlCreated(it);const moi=it.newly===true||it.newly===1||(dlMs(c)&&Date.now()-dlMs(c)<864e5);const u=dlUser(it);
   const mo=String(it.description||'').replace(/\s+/g,' ').trim();const tt=dtkField(it.title)||'Tin nhà';
   const lv=dlTc('level',it.level);const ttg=dlTT(it);const meta=[['🛒',dlTc('label',it.approval_house_label)],['📅',dlAgo(c)]].filter(x=>x[1]&&String(x[1]).trim()&&String(x[1]).trim()!=='0');
   return `<div class="card dlit">${moi?'<b class="dlnew">NEW</b>':''}<button class="dlt" data-a="dlCt" data-v="${i}">${esc(tt)}</button>${mo&&mo!==tt?`<p class="dlmo">${esc(mo.slice(0,180))}</p>`:''}
@@ -4709,6 +4715,39 @@ function ctv88Part(a){const L=(a.g.ctv88||[]).slice().reverse();const lk=t=>/^ht
   ${L.map(c=>`<div class="li">${face({name:c.t},'sm')}<div class="grow"><b>${esc(c.t)}</b><div class="sub">${esc(c.k||'')}${c.k&&c.l?' · ':''}${c.l?lk(c.l):''}</div></div><button class="btn ghost sm" data-a="ch88Xoa" data-v="${c.id}">${U.x88===c.id?'Xoá?':'🗑'}</button></div>`).join('')||'<p class="sub">Chưa có cộng tác viên nào.</p>'}</div>`}
 A.cv88Luu=()=>{const a=me();const t=val('cv88t').trim(),k=val('cv88k').trim(),l=val('cv88l').trim();if(!t){toast('Nhập tên cộng tác viên nha');return}
  a.g.ctv88=(a.g.ctv88||[]).concat([{id:'v'+Date.now().toString(36),t:t.slice(0,60),k:k.slice(0,80),l:l.slice(0,200),d:today()}]);save();render();toast('Đã lưu cộng tác viên 🙋')};
+
+/* ===== v89 Bản đồ các căn đã lọc (Leaflet + nền OpenStreetMap; định vị gần đúng bằng Nominatim theo tên đường + quận) ===== */
+let DL89EL=null,DL89MAP=null,DL89LAYER=null,DL89KEY='';const DL89Q=[];let DL89CHAY=false;
+const DL89C=(()=>{try{return JSON.parse(localStorage.getItem('hv89geo')||'{}')}catch(e){return {}}})();
+function dl89Luu(){try{const k=Object.keys(DL89C);if(k.length>800)k.slice(0,k.length-800).forEach(x=>delete DL89C[x]);localStorage.setItem('hv89geo',JSON.stringify(DL89C))}catch(e){}}
+function dl89Quan(id){const tc=dlS().tc;const q=tc?dlQuanAll(tc).find(x=>String(x.id)===String(id)):null;return q?q.name.split(' · ')[0]:''}
+function dl89Dc(it){const lo=it.location||{};let st=String(lo.street||'').trim();if(!st||/^nan$/i.test(st)){const m=dtkField(it.title).match(/^[\d.\/A-Za-z]*\s+((?:[^\d\s,()]+\s*){1,5})/u);st=m?m[1].trim():''}
+ st=st.replace(/^(đường|duong)\s+/i,'');let q=dl89Quan(lo.district)||dtkField(it.district).split(' - ')[0];return {st,q}}
+function dl89Khoa(p){return noDau(p.st+'|'+p.q)}
+function dl89Gg(p){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent([p.st,p.q,/bình dương|đồng nai|long an|tây ninh|vũng tàu|biên hòa/i.test(p.q)?'':'TP Hồ Chí Minh'].filter(Boolean).join(', '))}
+async function dl89Tim(p){if(window.__geo89)return window.__geo89(p);const tinh=/ - /.test(p.q)?p.q.replace(/ - /g,', '):p.q+', Thành phố Hồ Chí Minh';
+ const u='https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=vn&accept-language=vi&q='+encodeURIComponent(p.st+', '+tinh);
+ const r=await fetch(u,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('geo '+r.status);const j=await r.json();return j&&j[0]?[+j[0].lat,+j[0].lon]:0}
+async function dl89Chay(){if(DL89CHAY)return;DL89CHAY=true;try{while(DL89Q.length){const p=DL89Q.shift();const k=dl89Khoa(p);if(k in DL89C)continue;
+ try{DL89C[k]=await dl89Tim(p)}catch(e){DL89C[k]=0}dl89Luu();dl89Ve();if(!window.__geo89)await new Promise(r=>setTimeout(r,1100))}}finally{DL89CHAY=false}}
+function dl89Ds(d){return (d.list||[]).map((it,i)=>{const p=dl89Dc(it);p.i=i;p.n=i+1;p.it=it;const c=DL89C[dl89Khoa(p)];if(c){const h=hs88(String(it.id||i));p.lat=c[0]+((h%21)-10)*0.00012;p.lng=c[1]+(((h>>5)%21)-10)*0.00012}p.cho=!(dl89Khoa(p) in DL89C);return p})}
+function dl89Card(d){if(!d.list||!d.list.length)return '';const L=dl89Ds(d);const co=L.filter(p=>p.lat).length,cho=L.filter(p=>p.cho&&p.st).length;
+ L.forEach(p=>{if(p.cho&&p.st&&!DL89Q.some(x=>dl89Khoa(x)===dl89Khoa(p)))DL89Q.push(p)});setTimeout(()=>{dl89Chay();dl89Gan()},0);
+ return `<div class="card dl89"><div class="hd between"><div><b>🗺️ Bản đồ các căn đã lọc</b><div class="sub">${co}/${L.length} căn đã ghim${cho?` · ⏳ đang định vị ${cho} căn…`:''}</div></div><button class="btn ghost sm" data-a="dl89Toi">📍 Tôi</button></div>
+  <div class="dl89ho" id="dl89Ho"></div><div class="ft sub">Vị trí gần đúng theo tên đường + quận (tin ĐTK không có toạ độ). Chạm ghim để xem căn, mở Google Maps để tìm đúng nhà.</div></div>`}
+function dl89Pop(p){const g=(p.it.price&&+p.it.price.value)||'';return `<div class="dl89pop"><b>${p.n}. ${esc(sach74(dtkField(p.it.title)).slice(0,110))}</b><div>${esc([p.st,p.q].filter(Boolean).join(', '))}${g?' · 💰 '+esc(String(g).replace('.',','))+' tỷ':''}</div>
+ <div class="bt"><button type="button" data-dl89ct="${p.i}">📄 Chi tiết</button><a href="${dl89Gg(p)}" target="_blank" rel="noopener">🗺️ Google Maps</a></div></div>`}
+function dl89Gan(){const ho=document.getElementById('dl89Ho');if(!ho)return;if(!DL89EL){DL89EL=document.createElement('div');DL89EL.className='dl89el';DL89EL.innerHTML='<div class="bd71cho" style="padding:12px">🗺️ Đang mở bản đồ…</div>'}
+ if(DL89EL.parentNode!==ho)ho.appendChild(DL89EL);
+ bdNap().then(()=>{const LF=window.L;if(!DL89MAP){DL89EL.innerHTML='';DL89MAP=LF.map(DL89EL,{zoomControl:true});LF.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(DL89MAP);DL89MAP.setView([10.795,106.66],12);
+   DL89MAP.on('popupopen',e=>{const b=e.popup.getElement&&e.popup.getElement();if(!b)return;b.querySelectorAll('[data-dl89ct]').forEach(x=>x.onclick=ev=>{ev.preventDefault();A.dlCt(x.getAttribute('data-dl89ct'))})})}
+  setTimeout(()=>{try{DL89MAP.invalidateSize()}catch(e){}},60);dl89Ve()}).catch(e=>{DL89EL.innerHTML='<div class="note" style="margin:12px">'+esc(e.message)+'. Kiểm tra mạng rồi mở lại nha.</div>'})}
+function dl89Ve(){const d=U.dl;if(!DL89MAP||!d||!window.L)return;const LF=window.L;const L=dl89Ds(d).filter(p=>p.lat);const key=L.map(p=>p.n+':'+p.lat.toFixed(5)).join(',');if(key===DL89KEY)return;DL89KEY=key;
+ if(DL89LAYER)DL89LAYER.remove();DL89LAYER=LF.layerGroup().addTo(DL89MAP);const ic=n=>LF.divIcon({className:'bd71pin dl89pin',html:`<i></i><span>🏠</span><b>${n}</b>`,iconSize:[42,48],iconAnchor:[21,46],popupAnchor:[0,-42]});
+ const pts=L.map(p=>{LF.marker([p.lat,p.lng],{icon:ic(p.n),title:p.st}).addTo(DL89LAYER).bindPopup(dl89Pop(p),{maxWidth:250,minWidth:200});return [p.lat,p.lng]});
+ if(pts.length>1)DL89MAP.fitBounds(pts,{padding:[30,30],maxZoom:16});else if(pts.length)DL89MAP.setView(pts[0],15);
+ const sub=document.querySelector('.dl89 .hd .sub');if(sub){const all=dl89Ds(d);const cho=all.filter(p=>p.cho&&p.st).length;sub.textContent=all.filter(p=>p.lat).length+'/'+all.length+' căn đã ghim'+(cho?' · ⏳ đang định vị '+cho+' căn…':'')}}
+A.dl89Toi=()=>{if(!DL89MAP||!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}navigator.geolocation.getCurrentPosition(ps=>{const c=[ps.coords.latitude,ps.coords.longitude];window.L.circleMarker(c,{radius:9,color:'#fff',weight:3,fillColor:'#1A73E8',fillOpacity:1}).addTo(DL89MAP).bindPopup('Bạn đang ở đây');DL89MAP.setView(c,15)},()=>toast('Chưa lấy được vị trí. Cho phép trình duyệt dùng vị trí nha'),{enableHighAccuracy:true,timeout:15000,maximumAge:60000})};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
