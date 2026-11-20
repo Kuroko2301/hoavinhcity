@@ -6,7 +6,16 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v86 thi dua*/.dh86{font-size:11.5px;line-height:1.4;margin-top:4px;opacity:.92}</style>
+<style>/*v87 mini game*/
+.mg87n{margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.18);display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));background:linear-gradient(135deg,#2A1A14,#4A1E18);color:#fff;border-radius:18px;padding:14px 16px;cursor:pointer;font:inherit}
+.mg87n .em{font-size:30px}.mg87n b{font-size:16px;display:block}.mg87n .sub{color:#E9D9C4}.mg87n .go{margin-left:auto;font-size:22px;color:var(--gold)}
+.tim87{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}.tim87 .in{width:100%}
+.doi87{margin-top:8px;border:1px solid var(--line);border-radius:14px;padding:0;background:var(--card);overflow:hidden}
+.doi87>summary{list-style:none;display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer}.doi87>summary::-webkit-details-marker{display:none}
+.doi87 .dot{width:12px;height:12px;border-radius:50%;flex:0 0 auto}.doi87 .bd{padding:0 12px 12px}.doi87 .boat{max-height:120px}
+.don87{margin-top:10px;border-radius:12px;padding:10px;background:color-mix(in srgb,var(--gold) 12%,var(--card));border:1px solid color-mix(in srgb,var(--gold) 40%,var(--line))}
+.don87 .li{padding:8px 0}
+</style><style>/*v86 thi dua*/.dh86{font-size:11.5px;line-height:1.4;margin-top:4px;opacity:.92}</style>
 <style>/*v85 game*/.ct85 .li{align-items:center}.ct85 .num{font-size:13px}.vu85{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}.vu85 div{aspect-ratio:1;border-radius:12px;background:linear-gradient(180deg,rgba(80,150,90,.12),rgba(120,80,40,.18));display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:26px;line-height:1}.vu85 div small{font-size:9.5px;color:var(--muted);margin-top:3px;text-align:center;line-height:1.25}.vu85 .trong{font-size:14px;color:var(--muted);border:1.5px dashed var(--line);background:none}.lt85{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}.lt85 td,.lt85 th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}.lt85 .r{text-align:right}</style>
 <style>/*v84 chot hinh*/.ch84{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.ch84 .t{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--line)}.ch84 .t img{width:100%;height:100%;object-fit:cover;display:block}.ch84 .t button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.ch84 label.add{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--muted);cursor:pointer}.ch84 label.add span{font-size:24px}.ch84v{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.ch84v a{aspect-ratio:1;border-radius:9px;overflow:hidden;display:block;background:var(--line)}.ch84v img{width:100%;height:100%;object-fit:cover;display:block}</style>
 <style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
@@ -1090,7 +1099,7 @@ function wheelSvg(v){
 TAB.td=a=>{
   const people=leaderboard();
   return top10()+compBoard()+thuongCard()+tBoard()+`<div class="card"><div class="kicker" style="color:var(--gold2)">Thể lệ thi đua</div><p style="margin:6px 0 0;line-height:1.55">${esc(S.rules)}</p></div>
-  <div class="card"><h2 class="h2">Bảng thi đua tuần</h2><p class="sub" style="margin:-2px 0 6px">Tính từ thứ Hai tuần này: mỗi vụ chốt 30 điểm, mỗi khách 3 điểm, mỗi căn khảo sát 2 điểm, mỗi bài tin 1 điểm.</p><div class="list">${people.map((p,i)=>`<div class="li"><span class="pill ${i<3?'gold':''} num">${i+1}</span><div class="grow"><b>${esc(p.name)}</b>${p.me?' <span class="pill ok">Bạn</span>':''}<div class="sub">${ROLE_SHORT[p.role]} · ${p.vu} vụ chốt · ${p.khach} khách · ${p.khao} khảo sát · ${p.tin} bài tin</div></div><b class="num">${p.pts}<span class="sub" style="font-weight:600"> điểm</span></b></div>`).join('')}</div></div>`+gameCard(a);
+  <div class="card"><h2 class="h2">Bảng thi đua tuần</h2><p class="sub" style="margin:-2px 0 6px">Tính từ thứ Hai tuần này: mỗi vụ chốt 30 điểm, mỗi khách 3 điểm, mỗi căn khảo sát 2 điểm, mỗi bài tin 1 điểm.</p><div class="list">${people.map((p,i)=>`<div class="li"><span class="pill ${i<3?'gold':''} num">${i+1}</span><div class="grow"><b>${esc(p.name)}</b>${p.me?' <span class="pill ok">Bạn</span>':''}<div class="sub">${ROLE_SHORT[p.role]} · ${p.vu} vụ chốt · ${p.khach} khách · ${p.khao} khảo sát · ${p.tin} bài tin</div></div><b class="num">${p.pts}<span class="sub" style="font-weight:600"> điểm</span></b></div>`).join('')}</div></div>`+mg87Nut(a);
 };
 function leaderboard(tu){
   const m=me();tu=tu||dauTuan86();
@@ -2413,7 +2422,7 @@ function tdShortcut(){return `<div class="card"><div class="between"><div><h2 cl
 SH.tdboard=()=>({t:'Thi đua Hoa Vinh',h:`<div class="stack">${top10()}${compBoard()}${thuongCard()}${tBoard()}</div>`});
 
 /* Mini Game: đội xe tăng */
-function cycleInfo(){const n=new Date();const sm=n.getMonth()-n.getMonth()%2;const st=new Date(n.getFullYear(),sm,1),en=new Date(n.getFullYear(),sm+2,0),nx=new Date(n.getFullYear(),sm+2,1);const t0=new Date();t0.setHours(0,0,0,0);return {st,en,nx,days:Math.round((nx-t0)/864e5)}}
+function cycleInfo(){const n=new Date();const A=2026*12+11,i=n.getFullYear()*12+n.getMonth();const si=i<A?i:i-((i-A)%2),ni=i<A?A:si+2;const st=new Date(Math.floor(si/12),si%12,1),nx=new Date(Math.floor(ni/12),ni%12,1),en=nx;const t0=new Date();t0.setHours(0,0,0,0);return {st,en,nx,days:Math.round((nx-t0)/864e5)}}
 const dmy=d=>String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
 function tankSVG(g){
   const ms=g.members.slice(0,8),n=ms.length,c=g.color,x0=58,x1=262,sp=n>1?(x1-x0)/(n-1):0;
@@ -2437,21 +2446,21 @@ function gameCard(a){
   return `<div class="card game"><div class="between"><div><div class="kicker" style="color:var(--gold2)">Mini Game Hoa Vinh</div><h2 class="h2" style="margin:2px 0 0">⛵ Đội thuyền Hoa Vinh</h2></div><span class="pill gold">200k / người</span></div>
    <p class="sub" style="margin:6px 0 10px">Mỗi anh em góp 200k để lên thuyền của đội. Đội càng nhiều điểm (0 đến 15), thuyền càng xịn. Cứ 2 tháng một lần được đổi thành viên.</p>
    <div class="cycle"><div><b>Kỳ ${dmy(cy.st)} – ${dmy(cy.en)}</b><div class="sub">Ngày đổi thành viên: ${dmy(cy.nx)}</div></div><div class="cyc-d"><b class="num">${cy.days}</b><span>ngày</span></div></div>
-   ${S.groups.map(g=>{const inn=g.members.includes(a.name),st=g.paid.includes(a.name)?'p':g.pay.includes(a.name)?'w':'u';return `<div class="crew" style="--gc:${g.color}">
+   ${xin87Chay(a)}${(mg?[mg]:[]).map(g=>{const inn=g.members.includes(a.name),st=g.paid.includes(a.name)?'p':g.pay.includes(a.name)?'w':'u';return `<div class="crew" style="--gc:${g.color}">
     <div class="between"><div><b style="font-size:15px">${esc(g.name)}</b><div class="sub">Chỉ huy ${esc(g.lead)} · ${g.members.length} thành viên</div></div><div style="text-align:right"><div class="sub">Quỹ đội</div><b class="num">${tr(g.paid.length*2e5)}</b></div></div>
     ${boatSVG(g)}${boatTien(g)}
     <div class="row wrap" style="gap:6px">${g.members.map(nm=>{const s=g.paid.includes(nm)?'p':g.pay.includes(nm)?'w':'u';return `<span class="pill ${s==='p'?'ok':s==='w'?'warn':''}">${s==='p'?'✓':s==='w'?'⏳':'○'} ${esc(nm)}</span>`}).join('')}</div>
-    ${inn?(st==='p'?'<div class="note ok" style="margin-top:10px">⛵ Bạn đã lên thuyền của đội. Cùng anh em làm nhiệm vụ để nâng cấp thuyền nhé!</div>':st==='w'?'<div class="note" style="margin-top:10px">⏳ Bạn đã báo góp 200k, đang chờ Trợ lý xác nhận.</div>':`<button class="btn gold full" style="margin-top:10px" data-a="payTank" data-v="${g.id}">Góp 200k lên thuyền</button>`)+`<button class="btn ghost full roidoi${U.roiDoi===g.id?' xn':''}" style="margin-top:8px" data-a="leaveGroup" data-v="${g.id}">${U.roiDoi===g.id?'⚠️ Bấm lần nữa để rời đội':'🚪 Rời đội'}</button>`:(!mg?`<button class="btn gold full" style="margin-top:10px" data-a="joinGroup" data-v="${g.id}">⛵ Vào đội này</button>`:'')}
+    ${inn?(st==='p'?'<div class="note ok" style="margin-top:10px">⛵ Bạn đã lên thuyền của đội. Cùng anh em làm nhiệm vụ để nâng cấp thuyền nhé!</div>':st==='w'?'<div class="note" style="margin-top:10px">⏳ Bạn đã báo góp 200k, đang chờ Trợ lý xác nhận.</div>':`<button class="btn gold full" style="margin-top:10px" data-a="payTank" data-v="${g.id}">Góp 200k lên thuyền</button>`)+`<button class="btn ghost full roidoi${U.roiDoi===g.id?' xn':''}" style="margin-top:8px" data-a="leaveGroup" data-v="${g.id}">${U.roiDoi===g.id?'⚠️ Bấm lần nữa để rời đội':'🚪 Rời đội'}</button>`:''}${don87(g)}
    </div>`}).join('')}
    ${mg&&S.groups.length>1?`<div class="stack" style="margin-top:12px"><b>Đổi đội kỳ sau</b>${sw?`<div class="note">Bạn đã đăng ký chuyển sang ${esc((S.groups.find(g=>g.id===sw.to)||{}).name||'')} vào ngày ${dmy(cy.nx)}. Thuyền đi theo bạn.</div>`:`<div class="row"><select class="in grow" id="swt">${S.groups.filter(g=>g!==mg).map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('')}</select><button class="btn sm" data-a="swapReq">Đăng ký</button></div>`}</div>`:''}
-   ${!mg?`<div class="row" style="margin-top:12px"><input class="in grow" id="gn" placeholder="Tên đội mới"><button class="btn sm" data-a="newGroup">Lập đội</button></div>`:''}</div>`;
+   ${!mg?`<div class="row" style="margin-top:12px"><input class="in grow" id="gn" placeholder="Tên đội mới"><button class="btn sm" data-a="newGroup">Lập đội</button></div>`:''}${tim87(a,mg)}</div>`;
 }
-const BOAT_CAP=[[0,'Thuyền thúng'],[3,'Thuyền gỗ'],[6,'Thuyền buồm'],[9,'Thuyền rồng'],[12,'Du thuyền'],[15,'Du thuyền Hoàng Kim']];
+const BOAT_CAP=[[0,'Thuyền gỗ'],[3,'Thuyền buồm'],[6,'Thuyền rồng'],[9,'Du thuyền'],[12,'Siêu du thuyền'],[15,'Du thuyền Hoàng Kim']];
 function boatDiem(g){return Math.max(0,Math.min(15,Math.round(+((g&&g.diem)||0))))}
 function boatCap(d){let k=0;BOAT_CAP.forEach(([m],i)=>{if(d>=m)k=i});return k}
 function boatTien(g){const d=boatDiem(g),k=boatCap(d),nx=BOAT_CAP[k+1];
  return `<div class="boatlv"><div class="between"><b>⭐ ${d}/15 điểm · ${BOAT_CAP[k][1]}</b><span class="pill">Cấp ${k+1}/6</span></div><div class="bar" style="margin-top:6px"><i style="width:${d/15*100}%"></i></div><div class="sub" style="margin-top:4px">${nx?'Còn '+(nx[0]-d)+' điểm nữa lên <b>'+nx[1]+'</b>':'🏆 Đội đã có thuyền xịn nhất!'}</div></div>`}
-function boatSVG(g){const d=boatDiem(g),k=boatCap(d),c=g.color||'#8E1B1B';const ms=g.members.slice(0,8),n=ms.length;
+function boatSVG(g){const d=boatDiem(g),kc=boatCap(d),k=[1,2,3,4,4,5][kc],sieu=kc===4,c=g.color||'#8E1B1B';const ms=g.members.slice(0,8),n=ms.length;
  const Y=[120,124,126,126,124,126][k],X0=[118,92,82,74,70,64][k],X1=[202,228,238,246,250,256][k];const sp=n>1?(X1-X0)/(n-1):0;
  const port=ms.map((nm,i)=>{const x=n>1?X0+i*sp:160;const st=g.paid.includes(nm)?'p':g.pay.includes(nm)?'w':'u';return `<g><circle cx="${x}" cy="${Y}" r="11" fill="${st==='p'?'#FFF6E0':st==='w'?'#FFE9B0':'#E7E1D8'}" stroke="#2B211C" stroke-width="2.2"${st==='u'?' stroke-dasharray="4 3"':''}/><text x="${x}" y="${Y+3.5}" font-size="9.5" font-weight="800" text-anchor="middle" fill="#2B211C">${esc(initials(nm))}</text>${st==='p'?`<circle cx="${x+8}" cy="${Y-9}" r="4.6" fill="#2F9E55"/><path d="M${x+5.8} ${Y-9} l1.8 1.8 l3.2 -3.6" stroke="#fff" stroke-width="1.5" fill="none"/>`:''}</g>`}).join('');
  const ten=esc(g.name.replace(/^Đội /,'').slice(0,9));
@@ -2473,9 +2482,9 @@ function boatSVG(g){const d=boatDiem(g),k=boatCap(d),c=g.color||'#8E1B1B';const 
   <path d="M104 72 V50 H196 L214 72 Z" fill="${vo}" stroke="${ke}" stroke-width="2.2"/><rect x="114" y="56" width="70" height="9" rx="4" fill="#24384F"/>
   <path d="M74 112 V80 H222 L256 112 Z" fill="${vo}" stroke="${ke}" stroke-width="2.4"/><rect x="86" y="88" width="132" height="12" rx="5" fill="#24384F"/><path d="M96 90 h14 M124 90 h14 M152 90 h14 M180 90 h14" stroke="#8FC1E8" stroke-width="2"/>
   <path d="M18 112 H300 L280 150 H52 Q30 136 18 112 Z" fill="${vo}" stroke="${ke}" stroke-width="2.6"/><path d="M26 122 H292" stroke="${vang?'#8E1B1B':c}" stroke-width="7"/><path d="M40 136 H278" stroke="${vang?'#FFF3C8':c}" stroke-width="2" opacity=".7"/>
-  <line x1="150" y1="50" x2="150" y2="26" stroke="${ke}" stroke-width="2"/>${co(150,50,vang?'#C0392B':'#F3C24B')}
+  ${sieu?`<path d="M124 50 V36 H178 L190 50 Z" fill="${vo}" stroke="${ke}" stroke-width="2"/><rect x="130" y="40" width="40" height="6" rx="3" fill="#24384F"/><line x1="176" y1="36" x2="176" y2="24" stroke="${ke}" stroke-width="2"/><ellipse cx="176" cy="23" rx="9" ry="3" fill="#E7E1D8" stroke="${ke}" stroke-width="1.6"/><path d="M26 122 H292" stroke="#1F4E8C" stroke-width="7"/><circle cx="70" cy="136" r="3" fill="#8FC1E8"/><circle cx="90" cy="136" r="3" fill="#8FC1E8"/><circle cx="230" cy="136" r="3" fill="#8FC1E8"/><circle cx="250" cy="136" r="3" fill="#8FC1E8"/>`:''}<line x1="150" y1="${sieu?36:50}" x2="150" y2="26" stroke="${ke}" stroke-width="2"/>${co(150,sieu?36:50,vang?'#C0392B':'#F3C24B')}
   ${vang?'<g class="sao"><path d="M60 40 l3 7 l7 1 l-5 5 l1 7 l-6 -3 l-6 3 l1 -7 l-5 -5 l7 -1z" fill="#FFE27A"/><path d="M258 34 l2 5 l5 1 l-4 3 l1 5 l-4 -2 l-4 2 l1 -5 l-4 -3 l5 -1z" fill="#FFE27A"/><path d="M234 60 l1.6 4 l4 .6 l-3 2.6 l.8 4 l-3.4 -2 l-3.4 2 l.8 -4 l-3 -2.6 l4 -.6z" fill="#FFF"/></g><path d="M150 18 l6 -8 l6 6 l6 -10 l6 10 l6 -6 l6 8 z" fill="#FFD54A" stroke="#7A5512" stroke-width="1.5" transform="translate(-18 32)"/>':''}`}
- return `<svg class="boat" viewBox="0 0 320 180" role="img" aria-label="${esc(BOAT_CAP[k][1])} của ${esc(g.name)}, ${d} trên 15 điểm, ${g.members.length} thành viên">
+ return `<svg class="boat" viewBox="0 0 320 180" role="img" aria-label="${esc(BOAT_CAP[kc][1])} của ${esc(g.name)}, ${d} trên 15 điểm, ${g.members.length} thành viên">
   <g class="boat-body">${body}${port}</g>
   <path class="song s1" d="M-40 152 q20 -7 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V180 H-40 Z" fill="#3E8ED0" opacity=".55"/>
   <path class="song s2" d="M-40 162 q20 -6 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 V180 H-40 Z" fill="#2C6FA8" opacity=".8"/></svg>`}
@@ -3845,11 +3854,11 @@ function mgLuat69(a){const gia=(d)=>({id:'xem'+d,name:'Đội Hoa Vinh',color:'#
  const lv=BOAT_CAP.map(([m,t],i)=>`<div class="mg69lv"><div class="mg69svg">${boatSVG(gia(m))}</div><b>${i+1}. ${t}</b><span class="sub">từ ${m} điểm</span></div>`).join('');
  return `<div class="card mg69"><div class="between"><div class="kicker" style="color:var(--gold2)">6 cấp thuyền của đội</div><span class="sub">Vuốt ngang →</span></div><div class="mg69row">${lv}</div></div>
  <details class="card mg69luat" data-k="mgluat" open><summary>📜 Luật chơi Mini Game</summary><ol>
- <li><b>Lập đội hoặc vào đội có sẵn.</b> Người lập đội là Chỉ huy của đội.</li>
+ <li><b>Lập đội hoặc tìm đội có sẵn.</b> Người lập đội là Chỉ huy. Mỗi đội tối đa 6 người. Muốn vào đội khác thì bấm “Xin vào đội”, quá nửa thành viên đồng ý là được vào.</li>
  <li><b>Góp 200k để lên thuyền.</b> Bấm “Góp 200k lên thuyền”, Trợ lý xác nhận đã nhận thì tên bạn có dấu ✓.</li>
  <li><b>Đội được chấm từ 0 đến 15 điểm.</b> Trợ lý và Sếp chấm theo hoạt động chung của cả đội.</li>
- <li><b>Điểm càng cao, thuyền càng xịn:</b> 0 Thuyền thúng · 3 Thuyền gỗ · 6 Thuyền buồm · 9 Thuyền rồng · 12 Du thuyền · 15 Du thuyền Hoàng Kim.</li>
- <li><b>Mỗi kỳ 2 tháng.</b> Muốn đổi đội thì đăng ký trước, tới ngày đổi thành viên sẽ chuyển sang đội mới.</li>
+ <li><b>Điểm càng cao, thuyền càng xịn:</b> 0 Thuyền gỗ · 3 Thuyền buồm · 6 Thuyền rồng · 9 Du thuyền · 12 Siêu du thuyền · 15 Du thuyền Hoàng Kim.</li>
+ <li><b>Kỳ đầu kết thúc 01/12/2026, sau đó mỗi kỳ 2 tháng.</b> Muốn đổi đội thì đăng ký trước, tới ngày đổi thành viên sẽ chuyển sang đội mới.</li>
  <li><b>Rời đội:</b> bấm “Rời đội” 2 lần để chắc chắn.</li></ol></details>`}
 SH.game=()=>{const a=me();const g=gameCard(a);const cl=mgLuat69(a);return {t:'Mini Game Hoa Vinh',h:(myGroup(a)?g+cl:cl+g)}};
 /* ---- Thời gian biểu có thông báo ---- */
@@ -4558,6 +4567,40 @@ A.ch86Luu=async v=>{const d=me().g.deals[+v];if(!d)return;const L=(d.anh||[]).ma
  if(!files.length){toast('Chưa lưu được hình, thử lại sau nha');return}
  try{if(laIOS()&&navigator.canShare&&navigator.canShare({files})){await navigator.share({files});return}}catch(e){if(e&&e.name==='AbortError')return}
  files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Đã lưu '+files.length+' hình về máy 📥')};
+
+/* v87 Mini Game: tìm đội, xin vào đội (quá nửa đồng ý), tối đa 6 người */
+const DOI87_MAX=6;const live87=()=>{try{return !!LIVE}catch(e){return false}};
+function mg87Nut(a){const g=myGroup(a);return `<button class="mg87n" data-a="sheet" data-v="game"><span class="em">⛵</span><span><b>Mini Game Hoa Vinh</b><span class="sub">${g?esc(g.name)+' · '+g.members.length+'/'+DOI87_MAX+' người · '+BOAT_CAP[boatCap(boatDiem(g))][1]:'Lập đội hoặc tìm đội để lên thuyền'}</span></span><span class="go">›</span></button>`}
+function xin87Of(x){return x&&x.g&&x.g.xin87}
+function acc87(nm){return S.accts.find(q=>q.name===nm)}
+function don87Ds(g){return S.accts.filter(x=>x.status==='active'&&xin87Of(x)&&x.g.xin87.id===g.id&&!g.members.includes(x.name))}
+function phieu87(g,x){let co=0,khong=0;g.members.forEach(nm=>{const m=acc87(nm);const v=m&&m.g&&m.g.bau87&&m.g.bau87[x.email];if(v===1)co++;else if(v===-1)khong++});const can=Math.floor(g.members.length/2)+1;return {co,khong,can,n:g.members.length,dat:co>=can,truot:khong>=g.members.length-can+1}}
+function vao87(x,g){x.g.doi={id:g.id,ten:g.name,mau:g.color,lead:g.lead};delete x.g.xin87;if(!S.groups.find(q=>q.id===g.id&&q.members.includes(x.name)))g.members.push(x.name)}
+/* Người xin tự vào đội khi đủ phiếu (bản thật: mỗi người chỉ ghi được dữ liệu của mình) */
+function xin87Chay(a){const xi=xin87Of(a);if(!xi)return '';const g=S.groups.find(q=>q.id===xi.id);
+ if(!g){return `<div class="note" style="margin-top:10px">Đội bạn xin vào không còn nữa. <button class="btn ghost sm" data-a="xin87Huy">Bỏ đơn</button></div>`}
+ const p=phieu87(g,a);
+ if(p.dat&&g.members.length<DOI87_MAX&&!myGroup(a)){setTimeout(()=>{if(!xin87Of(a))return;vao87(a,g);save();render();confetti();toast('🎉 '+g.name+' đã đồng ý, chào mừng bạn vào đội!')},0);return ''}
+ return `<div class="note${p.truot?' warn':''}" style="margin-top:10px">${p.truot?`😢 ${esc(g.name)} chưa đồng ý cho bạn vào lần này.`:`⏳ Bạn đang xin vào <b>${esc(g.name)}</b>: ${p.co}/${p.can} người đồng ý (cần quá nửa đội ${p.n} người).`} <button class="btn ghost sm" data-a="xin87Huy">${p.truot?'Bỏ đơn':'Huỷ đơn'}</button></div>`}
+function don87(g){const m=me();if(!g.members.includes(m.name))return '';const ds=don87Ds(g);if(!ds.length)return '';
+ return `<div class="don87"><b>🙋 Đơn xin vào đội (${ds.length})</b><div class="sub">Quá nửa đội đồng ý là người đó được vào. Đội tối đa ${DOI87_MAX} người.</div>${ds.map(x=>{const p=phieu87(g,x);const v=m.g.bau87&&m.g.bau87[x.email];
+  return `<div class="li"><div class="grow"><b>${esc(x.name)}</b><div class="sub">${ROLE_SHORT[x.role]||''} · xin ngày ${esc(String(x.g.xin87.d||'').split('-').reverse().join('/'))} · ${p.co}/${p.can} đồng ý</div></div>${g.members.length>=DOI87_MAX?'<span class="pill">Đội đủ 6</span>':v===1?'<span class="pill ok">✓ Bạn đã đồng ý</span>':v===-1?'<span class="pill">Bạn chưa đồng ý</span>':`<button class="btn sm" data-a="bau87" data-v="${esc(x.email)}|1">Đồng ý</button><button class="btn ghost sm" data-a="bau87" data-v="${esc(x.email)}|-1">Chưa</button>`}</div>`}).join('')}</div>`}
+function tim87(a,mg){const q=boDau69((U.tim87||'').trim().toLowerCase());const xi=xin87Of(a);
+ const L=S.groups.filter(g=>g!==mg&&(!q||boDau69(g.name.toLowerCase()).includes(q)||g.members.some(n=>boDau69(n.toLowerCase()).includes(q))));
+ return `<div class="tim87"><b>🔎 Tìm đội</b><div class="sub" style="margin:2px 0 8px">Chạm vào đội để xem thành viên. Mỗi đội tối đa ${DOI87_MAX} người.</div>
+  <input class="in" id="tim87" data-tim87 placeholder="Gõ tên đội hoặc tên anh em…" value="${esc(U.tim87||'')}">
+  ${L.length?L.map(g=>{const day=g.members.length>=DOI87_MAX,dx=xi&&xi.id===g.id;const cap=BOAT_CAP[boatCap(boatDiem(g))][1];
+   return `<details class="doi87" data-k="doi87-${g.id}"><summary><span class="dot" style="background:${g.color}"></span><span class="grow"><b>${esc(g.name)}</b><span class="sub" style="display:block">Chỉ huy ${esc(g.lead)} · ${cap}</span></span><span class="pill ${day?'':'gold'}">${g.members.length}/${DOI87_MAX}</span></summary>
+    <div class="bd">${boatSVG(g)}<div class="sub" style="font-weight:800;margin:6px 0 4px">Thành viên</div><div class="row wrap" style="gap:6px">${g.members.map(nm=>`<span class="pill">${nm===g.lead?'⭐ ':''}${esc(nm)}</span>`).join('')}</div>
+    ${mg?'':day?'<div class="note" style="margin-top:10px">Đội đã đủ 6 người.</div>':dx?'<div class="note" style="margin-top:10px">⏳ Bạn đã xin vào đội này, chờ anh em đồng ý.</div>':`<button class="btn gold full" style="margin-top:10px" data-a="xin87" data-v="${g.id}">🙋 Xin vào đội</button>`}</div></details>`}).join(''):'<div class="sub" style="margin-top:8px">Chưa thấy đội nào hợp. Thử tên khác hoặc lập đội mới nha.</div>'}</div>`}
+document.addEventListener('input',e=>{const t=e.target;if(!t||!t.matches||!t.matches('[data-tim87]'))return;U.tim87=t.value;const p=t.selectionStart;render();const n=document.getElementById('tim87');if(n){n.focus();try{n.setSelectionRange(p,p)}catch(_){}}});
+A.xin87=v=>{const a=me();if(myGroup(a)){toast('Bạn đã có đội rồi');return}const g=S.groups.find(q=>q.id===v);if(!g)return;if(g.members.length>=DOI87_MAX){toast('Đội đã đủ 6 người');return}
+ a.g.xin87={id:g.id,d:today()};save();render();toast('Đã gửi đơn xin vào '+g.name+' 🙋')};
+A.xin87Huy=()=>{const a=me();delete a.g.xin87;save();render();toast('Đã huỷ đơn')};
+A.bau87=v=>{const m=me();const i=v.lastIndexOf('|');const em=v.slice(0,i),d=+v.slice(i+1);const g=myGroup(m);if(!g)return;m.g.bau87=m.g.bau87||{};m.g.bau87[em]=d;
+ const x=S.accts.find(q=>q.email===em);if(x&&xin87Of(x)&&!live87()){const p=phieu87(g,x);if(p.dat&&g.members.length<DOI87_MAX){vao87(x,g);save();render();confetti();toast(x.name+' đã vào '+g.name+' ⛵');return}}
+ save();render();toast(d===1?'Đã đồng ý':'Đã ghi ý kiến')};
+{const _j=A.joinGroup;A.joinGroup=v=>{const g=S.groups.find(q=>q.id===v);if(g&&g.members.length>=DOI87_MAX){toast('Đội đã đủ 6 người');return}return _j(v)}}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
