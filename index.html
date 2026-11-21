@@ -6,7 +6,15 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v96 trang thai cho*/
+<style>/*v98 bao giam chao*/
+.gc98{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:14px;border:1.5px dashed rgba(255,255,255,.4);color:#fff}
+.gc98 .grow b{font-size:14px;color:#fff}.gc98 .sub{font-size:12.5px;color:#F8E6D2;margin-top:2px}.gc98 .gc98da{color:var(--gold);font-size:12.5px}
+.gc98moi{box-shadow:0 0 0 1.5px #fff}
+.gc98 button.tg{flex:none;width:52px;height:30px;border-radius:999px;border:0;background:#bbb;position:relative;cursor:pointer}
+.gc98 button.tg::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s}
+.gc98 button.tg.on{background:#2E8B57}.gc98 button.tg.on::after{left:25px}
+.gc98moi{display:inline-block;background:var(--red);color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:800;margin-left:6px}
+</style><style>/*v96 trang thai cho*/
 .xn{position:relative;overflow:hidden}
 .xn::after{content:'';position:absolute;left:0;bottom:0;height:4px;width:100%;background:var(--red,#B3261E);transform-origin:left;animation:xn96 4s linear forwards;pointer-events:none}
 @keyframes xn96{from{transform:scaleX(1)}to{transform:scaleX(0)}}
@@ -4175,7 +4183,7 @@ function pk72Card(a){const p=pk72S(a);const Q=pk72Q();const loi=pk72Loi(p);const
  <details class="dlm pkq" data-k="pk72q"><summary class="in">📍 ${p.q.length?esc(p.q.map(x=>x.name).join(', ')):'Chọn khu vực'} <small>${p.q.length}/${PK72_MAX_Q}</small></summary><div class="dlmb">${Q.map(q=>`<label><input type="checkbox" data-a="pk72Q" data-v="${esc(q.id)}" ${chon.includes(q.id)?'checked':''} ${!chon.includes(q.id)&&p.q.length>=PK72_MAX_Q?'disabled':''}> ${esc(q.name)}</label>`).join('')}</div></details>
  ${p.q.length?`<div class="pkchip">${p.q.map(x=>`<button data-a="pk72Q" data-v="${esc(x.id)}" aria-label="Bỏ ${esc(x.name)}">${esc(x.name)} ✕</button>`).join('')}</div>`:''}
  <div class="grid2" style="margin-top:8px"><label class="pkgiain"><span>Từ</span><input class="in num" inputmode="decimal" data-pk72="tu" value="${p.tu!=null?nf(p.tu):''}" placeholder="4" aria-label="Giá từ (tỷ)"><em>tỷ</em></label><label class="pkgiain"><span>Đến</span><input class="in num" inputmode="decimal" data-pk72="den" value="${p.den!=null?nf(p.den):''}" placeholder="8" aria-label="Giá đến (tỷ)"><em>tỷ</em></label></div>
- ${loi&&(p.q.length||p.tu!=null||p.den!=null)?`<div class="pkloi">⚠️ ${esc(loi)}</div>`:xong?`<div class="pkok">✓ ${esc(p.q.map(x=>x.name).join(', '))} · ${tyTxt(p.tu)} đến ${tyTxt(p.den)}</div>`:''}</div>${ket}`}
+ ${loi&&(p.q.length||p.tu!=null||p.den!=null)?`<div class="pkloi">⚠️ ${esc(loi)}</div>`:xong?`<div class="pkok">✓ ${esc(p.q.map(x=>x.name).join(', '))} · ${tyTxt(p.tu)} đến ${tyTxt(p.den)}</div>`:''}${gc98Row(a)}</div>${ket}`}
 A.pk72Q=v=>{const a=me();const p=pk72S(a);const i=p.q.findIndex(x=>x.id===v);if(i>=0)p.q.splice(i,1);else{if(p.q.length>=PK72_MAX_Q){toast('Chọn tối đa '+PK72_MAX_Q+' khu vực thôi nha');render();return}const q=pk72Q().find(x=>x.id===v);if(q)p.q.push(q)}save();render()};
 document.addEventListener('change',e=>{const k=e.target&&e.target.dataset&&e.target.dataset.pk72;if(!k)return;const a=me();if(!a)return;const p=pk72S(a);const t=String(e.target.value).trim().replace(',','.');const v=t===''?null:parseFloat(t);p[k]=v!=null&&isFinite(v)&&v>=0?Math.round(v*100)/100:null;save();render()});
 async function pk72Lay(p,offset){const body={size:30,offset:offset||0,location:{district:p.q.map(x=>isNaN(+x.id)?x.id:+x.id)},price:{from:Math.round(p.tu*1000),to:Math.round(p.den*1000)},giam:true,sorts:{created:'desc'}};
@@ -4955,6 +4963,29 @@ function cho96Bat(msg){CHO96++;if(msg)CHO96M.push(msg);cho96Hien()}
 function cho96Tat(msg){CHO96=Math.max(0,CHO96-1);if(msg){const i=CHO96M.lastIndexOf(msg);if(i>=0)CHO96M.splice(i,1)}cho96Hien()}
 function cho96(p,el){let xong=false,bat=false;const t=setTimeout(()=>{if(xong)return;bat=true;cho96Bat();if(el&&el.isConnected)el.classList.add('dang96')},300);
  const het=()=>{xong=true;clearTimeout(t);if(bat)cho96Tat();document.querySelectorAll('.dang96').forEach(x=>x.classList.remove('dang96'))};p.then(het,het)}
+
+/* ---- v98 Thông báo căn giảm chào mới (theo ô Lựa chọn phân khúc) ---- */
+const GC98_PHUT=15;
+function gc98S(a){return a.g.gc98||(a.g.gc98={on:true,seen:[],key:'',init:false,last:0,moi:[]})}
+let GC98D=false;
+async function gc98Quet(ep){const a=me();if(!a||a.status!=='active'||!hasCtv(a)||GC98D)return;const g=gc98S(a);if(!g.on)return;const p=pk72S(a);if(pk72Loi(p))return;
+ const key=pk72Key(p);if(g.key!==key){g.key=key;g.seen=[];g.init=false;g.moi=[];g.last=0}
+ if(!ep&&Date.now()-(g.last||0)<GC98_PHUT*60000)return;
+ let L;GC98D=true;try{if(pk72Demo&&!dtkTok())L=pk72Mau(p);else if(!dtkTok())return;else L=(await pk72Lay(p,0)).L}catch(e){return}finally{GC98D=false}
+ g.last=Date.now();const id=it=>String(it.id||it._id||'');const ids=L.map(id).filter(Boolean);const seen=new Set(g.seen);
+ const moi=L.filter(it=>id(it)&&!seen.has(id(it)));
+ if(!g.init){g.init=true;g.seen=ids.slice(0,500);save();return}
+ if(moi.length){g.seen=[...new Set(ids.concat(g.seen))].slice(0,500);g.moi=[...new Set(moi.map(id).concat(g.moi||[]))].slice(0,50);save();
+  const t=moi[0];const gia=pk72Gia(t);const kv=p.q.map(x=>x.name).join(', ');
+  nhacBao('🔻 '+moi.length+' căn giảm chào mới',kv+' · '+tyTxt(p.tu)+' đến '+tyTxt(p.den)+(gia?' · căn mới nhất '+tyTxt(gia):''),'gc98');
+  if(U.pk72&&U.pk72.key===key)U.pk72=null;render()}else{save()}}
+A.gc98Bat=async()=>{const a=me();const g=gc98S(a);g.on=!g.on;save();render();
+ if(g.on){if(nhacQuyen()==='default')await nhacXin();toast('🔔 Đã bật báo căn giảm chào mới');gc98Quet(true)}else toast('Đã tắt báo căn giảm chào')};
+A.gc98Da=()=>{const a=me();gc98S(a).moi=[];save();render()};
+function gc98Row(a){const g=gc98S(a);const n=(g.moi||[]).length;const q=nhacQuyen();const p=pk72S(a);const ok=!pk72Loi(p);
+ return `<div class="gc98"><div class="grow"><b>🔔 Báo khi có căn giảm chào mới</b>${n?`<span class="gc98moi">🆕 ${n} căn mới</span>`:''}<div class="sub">${!g.on?'Đang tắt. Bật lên để không lỡ căn giảm chào.':!ok?'Chọn khu vực và tầm giá ở trên, app sẽ báo khi có căn giảm chào mới.':`App kiểm tra mỗi ${GC98_PHUT} phút khi đang mở, có căn mới là báo lên điện thoại.${q==='denied'?' ⚠️ Điện thoại đang chặn thông báo của app, nên chỉ báo trong app.':''}`}</div>${n?`<button class="link gc98da" data-a="gc98Da">Đã xem các căn mới</button>`:''}</div><button class="tg${g.on?' on':''}" data-a="gc98Bat" role="switch" aria-checked="${g.on}" aria-label="Báo căn giảm chào mới"></button></div>`}
+setTimeout(()=>gc98Quet(),15000);setInterval(()=>gc98Quet(),5*60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>gc98Quet(),3000)});
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
