@@ -2225,7 +2225,13 @@ A.sheet=v=>{U.sheet=v;U.resetAsk=false;if(v==='qa'){U.qres=undefined;U.qq=''}ren
 A.closeSheet=()=>{U.sheet=null;render()};
 A.closeBg=(v,el,e)=>{if(e.target===el){U.sheet=null;render()}};
 const ROLE_OPTS=[['ctv','Cộng tác viên'],['cg','Đầu chủ - Chuyên gia'],['tl','Trợ lý'],['sep','Trưởng phòng'],['hv','Học viên']];
-SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}`}};
+SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}${mayCard(p)}`}};
+function mayCard(p){if(!LIVE||!LIVE.tb||!p.id)return '';const t=LIVE.tb[p.id];const ok=['ctv','cg','hv'].includes(p.role);
+ return `<div class="card" style="margin-top:14px"><h3 class="h2" style="margin:0;font-size:1.05rem">📱 Thiết bị đăng nhập</h3><p class="sub" style="margin:4px 0 8px">${t?'Đang giữ: <b>'+esc(t.ten_may||'Thiết bị')+'</b> từ '+esc(new Date(t.gan_luc).toLocaleDateString('vi-VN')):'Chưa gắn máy nào, lần đăng nhập tới sẽ gắn máy đó.'}</p>
+ ${ok?(t?`<button class="btn gold" data-a="resetMay" data-v="${esc(p.email)}">Reset đăng nhập</button><p class="sub" style="margin-top:6px">Bấm khi bạn ấy đổi máy hoặc quên đăng xuất. Máy nào đăng nhập tiếp theo sẽ giữ tài khoản.</p>`:''):'<p class="sub">Trưởng phòng và Trợ lý nhờ Claude reset đăng nhập giúp nha.</p>'}</div>`}
+A.resetMay=async v=>{const p=acct(v);if(!p||LIVE.busy)return;busy(true,'Đang reset đăng nhập…');
+ try{const {error}=await sb.rpc('reset_thiet_bi',{p_id:p.id});if(error)throw error;if(LIVE.tb)delete LIVE.tb[p.id];toast('Đã reset đăng nhập cho '+p.name+', bạn ấy đăng nhập lại được rồi')}
+ catch(err){toast(/Chỉ reset|không có quyền/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);render()}};
 A.doiVai=v=>{const [email,role]=v.split('|');const p=acct(email);if(!p)return;if(p.role===role){U.sheet=null;render();return}p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};U.sheet=null;save();render();toast('Đã đổi '+p.name+' thành '+ROLES[role])};
 /* ===== Kho Drive Hoa Vinh ===== */
 const DRIVE={
@@ -5683,6 +5689,7 @@ async function sbLoad(){
    sb.from('khoa_dang_nhap').select('gmail,khoa_den').gt('khoa_den',new Date().toISOString()),
    sb.from('ho_so_nhan_su').select('*').order('id')]);
   (lk.data||[]).forEach(x=>{S.locks[x.gmail]=Date.parse(x.khoa_den)});
+  LIVE.tb={};try{const tb=await sb.rpc('ds_thiet_bi');(tb.data||[]).forEach(x=>{LIVE.tb[x.nguoi_dung_id]=x})}catch(e){}
   LIVE.hs=(hs.data||[]).map(r=>({so:r.so_ho_so||'',ky:r.ngay_ky_hd||'',ten:r.ho_ten||'',sinh:r.ngay_sinh||'',que:r.que_quan||'',dc:r.dia_chi||'',cccd:r.cccd||'',sdt:r.so_dien_thoai||'',mst:r.ma_so_thue||'',stk:r.so_tai_khoan||'',nh:r.ngan_hang||'',drive:r.link_drive||''}));
  }
  await loadVu(mine);
@@ -5816,7 +5823,12 @@ A.dealOk=async v=>{const d=S.dealQueue[+v];if(!d||d.done||LIVE.busy)return;busy(
  try{if(d.id){const {error}=await sb.rpc('duyet_vu_chot',{p_id:d.id,p_he_so_t:tierT(d.p),p_dong_y:true});if(error)throw error}
   busy(false);_dealOk(v);const x=d.email&&acct(d.email);if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x.id]=(LIVE.tNam[x.id]||0)+tierT(d.p)}await syncNow();render()}
  catch(err){busy(false);toast(/đã được xử lý|Chỉ Sếp/.test(err.message||'')?err.message:errVi(err));render()}};
+/* ---- 1 tài khoản chỉ đăng nhập 1 thiết bị: máy đầu tiên giữ tài khoản, máy khác bị chặn tới khi được reset ---- */
+function maMay(){const K='hoavinh-ma-may';try{let v=localStorage.getItem(K);if(!v){v=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));localStorage.setItem(K,v)}return v}catch(e){return maMay._v||(maMay._v='tam-'+Date.now().toString(36)+Math.random().toString(36).slice(2))}}
+function tenMay(){const u=navigator.userAgent||'';const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Mac/.test(u)?'Máy Mac':/Windows/.test(u)?'Máy Windows':'Thiết bị';const br=/Zalo/i.test(u)?'Zalo':/FBAN|FBAV/.test(u)?'Facebook':/CriOS|Chrome/.test(u)?'Chrome':/Safari/.test(u)?'Safari':/Firefox|FxiOS/.test(u)?'Firefox':'trình duyệt';return os+' · '+br}
+async function giuMay(){try{const {data,error}=await sb.rpc('giu_thiet_bi',{p_ma:maMay(),p_ten:tenMay()});if(error){console.warn('[Hoa Vinh] giu thiet bi',error);return true}return data!=='khac'}catch(e){return true}}
 async function afterLogin(fresh){
+ if(!(await giuMay())){S.me=null;S.accts=[];LIVE.me=null;LIVE.hs=null;U.auth.step='email';U.auth.err='Tài khoản này đang đăng nhập trên một máy khác. Nhờ Trợ lý bấm “Reset đăng nhập” giúp bạn, rồi đăng nhập lại trên máy này nhé.';_save();await sb.auth.signOut();return}
  const mine=await sbLoad();
  if(!mine){S.me=null;U.auth.step='email';U.auth.err='Chưa thấy tài khoản. Bấm “Đăng ký mới” giúp mình nhé.';await sb.auth.signOut();return}
  if(mine.trang_thai==='tu_choi'||mine.trang_thai==='tam_ngung'){S.me=null;U.auth.step='email';
@@ -5885,7 +5897,7 @@ A.submitReg=async()=>{const A2=U.auth;const n=val('rn'),d=val('rd');A2.draft.nam
   const {error}=await sb.from('nguoi_dung').update({ho_ten:n,ngay_sinh:d,anh}).eq('id',user.id);if(error)throw error;
   A2.err='';A2.draft={};await afterLogin(false);
  }catch(err){A2.err=errVi(err)}finally{busy(false);render()}};
-A.logout=async()=>{try{await syncNow();if(sb)await sb.auth.signOut()}catch(e){}LIVE.me=null;S.accts=[];S.locks={};LIVE.hs=null;_logout()};
+A.logout=async()=>{try{await syncNow();if(sb){await sb.rpc('tha_thiet_bi',{p_ma:maMay()}).then(()=>{},()=>{});await sb.auth.signOut()}}catch(e){}LIVE.me=null;S.accts=[];S.locks={};LIVE.hs=null;_logout()};
 A.liveRefresh=async()=>{if(LIVE.busy)return;busy(true,'Đang tải lại…');
  try{await syncNow();await afterLogin(false);const m=me();toast(m&&m.status==='pending'?'Trợ lý chưa duyệt, đợi chút nha':'Đã cập nhật dữ liệu mới nhất')}
  catch(err){toast(errVi(err))}finally{busy(false);U.sheet=null;render()}};
