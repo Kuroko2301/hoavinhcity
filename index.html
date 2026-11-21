@@ -6,7 +6,29 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v100 di quay nha*/
+<style>/*v101 hook tuyen*/
+.hk101{margin-top:8px}
+.hk101t{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:12px;border:1.5px solid #3A1F5C;background:#F4EEFC;color:#3A1F5C;font-weight:800;font-size:13.5px;cursor:pointer;text-align:left}
+.hk101t small{font-weight:700;opacity:.75}.hk101t .mui{margin-left:auto;font-size:12px}
+.hk101t.on{border-radius:12px 12px 0 0}
+.hk101b{border:1.5px solid #3A1F5C;border-top:0;border-radius:0 0 12px 12px;padding:8px 10px 10px;background:var(--card,#fff)}
+.hk101k{border:1.5px solid var(--line,#E5DED2);border-left:5px solid #7B4FC4;border-radius:12px;padding:8px 10px;margin-top:8px;background:var(--card,#fff)}
+.hk101k .kk{display:flex;justify-content:space-between;gap:6px;font-size:11.5px;color:var(--muted,#7A6F63);font-weight:700}
+.hk101k .kk em{font-style:normal;background:#EFE7FB;color:#4B2A84;border-radius:999px;padding:1px 8px}
+.hk101k .cc{font-size:15px;font-weight:800;line-height:1.4;margin:5px 0 6px;color:var(--ink,#2A211B)}
+.hk101k button{font-size:12.5px;padding:5px 12px}
+.hk101f{display:flex;gap:8px;margin-top:10px}.hk101f button{flex:1}
+.qn101seg{display:flex;gap:6px;margin:0 0 12px;padding:4px;border-radius:14px;background:var(--line,#EFE7DC)}
+.qn101seg button{flex:1;border:0;border-radius:11px;padding:9px 6px;font-weight:800;font-size:13px;background:transparent;color:inherit;cursor:pointer}
+.qn101seg button.on{background:#3A1F5C;color:#fff}
+.qn101it{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:14px;border:1.5px solid var(--line,#E5DED2);margin-top:8px;background:var(--card,#fff)}
+.qn101it img{width:56px;height:56px;border-radius:10px;object-fit:cover;flex:none}
+.qn101it .x{flex:none;border:0;background:transparent;font-size:16px;cursor:pointer;color:var(--muted,#7A6F63)}
+.qn101tu{padding:12px;border-radius:16px;border:1.5px solid var(--line,#E5DED2);margin-top:10px;background:var(--card,#fff)}
+.qn101tu .so{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#3A1F5C;color:#fff;font-weight:800;font-size:13px;flex:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hk101t{background:#2A1F3D;color:#E3D4FF;border-color:#7B4FC4}:root:not([data-theme="light"]) .hk101b{border-color:#7B4FC4}:root:not([data-theme="light"]) .hk101k .kk em{background:#3A2A5C;color:#E3D4FF}:root:not([data-theme="light"]) .hk101k .cc{color:inherit}}
+:root[data-theme="dark"] .hk101t{background:#2A1F3D;color:#E3D4FF;border-color:#7B4FC4}:root[data-theme="dark"] .hk101b{border-color:#7B4FC4}:root[data-theme="dark"] .hk101k .kk em{background:#3A2A5C;color:#E3D4FF}:root[data-theme="dark"] .hk101k .cc{color:inherit}
+</style><style>/*v100 di quay nha*/
 .qn100b{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:12px 14px;border:0;border-radius:18px;background:linear-gradient(135deg,#1F2A44,#3A1F5C);color:#fff;text-align:left;cursor:pointer;box-shadow:0 6px 16px rgba(31,42,68,.25)}
 .qn100b .ic{font-size:28px;flex:none}.qn100b b{font-size:16px;display:block}.qn100b small{display:block;font-size:12.5px;color:#E3DAF5;margin-top:2px}.qn100b .mui{font-size:22px;opacity:.8}
 .qn100 label.lb{display:block;font-weight:800;font-size:14px;margin:4px 0 6px}
@@ -5375,9 +5397,9 @@ let qn100Tim=async dc=>{const t=noDau72(dc).replace(/^(so|nha|duong|hem)\s+/,'')
   return {id:h.id,title:`${h.addr} · ${h.type||'Nhà'} ${h.dt||''} · ${h.q}`,gia:h.p,dt:null,anh:'',diem,_h:h}}).sort((x,y)=>y.diem-x.diem);
  return {ds,khop_so:!!so&&ds.some(x=>x.diem>=7)}};
 let qn100Hook=async o=>{await new Promise(r=>setTimeout(r,900));const h=o.it&&o.it._h;
- const q=h?h.q:'Sài Gòn';const gia=h?tyTxt(h.p):'';const dm=[];
+ const q=h?h.q:(o.q||'Sài Gòn');const gia=h?tyTxt(h.p):(o.gia?tyTxt(o.gia):'');const dm=[];
  if(h){if(gcOn(h))dm.push('Vừa giảm chào '+gcAmt(h));if(cheap(h)>=.05)dm.push('Rẻ hơn định giá '+Math.round(cheap(h)*100)+'%');if(/xe hơi|mặt tiền/i.test(h.hem||''))dm.push(/mặt tiền/i.test(h.hem)?'Mặt tiền kinh doanh':'Hẻm xe hơi');if(h.dt)dm.push('Diện tích '+h.dt);if(h.tang)dm.push(h.tang+' tầng, '+(h.pn||'?')+' phòng ngủ');(h.plus||[]).slice(0,2).forEach(x=>dm.push(x))}
- else dm.push(...String(o.mo_ta||'').split(/[\n.;,]/).map(x=>x.trim()).filter(x=>x.length>3).slice(0,4));
+ else dm.push(...String(o.mo_ta||'').split(/[\n;]|[.,](?!\d)/).map(x=>x.trim()).filter(x=>x.length>3).slice(0,4));
  const d0=dm[0]||'giá quá mềm';const d1=dm[1]||d0;
  const cau=[['Câu hỏi tò mò',`Ai bảo ${q} hết nhà ${gia?'tầm '+gia:'giá mềm'}?`],['Con số gây sốc',`${gia||'Giá này'} mà ${d1.toLowerCase()}, nghe vô lý không?`],['Phá định kiến',`Ai nói nhà ${q} giá cao, xem căn này đi!`],['So sánh bất ngờ',`Tiền mua căn hộ, ở đây mua được nguyên căn nhà.`],['Cảnh báo',`Đừng mua nhà ${q} khi chưa xem căn này.`],['Góc nhìn người mua',`Nếu bạn đang tìm nhà ${q}, dừng lại 30 giây.`],['Kể chuyện chủ',`Chủ cần tiền gấp nên ${d0.toLowerCase()}.`],['Thách thức',`Tìm được căn rẻ hơn ở ${q}, tôi mời cà phê.`],['Hé lộ bí mật',`Điều môi giới ít nói về căn ${q} này…`],['Giữ chân',`Xem tới cuối, bạn sẽ biết vì sao căn này hot.`]];
  return {hooks:cau.map(([kieu,c])=>({kieu,cau:c})),diem_manh:[...new Set(dm)].filter((x,i,L)=>!L.some((y,j)=>j<i&&noDau72(x).includes(noDau72(y)))).slice(0,5),mo_dau:'Đứng trước cửa nhà, quay thấy hẻm hoặc mặt tiền rồi nói hook.',nguon:h?'dtk':'tu_go',demo:true}};
@@ -5427,6 +5449,70 @@ SH.qn100=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🎬 Đi quay nhà',h:'<
 document.addEventListener('input',e=>{const id=e.target&&e.target.id;if(id==='qnDc'||id==='qnGhi'||id==='qnMt')qn100Keep()});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='qnDc'){e.preventDefault();A.qn100Tim()}});
 {const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;return `<button class="qn100b" data-a="qn100Mo"><span class="ic">🎬</span><div class="grow"><b>Đi quay nhà</b><small>Gõ địa chỉ căn, AI viết câu hook nói 3 giây đầu video</small></div><span class="mui">›</span></button>`+h}}
+
+/* ---- v101 Câu hook sổ xuống cho từng căn (tuyến Khảo sát + Đi quay nhà theo danh sách) ---- */
+function hk101U(){return U.hk101||(U.hk101={mo:{},dang:{},loi:{}})}
+function hk101C(a){a=a||me();return a.g.hk101||(a.g.hk101={})}
+function qn101S(a){a=a||me();return a.g.qn101||(a.g.qn101={ds:[],tuyen:[],ai:''})}
+function hk101Tim(k){const a=me();if(!a)return null;return (ks75S(a).ds||[]).find(x=>x.k===k)||(qn101S(a).ds||[]).find(x=>x.k===k)||null}
+function hk101Box(x){if(!x)return '';const u=hk101U(),c=hk101C()[x.k],mo=!!u.mo[x.k],k=esc(x.k);
+ let b='';if(mo){
+  if(u.dang[x.k])b=`<div class="pktt" role="status" style="margin:4px 0 0"><span class="spin72"></span><div><b>🤖 AI đang tìm điểm mạnh và viết câu hook…</b></div></div>`;
+  else if(u.loi[x.k])b=`<div class="note bad" style="margin:4px 0 0">${esc(u.loi[x.k])}</div><button class="btn ghost sm full" style="margin-top:6px" data-a="hk101Lai" data-v="${k}">Thử lại</button>`;
+  else if(c){b=(c.diem_manh&&c.diem_manh.length?`<div class="qn100dm">${c.diem_manh.map(t=>`<span>💪 ${esc(t)}</span>`).join('')}</div>`:'')+(c.mo_dau?`<div class="qn100md" style="margin-top:6px">🎥 <b>Cảnh mở đầu:</b> ${esc(c.mo_dau)}</div>`:'')
+   +c.hooks.map((h,i)=>`<div class="hk101k"><div class="kk"><span>Câu ${i+1}${h.kieu?' · <em>'+esc(h.kieu)+'</em>':''}</span><span>⏱ ~${qn100Giay(h.cau)} giây</span></div><div class="cc">“${esc(h.cau)}”</div><button class="btn ghost sm" data-a="hk101Chep" data-v="${k}|${i}">📋 Chép</button></div>`).join('')
+   +`<div class="hk101f"><button class="btn ghost sm" data-a="hk101ChepHet" data-v="${k}">📋 Chép hết</button><button class="btn ghost sm" data-a="hk101Lai" data-v="${k}">↻ Viết bộ khác</button></div>`}}
+ return `<div class="hk101"><button class="hk101t${mo?' on':''}" data-a="hk101Mo" data-v="${k}" aria-expanded="${mo}">🎙 Câu hook 3 giây đầu${c?` <small>· ${c.hooks.length} câu</small>`:''}<span class="mui">${mo?'Thu gọn ▲':'Xem ▼'}</span></button>${mo?`<div class="hk101b">${b}</div>`:''}</div>`}
+async function hk101Viet(k,lamMoi){const x=hk101Tim(k);if(!x)return;const u=hk101U();if(u.dang[k])return;u.dang[k]=true;delete u.loi[k];render();
+ try{const kq=await qn100Hook({id:x.k,it:{},mo_ta:[x.t,x.mo,x.g?'Giá chào: '+tyTxt(x.g):'',x.dt?'Diện tích: '+x.dt+' m²':'',x.q?'Khu vực: '+[x.ph,x.q].filter(Boolean).join(', '):''].filter(Boolean).join('\n'),q:x.q,gia:x.g,ghi_chu:'',lam_moi:!!lamMoi});
+  const C=hk101C();C[k]=Object.assign({luc:new Date().toISOString()},kq);const ks=Object.keys(C);if(ks.length>80)ks.sort((p,q)=>String(C[p].luc).localeCompare(String(C[q].luc))).slice(0,ks.length-80).forEach(z=>delete C[z]);save()}
+ catch(e){u.loi[k]=String(e&&e.message||e)}finally{delete u.dang[k];render()}}
+A.hk101Mo=k=>{const u=hk101U();u.mo[k]=!u.mo[k];render();if(u.mo[k]&&!hk101C()[k]&&!u.dang[k])return hk101Viet(k,false)};
+A.hk101Lai=k=>hk101Viet(k,true);
+A.hk101Chep=v=>{const i=v.lastIndexOf('|');const c=hk101C()[v.slice(0,i)];const h=c&&c.hooks[+v.slice(i+1)];if(h)copy(h.cau)};
+A.hk101ChepHet=k=>{const c=hk101C()[k];if(c)copy(c.hooks.map((h,i)=>(i+1)+'. '+h.cau).join('\n'))};
+/* 1) Khảo sát nhà: tuyến đã xếp + bước đi khảo sát */
+{const o=SH.ks75tuyen;SH.ks75tuyen=function(){const x=o.apply(this,arguments);const T=ks75Tuyen();if(!x||!x.h||!T.length)return x;let i=0;
+ x.h=x.h.replace(/(<ol class="ks75ol">)([\s\S]*?)(<\/ol>)/,(m,a,b,c)=>a+b.replace(/<\/li>/g,()=>hk101Box(T[i++])+'</li>')+c);return x}}
+{const o=SH.ks75di;SH.ks75di=function(){const x=o.apply(this,arguments);const T=ks75Tuyen();if(!x||!x.h||!T.length)return x;let i=0;
+ x.h=x.h.replace(/<div class="ks75ba">/g,()=>hk101Box(T[i++])+'<div class="ks75ba">');return x}}
+/* 2) Đi quay nhà: Lọc nhà → Thêm vào danh sách → AI xếp đường → hook từng căn */
+function qn101Tuyen(){const g=qn101S();return (g.tuyen||[]).map(k=>g.ds.find(x=>x.k===k)).filter(Boolean)}
+SH.qn101loc=()=>{const g=qn101S();return {t:'🔎 Lọc nhà đi quay',h:`<p class="sub" style="margin-top:4px">Gõ yêu cầu như nói chuyện (VD: "nhà Tân Phú hẻm xe hơi dưới 6 tỷ"), AI lọc trên Đại Thế Kỷ. Căn nào muốn đi quay thì bấm <b>➕ Thêm vào danh sách</b>.</p>
+ <button class="ks75o full" style="margin-bottom:10px" data-a="qn101Ve">🎬 Danh sách đi quay <b>${g.ds.length}</b> <span class="sub" style="margin-left:auto">Xem →</span></button>${dlFormPart()}${dlResultsPart()}`}};
+{const o=dlResultsPart;dlResultsPart=function(){if(U.sheet!=='qn101loc')return o.apply(this,arguments);const d=U.dl;if(!d)return '';const ids=new Set(qn101S().ds.map(x=>x.k));const da0=d.da;d.da={};(d.list||[]).forEach((it,i)=>{if(ids.has(String(it.id||it._id)))d.da[i]=1});
+ let h;try{h=o.apply(this,arguments)}finally{d.da=da0}return h.replace(/data-a="dlAdd" data-v="(\d+)">➕ Thêm (?:căn này )?vào Kho/g,'data-a="qn101Them" data-v="$1">➕ Thêm vào danh sách').replace(/✅ Đã thêm[^<]*/g,'✅ Đã có trong danh sách')}}
+A.qn101Them=i=>{const it=dlS().list[+i];if(!it)return;const g=qn101S();const x=ks75Tu(it);if(g.ds.some(y=>y.k===x.k)){toast('Căn này đã có trong danh sách');return}
+ if(g.ds.length>=30){toast('Danh sách đi quay tối đa 30 căn nha');return}x.chon=true;g.ds.push(x);save();render();toast('🎬 Đã thêm vào danh sách đi quay ('+g.ds.length+' căn)')};
+A.qn101Loc=()=>{U.sheet='qn101loc';render()};
+A.qn101Ve=()=>{qn100S().mode='ds';U.sheet='qn100';render()};
+A.qn101Mode=v=>{qn100Keep();qn100S().mode=v;render()};
+A.qn101Bo=k=>{const g=qn101S();g.ds=g.ds.filter(x=>x.k!==k);g.tuyen=(g.tuyen||[]).filter(y=>y!==k);save();render()};
+A.qn101Chon=k=>{const x=qn101S().ds.find(y=>y.k===k);if(x){x.chon=!x.chon;save();render()}};
+A.qn101Xoa=()=>{if(!U.qn101Xn||Date.now()-U.qn101Xn>4000){U.qn101Xn=Date.now();toast('Bấm lần nữa để xoá cả danh sách đi quay');return}U.qn101Xn=0;Object.assign(qn101S(),{ds:[],tuyen:[],ai:''});save();render();toast('Đã xoá danh sách đi quay')};
+A.qn101Xep=async()=>{const g=qn101S();const L=g.ds.filter(x=>x.chon);if(!L.length){toast('Chọn ít nhất 1 căn nha');return}if(U.qn101Dang)return;U.qn101Dang=true;render();
+ let sx=null,ai='';
+ try{if(L.length>2){try{const q='Bạn là trợ lý xếp tuyến đi quay video nhà ở TP. Hồ Chí Minh bằng xe máy. Hãy sắp xếp các địa chỉ sau theo thứ tự đi tiện nhất: đi căn gần nhau liên tiếp, không đi vòng ngược lại.\n'+L.map((x,i)=>(i+1)+') '+ks75Dc(x)).join('\n')+'\nChỉ trả lời đúng 1 dòng theo mẫu: THUTU: 3,1,2';
+   const ans=await Promise.race([A.vvAnswer(q,[]),new Promise(r=>setTimeout(()=>r(''),25000))]);const m=String(ans||'').match(/THUTU\s*:\s*([\d,\s]+)/i);
+   if(m){const ns=m[1].split(/[,\s]+/).filter(Boolean).map(Number);if(ns.length===L.length&&new Set(ns).size===L.length&&ns.every(n=>n>=1&&n<=L.length)){sx=ns.map(n=>L[n-1]);ai='🤖 AI VinViLLa đã xếp tuyến theo đường đi gần nhất.'}}}catch(e){console.warn('qn101 AI',e)}}
+  if(!sx){sx=ks75Sap(L);ai='🤖 Đã xếp theo từng khu liền kề: đi hết một quận/phường rồi mới qua quận bên cạnh.'}
+  g.tuyen=sx.map(x=>x.k);g.ai=ai;save();toast('🗺️ Đã xếp xong tuyến đi quay '+sx.length+' căn')}
+ finally{U.qn101Dang=false;render()}};
+function qn101Part(a){const g=qn101S(a);const T=qn101Tuyen();const n=g.ds.filter(x=>x.chon).length;
+ let h=`<p class="sub" style="margin:0 0 10px">Lọc nhiều căn trên Đại Thế Kỷ, thêm vào danh sách, AI xếp đường đi tiện nhất. Mỗi căn có nút sổ xuống <b>câu hook 3 giây đầu</b>.</p>
+ <button class="btn gold full" data-a="qn101Loc">🔎 Lọc nhà trên Đại Thế Kỷ</button>`;
+ if(T.length)h+=`<div class="card ks75kq" style="margin-top:12px"><div class="between"><b>🗺️ Tuyến đi quay · ${T.length} căn</b></div>${g.ai?`<p class="sub" style="margin:4px 0 0">${esc(g.ai)}</p>`:''}
+  ${T.map((x,i)=>`<div class="qn101tu"><div class="row" style="gap:10px;align-items:flex-start"><span class="so">${i+1}</span><div class="grow" style="min-width:0"><b>${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}</b><div class="sub">${x.g?tyTxt(x.g)+' · ':''}${esc(String(x.t).slice(0,70))}</div>
+   <a class="btn ghost sm" style="margin-top:6px" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a></div></div>${hk101Box(x)}</div>`).join('')}
+  <div style="margin-top:10px">${ks75MapNut(T)}</div></div>`;
+ h+=`<div class="between" style="margin:16px 2px 2px"><h3 class="h3" style="margin:0">📋 Danh sách đi quay (${g.ds.length})</h3>${g.ds.length?'<button class="link" style="font-size:12.5px" data-a="qn101Xoa">Xoá hết</button>':''}</div>`;
+ if(!g.ds.length)h+=`<div class="note" style="margin-top:6px">Chưa có căn nào. Bấm <b>🔎 Lọc nhà trên Đại Thế Kỷ</b> rồi chọn <b>➕ Thêm vào danh sách</b> nha.</div>`;
+ else h+=`<p class="sub" style="margin:2px">Chạm vào căn để chọn hoặc bỏ chọn, rồi bấm AI sắp xếp đường.</p>`+g.ds.map(x=>`<div class="qn101it"><button class="tep74c" style="flex:none;margin-top:2px;cursor:pointer;border:0" data-a="qn101Chon" data-v="${esc(x.k)}" aria-label="Chọn căn">${x.chon?'✓':''}</button>${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:''}<div class="grow" style="min-width:0" data-a="qn101Chon" data-v="${esc(x.k)}"><div>${ks75Ten(x)}</div><div class="sub">📍 ${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}</div></div><button class="x" data-a="qn101Bo" data-v="${esc(x.k)}" aria-label="Bỏ khỏi danh sách">✕</button></div>`).join('')
+  +`<button class="btn full ks75ai" style="margin-top:10px" data-a="qn101Xep" ${n<1||U.qn101Dang?'disabled':''}>${U.qn101Dang?'⏳ AI đang sắp xếp đường đi…':'🤖 AI sắp xếp đường đi ('+n+' căn)'}</button>`;
+ return h}
+{const o=SH.qn100;SH.qn100=function(){const x=o.apply(this,arguments);const a=me();if(!a||!hasCtv(a)||!x||!x.h)return x;const q=qn100S();const m=q.mode==='ds'?'ds':'dc';
+ const seg=`<div class="qn101seg" role="tablist"><button class="${m==='dc'?'on':''}" data-a="qn101Mode" data-v="dc" role="tab" aria-selected="${m==='dc'}">📍 Theo địa chỉ</button><button class="${m==='ds'?'on':''}" data-a="qn101Mode" data-v="ds" role="tab" aria-selected="${m==='ds'}">🔎 Lọc nhà & xếp tuyến</button></div>`;
+ x.h=seg+(m==='ds'?`<div class="qn100">${qn101Part(a)}</div>`:x.h);return x}}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -6380,7 +6466,9 @@ async function qn100Goi(body,ms){const hetGio=new Promise((_,rej)=>setTimeout(()
  throw new Error((j&&j.loi)||errVi(error))}
 {const _t=qn100Tim,_h=qn100Hook;
  qn100Tim=async dc=>{if(!sb)return _t(dc);return await qn100Goi({viec:'tim',dia_chi:dc},40000)};
- qn100Hook=async o=>{if(!sb)return _h(o);const b={viec:'hook',ghi_chu:o.ghi_chu||'',lam_moi:!!o.lam_moi};if(o.id)b.id=String(o.id);else b.mo_ta=o.mo_ta||'';return await qn100Goi(b,70000)}}
+ qn100Hook=async o=>{if(!sb)return _h(o);const b={viec:'hook',ghi_chu:o.ghi_chu||'',lam_moi:!!o.lam_moi};if(o.id)b.id=String(o.id);if(o.mo_ta)b.mo_ta=o.mo_ta;return await qn100Goi(b,70000)}}
+
+/* v101: câu hook sổ xuống cho từng căn trong tuyến Khảo sát + Đi quay nhà dùng chung qn100Hook ở trên (gửi id ĐTK + mo_ta dự phòng). */
 
 render();
 })();
