@@ -6008,7 +6008,7 @@ async function loadKyNiem(mine){LIVE.kn=null;if(!mine||mine.trang_thai!=='hoat_d
 function knInNtt(k){if(!LIVE.kn)return null;return LIVE.kn.find(x=>x.khu!=='ky_niem'&&(x.path===k.path||x.path.includes('/kn'+k.rid+'-')))}
 const KHU_TEN={vd:'Khu 1',tt:'Khu 2',dl:'Khu 3'};
 SH.kyniem=()=>{const a=me();if(!a||a.role==='hv')return {t:'Kỷ niệm Hoa Vinh',h:'<p class="sub">Mục này dành cho anh em trong phòng.</p>'};const adm=a.role==='tl'||a.role==='sep';
- return {t:'📸 Kỷ niệm Hoa Vinh',h:`<div class="card stack" style="gap:10px"><b>Chia sẻ kỷ niệm</b><input class="in" id="knc" placeholder="Viết vài dòng về khoảnh khắc này"><div class="grid2"><label class="btn ghost sm" style="display:grid;place-items:center">📷 Chọn ảnh<input type="file" accept="image/*" data-kn2="1" hidden></label><button class="btn ghost sm" data-a="knVideo">🎬 Thêm link video</button></div><input class="in" id="knl" placeholder="Link video YouTube (nếu là video)"></div>
+ return {t:'📸 Kỷ niệm Hoa Vinh',h:`<div class="card stack" style="gap:10px"><b>Chia sẻ kỷ niệm</b><input class="in" id="knc" placeholder="Viết vài dòng về khoảnh khắc này"><div class="grid2"><label class="btn ghost sm" style="display:grid;place-items:center">📷 Chọn ảnh (nhiều tấm)<input type="file" accept="image/*" multiple data-kn2="1" hidden></label><button class="btn ghost sm" data-a="knVideo">🎬 Thêm link video</button></div><input class="in" id="knl" placeholder="Link video YouTube (nếu là video)">${adm?`<label class="row sub" style="align-items:center;gap:8px"><input type="checkbox" id="kn_ntt" checked> Đưa luôn vào Nhà Truyền Thống<select class="in" id="kn_khu" style="min-height:34px;font-size:12px;padding:4px 8px;flex:1"><option value="tt">Khu 2: Tập thể</option><option value="vd">Khu 1: Vinh danh</option><option value="dl">Khu 3: Du lịch</option></select></label>`:''}</div>
  <div class="kfeed">${S.kyniem.slice().reverse().map(k=>{const inN=knInNtt(k);const mine=k.uid&&LIVE.me&&k.uid===LIVE.me.id;return `<div class="kitem">${k.type==='video'&&k.link?`<a href="${esc(k.link)}" target="_blank" rel="noopener" style="text-decoration:none">${tile(k)}</a>`:tile(k)}<div class="kcap"><b>${esc(k.by)}</b> <span class="sub">${fmtD(k.d)}</span><div>${esc(k.cap)}</div><div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><button class="btn ghost sm" data-a="knHeart" data-v="${k.id}">❤️ ${k.hearts||0}</button>${adm?(inN?`<span class="pill ok" style="align-self:center">✓ Đã ở Nhà TT · ${KHU_TEN[inN.khu]}</span>`:`<select class="in" id="kz_${k.id}" style="min-height:34px;font-size:12px;padding:4px 8px;flex:1"><option value="tt">Khu 2: Tập thể</option><option value="vd">Khu 1: Vinh danh</option><option value="dl">Khu 3: Du lịch</option></select><button class="btn sm" data-a="knToNtt" data-v="${k.id}">Đưa vào Nhà TT</button>`):''}${adm||mine?`<button class="btn ghost sm" data-a="knDel" data-v="${k.id}">🗑️ Xoá</button>`:''}</div></div></div>`}).join('')||'<p class="sub">Chưa có kỷ niệm nào. Chia sẻ tấm đầu tiên nha!</p>'}</div>`}};
 SH.ntt=()=>{const a=me();const z=U.ntz||'vd',adm=a&&(a.role==='tl'||a.role==='sep');const L=(S.ntt[z]||[]).slice().sort((x,y)=>String(y.d).localeCompare(String(x.d)));
  const byYear={};L.forEach(x=>{const y=String(x.d).slice(0,4);(byYear[y]=byYear[y]||[]).push(x)});
@@ -6018,13 +6018,19 @@ SH.ntt=()=>{const a=me();const z=U.ntz||'vd',adm=a&&(a.role==='tl'||a.role==='se
 function knBlob(dataUrl){return dataUrlBlob(dataUrl)}
 async function knUpload(folder,src){const m=LIVE.me;const path=folder+'/'+(folder==='ky-niem'?m.id+'/':'')+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.jpg';
  const {error}=await sb.storage.from('ky-niem').upload(path,knBlob(src),{contentType:'image/jpeg'});if(error)throw error;return path}
-document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!(el.dataset.kn2||el.dataset.ntt2)||!el.files||!el.files[0])return;const file=el.files[0];el.value='';
+const knShrink=f=>new Promise(res=>shrinkBig(f,res));
+document.addEventListener('change',async e=>{const el=e.target;if(!el.dataset||!(el.dataset.kn2||el.dataset.ntt2)||!el.files||!el.files[0])return;const files=[...el.files];el.value='';
  const z=el.dataset.ntt2;const t=z?val('nt_t'):'';if(z&&!t){toast('Đặt tên kỷ niệm trước rồi chọn ảnh nha');return}const cap=val('knc')||'Kỷ niệm cùng anh em',d=z?(val('nt_d')||today()):today();
- shrinkBig(file,async src=>{if(LIVE.busy)return;busy(true,'Đang lưu ảnh…');
-  try{const path=await knUpload(z?'truyen-thong':'ky-niem',src);
-   const {error}=await sb.from('ky_niem').insert({khu:z||'ky_niem',tieu_de:z?t:cap,ngay:d,loai:'anh',duong_dan:path});if(error)throw error;
-   if(!z){const a=me();give(a,{bac:1},'Chia sẻ kỷ niệm');save()}await loadKyNiem(LIVE.me);toast(z?'Đã lưu vào Nhà Truyền Thống':'Đã đăng kỷ niệm 📸')}
-  catch(err){toast(errVi(err))}finally{busy(false);render()}})});
+ const cb=document.getElementById('kn_ntt');const khu=!z&&cb&&cb.checked?(val('kn_khu')||'tt'):'';if(LIVE.busy)return;let ok=0;
+ try{for(const f of files){busy(true,'Đang lưu ảnh '+(ok+1)+'/'+files.length+'…');const src=await knShrink(f);
+   const path=await knUpload(z?'truyen-thong':'ky-niem',src);
+   const {data:row,error}=await sb.from('ky_niem').insert({khu:z||'ky_niem',tieu_de:z?t:cap,ngay:d,loai:'anh',duong_dan:path}).select('id').single();if(error)throw error;
+   if(khu){const p2='truyen-thong/kn'+row.id+'-'+Date.now().toString(36)+'.jpg';const c=await sb.storage.from('ky-niem').copy(path,p2);if(c.error)throw c.error;
+    const r2=await sb.from('ky_niem').insert({khu,tieu_de:cap,ngay:d,loai:'anh',duong_dan:p2});if(r2.error)throw r2.error}
+   ok++}
+  if(!z&&ok){const a=me();give(a,{bac:1},'Chia sẻ kỷ niệm');save()}
+  toast(z?'Đã lưu '+ok+' ảnh vào Nhà Truyền Thống':'Đã đăng '+ok+' kỷ niệm'+(khu?' và đưa vào Nhà TT':'')+' 📸')}
+ catch(err){toast((ok?'Đã lưu '+ok+' ảnh. ':'')+errVi(err))}finally{await loadKyNiem(LIVE.me).catch(()=>{});busy(false);render()}});
 A.knVideo=async()=>{const l=val('knl');if(!/^https?:\/\//.test(l)){toast('Dán link video vào ô bên dưới nhé');return}if(LIVE.busy)return;busy(true);
  try{const {error}=await sb.from('ky_niem').insert({khu:'ky_niem',tieu_de:val('knc')||'Video kỷ niệm',ngay:today(),loai:'video',duong_dan:l});if(error)throw error;await loadKyNiem(LIVE.me);toast('Đã đăng video kỷ niệm')}
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
