@@ -6,7 +6,62 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v98 bao giam chao*/
+<style>/*v99 hoc tu video*/
+.lv99f{display:grid;grid-template-columns:1fr;gap:10px}
+.lv99chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.lv99chips button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer}
+.lv99chips button.on{background:var(--red);border-color:var(--red);color:#fff}
+.lv99sum{border-radius:16px;padding:12px 14px;background:linear-gradient(135deg,#8E1B1B,#B8412A);color:#fff;margin-top:12px}
+.lv99sum b{font-size:20px}.lv99sum .sub{color:#F8E6D2}
+.lv99nh{border:1px solid var(--line);border-radius:16px;padding:12px;margin-top:10px;background:var(--card)}
+.lv99nh.best{border:2px solid #2E8B57}
+.lv99nh .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.lv99nh .ten{font-weight:800;font-size:16px}
+.lv99nh .tien{font-size:20px;font-weight:800;color:var(--red);white-space:nowrap}
+.lv99g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.lv99g div{background:rgba(184,134,42,.08);border-radius:10px;padding:6px 8px;font-size:12.5px}
+.lv99g div b{display:block;font-size:14px}
+.lv99tb{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
+.lv99tb th,.lv99tb td{padding:5px 4px;border-bottom:1px solid var(--line);text-align:right}
+.lv99tb th:first-child,.lv99tb td:first-child{text-align:left}
+.lv99ai{white-space:pre-wrap;font-size:14px;line-height:1.55}
+.lv99s{display:grid;grid-template-columns:1.3fr .8fr .8fr .8fr;gap:6px;align-items:center;margin-top:6px}
+.lv99s .in{min-height:40px;padding:6px 8px}
+.lv99s b{font-size:13px}
+.card.kk99c{border-radius:18px;padding:14px;background:linear-gradient(135deg,#1F4E8C,#2E6FB5)!important;color:#fff;border:0}
+.kk99c .sub{color:#DCE8F8}.kk99c .kicker{color:#FFD98A}
+.kk99r{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:12px;padding:8px 10px;margin-top:8px;border:0;width:100%;color:#fff;cursor:pointer;text-align:left}
+.kk99r b{font-size:14px}.kk99r .n{margin-left:auto;background:#FFD98A;color:#5A3A00;border-radius:999px;padding:2px 10px;font-weight:800;white-space:nowrap}
+.hg99{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.hg99 span{font-size:12px;font-weight:700;border-radius:999px;padding:2px 8px}
+.hg99 .ok{background:#E3F4E8;color:#1E6B3A}.hg99 .no{background:#FBE5E5;color:#9B1C1C}
+.re99{display:inline-block;background:#2E8B57;color:#fff;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800}
+.cao99{display:inline-block;background:#9B6A1C;color:#fff;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800}
+.kh99ai{border:1.5px dashed var(--red);border-radius:14px;padding:10px 12px;background:rgba(142,27,27,.04)}
+.kh99ai label.btn{display:flex;align-items:center;justify-content:center}
+.hgpick99{display:flex;flex-wrap:wrap;gap:6px}
+.hgpick99 button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 10px;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer}
+.hgpick99 button.on{background:#1F4E8C;border-color:#1F4E8C;color:#fff}
+.keo99h{border-radius:18px;padding:14px;background:linear-gradient(135deg,#C0392B,#E8743B);color:#fff}
+.keo99h .sub{color:#FFEDE0}
+.keo99b{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.keo99b div{background:rgba(255,255,255,.16);border-radius:12px;padding:8px;font-size:12px;text-align:center;font-weight:700}
+.keo99b div span{display:block;font-size:20px}
+.dg99big{border-radius:18px;padding:14px;background:#1E1B16;color:#fff}
+.dg99big .sub{color:#CFC6B8}.dg99big b.v{font-size:28px;color:#F3C969}
+.dg99tb{width:100%;border-collapse:collapse;font-size:12.5px}
+.dg99tb th,.dg99tb td{padding:6px 4px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+.dg99tb th:first-child,.dg99tb td:first-child{text-align:left}
+.rau99{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.rau99 .lg{border:1px solid var(--line);border-radius:14px;padding:10px;text-align:center;background:linear-gradient(180deg,rgba(80,150,90,.08),rgba(120,80,40,.14))}
+.rau99 .lg .em{font-size:30px;line-height:1.1}
+.rau99 .lg b{display:block;font-size:13.5px;margin-top:2px}
+.rau99 .lg .sub{font-size:12px}
+.rau99 .bar{margin-top:6px}
+.rau99ai{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.rau99ai:last-child{border-bottom:0}
+.rau99ai .grow{min-width:0}
+</style><style>/*v98 bao giam chao*/
 .gc98{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 12px;border-radius:14px;border:1.5px dashed rgba(255,255,255,.4);color:#fff}
 .gc98 .grow b{font-size:14px;color:#fff}.gc98 .sub{font-size:12.5px;color:#F8E6D2;margin-top:2px}.gc98 .gc98da{color:var(--gold);font-size:12.5px}
 .gc98moi{box-shadow:0 0 0 1.5px #fff}
@@ -4987,6 +5042,305 @@ function gc98Row(a){const g=gc98S(a);const n=(g.moi||[]).length;const q=nhacQuye
 setTimeout(()=>gc98Quet(),15000);setInterval(()=>gc98Quet(),5*60000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>gc98Quet(),3000)});
 
+/* ===================== v99: học từ app trong video + Tính lãi vay ===================== */
+U.l73=U.l73||{};
+const sach99=t=>String(t||'').replace(/\s+/g,' ').trim();
+function tien99(d){const a=Math.abs(d);if(a>=1e9)return nf(Math.round(d/1e7)/100)+' tỷ';if(a>=1e6)return nf(Math.round(d/1e4)/100)+' triệu';return Math.round(d/1e3).toLocaleString('vi-VN')+' nghìn'}
+const pct99=v=>nf(Math.round(v*100)/100)+'%';
+function chep99(t){try{if(navigator.clipboard){navigator.clipboard.writeText(t).then(()=>toast('Đã chép, dán vào Zalo gửi khách nha'),()=>toast('Máy chưa cho chép, bấm giữ để chép tay nha'));return}}catch(e){}toast('Máy chưa cho chép, bấm giữ để chép tay nha')}
+function moi99(it){const c=dlCreated(it);if(!c)return 0;const t=typeof c==='number'?(c<1e12?c*1000:c):Date.parse(c);return isNaN(t)?0:t}
+/* căn trong Kho mẫu (bản demo) → dạng tin ĐTK */
+function mau99(h){return {id:h.id,_kho:h.id,title:(h.type||'Nhà')+' '+(h.dt||'')+' · '+(h.hem?'hẻm '+h.hem+' · ':'')+h.q,description:h.note||'',price:{value:h.p},direction:h.dir||'',area:(m=>m?Math.round(parseFloat(m[1].replace(',','.'))*parseFloat(m[2].replace(',','.'))*10)/10:0)(String(h.dt||'').match(/(\d+(?:[.,]\d+)?)\s*x\s*(\d+(?:[.,]\d+)?)/)),location:{district:h.q},_giam:h.gc&&gcOn(h)?{cu:h.gc.from,moi:h.p,txt:'Giảm chào '+gcAmt(h)}:null,created:h.d?Date.parse(h.d+'T09:30:00'):Date.now()-864e5}}
+const demo99=()=>pk72Demo&&!dtkTok();
+/* khu vực (tên) → mã quận ĐTK */
+async function tc99(){const d=dlS();if(d.tc||demo99())return;try{d.tc=await dtkApi('tuy_chon')}catch(e){}}
+function qid99(ten){const t=noDau72(ten);if(!t)return null;const Q=pk72Q();const x=Q.find(q=>noDau72(q.name)===t)||Q.find(q=>noDau72(q.name).startsWith(t)||t.startsWith(noDau72(q.name)));return x?(isNaN(+x.id)?x.id:+x.id):ten}
+/* lấy tin ĐTK theo quận + giá (tỷ) */
+async function lay99(quan,tu,den,giam,size,offset){
+ if(demo99()){const T=quan.map(noDau72);return (S.kho||[]).filter(h=>h.p>=tu&&h.p<=den&&(!T.length||T.some(t=>noDau72(h.q).includes(t)))&&(!giam||(h.gc&&gcOn(h)))).map(mau99)}
+ await tc99();const body={size:size||30,offset:offset||0,location:{district:quan.map(qid99).filter(x=>x!=null)},price:{from:Math.round(tu*1000),to:Math.round(den*1000)},sorts:{created:'desc'}};if(giam)body.giam=true;
+ const j=await dtkApi('tim',body);if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};const L=dd.data||[];return Array.isArray(L)?L:[]}
+/* gọn tin để lưu trong game (khỏi nặng) */
+function gon99(it){const im=Array.isArray(it.images)?it.images.slice(0,4):[];return {id:it.id||it._id,_kho:it._kho||'',title:dtkField(it.title).slice(0,200),description:String(it.description||'').slice(0,400),price:it.price,area:it.area,location:it.location,district:it.district,images:im,created:dlCreated(it),_giam:it._giam||null,direction:huongIt99(it)}}
+
+/* ---------- 6. Tứ trạch (cung mệnh theo năm sinh âm lịch) ---------- */
+const HUONG8=['Đông','Tây','Nam','Bắc','Đông Bắc','Đông Nam','Tây Bắc','Tây Nam'];
+const CUNG99={1:'Khảm',2:'Khôn',3:'Chấn',4:'Tốn',6:'Càn',7:'Đoài',8:'Cấn',9:'Ly'};
+const DONG99=['Đông','Đông Nam','Nam','Bắc'],TAY99=['Tây','Tây Bắc','Tây Nam','Đông Bắc'];
+function cung99(nam,gt){nam=+nam;if(!(nam>=1920&&nam<=2030))return null;let s=String(nam%100).padStart(2,'0').split('').reduce((t,x)=>t+(+x),0);while(s>9)s=String(s).split('').reduce((t,x)=>t+(+x),0);
+ let k;if(gt==='nu'){k=(nam<2000?5:6)+s;while(k>9)k-=9;if(k===5)k=8}else{k=(nam<2000?10:9)-s;if(k<=0)k+=9;if(k===5)k=2}
+ const dong=[1,3,4,9].includes(k);return {so:k,ten:CUNG99[k],nhom:dong?'Đông tứ mệnh':'Tây tứ mệnh',hop:dong?DONG99:TAY99}}
+function huongHop99(c){const L=[];if(c&&Array.isArray(c.hg99)&&c.hg99.length)return {ds:c.hg99,vi:'hướng khách muốn'};const cu=c&&c.ns99?cung99(c.ns99,c.gt99):null;return cu?{ds:cu.hop,vi:cu.nhom}:null}
+const HG_RE=/h[uư][oớ]ng\s*:?\s*(đông\s*nam|đông\s*bắc|tây\s*nam|tây\s*bắc|đông|tây|nam|bắc)/i;
+function huongIt99(it){if(!it)return '';for(const k of ['direction','huong','house_direction'])if(it[k]){const v=dtkField(it[k]);if(v)return chuanHg99(v)}
+ const m=(dtkField(it.title)+' '+String(it.description||'')).match(HG_RE);return m?chuanHg99(m[1]):''}
+function chuanHg99(v){const t=noDau72(v).replace(/^huong\s*/,'').trim();const x=HUONG8.find(h=>noDau72(h)===t);return x||''}
+function hgChip99(c,it){const hh=huongHop99(c);const h=it.direction||huongIt99(it);if(!hh)return h?`<div class="hg99"><span class="ok" style="background:#EEE;color:#444">🧭 Hướng ${esc(h)}</span></div>`:'';
+ if(!h)return `<div class="hg99"><span class="ok" style="background:#EEE;color:#555">🧭 Tin chưa ghi hướng</span></div>`;const ok=hh.ds.includes(h);return `<div class="hg99"><span class="${ok?'ok':'no'}">${ok?'✓':'✗'} Hướng ${esc(h)}</span><span style="color:var(--muted);font-weight:600">${ok?'hợp':'chưa hợp'} ${esc(hh.vi)}</span></div>`}
+
+/* ---------- 1. Tính lãi vay ---------- */
+const LV99_NGAY='21/11/2026';
+const LV99_MAC=[
+ {id:'vib',ten:'VIB',ud:7.9,th:24,sau:10.8,ghi:'Theo bảng tính VIB phòng gửi: vay tối đa 85% giá trị định giá, tối đa 30 năm, ân hạn gốc 2 đến 5 năm.',chac:1},
+ {id:'vtb',ten:'VietinBank',ud:7.3,th:36,sau:11,ghi:'Báo tháng 11/2026 ghi 5,8% đến 7,3% tuỳ kỳ cố định 12, 24 hoặc 36 tháng.'},
+ {id:'mb',ten:'MB',ud:7.5,th:12,sau:11,ghi:'Báo tháng 11/2026 ghi 6,5% đến 7,5% tuỳ gói.'},
+ {id:'acb',ten:'ACB',ud:8.8,th:24,sau:11,ghi:'Báo ghi 8,3% nếu cố định 12 tháng, 8,8% nếu 24 tháng.'},
+ {id:'vcb',ten:'Vietcombank',ud:9,th:12,sau:11,ghi:'Gói Nhà mới an cư 9% trong 12 tháng đầu.'},
+ {id:'bidv',ten:'BIDV',ud:9,th:12,sau:11,ghi:'Gói Ngôi nhà đầu tiên: 9% cố định 12 tháng, 9,5% nếu 18 tháng, 10% nếu 24 tháng.'},
+ {id:'agr',ten:'Agribank',ud:9.5,th:12,sau:11,ghi:'Người dưới 35 tuổi mua nhà ở xã hội có gói 6,5% trong 5 năm đầu (tới 31/12/2026).'},
+ {id:'tcb',ten:'Techcombank',ud:9.5,th:12,sau:11,ghi:'Báo ghi 9,5% đến 10% cố định 12 tháng.'},
+ {id:'hdb',ten:'HDBank',ud:9.8,th:12,sau:11.5,ghi:'Số liệu báo tháng 9/2026.'},
+ {id:'stb',ten:'Sacombank',ud:11,th:12,sau:12,ghi:'Báo ghi 11% đến 13% cố định 12 đến 18 tháng.'}];
+function lv99Ds(){const d=S.lv99&&Array.isArray(S.lv99.ds)&&S.lv99.ds.length?S.lv99.ds:LV99_MAC;return d}
+function lv99Ngay(){return (S.lv99&&S.lv99.ngay)||LV99_NGAY}
+function lv99S(){return U.lv99||(U.lv99={t:'',n:'',cach:'goc',ah:0,mo:{}})}
+function lv99So(x){let t=String(x||'').toLowerCase().replace(/\s+/g,' ').trim();if(!t)return 0;
+ let m=t.match(/(\d+(?:[.,]\d+)?)\s*t[ỷyi]\s*(\d+)?/);if(m){let v=parseFloat(m[1].replace(',','.'));if(m[2])v+=parseFloat('0.'+m[2]);return v*1e9}
+ m=t.match(/(\d+(?:[.,]\d+)?)\s*(tr|triệu|trieu)/);if(m)return parseFloat(m[1].replace(',','.'))*1e6;
+ const n=parseFloat(t.replace(/\.(?=\d{3}\b)/g,'').replace(',','.'));if(!(n>0))return 0;if(n>=1e7)return n;return n>=50?n*1e6:n*1e9}
+function lv99Tinh(P,nam,b,cach,ah){const N=Math.max(1,Math.round(nam*12));ah=Math.max(0,Math.min(ah||0,N-1));let du=P,tong=0,lai=0,t1=0,tSau=0,max=0,pay=0;const goc=P/(N-ah);const yr=[];
+ for(let i=1;i<=N;i++){const r=(i<=b.th?b.ud:b.sau)/1200;const l=du*r;let g;
+  if(i<=ah)g=0;else if(cach==='deu'){if(!pay||i===b.th+1){const n=N-i+1;pay=r>0?du*r/(1-Math.pow(1+r,-n)):du/n}g=pay-l}else g=goc;
+  if(i===N)g=du;const tra=g+l;du=Math.max(0,du-g);lai+=l;tong+=tra;if(i===1)t1=tra;if(i===b.th+1)tSau=tra;if(tra>max)max=tra;
+  if(i%12===1)yr.push({nam:Math.ceil(i/12),tra,ls:i<=b.th?b.ud:b.sau});if(i%12===0||i===N)yr[yr.length-1].du=du}
+ return {t1,tSau:b.th<N?tSau:0,max,lai,tong,yr}}
+A.lv99Nam=v=>{const u=lv99S();u.t=val('lv99t')||u.t;u.n=v;A.lv99Tinh()};
+A.lv99Cach=v=>{const u=lv99S();u.t=val('lv99t')||u.t;u.n=val('lv99n')||u.n;u.cach=v;if(u.kq)A.lv99Tinh();else render()};
+A.lv99Ah=v=>{const u=lv99S();u.t=val('lv99t')||u.t;u.n=val('lv99n')||u.n;u.ah=+v;if(u.kq)A.lv99Tinh();else render()};
+A.lv99Tinh=()=>{const u=lv99S();const t=document.getElementById('lv99t');if(t)u.t=t.value;const n=document.getElementById('lv99n');if(n&&n.value)u.n=n.value;
+ const P=lv99So(u.t),N=parseFloat(String(u.n).replace(',','.'));if(!(P>=1e7)){toast('Nhập số tiền khách cần vay nha, ví dụ 2,5 tỷ hoặc 800 triệu');return}if(!(N>=1&&N<=35)){toast('Số năm vay từ 1 đến 35 năm nha');return}
+ u.kq={P,N,ds:lv99Ds().map(b=>Object.assign({b},lv99Tinh(P,N,b,u.cach,u.ah))).sort((x,y)=>x.t1-y.t1)};u.ai='';render()};
+A.lv99Mo=v=>{const u=lv99S();u.mo[v]=!u.mo[v];render()};
+function lv99Txt(){const u=lv99S();const k=u.kq;if(!k)return '';const L=k.ds.slice(0,5);
+ return `Khách vay ${tien99(k.P)} trong ${nf(k.N)} năm (${u.cach==='deu'?'trả đều mỗi tháng':'gốc chia đều, lãi tính trên dư nợ giảm dần'}${u.ah?', ân hạn gốc '+u.ah+' tháng':''}):\n`+L.map((x,i)=>`${i+1}. ${x.b.ten}: ưu đãi ${pct99(x.b.ud)} trong ${x.b.th} tháng, sau đó khoảng ${pct99(x.b.sau)}. Tháng đầu trả ${tien99(x.t1)}${x.tSau?', sau ưu đãi khoảng '+tien99(x.tSau)+'/tháng':''}. Tổng lãi khoảng ${tien99(x.lai)}.`).join('\n')+`\n\nLãi suất tham khảo cập nhật ${lv99Ngay()}, lãi sau ưu đãi là ước tính, ngân hàng sẽ báo chính xác khi duyệt hồ sơ.`}
+A.lv99Chep=()=>chep99(lv99Txt());
+A.lv99Ai=async()=>{const u=lv99S();if(!u.kq||u.aiDang)return;u.aiDang=true;u.ai='';render();
+ try{const q='Mình là môi giới nhà phố TP.HCM. Đây là bảng tính vay mua nhà cho khách:\n'+lv99Txt()+'\n\nTư vấn ngắn gọn (tối đa 6 câu) nên chọn ngân hàng nào, cần lưu ý gì khi hết ưu đãi, thu nhập khách nên có bao nhiêu để duyệt dễ.';
+  u.ai=String(await A.vvAnswer(q,[])||'').trim()||'VinViLLa chưa trả lời được, thử lại sau nha.'}catch(e){u.ai='VinViLLa đang bận ('+(e&&e.message||'lỗi mạng')+'), thử lại sau ít phút nha.'}finally{u.aiDang=false;render()}};
+SH.lv99=()=>{const a=me();const u=lv99S();const k=u.kq;const best=k&&k.ds[0];
+ const chip=(on,act,v,l)=>`<button class="${on?'on':''}" data-a="${act}" data-v="${v}">${l}</button>`;
+ return {t:'🏦 Tính lãi vay mua nhà',h:`<div class="lv99f">
+ <label class="f" for="lv99t">💰 Số tiền khách cần vay<input class="in num" id="lv99t" inputmode="decimal" autocomplete="off" placeholder="Ví dụ: 2,5 (tỷ) hoặc 800 (triệu)" value="${esc(u.t)}"></label>
+ <div><label class="f" for="lv99n">📅 Khách vay mấy năm<input class="in num" id="lv99n" inputmode="numeric" autocomplete="off" placeholder="Ví dụ: 20" value="${esc(u.n)}"></label>
+ <div class="lv99chips">${[5,10,15,20,25,30].map(n=>chip(String(u.n)===String(n),'lv99Nam',n,n+' năm')).join('')}</div></div>
+ <button class="btn full" data-a="lv99Tinh">🧮 Tính tiền trả hằng tháng</button>
+ <details${u.cach!=='goc'||u.ah?' open':''}><summary class="sub" style="font-weight:700;cursor:pointer">⚙️ Tuỳ chọn thêm (không bắt buộc)</summary>
+ <div class="sub" style="margin-top:8px;font-weight:700">Cách trả</div><div class="lv99chips">${chip(u.cach==='goc','lv99Cach','goc','Gốc đều, lãi giảm dần (ngân hàng hay dùng)')}${chip(u.cach==='deu','lv99Cach','deu','Trả đều mỗi tháng')}</div>
+ <div class="sub" style="margin-top:8px;font-weight:700">Ân hạn gốc (chỉ trả lãi lúc đầu)</div><div class="lv99chips">${[0,12,24,36,60].map(n=>chip(u.ah===n,'lv99Ah',n,n?n+' tháng':'Không')).join('')}</div></details></div>
+ ${k?`<div class="lv99sum"><div class="sub">Vay ${tien99(k.P)} · ${nf(k.N)} năm · ${u.cach==='deu'?'trả đều':'gốc đều'}${u.ah?' · ân hạn '+u.ah+' tháng':''}</div>
+  <div style="margin-top:4px">Thấp nhất: <b>${tien99(best.t1)}/tháng</b> ở <b>${esc(best.b.ten)}</b></div>
+  <div class="sub" style="margin-top:4px">💡 Thu nhập khách nên từ <b style="font-size:14px;color:#fff">${tien99(best.max*2)}/tháng</b> (tiền trả nợ không quá một nửa thu nhập thì ngân hàng dễ duyệt).</div></div>
+  ${k.ds.map((x,i)=>{const mo=u.mo[x.b.id];return `<div class="lv99nh${i===0?' best':''}"><div class="top"><div><div class="ten">${i===0?'🏆 ':''}${esc(x.b.ten)}</div><div class="sub">Ưu đãi ${pct99(x.b.ud)} trong ${x.b.th} tháng, sau đó ${x.b.chac?'':'khoảng '}${pct99(x.b.sau)}</div></div><div style="text-align:right"><div class="tien num">${tien99(x.t1)}</div><div class="sub">tháng đầu</div></div></div>
+   <div class="lv99g"><div>Sau ưu đãi<b class="num">${x.tSau?tien99(x.tSau)+'/th':'—'}</b></div><div>Tháng cao nhất<b class="num">${tien99(x.max)}</b></div><div>Tổng lãi<b class="num">${tien99(x.lai)}</b></div><div>Tổng phải trả<b class="num">${tien99(x.tong)}</b></div></div>
+   ${x.b.ghi?`<div class="sub" style="margin-top:6px">ℹ️ ${esc(x.b.ghi)}</div>`:''}
+   <button class="link" style="margin-top:6px" data-a="lv99Mo" data-v="${esc(x.b.id)}">${mo?'▲ Ẩn bảng từng năm':'▼ Xem bảng trả từng năm'}</button>
+   ${mo?`<table class="lv99tb"><tr><th>Năm</th><th>Lãi</th><th>Trả tháng đầu năm</th><th>Còn nợ cuối năm</th></tr>${x.yr.map(y=>`<tr><td>${y.nam}</td><td>${pct99(y.ls)}</td><td class="num">${tien99(y.tra)}</td><td class="num">${tien99(y.du||0)}</td></tr>`).join('')}</table>`:''}</div>`}).join('')}
+  <div class="grid2" style="margin-top:12px"><button class="btn ghost" data-a="lv99Chep">📋 Chép gửi khách</button><button class="btn gold" data-a="lv99Ai" ${u.aiDang?'disabled':''}>${u.aiDang?'⏳ Đang hỏi…':'🤖 VinViLLa tư vấn'}</button></div>
+  ${u.ai?`<div class="card" style="margin-top:10px"><div class="kicker">🤖 VinViLLa tư vấn</div><div class="lv99ai">${esc(u.ai)}</div></div>`:''}`:''}
+ <p class="sub" style="margin-top:12px">📌 Lãi suất tham khảo cập nhật <b>${esc(lv99Ngay())}</b> (VIB theo bảng tính phòng gửi, các ngân hàng khác theo báo tháng 11/2026). Lãi sau ưu đãi là lãi thả nổi, phần lớn là <b>ước tính</b>. Ngân hàng sẽ báo con số chính xác khi duyệt hồ sơ.</p>
+ ${laQL69(a)?`<button class="btn ghost full" data-a="sheet" data-v="lv99s">✏️ Cập nhật lãi suất ngân hàng (Sếp, Trợ lý)</button>`:''}`}};
+SH.lv99s=()=>{const a=me();if(!laQL69(a))return {t:'Cập nhật lãi suất',h:'<p class="sub">Chỉ Sếp và Trợ lý sửa được.</p>'};const L=lv99Ds();
+ return {t:'✏️ Lãi suất ngân hàng',h:`<p class="sub" style="margin-top:0">Sửa xong bấm Lưu, cả phòng thấy bảng mới. Ô trống hoặc 0 thì ngân hàng đó bị ẩn.</p>
+ <div class="lv99s"><b>Ngân hàng</b><b>Ưu đãi %</b><b>Số tháng</b><b>Sau đó %</b></div>
+ ${L.map((b,i)=>`<div class="lv99s"><input class="in" id="lvs_t${i}" value="${esc(b.ten)}" aria-label="Tên ngân hàng"><input class="in num" id="lvs_u${i}" inputmode="decimal" value="${nf(b.ud)}" aria-label="Lãi ưu đãi ${esc(b.ten)}"><input class="in num" id="lvs_m${i}" inputmode="numeric" value="${b.th}" aria-label="Số tháng ưu đãi ${esc(b.ten)}"><input class="in num" id="lvs_s${i}" inputmode="decimal" value="${nf(b.sau)}" aria-label="Lãi sau ưu đãi ${esc(b.ten)}"></div>`).join('')}
+ <div class="lv99s"><input class="in" id="lvs_tn" placeholder="Thêm ngân hàng"><input class="in num" id="lvs_un" inputmode="decimal" placeholder="%"><input class="in num" id="lvs_mn" inputmode="numeric" placeholder="tháng"><input class="in num" id="lvs_sn" inputmode="decimal" placeholder="%"></div>
+ <div class="grid2" style="margin-top:12px"><button class="btn" data-a="lv99Luu">💾 Lưu cho cả phòng</button><button class="btn ghost" data-a="lv99Goc">↺ Về bảng mặc định</button></div>`}};
+function lv99Doc(){const L=lv99Ds();const f=x=>parseFloat(String(x||'').replace(',','.'));const out=[];
+ L.concat([{id:'n',ten:''}]).forEach((b,i)=>{const k=i<L.length?i:'n';const ten=val('lvs_t'+k).trim(),ud=f(val('lvs_u'+k)),th=parseInt(val('lvs_m'+k),10),sau=f(val('lvs_s'+k));
+  if(!ten||!(ud>0)||!(th>0))return;out.push(Object.assign({},i<L.length?b:{id:'nh'+Date.now()},{ten,ud,th,sau:sau>0?sau:ud,ghi:i<L.length&&ten===b.ten&&ud===b.ud&&th===b.th?(b.ghi||''):'',chac:i<L.length&&ten===b.ten&&ud===b.ud&&(sau>0?sau:ud)===b.sau?b.chac:0}))});return out}
+let lv99Ghi=async ds=>{S.lv99={ds,ngay:fmtD(today()),by:me().name};save()};
+A.lv99Luu=async()=>{const ds=lv99Doc();if(!ds.length){toast('Cần ít nhất 1 ngân hàng nha');return}try{await lv99Ghi(ds);U.lv99&&(U.lv99.kq=null);toast('Đã lưu lãi suất mới cho cả phòng');A.sheet('lv99')}catch(e){toast(e&&e.message||'Chưa lưu được')}};
+A.lv99Goc=async()=>{try{await lv99Ghi(LV99_MAC.map(b=>Object.assign({},b)));toast('Đã về bảng mặc định');A.sheet('lv99')}catch(e){toast(e&&e.message||'Chưa lưu được')}};
+document.addEventListener('input',e=>{const el=e.target;if(!el||!U.lv99)return;if(el.id==='lv99t')U.lv99.t=el.value;if(el.id==='lv99n')U.lv99.n=el.value});
+
+/* ---------- 5. Định giá tham khảo ---------- */
+const DG99={};/* quận → {med, n, luc} đơn giá triệu/m² */
+const MT99=/m[ặa]t\s*ti[ềe]n|\bMT\b/i;
+function dgLoai99(it){return MT99.test(dtkField(it.title)+' '+String(it.description||'').slice(0,200))?'mt':'hem'}
+function dt99(it){const a=Number(it.area)||0;if(a>8)return a;const m=(dtkField(it.title)+' '+String(it.description||'')).match(/(\d+(?:[.,]\d+)?)\s*m?\s*x\s*(\d+(?:[.,]\d+)?)/i);return m?Math.round(parseFloat(m[1].replace(',','.'))*parseFloat(m[2].replace(',','.'))*10)/10:0}
+const giaIt99=it=>(it._giam&&it._giam.moi)||pk72Gia(it);
+function phanVi99(L,p){if(!L.length)return 0;const s=L.slice().sort((a,b)=>a-b);const k=(s.length-1)*p;const f=Math.floor(k);return s[f]+(s[Math.min(f+1,s.length-1)]-s[f])*(k-f)}
+async function mau99Quan(quan,loai){const key=noDau72(quan)+'|'+loai;const c=DG99[key];if(c&&Date.now()-c.luc<36e5)return c;
+ let L=await lay99([quan],0.3,200,false,30,0);if(!demo99())for(const o of [30,60]){if(L.length<o)break;try{L=L.concat(await lay99([quan],0.3,200,false,30,o))}catch(e){break}}
+ const ds=L.map(it=>({it,g:giaIt99(it),dt:dt99(it),loai:dgLoai99(it)})).filter(x=>x.g>0.3&&x.dt>=12&&x.dt<=600).map(x=>Object.assign(x,{dg:x.g*1000/x.dt}));
+ let cung=ds.filter(x=>x.loai===loai);if(cung.length<5)cung=ds;const dgs=cung.map(x=>x.dg);
+ const r={med:phanVi99(dgs,.5),p25:phanVi99(dgs,.25),p75:phanVi99(dgs,.75),n:cung.length,ds:cung,luc:Date.now(),loai:cung===ds&&ds.length&&cung.length!==ds.filter(x=>x.loai===loai).length?'tat':loai};DG99[key]=r;return r}
+function reHon99(it){const q=pk72Quan(it)||dtkField(it.location&&it.location.district);if(!q)return null;const c=DG99[noDau72(q)+'|'+dgLoai99(it)];const dt=dt99(it),g=giaIt99(it);if(!c||c.n<5||!dt||!g)return null;const uoc=c.med*dt/1000;return (uoc-g)/uoc}
+function reTag99(it){const x=reHon99(it);if(x==null||Math.abs(x)<0.03)return '';return x>0?`<span class="re99">Rẻ hơn khu ${Math.round(x*100)}%</span>`:`<span class="cao99">Cao hơn khu ${Math.round(-x*100)}%</span>`}
+async function napDg99(L){const Q=[...new Set(L.map(it=>pk72Quan(it)||dtkField(it.location&&it.location.district)).filter(Boolean))].slice(0,3);let doi=false;
+ for(const q of Q){for(const lo of ['hem','mt']){if(DG99[noDau72(q)+'|'+lo])continue;try{await mau99Quan(q,lo);doi=true}catch(e){}}}if(doi)render()}
+async function dgTinh99(o){/* o:{q,dt,g,loai,id} */const c=await mau99Quan(o.q,o.loai);const ds=c.ds.filter(x=>String(x.it.id||x.it._id||'')!==String(o.id||'-'));
+ if(ds.length<4)return {it:o,it0:c,thieu:true,n:ds.length};const uoc=c.med*o.dt/1000;const lo=c.p25*o.dt/1000,hi=c.p75*o.dt/1000;
+ const gan=ds.slice().sort((a,b)=>Math.abs(a.dt-o.dt)-Math.abs(b.dt-o.dt)).slice(0,6);const tin=Math.min(85,Math.round(35+ds.length*1.2-(c.p75-c.p25)/Math.max(1,c.med)*20));
+ return {o,uoc,lo,hi,med:c.med,n:ds.length,gan,tin:Math.max(25,tin),lech:o.g?(uoc-o.g)/uoc:null,tat:c.loai==='tat'}}
+SH.dg99=v=>{const d=U.dg99||(U.dg99={});if(v&&v!=='tay'&&d.v!==v){const it=it74(v);d.v=v;d.kq=null;d.loi='';if(it){const q=pk72Quan(it)||dtkField(it.location&&it.location.district);d.o={q,dt:dt99(it),g:giaIt99(it),loai:dgLoai99(it),id:it.id||it._id,t:sach74(dtkField(it.title)).slice(0,120)};d.dang=true;setTimeout(()=>dgChay99(),0)}}
+ if(v==='tay'&&d.v!=='tay'){d.v='tay';d.o=null;d.kq=null;d.loi=''}
+ const o=d.o,k=d.kq;const tay=d.v==='tay';
+ return {t:'📊 Định giá tham khảo',h:`${tay?`<div class="stack" style="gap:10px"><label class="f" for="dgq">📍 Quận<select class="in" id="dgq">${QUAN_ALL.map(q=>`<option ${o&&o.q===q?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+  <div class="grid2" style="margin:0"><label class="f" for="dgdt">📐 Diện tích đất (m²)<input class="in num" id="dgdt" inputmode="decimal" value="${o&&o.dt||''}" placeholder="Ví dụ 50"></label><label class="f" for="dgg">💰 Giá chào (tỷ)<input class="in num" id="dgg" inputmode="decimal" value="${o&&o.g?nf(o.g):''}" placeholder="Không bắt buộc"></label></div>
+  <div class="lv99chips">${[['hem','Nhà hẻm'],['mt','Mặt tiền']].map(([x,l])=>`<button class="${(o&&o.loai||'hem')===x?'on':''}" data-a="dg99Loai" data-v="${x}">${l}</button>`).join('')}</div>
+  <button class="btn full" data-a="dg99Tay">📊 Định giá</button></div>`:o?`<div class="note" style="margin-top:0">🏠 ${o.g?'<b>'+tyTxt(o.g)+'</b> · ':''}${esc(o.t||'')} · 📍 ${esc(o.q)} · 📐 ${o.dt?nf(o.dt)+' m²':'chưa rõ diện tích'}</div>`:''}
+  ${d.dang?'<p class="sub">⏳ Đang so với các căn cùng quận trong Kho Đại Thế Kỷ…</p>':d.loi?`<div class="note warn">${esc(d.loi)}</div>`:k&&k.thieu?`<div class="note warn">Chưa đủ căn cùng khu để so (mới có ${k.n} căn), thử lại sau khi Kho có thêm tin nha.</div>`:k?`
+  <div class="dg99big"><div class="sub">GIÁ TRỊ THAM KHẢO</div><b class="v num">${tyTxt(k.uoc)}</b><div class="sub">Khoảng hợp lý ${tyTxt(k.lo)} đến ${tyTxt(k.hi)} · Độ tin cậy ${k.tin}%</div>
+   ${k.lech!=null?`<div style="margin-top:8px">${k.lech>=0.03?`<span class="re99" style="font-size:14px">Giá chào rẻ hơn ${Math.round(k.lech*100)}%</span>`:k.lech<=-0.03?`<span class="cao99" style="font-size:14px">Giá chào cao hơn ${Math.round(-k.lech*100)}%</span>`:'<span class="re99" style="background:#666">Giá chào sát giá khu</span>'}</div>`:''}</div>
+  <p class="sub">Đơn giá trung bình ${esc(o.q)}: <b>${nf(Math.round(k.med*10)/10)} triệu/m²</b>${k.tat?' (gộp cả hẻm và mặt tiền vì chưa đủ căn cùng loại)':o.loai==='mt'?' (nhà mặt tiền)':' (nhà hẻm)'}, tính từ <b>${k.n} căn</b> đang chào.</p>
+  <h3 class="h3" style="margin:12px 0 4px">Căn tham khảo gần giống nhất</h3>
+  <table class="dg99tb"><tr><th>Căn</th><th>DT</th><th>Giá</th><th>Đơn giá</th></tr>${k.gan.map(x=>`<tr><td>${esc(sach74(dtkField(x.it.title)).slice(0,60)||'Tin nhà')}</td><td class="num">${nf(x.dt)}m²</td><td class="num">${tyTxt(x.g)}</td><td class="num">${nf(Math.round(x.dg))}tr</td></tr>`).join('')}</table>
+  <p class="sub" style="margin-top:10px">ℹ️ So với các căn <b>đang chào</b> cùng quận trên Kho Đại Thế Kỷ (chưa phải giá đã bán), chỉ để tham khảo nhanh. Hẻm, hướng, nở hậu, pháp lý… sẽ làm giá lệch, nhớ xem thực tế nha.</p>`:''}`}};
+async function dgChay99(){const d=U.dg99;if(!d||!d.o)return;const o=d.o;if(!o.q){d.dang=false;d.loi='Tin chưa ghi quận, chưa định giá được';render();return}if(!o.dt){d.dang=false;d.loi='Tin chưa ghi diện tích, chưa định giá được';render();return}
+ d.dang=true;render();try{d.kq=await dgTinh99(o)}catch(e){d.loi=(e&&e.status===401)?'Cần đăng nhập Đại Thế Kỷ để định giá':'Chưa định giá được ('+(e&&e.message||'lỗi mạng')+')'}d.dang=false;if(U.dg99===d)render()}
+A.dg99Loai=v=>{const d=U.dg99||(U.dg99={v:'tay'});d.o=Object.assign(d.o||{},{q:val('dgq'),dt:parseFloat(String(val('dgdt')).replace(',','.'))||0,g:parseFloat(String(val('dgg')).replace(',','.'))||0,loai:v});render()};
+A.dg99Tay=()=>{const d=U.dg99||(U.dg99={v:'tay'});const o=d.o=Object.assign(d.o||{loai:'hem'},{q:val('dgq'),dt:parseFloat(String(val('dgdt')).replace(',','.'))||0,g:parseFloat(String(val('dgg')).replace(',','.'))||0,t:'Căn bạn nhập'});if(!o.dt){toast('Nhập diện tích đất nha');return}d.kq=null;d.loi='';dgChay99()};
+A.dg99Mo=()=>{U.dg99={};A.sheet('dg99:tay')};
+
+/* ---------- thẻ tin dùng chung (Kèo giá tốt, Khớp khách) ---------- */
+function x99It(src,it,i,c){const gm=giaIt99(it);const cu=it._giam&&it._giam.cu;const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const tt=sach74(dtkField(it.title))||'Tin nhà';const q=pk72Quan(it)||dtkField(it.location&&it.location.district);const dt=dt99(it);const cr=dlCreated(it);const v=src+'|'+i;const da=((U.l73[src]||{}).da||{})[i];
+ return `<div class="card pk72it">${img?`<button class="pkimg" data-a="x99Ct" data-v="${esc(v)}"><img src="${esc(img)}" alt="" loading="lazy">${cu?`<b class="gcb">⬇ Giảm ${tyTxt(cu-gm)}</b>`:''}</button>`:''}
+  <div class="pkgia">${cu?`<span class="cu num">${tyTxt(cu)}</span><span class="mt">→</span>`:''}<b class="moi num">${tyTxt(gm)}</b>${cu?`<span class="pill bad">-${Math.round((cu-gm)/cu*100)}%</span>`:''} ${reTag99(it)}</div>
+  <button class="dlt" data-a="x99Ct" data-v="${esc(v)}">${esc(tt.slice(0,140))}</button>
+  <div class="pkmeta">${q?`<span>📍 ${esc(q)}</span>`:''}${dt?`<span>📐 ${nf(dt)} m²</span>`:''}${cr?`<span>📅 ${esc(dlAgo(cr))}</span>`:''}</div>${c!==undefined?hgChip99(c,it):''}
+  <div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="x99Ct" data-v="${esc(v)}">📄 Xem đầy đủ</button><button class="btn ghost sm" data-a="sheet" data-v="dg99:${esc(v)}">📊 Định giá</button></div>
+  ${it._kho?'':da?'<div class="note ok" style="margin:0 12px 8px;text-align:center">✅ Đã thêm vào Kho</div>':`<button class="btn gold sm full" style="margin-bottom:8px" data-a="x99Add" data-v="${esc(v)}">➕ Thêm vào Kho hàng cá nhân</button>`}${tep74Nut(v)}</div>`}
+A.x99Ct=async v=>{const it=it74(v);if(!it)return;if(it._kho){A.sheet('house:'+it._kho);return}
+ const ct=U.dlCt={i:-1,x99:v,it,loading:true};A.sheet('dlCt');
+ try{const r2=await dtkApi('chi_tiet',{id:it.id||it._id,it});if(U.dlCt!==ct)return;ct.bk=Object.assign({},it,(r2&&r2.bk)||{});ct.bai=dlDep((r2&&r2.bai_ai)||'');ct.hn=r2&&r2.hinh_nha;ct.nhanh=!!(r2&&r2.loc_nhanh&&ct.bai)}
+ catch(e){ct.bk=it;ct.err=e.message}ct.loading=false;if(U.sheet==='dlCt')render()};
+{const o=SH.dlCt;SH.dlCt=function(){const x=o.apply(this,arguments);const c=U.dlCt;if(c&&c.x99&&x&&x.h){x.h=x.h.replace(/data-a="dlAdd" data-v="[^"]*"/g,'data-a="x99Add" data-v="'+esc(c.x99)+'"')+`<div style="margin-top:10px">${tep74Nut(c.x99)}<button class="btn ghost full" style="margin-top:8px" data-a="sheet" data-v="dg99:${esc(c.x99)}">📊 Định giá căn này</button></div>`}return x}}
+A.x99Add=v=>{const k=v.lastIndexOf('|');const src=v.slice(0,k),i=+v.slice(k+1);const r=U.l73[src];if(!r)return;U.dtkTong={list:r.list,da:r.da||(r.da={}),inline:'pk'};A.dtkTongAdd(i)};
+/* nút Định giá + nhãn Rẻ hơn trên thẻ giảm giá của Lựa chọn phân khúc */
+{const o=pk72It;pk72It=function(it,i){let h=o.apply(this,arguments);const tag=reTag99(it);if(tag)h=h.replace('</div>\n  <button class="dlt"',' '+tag+'</div>\n  <button class="dlt"');return h.replace(/<\/div>$/,`<button class="btn ghost sm full" style="margin:0 12px 10px;width:calc(100% - 24px)" data-a="sheet" data-v="dg99:pk|${i}">📊 Định giá căn này</button></div>`)}}
+{let t99=0;const o=render;render=function(){const r=o.apply(this,arguments);try{const p=U.pk72;if(p&&p.list&&p.list.length&&!p.dg99&&!p.loading){p.dg99=1;clearTimeout(t99);t99=setTimeout(()=>napDg99(p.list),800)}}catch(e){}return r}}
+
+/* ---------- 4. Kèo giá tốt ---------- */
+const KEO99_MIN=0.10;
+function keoQ99(a){const p=pk72S(a);const k=a.g.keo99||(a.g.keo99={q:[]});return k.q.length?k.q:p.q}
+SH.keo99=()=>{const a=me();const Q=keoQ99(a);const r=U.keo99;if(Q.length&&(!r||r.key!==JSON.stringify(Q.map(x=>x.id))))setTimeout(()=>keoTim99(),0);
+ const L=r&&r.list||[];U.l73.keo99=U.l73.keo99&&U.l73.keo99.list===L?U.l73.keo99:{list:L,da:{}};
+ return {t:'🔥 Kèo giá tốt',h:`<div class="keo99h"><b style="font-size:16px">Mới vào nghề, chưa biết bắt đầu từ đâu?</b><div class="sub" style="margin-top:4px">Bắt đầu từ những căn chủ vừa giảm chào từ ${Math.round(KEO99_MIN*100)}% trở lên. Nhà rẻ dễ đăng, dễ có khách, dễ chốt.</div>
+  <div class="keo99b"><div><span>👀</span>1. Chọn căn ngon</div><div><span>📍</span>2. Đi khảo sát</div><div><span>📣</span>3. Đăng tin</div></div></div>
+  <div class="kicker" style="margin:12px 0 6px">📍 Khu vực (tối đa 3)</div><div class="lv99chips">${pk72Q().slice(0,40).map(q=>{const on=Q.some(x=>String(x.id)===String(q.id));return `<button class="${on?'on':''}" data-a="keo99Q" data-v="${esc(q.id)}">${esc(q.name)}</button>`}).join('')}</div>
+  ${!Q.length?'<p class="sub" style="margin-top:10px">Chọn khu vực bạn làm để xem kèo nha.</p>':!r||r.loading?'<p class="sub" style="margin-top:10px">⏳ Đang tìm căn giảm chào mạnh…</p>':r.can?'<div class="note warn" style="margin-top:10px">Cần đăng nhập Đại Thế Kỷ để xem kèo. Vào Kho nhà, bấm Đăng nhập Đại Thế Kỷ nha.</div>':r.err?`<div class="note warn" style="margin-top:10px">${esc(r.err)} <button class="link" data-a="keo99Lai">Thử lại</button></div>`:
+  `<p class="sub" style="margin:10px 0 0">Có <b>${L.length} kèo</b> giảm từ ${Math.round(KEO99_MIN*100)}% trở lên, giảm mạnh nhất lên đầu.</p>${L.map((it,i)=>x99It('keo99',it,i)).join('')||'<p class="sub">Hôm nay chưa có căn nào giảm từ 10% ở khu này, thử thêm khu vực khác nha.</p>'}`}`}};
+A.keo99Q=v=>{const a=me();const k=a.g.keo99||(a.g.keo99={q:[]});if(!k.q.length)k.q=pk72S(a).q.slice();const j=k.q.findIndex(x=>String(x.id)===String(v));if(j>=0)k.q.splice(j,1);else{if(k.q.length>=3){toast('Tối đa 3 khu vực nha');return}const q=pk72Q().find(x=>String(x.id)===String(v));if(q)k.q.push({id:q.id,name:q.name})}
+ if(!k.q.length)k.q=[];U.keo99=null;save();render()};
+A.keo99Lai=()=>{U.keo99=null;render()};
+async function keoTim99(){const a=me();const Q=keoQ99(a);const key=JSON.stringify(Q.map(x=>x.id));if(U.keo99&&U.keo99.key===key)return;const r=U.keo99={key,loading:true,list:[]};render();
+ try{let L=[];if(demo99())L=await lay99(Q.map(x=>x.name),0,500,true);else{for(let o=0;o<90&&L.length<40;o+=30){const k=await pk72Lay({q:Q,tu:0,den:200},o);L=L.concat(k.L);if(k.het)break}}
+  const pc=it=>{const g=it._giam;return g&&g.cu&&g.moi&&g.cu>g.moi?(g.cu-g.moi)/g.cu:0};r.list=L.filter(it=>pc(it)>=KEO99_MIN-1e-9).sort((x,y)=>pc(y)-pc(x)).slice(0,30);setTimeout(()=>napDg99(r.list),300)}
+ catch(e){if(e.status===401)r.can=true;else r.err=e.message||'Chưa tìm được, thử lại sau ít phút nha'}
+ if(U.keo99!==r)return;r.loading=false;render()}
+
+/* ---------- 2. Khớp khách mỗi ngày ---------- */
+const KK99_GIO=3,KK99_MOI=12;
+function kkDs99(a){return (a.g.clients||[]).filter(c=>!c.chot&&c.stage!=='coc'&&(c.q||'').trim())}
+function kkS99(c){return c.kk99||(c.kk99={seen:[],moi:[],init:false})}
+let KK99D=false;
+async function kkQuet99(ep){const a=me();if(!a||a.status!=='active'||!hasCtv(a)||KK99D)return;const g=a.g.kk99g||(a.g.kk99g={last:0});if(!ep&&Date.now()-(g.last||0)<KK99_GIO*36e5)return;
+ const L=kkDs99(a).slice(0,10);if(!L.length)return;KK99D=true;g.last=Date.now();let tong=0;const ai=[];
+ try{for(const c of L){const k=kkS99(c);const tu=Math.max(0,(c.min||0)*0.9),den=(c.max&&c.max<99?c.max*1.05:(c.min?c.min*1.6:200));let ds;
+   try{ds=await lay99([c.q],tu,den,false,30,0)}catch(e){if(e.status===401)break;continue}
+   const id=it=>String(it.id||it._id||'');const seen=new Set(k.seen);const moi=ds.filter(it=>id(it)&&!seen.has(id(it)));
+   let them=moi;if(!k.init){k.init=true;them=moi.filter(it=>Date.now()-moi99(it)<=2*864e5)}
+   k.seen=[...new Set(ds.map(id).filter(Boolean).concat(k.seen))].slice(0,300);
+   if(them.length){const hh=huongHop99(c);const xep=them.map(gon99).sort((x,y)=>(hh&&hh.ds.includes(y.direction)?1:0)-(hh&&hh.ds.includes(x.direction)?1:0));k.moi=xep.concat(k.moi||[]).filter((x,i,arr)=>arr.findIndex(y=>String(y.id)===String(x.id))===i).slice(0,KK99_MOI);k.ngay=today();tong+=them.length;ai.push([c.name,them.length])}
+   if(!demo99())await new Promise(r=>setTimeout(r,1500))}}
+ finally{KK99D=false}
+ save();if(tong){nhacBao(ai.length===1?'🎯 Hôm nay có '+ai[0][1]+' căn khớp với '+ai[0][0]:'🎯 Hôm nay có '+tong+' căn mới khớp '+ai.length+' khách',ai.map(x=>x[0]+' '+x[1]+' căn').join(' · '),'kk99');render()}}
+function kkCard99(a){if(!hasCtv(a))return '';const L=kkDs99(a).filter(c=>(kkS99(c).moi||[]).length);if(!L.length){const n=kkDs99(a).length;return n?`<div class="card kk99c"><div class="kicker">🎯 Khớp khách mỗi ngày</div><div class="sub" style="margin-top:4px">App tự tìm căn mới hợp khu vực và tài chính của ${n} khách, có căn khớp là báo bạn ngay.</div><button class="kk99r" data-a="kk99Quet"><b>🔄 Tìm ngay</b></button></div>`:''}
+ return `<div class="card kk99c"><div class="kicker">🎯 Khớp khách mỗi ngày</div><b style="font-size:16px">Có ${L.reduce((t,c)=>t+c.kk99.moi.length,0)} căn mới hợp với ${L.length} khách</b>
+  ${L.slice(0,5).map(c=>`<button class="kk99r" data-a="sheet" data-v="kk99:${esc(c.name)}"><span>👤</span><div><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q)}${c.max&&c.max<99?' · '+(c.min?nf(c.min)+' đến ':'dưới ')+nf(c.max)+' tỷ':''}</div></div><span class="n">${c.kk99.moi.length} căn</span></button>`).join('')}</div>`}
+A.kk99Quet=async()=>{toast('🔎 Đang tìm căn mới cho khách…');const a=me();(a.g.kk99g||(a.g.kk99g={})).last=0;await kkQuet99(true);const n=kkDs99(a).reduce((t,c)=>t+(kkS99(c).moi||[]).length,0);if(!n)toast('Chưa có căn mới khớp khách, app sẽ tìm lại sau '+KK99_GIO+' giờ');render()};
+SH.kk99=v=>{const c=kh73(v);if(!c)return {t:'Nhà mới khớp khách',h:''};const k=kkS99(c);const L=k.moi||[];const src='kk99_'+noDau72(c.name).replace(/\W+/g,'_');U.l73[src]=U.l73[src]&&U.l73[src].list===L?U.l73[src]:{list:L,da:{}};const hh=huongHop99(c);
+ if(L.length)setTimeout(()=>napDg99(L),300);
+ return {t:'🎯 Nhà mới khớp '+c.name,h:`<div class="note" style="margin-top:0">👤 <b>${esc(c.name)}</b> · 📍 ${esc(c.q)}${c.max&&c.max<99?' · '+(c.min?nf(c.min)+' đến ':'dưới ')+nf(c.max)+' tỷ':''}${hh?`<br>🧭 Hướng hợp (${esc(hh.vi)}): <b>${hh.ds.map(esc).join(', ')}</b>`:'<br>🧭 Chưa có hướng. Thêm năm sinh gia chủ ở thẻ khách để app chấm hướng hợp.'}</div>
+ ${L.length?`<p class="sub">${L.length} căn mới lên khớp khu vực và tài chính. Căn hợp hướng được xếp lên đầu.</p>${L.map((it,i)=>x99It(src,it,i,c)).join('')}<button class="btn ghost full" style="margin-top:10px" data-a="kk99Da" data-v="${esc(c.name)}">✓ Đã xem hết, dọn danh sách</button>`:'<p class="sub">Chưa có căn mới khớp. App tự tìm lại mỗi '+KK99_GIO+' giờ khi bạn mở app.</p>'}
+ <button class="btn ghost full" style="margin-top:8px" data-a="sheet" data-v="ns99:${esc(c.name)}">🧭 Năm sinh gia chủ, hướng khách muốn</button>`}};
+A.kk99Da=v=>{const c=kh73(v);if(!c)return;kkS99(c).moi=[];save();A.sheet('')};
+setTimeout(()=>kkQuet99(),20000);setInterval(()=>kkQuet99(),20*60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(()=>kkQuet99(),5000)});
+/* thẻ khách: nút Nhà mới khớp + tứ trạch */
+{const o=khachPart;khachPart=function(a){let h=o.apply(this,arguments);return h.replace(/<button class="btn ghost sm gui74b" data-a="sheet" data-v="gui74:([^"]*)">/g,(m,v)=>{const c=kh73(v.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"));const n=c?(kkS99(c).moi||[]).length:0;const cu=c&&c.ns99?cung99(c.ns99,c.gt99):null;
+  return `<button class="btn ${n?'':'ghost '}sm" data-a="sheet" data-v="kk99:${v}">🎯 Nhà mới khớp${n?` <b class="gui74n">${n}</b>`:''}</button><button class="btn ghost sm" data-a="sheet" data-v="ns99:${v}">🧭 ${cu?esc(cu.ten)+' · '+esc(cu.nhom):c&&c.hg99&&c.hg99.length?'Hướng '+c.hg99.map(esc).join(', '):'Hướng hợp'}</button>`+m})}}
+SH.ns99=v=>{const c=kh73(v);if(!c)return {t:'Hướng hợp',h:''};const d=U.ns99&&U.ns99.v===v?U.ns99:(U.ns99={v,ns:c.ns99||'',gt:c.gt99||'nam',hg:(c.hg99||[]).slice()});const cu=cung99(d.ns,d.gt);
+ return {t:'🧭 Hướng hợp của '+c.name,h:`<p class="sub" style="margin-top:0">Nhập năm sinh <b>âm lịch</b> của gia chủ (người đứng tên), app tính cung mệnh theo Bát trạch để biết hướng nhà hợp.</p>
+ <div class="grid2" style="margin:0"><label class="f" for="ns99n">Năm sinh gia chủ<input class="in num" id="ns99n" inputmode="numeric" maxlength="4" value="${esc(d.ns)}" placeholder="Ví dụ 1985"></label><label class="f" for="ns99g">Giới tính<select class="in" id="ns99g"><option value="nam" ${d.gt!=='nu'?'selected':''}>Nam</option><option value="nu" ${d.gt==='nu'?'selected':''}>Nữ</option></select></label></div>
+ <button class="btn ghost full" style="margin-top:8px" data-a="ns99Xem">🔮 Xem cung mệnh</button>
+ ${cu?`<div class="note ok" style="margin-top:10px">Cung <b>${esc(cu.ten)}</b> · <b>${esc(cu.nhom)}</b><br>Hướng hợp: <b>${cu.hop.join(', ')}</b><br><span class="sub">Hướng chưa hợp: ${HUONG8.filter(h=>!cu.hop.includes(h)).join(', ')}</span></div>`:''}
+ <div class="kicker" style="margin:12px 0 6px">Hoặc chọn hướng khách muốn (ưu tiên hơn cung mệnh)</div>
+ <div class="hgpick99">${HUONG8.map(h=>`<button class="${d.hg.includes(h)?'on':''}" data-a="ns99Hg" data-v="${esc(h)}">${esc(h)}</button>`).join('')}</div>
+ <button class="btn full" style="margin-top:12px" data-a="ns99Luu">💾 Lưu cho khách này</button>`}};
+const ns99Doc=()=>{const d=U.ns99;if(!d)return;const n=document.getElementById('ns99n'),g=document.getElementById('ns99g');if(n)d.ns=n.value.replace(/\D/g,'');if(g)d.gt=g.value};
+A.ns99Xem=()=>{ns99Doc();const d=U.ns99;if(d&&d.ns&&!cung99(d.ns,d.gt))toast('Năm sinh từ 1920 đến 2030 nha');render()};
+A.ns99Hg=v=>{ns99Doc();const d=U.ns99;if(!d)return;const j=d.hg.indexOf(v);if(j>=0)d.hg.splice(j,1);else d.hg.push(v);render()};
+A.ns99Luu=()=>{ns99Doc();const d=U.ns99;if(!d)return;const c=kh73(d.v);if(!c)return;if(d.ns&&!cung99(d.ns,d.gt)){toast('Năm sinh từ 1920 đến 2030 nha');return}c.ns99=d.ns?+d.ns:'';c.gt99=d.gt;c.hg99=d.hg.slice();U.ns99=null;save();toast('Đã lưu hướng hợp cho '+c.name);A.sheet('kk99:'+c.name)};
+
+/* ---------- 3. Thêm khách: chụp tin nhắn, AI điền sẵn ---------- */
+let docKhach99=async src=>{await new Promise(r=>setTimeout(r,900));return {ten:'Anh Khoa',quan:QUAN[0]||'Tân Phú',gia_tu:6,gia_den:8,huong:['Đông','Đông Nam'],so_pn:3,hem:'xe hơi',ghi_chu:'Bản demo: AI đọc thử. Bản thật đọc đúng tin nhắn trong hình.'}};
+function kh99S(){return U.kh99||(U.kh99={})}
+{const o=SH.clients;SH.clients=function(){const x=o.apply(this,arguments);if(!x||!x.h)return x;const d=kh99S();
+ const box=`<div class="kh99ai"><b>📸 Khách nhắn nhu cầu? Chụp màn hình gửi AI</b><div class="sub" style="margin:2px 0 8px">AI đọc tin nhắn rồi điền sẵn tên, khu vực, tài chính, hướng. Bạn xem lại rồi bấm Lưu.</div>
+  <label class="btn ghost full" for="kh99f">${d.dang?'⏳ AI đang đọc tin nhắn…':'📷 Chọn ảnh tin nhắn'}</label><input type="file" id="kh99f" accept="image/*" hidden data-kh99="1">
+  ${d.kq?`<div class="note ok" style="margin:8px 0 0">✨ AI đã điền: ${esc([d.kq.ten,d.kq.quan,d.kq.gia_den?((d.kq.gia_tu?nf(d.kq.gia_tu)+'–':'dưới ')+nf(d.kq.gia_den)+' tỷ'):'',(d.kq.huong||[]).length?'hướng '+d.kq.huong.join('/'):'',d.kq.so_pn?d.kq.so_pn+' PN':'',d.kq.hem?'hẻm '+d.kq.hem:''].filter(Boolean).join(' · '))}${d.kq.ghi_chu?'<br><span class="sub">'+esc(d.kq.ghi_chu)+'</span>':''}</div>`:''}${d.loi?`<div class="note warn" style="margin:8px 0 0">${esc(d.loi)}</div>`:''}</div>`;
+ x.h=x.h.replace('<div class="stack" style="gap:10px">','<div class="stack" style="gap:10px">'+box);if(d.kq)setTimeout(kh99Dien,0);return x}}
+function kh99Dien(){const d=kh99S();const k=d.kq;if(!k)return;const set=(id,v)=>{const e=document.getElementById(id);if(e&&v!=null&&v!==''&&!e.value)e.value=v};
+ set('kn',k.ten);set('kpt',k.gia_tu?nf(k.gia_tu):'');set('kpd',k.gia_den?nf(k.gia_den):'');
+ const s=document.getElementById('kqq');if(s&&k.quan&&!d.daQ){const t=noDau72(k.quan);let op=[...s.options].find(o=>noDau72(o.value)===t||noDau72(o.value).includes(t)||t.includes(noDau72(o.value)));if(!op){op=document.createElement('option');op.textContent=k.quan;s.appendChild(op)}s.value=op.value;d.daQ=1}}
+document.addEventListener('change',e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.kh99||!el.files||!el.files[0])return;const f=el.files[0];el.value='';const d=kh99S();if(d.dang)return;d.dang=true;d.loi='';d.kq=null;d.daQ=0;render();
+ shrink(f,async src=>{try{const k=await docKhach99(src);if(!k||(!k.quan&&!k.gia_den&&!k.ten))throw new Error('AI chưa thấy nhu cầu trong ảnh, chụp rõ tin nhắn hơn nha');d.kq=k}catch(err){d.loi=(err&&err.message)||'AI chưa đọc được ảnh, thử lại nha'}finally{d.dang=false;render()}})});
+{const o=A.addClient;A.addClient=function(){const a=me();const n=(a.g.clients||[]).length;const r=o.apply(this,arguments);const d=U.kh99;if(d&&d.kq&&a.g.clients.length>n){const c=a.g.clients[a.g.clients.length-1];const k=d.kq;if(Array.isArray(k.huong)&&k.huong.length)c.hg99=k.huong.map(chuanHg99).filter(Boolean);
+  const them=[k.so_pn?k.so_pn+' phòng ngủ':'',k.hem?'hẻm '+k.hem:'',k.loai||'',k.ghi_chu&&!/demo/i.test(k.ghi_chu)?k.ghi_chu:''].filter(Boolean).join(', ');if(them){c.need=[c.need,them].filter(Boolean).join(', ');c.nhac=c.nhac||them}U.kh99=null;save();render()}else if(a.g.clients.length>n)U.kh99=null;return r}}
+
+/* ---------- 7. Vườn rau xã hội ---------- */
+const RAU99=[{k:'muong',em:'🥬',ten:'Rau muống',gio:2,gia:0,thu:1},{k:'cachua',em:'🍅',ten:'Cà chua',gio:6,gia:1,thu:3},{k:'dua',em:'🍉',ten:'Dưa hấu',gio:12,gia:2,thu:6,mo:5}];
+const RAU99_LUONG=6,RAU99_TRAN=12,RAU99_HAI=3;
+const rauK99=k=>RAU99.find(x=>x.k===k);
+const idA99=a=>String(a.id||a.email||a.name);
+function rauS99(a){const g=a.g.rau99||(a.g.rau99={l:[],tuoi:'',hai:[],thu:{}});if(!Array.isArray(g.l))g.l=[];while(g.l.length<RAU99_LUONG)g.l.push(null);if(!Array.isArray(g.hai))g.hai=[];if(!g.thu)g.thu={};return g}
+function rauTt99(a,i){const g=rauS99(a);const x=g.l[i];if(!x)return {tt:'trong'};const r=rauK99(x.k);if(!r)return {tt:'trong'};const now=Date.now();
+ const tuoiLan=Math.max(x.t,x.w||0);if(now-tuoiLan>48*36e5&&!x.chin)return {tt:'heo',x,r};
+ const dur=r.gio*36e5*(x.w&&x.w-x.t<24*36e5?1:2);const chinLuc=x.t+dur;const bi=rauBiHai99(a,i).length;
+ if(now<chinLuc)return {tt:'lon',x,r,pc:Math.max(0,Math.min(1,(now-x.t)/dur)),con:chinLuc-now,bi};
+ return {tt:'chin',x,r,qua:now-chinLuc,bi}}
+function rauBiHai99(a,i){const g=rauS99(a);const x=g.l[i];if(!x)return [];const me_=idA99(a);const L=[];(S.accts||[]).forEach(b=>{if(b===a||!b.g||!b.g.rau99||!Array.isArray(b.g.rau99.hai))return;b.g.rau99.hai.forEach(h=>{if(h.chu===me_&&h.l===i&&h.vu===x.t)L.push({ai:b,h})})});return L}
+function rauHom99(a,k){const g=rauS99(a);const t=today();return (g.thu[t]&&g.thu[t][k])||0}
+function rauCong99(a,k,n){const g=rauS99(a);const t=today();Object.keys(g.thu).forEach(d=>{if(d<dAgo(7))delete g.thu[d]});g.thu[t]=g.thu[t]||{};g.thu[t][k]=(g.thu[t][k]||0)+n}
+const gioTxt99=ms=>{const m=Math.ceil(ms/6e4);return m>=60?Math.floor(m/60)+' giờ '+(m%60?m%60+' phút':''):m+' phút'};
+A.rau99Gieo=v=>{const [i,k]=String(v).split(':');const a=me();const g=rauS99(a);const r=rauK99(k);if(!r||g.l[+i])return;if(r.mo&&(a.g.streak||0)<r.mo){toast(r.ten+' mở khi chuỗi điểm danh từ '+r.mo+' ngày nha');return}
+ if((a.g.bac||0)<r.gia){toast('Cần '+r.gia+' 🥈 Bạc để mua hạt '+r.ten);return}if(r.gia)a.g.bac=Math.round((a.g.bac-r.gia)*10)/10;g.l[+i]={k,t:Date.now(),w:g.tuoi===today()?Date.now():0};U.rau99g=null;save();render();toast('🌱 Đã gieo '+r.ten+(g.tuoi===today()?'':', nhớ tưới vườn nha'))};
+A.rau99Tuoi=()=>{const a=me();const g=rauS99(a);if(g.tuoi===today()){toast('Hôm nay vườn đã tưới rồi 💧');return}g.tuoi=today();const now=Date.now();g.l.forEach((x,i)=>{if(x&&rauTt99(a,i).tt!=='heo')x.w=now});save();render();toast('💧 Đã tưới cả vườn, rau lớn đủ tốc độ')};
+A.rau99Thu=v=>{const a=me();const i=+v;const t=rauTt99(a,i);const g=rauS99(a);if(t.tt==='heo'){g.l[i]=null;save();render();toast('🥀 Đã dọn luống rau héo');return}if(t.tt!=='chin')return;
+ const con=Math.max(0,t.r.thu-t.bi);const tran=Math.max(0,RAU99_TRAN-rauHom99(a,'thu'));const n=Math.min(con,tran);g.l[i]=null;
+ if(n>0){rauCong99(a,'thu',n);give(a,{bac:n},'Thu hoạch '+t.r.ten)}else toast(con?'Hôm nay đã thu đủ '+RAU99_TRAN+' Bạc từ vườn, mai thu tiếp nha':'😅 Rau bị đồng đội hái hết rồi');
+ save();render()};
+A.rau99Hai=v=>{const [id,i]=String(v).split('|');const a=me();const b=(S.accts||[]).find(x=>idA99(x)===id);if(!b)return;const t=rauTt99(b,+i);
+ if(t.tt!=='chin'||t.qua<36e5){toast('Rau chưa chín quá 1 giờ, chưa hái được');return}if(t.bi>=Math.min(2,t.r.thu-1)){toast('Luống này đã bị hái đủ rồi');return}
+ const g=rauS99(a);if(g.hai.some(h=>h.chu===id&&h.l===+i&&h.vu===t.x.t)){toast('Bạn đã ghé hái luống này rồi');return}if(rauHom99(a,'hai')>=RAU99_HAI){toast('Mỗi ngày ghé hái tối đa '+RAU99_HAI+' bó thôi nha');return}
+ g.hai.unshift({chu:id,ten:b.name,l:+i,vu:t.x.t,luc:Date.now(),rau:t.r.k});g.hai=g.hai.slice(0,40);rauCong99(a,'hai',1);give(a,{bac:1},'Ghé vườn '+b.name+' hái 1 bó '+t.r.ten);save();render()};
+A.rau99Mo=v=>{U.rau99g=U.rau99g===v?null:v;render()};
+function rau99(a){if(!hasCtv(a))return '';const g=rauS99(a);const tuoi=g.tuoi===today();const me_=idA99(a);
+ const ghe=[];(S.accts||[]).forEach(b=>{if(b===a||!b.g||!b.g.rau99||!Array.isArray(b.g.rau99.hai))return;b.g.rau99.hai.forEach(h=>{if(h.chu===me_&&Date.now()-h.luc<3*864e5)ghe.push({b,h})})});ghe.sort((x,y)=>y.h.luc-x.h.luc);
+ const vuon=[];(S.accts||[]).forEach(b=>{if(b===a||b.status!=='active'||!b.g||!b.g.rau99)return;(b.g.rau99.l||[]).forEach((x,i)=>{if(!x)return;const t=rauTt99(b,i);if(t.tt==='chin'&&t.qua>=36e5&&t.bi<Math.min(2,t.r.thu-1)&&!g.hai.some(h=>h.chu===idA99(b)&&h.l===i&&h.vu===x.t))vuon.push({b,i,t})})});
+ const luong=g.l.map((x,i)=>{const t=rauTt99(a,i);
+  if(t.tt==='trong')return `<div class="lg"><div class="em">🟫</div><b>Luống ${i+1}</b><div class="sub">Đang trống</div>${U.rau99g===String(i)?RAU99.map(r=>`<button class="btn ghost sm full" style="margin-top:6px" data-a="rau99Gieo" data-v="${i}:${r.k}">${r.em} ${r.ten} · ${r.gia?r.gia+' 🥈':'miễn phí'}<br><small>chín sau ${r.gio} giờ · thu ${r.thu} 🥈${r.mo&&(a.g.streak||0)<r.mo?' · 🔒 chuỗi '+r.mo+' ngày':''}</small></button>`).join(''):`<button class="btn sm full" style="margin-top:6px" data-a="rau99Mo" data-v="${i}">Gieo hạt</button>`}</div>`;
+  if(t.tt==='heo')return `<div class="lg"><div class="em">🥀</div><b>${t.r.ten} héo</b><div class="sub">Bỏ quá 2 ngày không tưới</div><button class="btn ghost sm full" style="margin-top:6px" data-a="rau99Thu" data-v="${i}">Dọn luống</button></div>`;
+  if(t.tt==='lon')return `<div class="lg"><div class="em">🌱</div><b>${t.r.ten} · ${Math.round(t.pc*100)}%</b><div class="sub">Chín sau ${gioTxt99(t.con)}${t.x.w?'':' (chưa tưới, lớn chậm)'}</div><div class="bar"><i style="width:${Math.round(t.pc*100)}%"></i></div></div>`;
+  return `<div class="lg"><div class="em">${t.r.em}</div><b>${t.r.ten} chín rồi!</b><div class="sub">${t.bi?'Bị hái '+t.bi+' bó · ':''}${t.qua>=36e5?'⚠️ Đồng đội có thể ghé hái':'Thu trong '+gioTxt99(36e5-t.qua)+' kẻo bị hái'}</div><button class="btn gold sm full" style="margin-top:6px" data-a="rau99Thu" data-v="${i}">🧺 Thu ${Math.max(0,t.r.thu-t.bi)} 🥈</button></div>`}).join('');
+ return `<div class="card"><div class="between"><div><div class="kicker" style="color:var(--gold2)">Vườn nhà ${esc(a.brand||a.name)}</div><h2 class="h2" style="margin:2px 0 0">🥬 Vườn rau</h2></div><span class="pill gold">Hôm nay ${rauHom99(a,'thu')}/${RAU99_TRAN} 🥈</span></div>
+  <button class="btn ${tuoi?'ghost':''} full" style="margin-top:10px" data-a="rau99Tuoi" ${tuoi?'disabled':''}>${tuoi?'💧 Hôm nay đã tưới cả vườn':'💧 Tưới cả vườn'}</button>
+  <div class="rau99">${luong}</div>
+  <p class="sub" style="margin-top:8px">Tưới mỗi ngày rau lớn đủ tốc độ, quên tưới lớn chậm gấp đôi, bỏ quá 2 ngày rau héo. Rau chín quá 1 giờ chưa thu thì đồng đội ghé hái được 1 bó.</p>
+  ${vuon.length?`<div class="kicker" style="margin:10px 0 4px">🧺 Vườn đồng đội đang chín</div>${vuon.slice(0,6).map(x=>`<div class="rau99ai"><span>${x.t.r.em}</span><div class="grow"><b>${esc(x.b.name)}</b><div class="sub">${x.t.r.ten} chín quá ${gioTxt99(x.t.qua)}</div></div><button class="btn sm" data-a="rau99Hai" data-v="${esc(idA99(x.b))}|${x.i}" ${rauHom99(a,'hai')>=RAU99_HAI?'disabled':''}>Hái 1 bó +1 🥈</button></div>`).join('')}`:''}
+  ${ghe.length?`<div class="kicker" style="margin:10px 0 4px">👀 Ai vừa ghé vườn bạn</div>${ghe.slice(0,5).map(x=>`<div class="rau99ai"><span>🧑‍🌾</span><div class="grow"><b>${esc(x.b.name)}</b> <span class="sub">vừa hái 1 bó ${(rauK99(x.h.rau)||{ten:'rau'}).ten.toLowerCase()}</span></div><span class="sub">${esc(new Date(x.h.luc).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'}))}</span></div>`).join('')}`:''}</div>`}
+{const o=vuon85;vuon85=function(a){return o.apply(this,arguments)+rau99(a)}}
+/* demo: vườn đồng đội có rau chín để thử ghé hái */
+(function(){if(!pk72Demo)return;const b=(S.accts||[]).find(x=>x.name==='Anh Minh Tú');if(b&&b.g&&!b.g.rau99){b.g.rau99={l:[{k:'cachua',t:Date.now()-9*36e5,w:Date.now()-8*36e5},null,null,null,null,null],tuoi:today(),hai:[],thu:{}}}
+ const me_=(S.accts||[]).find(x=>x.name==='Chị Thu Hương');if(b&&me_&&!b.g.rau99.hai.length)b.g.rau99.hai.push({chu:idA99(me_),ten:me_.name,l:5,vu:0,luc:Date.now()-2*36e5,rau:'muong'})})();
+
+/* ---------- lối tắt Trang chủ + Làm nhanh ---------- */
+{const o=qk69;qk69=function(a){const h=o.apply(this,arguments);if(!hasCtv(a))return h;return h.replace(/<\/div>$/,`<button data-a="sheet" data-v="keo99"><span>🔥</span><b>Kèo giá tốt</b></button><button data-a="sheet" data-v="lv99"><span>🏦</span><b>Tính lãi vay</b></button><button data-a="dg99Mo" data-v=""><span>📊</span><b>Định giá</b></button></div>`)+kkCard99(a)}}
+{const o=SH.quick;SH.quick=function(){const x=o.apply(this,arguments);if(hasCtv(me())&&x&&x.h)x.h=x.h.replace('</div>',`<button data-a="sheet" data-v="lv99"><span>🏦</span>Tính lãi vay</button><button data-a="sheet" data-v="keo99"><span>🔥</span>Kèo giá tốt</button><button data-a="dg99Mo" data-v=""><span>📊</span>Định giá</button></div>`);return x}}
+/* ===================== /v99 ===================== */
+
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
    Trợ lý/Sếp duyệt + chọn vai trò, danh bạ anh em, game của từng người,
@@ -5916,6 +6270,20 @@ setTimeout(()=>drive94Kiem(),8000);
 
 /* ---- v96 busy() của bản thật cũng hiện thanh "⏳ …" ở trên cùng cho tới khi xong ---- */
 {const o=busy;let m96='';busy=function(on,msg){o(on,msg);try{if(on){if(m96)cho96Tat(m96);m96=msg||'Đang xử lý, chờ chút nha…';cho96Bat(m96)}else if(m96){cho96Tat(m96);m96=''}}catch(e){}}}
+
+
+/* ---- v99 Học từ app video:
+   • Lãi suất ngân hàng cho cả phòng: cai_dat_phong 'lai_suat_ngan_hang' {ds,ngay,by} (Sếp/Trợ lý sửa, mọi người đọc).
+   • Thêm khách từ ảnh tin nhắn: Edge Function doc-nha-tu-anh với loai='nhu_cau_khach' (bản 2026-11-21). ---- */
+async function loadLv99(){try{const {data,error}=await sb.from('cai_dat_phong').select('gia_tri').eq('khoa','lai_suat_ngan_hang').maybeSingle();if(!error&&data&&data.gia_tri&&Array.isArray(data.gia_tri.ds)&&data.gia_tri.ds.length)S.lv99=data.gia_tri}catch(e){}}
+{const _sl99=sbLoad;sbLoad=async function(){const r=await _sl99.apply(this,arguments);if(LIVE.me&&LIVE.me.trang_thai==='hoat_dong'&&LIVE.me.vai_tro!=='hoc_vien')await loadLv99();return r}}
+lv99Ghi=async ds=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,'Đang lưu lãi suất…');
+ try{const gt={ds,ngay:fmtD(today()),by:(me()||{}).name||''};const {error}=await sb.from('cai_dat_phong').upsert({khoa:'lai_suat_ngan_hang',gia_tri:gt,cap_nhat_luc:new Date().toISOString()});if(error)throw error;S.lv99=gt;_save()}
+ catch(e){throw new Error(errVi(e))}finally{busy(false)}};
+docKhach99=async src=>{const hetGio=new Promise((_,rej)=>setTimeout(()=>rej(new Error('AI đọc lâu quá, thử lại nha')),45000));
+ const {data,error}=await Promise.race([sb.functions.invoke('doc-nha-tu-anh',{body:{anh_base64:src,loai:'nhu_cau_khach'}}),hetGio]);
+ if(data&&data.khach)return data.khach;let j=data;try{if(!j&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}
+ throw new Error((j&&j.loi)||'AI chưa đọc được tin nhắn này, thử lại nha')};
 
 render();
 })();
