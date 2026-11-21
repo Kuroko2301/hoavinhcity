@@ -2084,7 +2084,7 @@ SH.game=()=>({t:'Mini Game Hoa Vinh',h:gameCard(me())});
 function renderSheet(){
   const w=$('#sheetwrap');
   if(!U.sheet||!S.me&&U.sheet!=='switch'){w.innerHTML='';return}
-  const [sk,sa]=U.sheet.split(':');const s=SH[sk](sa);const sc=w.querySelector('.sheet');const top=sc?sc.scrollTop:0;
+  const _i97=U.sheet.indexOf(':');const sk=_i97<0?U.sheet:U.sheet.slice(0,_i97),sa=_i97<0?undefined:U.sheet.slice(_i97+1);const s=SH[sk](sa);const sc=w.querySelector('.sheet');const top=sc?sc.scrollTop:0;
   w.innerHTML=`<div class="sheet-bg" data-a="closeBg"><div class="sheet gut" role="dialog" aria-modal="true" aria-label="${esc(s.t)}"><div class="grab"></div><div class="sheet-h"><h2 class="h2" style="margin:0">${esc(s.t)}</h2><button class="x" data-a="closeSheet" aria-label="Đóng">×</button></div>${s.h}</div></div>`;
   const nsc=w.querySelector('.sheet');if(nsc)nsc.scrollTop=top;
 }
