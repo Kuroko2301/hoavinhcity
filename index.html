@@ -5994,13 +5994,14 @@ SH.switch=()=>{const m=me();if(!m)return {t:'Tài khoản',h:''};return {t:'Tài
 
 /* ---- Kỷ niệm Hoa Vinh + Nhà Truyền Thống: lưu trên Supabase (bảng ky_niem, kho ky-niem), có nút Xoá ---- */
 LIVE.kn=null;
+const KHU_DB={vd:'vinh_danh',tt:'tap_the',dl:'du_lich'},KHU_APP={vinh_danh:'vd',tap_the:'tt',du_lich:'dl',ky_niem:'ky_niem'};
 const KN_TIM='hoavinh-tim';function knTim(){try{return JSON.parse(localStorage.getItem(KN_TIM))||{}}catch(e){return {}}}
 async function loadKyNiem(mine){LIVE.kn=null;if(!mine||mine.trang_thai!=='hoat_dong')return;
  const {data,error}=await sb.from('ky_niem').select('id,khu,tieu_de,ngay,loai,duong_dan,nguoi_dang_id,tao_luc').order('tao_luc');if(error){console.warn('[Hoa Vinh] ky niem',error);return}
  const paths=[...new Set(data.filter(r=>r.loai!=='video'&&r.duong_dan&&!/^(data:|https?:)/.test(r.duong_dan)).map(r=>r.duong_dan))];const url={};
  if(paths.length){const s=await sb.storage.from('ky-niem').createSignedUrls(paths,86400).catch(()=>({data:[]}));(s.data||[]).forEach(x=>{if(x.signedUrl)url[x.path]=x.signedUrl})}
  const tim=knTim();const nm=id=>{const a=S.accts.find(x=>x.id===id);return a?a.name:'Anh em Hoa Vinh'};
- const it=r=>{const v=r.loai==='video';const p=r.duong_dan||'';return {id:'r'+r.id,rid:r.id,khu:r.khu,cap:r.tieu_de||'',t:r.tieu_de||'',by:nm(r.nguoi_dang_id),who:'',uid:r.nguoi_dang_id,d:r.ngay||(r.tao_luc||'').slice(0,10),type:v?'video':'img',link:v?p:'',path:p,src:v?'':(/^(data:|https?:)/.test(p)?p:url[p]||''),em:v?'🎬':'📷',hue:v?280:20,hearts:tim['r'+r.id]||0,media:[]}};
+ const it=r=>{const v=r.loai==='video';const p=r.duong_dan||'';return {id:'r'+r.id,rid:r.id,khu:KHU_APP[r.khu]||r.khu,cap:r.tieu_de||'',t:r.tieu_de||'',by:nm(r.nguoi_dang_id),who:'',uid:r.nguoi_dang_id,d:r.ngay||(r.tao_luc||'').slice(0,10),type:v?'video':'img',link:v?p:'',path:p,src:v?'':(/^(data:|https?:)/.test(p)?p:url[p]||''),em:v?'🎬':'📷',hue:v?280:20,hearts:tim['r'+r.id]||0,media:[]}};
  LIVE.kn=data.map(it);const ntt={vd:[],tt:[],dl:[]};LIVE.kn.forEach(x=>{if(ntt[x.khu])ntt[x.khu].push(x)});
  /* không lưu ảnh vào bộ nhớ máy: để thuộc tính ẩn khỏi JSON */
  Object.defineProperty(S,'kyniem',{value:LIVE.kn.filter(x=>x.khu==='ky_niem'),writable:true,enumerable:false,configurable:true});Object.defineProperty(S,'ntt',{value:ntt,writable:true,enumerable:false,configurable:true});
@@ -6024,9 +6025,9 @@ document.addEventListener('change',async e=>{const el=e.target;if(!el.dataset||!
  const cb=document.getElementById('kn_ntt');const khu=!z&&cb&&cb.checked?(val('kn_khu')||'tt'):'';if(LIVE.busy)return;let ok=0;
  try{for(const f of files){busy(true,'Đang lưu ảnh '+(ok+1)+'/'+files.length+'…');const src=await knShrink(f);
    const path=await knUpload(z?'truyen-thong':'ky-niem',src);
-   const {data:row,error}=await sb.from('ky_niem').insert({khu:z||'ky_niem',tieu_de:z?t:cap,ngay:d,loai:'anh',duong_dan:path}).select('id').single();if(error)throw error;
+   const {data:row,error}=await sb.from('ky_niem').insert({khu:z?KHU_DB[z]:'ky_niem',tieu_de:z?t:cap,ngay:d,loai:'anh',duong_dan:path}).select('id').single();if(error)throw error;
    if(khu){const p2='truyen-thong/kn'+row.id+'-'+Date.now().toString(36)+'.jpg';const c=await sb.storage.from('ky-niem').copy(path,p2);if(c.error)throw c.error;
-    const r2=await sb.from('ky_niem').insert({khu,tieu_de:cap,ngay:d,loai:'anh',duong_dan:p2});if(r2.error)throw r2.error}
+    const r2=await sb.from('ky_niem').insert({khu:KHU_DB[khu],tieu_de:cap,ngay:d,loai:'anh',duong_dan:p2});if(r2.error)throw r2.error}
    ok++}
   if(!z&&ok){const a=me();give(a,{bac:1},'Chia sẻ kỷ niệm');save()}
   toast(z?'Đã lưu '+ok+' ảnh vào Nhà Truyền Thống':'Đã đăng '+ok+' kỷ niệm'+(khu?' và đưa vào Nhà TT':'')+' 📸')}
@@ -6038,7 +6039,7 @@ A.knHeart=v=>{const t=knTim();t[v]=(t[v]||0)+1;try{localStorage.setItem(KN_TIM,J
 A.knToNtt=async v=>{const k=(LIVE.kn||[]).find(x=>x.id===v);if(!k||LIVE.busy)return;const z=val('kz_'+v)||'tt';busy(true,'Đang đưa vào Nhà Truyền Thống…');
  try{let p=k.type==='video'||/^(data:|https?:)/.test(k.path)?k.path:'truyen-thong/kn'+k.rid+'-'+Date.now().toString(36)+'.jpg';
   if(p!==k.path){const c=await sb.storage.from('ky-niem').copy(k.path,p);if(c.error)throw c.error}
-  const {error}=await sb.from('ky_niem').insert({khu:z,tieu_de:k.cap,ngay:k.d,loai:k.type==='video'?'video':'anh',duong_dan:p});if(error)throw error;
+  const {error}=await sb.from('ky_niem').insert({khu:KHU_DB[z],tieu_de:k.cap,ngay:k.d,loai:k.type==='video'?'video':'anh',duong_dan:p});if(error)throw error;
   await loadKyNiem(LIVE.me);confetti();toast('Đã đưa vào Nhà Truyền Thống')}
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
 A.knDel=async v=>{const k=(LIVE.kn||[]).find(x=>x.id===v);if(!k||LIVE.busy)return;if(U.knDelAsk!==v){U.knDelAsk=v;toast('Bấm “Xoá” lần nữa để xoá hẳn');setTimeout(()=>{if(U.knDelAsk===v)U.knDelAsk=null},6000);return}U.knDelAsk=null;busy(true,'Đang xoá…');
