@@ -1321,7 +1321,7 @@ TAB.duyet=a=>{
    <label class="f" for="pg_${esc(p.email)}">Vai trò trong game<select class="in" id="pg_${esc(p.email)}">${GAME_ROLES.map(g=>`<option>${g}</option>`).join('')}</select></label>
    <div class="grid2"><button class="btn green" data-a="approve" data-v="${esc(p.email)}">Duyệt</button><button class="btn ghost" data-a="reject" data-v="${esc(p.email)}">Từ chối</button></div></div>`).join('')||'<p class="sub" style="margin-top:6px">Không có ai đang chờ.</p>'}</div>
   ${postAdminCard()}
-  ${(me()||{}).role==='tl'?'':mediaAdmin()}
+  ${mediaAdmin()}
   ${lhAdmin(a)}
   ${tankAdmin()}
   ${flagApprovals(flags)}
@@ -2225,13 +2225,7 @@ A.sheet=v=>{U.sheet=v;U.resetAsk=false;if(v==='qa'){U.qres=undefined;U.qq=''}ren
 A.closeSheet=()=>{U.sheet=null;render()};
 A.closeBg=(v,el,e)=>{if(e.target===el){U.sheet=null;render()}};
 const ROLE_OPTS=[['ctv','Cộng tác viên'],['cg','Đầu chủ - Chuyên gia'],['tl','Trợ lý'],['sep','Trưởng phòng'],['hv','Học viên']];
-SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}${mayCard(p)}`}};
-function mayCard(p){if(!LIVE||!LIVE.tb||!p.id)return '';const t=LIVE.tb[p.id];const ok=['ctv','cg','hv'].includes(p.role);
- return `<div class="card" style="margin-top:14px"><h3 class="h2" style="margin:0;font-size:1.05rem">📱 Thiết bị đăng nhập</h3><p class="sub" style="margin:4px 0 8px">${t?'Đang giữ: <b>'+esc(t.ten_may||'Thiết bị')+'</b> từ '+esc(new Date(t.gan_luc).toLocaleDateString('vi-VN')):'Chưa gắn máy nào, lần đăng nhập tới sẽ gắn máy đó.'}</p>
- ${ok?(t?`<button class="btn gold" data-a="resetMay" data-v="${esc(p.email)}">Reset đăng nhập</button><p class="sub" style="margin-top:6px">Bấm khi bạn ấy đổi máy hoặc quên đăng xuất. Máy nào đăng nhập tiếp theo sẽ giữ tài khoản.</p>`:''):'<p class="sub">Trưởng phòng và Trợ lý nhờ Claude reset đăng nhập giúp nha.</p>'}</div>`}
-A.resetMay=async v=>{const p=acct(v);if(!p||LIVE.busy)return;busy(true,'Đang reset đăng nhập…');
- try{const {error}=await sb.rpc('reset_thiet_bi',{p_id:p.id});if(error)throw error;if(LIVE.tb)delete LIVE.tb[p.id];toast('Đã reset đăng nhập cho '+p.name+', bạn ấy đăng nhập lại được rồi')}
- catch(err){toast(/Chỉ reset|không có quyền/.test(err.message||'')?err.message:errVi(err))}finally{busy(false);render()}};
+SH.doivai=email=>{const p=acct(email);const m=me();if(!p||!m)return{t:'Đổi vai trò',h:'<p class="sub">Không tìm thấy người này.</p>'};const canSep=m.role==='sep';const opts=ROLE_OPTS.filter(([k])=>k!=='sep'||canSep);return{t:'Đổi vai trò',h:`<div class="row">${avatar(p)}<div class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.email)} · đang là ${ROLES[p.role]}</div></div></div><p class="sub" style="margin-top:12px">Chọn vai trò mới:</p><div class="stack" style="margin-top:8px">${opts.map(([k,l])=>`<button class="roleopt ${p.role===k?'on':''}" data-a="doiVai" data-v="${esc(email)}|${k}"><span class="grow"><b>${l}</b></span>${p.role===k?'<span class="pill ok">Đang là</span>':''}</button>`).join('')}</div>${!canSep?'<p class="sub" style="margin-top:10px">Chỉ Trưởng phòng mới đặt được vai Trưởng phòng.</p>':''}`}};
 A.doiVai=v=>{const [email,role]=v.split('|');const p=acct(email);if(!p)return;if(p.role===role){U.sheet=null;render();return}p.role=role;if(role==='hv'&&!p.g.hv)p.g.hv={tt:false,vh:false,vid:[0,0,0],test:null,meet:null};U.sheet=null;save();render();toast('Đã đổi '+p.name+' thành '+ROLES[role])};
 /* ===== Kho Drive Hoa Vinh ===== */
 const DRIVE={
@@ -2750,36 +2744,22 @@ function hsLoad(){try{const x=JSON.parse(localStorage.getItem(HS_KEY));if(x&&x.r
 function hsData(){const x=hsLoad();return x?{rows:x.rows,real:true,file:x.file,at:x.at}:{rows:HS_SAMPLE,real:false}}
 const noDau=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
 const noPre=s=>noDau(s).replace(/^(anh|chi|em|ban|co|chu|tro ly)\s+/,'');
-function dmyIso(s){s=String(s||'').trim();let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/);if(!m)return '';let y=m[3];if(y.length===2)y=(+y>40?'19':'20')+y;return y.length===4?y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'):''}
+function dmyIso(s){const m=String(s||'').match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);return m?m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'):''}
 function nameHit(full,reg){const f=noPre(full),r=noPre(reg);if(!f||!r)return false;return f===r||f.endsWith(' '+r)||r.endsWith(' '+f)}
-/* Khớp thông minh: anh em hay đăng ký bằng tên thương hiệu ("Tuyền bds nè!"), nên ngoài họ tên còn so từng chữ trong tên với tên app và Gmail.
-   'ok' = trùng ngày sinh + có chữ trong tên khớp (tên app hoặc Gmail); 'dob' = chỉ trùng ngày sinh; 'name' = trùng tên, khác ngày sinh; '' = chưa đăng ký */
-const hsTok=s=>noDau(s).replace(/[^a-z0-9 ]/g,' ').split(' ').filter(w=>w.length>=2);
-function hsHint(row,a){if(nameHit(row.ten,a.name))return 3;const T=hsTok(row.ten);if(!T.length)return 0;const N=hsTok(a.name),g=noDau(String(a.email||'').split('@')[0]).replace(/[^a-z]/g,'');
- const ten=T[T.length-1];let sc=0;if(N.includes(ten))sc=2;else if(T.some(w=>N.includes(w)&&w.length>=3))sc=1;
- if(g&&ten.length>=3&&g.includes(ten))sc=Math.max(sc,T[0].length>=2&&g.includes(T[0])?2:1);return sc}
-function hsMatch(row){const iso=dmyIso(row.sinh);let best=null,dob=null;
- for(const a of S.accts){const h=hsHint(row,a),same=!!(a.dob&&iso&&iso===a.dob);
-  if(same&&h>0){if(!best||best.st!=='ok'||h>best.h)best={st:'ok',a,h};continue}
-  if(same){if(!dob&&!hsData().rows.some(o=>o!==row&&dmyIso(o.sinh)===a.dob&&hsHint(o,a)>0))dob={st:'dob',a};continue}
-  if(h===3&&!best)best={st:'name',a,h}}
- if(best&&best.st==='ok')return best;if(dob)return dob;if(best)return best;
- for(const m of S.members)if(nameHit(row.ten,m.name))return {st:'name',m};return {st:''}}
-function hsOfAcct(a){const d=hsData();for(const r of d.rows){const m=hsMatch(r);if(m.st==='ok'&&m.a===a)return r}return null}
+/* trạng thái 1 dòng hồ sơ: 'ok' khớp tên + ngày sinh với tài khoản app, 'name' chỉ trùng tên, '' chưa đăng ký */
+function hsMatch(row){let best=null;for(const a of S.accts){if(!nameHit(row.ten,a.name))continue;const ok=a.dob&&dmyIso(row.sinh)===a.dob;if(ok)return {st:'ok',a};best=best||{st:'name',a}}
+ if(!best)for(const m of S.members)if(nameHit(row.ten,m.name))return {st:'name',m};return best||{st:''}}
+function hsOfAcct(a){const d=hsData();for(const r of d.rows){if(nameHit(r.ten,a.name)&&a.dob&&dmyIso(r.sinh)===a.dob)return r}return null}
 function hsGreen(p){const a=p.email&&S.accts.find(x=>x.email===p.email);return !!(a&&hsOfAcct(a))}
 const hsCan=()=>{const a=me();return a&&(a.role==='sep'||a.role==='tl')};
 const mask=s=>{s=String(s||'');return s.length>4?'•••• '+s.slice(-4):s};
-function hsRow(r,i){const m=hsMatch(r),open=U.hsOpen===i;const st=m.st==='ok'?['ok','✅ Đã tham gia app']:m.st==='dob'?['warn','Trùng ngày sinh, xem lại tên']:m.st==='name'?['warn','Trùng tên, chưa khớp ngày sinh']:['','Chưa đăng ký app'];
+function hsRow(r,i){const m=hsMatch(r),open=U.hsOpen===i;const st=m.st==='ok'?['ok','Đã đăng ký app']:m.st==='name'?['warn','Trùng tên, chưa khớp ngày sinh']:['','Chưa đăng ký app'];
  return `<div class="hs ${m.st==='ok'?'hs-ok':''}"><button class="hs-hd" data-a="hsOpen" data-v="${i}" aria-expanded="${open}"><span class="hs-name">${esc(r.ten)}</span><span class="pill ${st[0]}">${st[1]}</span></button>
- <div class="sub">Hồ sơ số ${esc(r.so)} · ký HĐ ${esc(r.ky)} · sinh ${esc(r.sinh)}${m.a?' · tài khoản app: <b>'+esc(m.a.name)+'</b>'+(m.a.email?' ('+esc(m.a.email)+')':''):''}</div>
+ <div class="sub">Hồ sơ số ${esc(r.so)} · ký HĐ ${esc(r.ky)} · sinh ${esc(r.sinh)}${m.a?' · tài khoản: '+esc(m.a.name):''}</div>
  ${open?`<table class="tbl" style="margin-top:6px"><tr><td>Số điện thoại</td><td class="r">${r.sdt?`<a class="link" href="tel:${esc(r.sdt)}">${esc(r.sdt)}</a>`:'—'}</td></tr><tr><td>Quê quán</td><td class="r">${esc(r.que)||'—'}</td></tr><tr><td>Địa chỉ thường trú</td><td class="r">${esc(r.dc)||'—'}</td></tr>
   <tr><td>Căn cước</td><td class="r num">${U.hsShow===i?esc(r.cccd):mask(r.cccd)}</td></tr><tr><td>Mã số thuế</td><td class="r num">${U.hsShow===i?esc(r.mst):mask(r.mst)}</td></tr><tr><td>Số tài khoản</td><td class="r num">${U.hsShow===i?esc(r.stk):mask(r.stk)} · ${esc(r.nh)}</td></tr></table>
   <div class="row" style="margin-top:8px"><button class="btn ghost sm grow" data-a="hsShow" data-v="${i}">${U.hsShow===i?'Ẩn số riêng tư':'Hiện căn cước, STK'}</button>${/^https:\/\/drive\.google\.com\//.test(r.drive)?`<a class="btn gold sm grow" style="display:grid;place-items:center;text-decoration:none" href="${esc(r.drive)}" target="_blank" rel="noopener">Mở hồ sơ Drive</a>`:''}</div>`:''}</div>`}
-function hsNoHd(){const d=hsData();return S.accts.filter(a=>a.status==='active'&&!d.rows.some(r=>{const m=hsMatch(r);return m.st==='ok'&&m.a===a}))}
 function hsList(){const d=hsData(),q=noDau(U.hsq||''),f=U.hsf||'all';
- if(f==='hd'){const A_=hsNoHd().filter(a=>!q||noDau(a.name).includes(q)),R=d.rows.map((r,i)=>[r,i]).filter(([r])=>!String(r.ky||'').trim()&&(!q||noDau(r.ten).includes(q)));
-  if(!A_.length&&!R.length)return '<p class="sub">Ai trong app cũng đã có hồ sơ ký hợp đồng 🎉</p>';
-  return `<div class="sub" style="margin:2px 0 6px">${A_.length+R.length} người chưa ký hợp đồng · đã vào app nhưng chưa có hồ sơ</div>${A_.map(a=>`<div class="hs"><div class="hs-hd" style="cursor:default"><span class="hs-name">${esc(a.name)}</span><span class="pill warn">Chưa ký HĐ</span></div><div class="sub">${esc(ROLES[a.role]||'')}${a.email?' · '+esc(a.email):''}${a.dob?' · sinh '+esc(a.dob.split('-').reverse().join('/')):''}</div></div>`).join('')}${R.map(([r,i])=>hsRow(r,i)).join('')}`}
  const L=d.rows.map((r,i)=>[r,i,hsMatch(r).st]).filter(([r,i,st])=>(!q||noDau(r.ten).includes(q)||String(r.sdt).includes(q)||String(r.so)===q)&&(f==='all'||(f==='ok'?st==='ok':st!=='ok')));
  return `<div class="sub" style="margin:2px 0 6px">${L.length} người</div>${L.map(([r,i])=>hsRow(r,i)).join('')||'<p class="sub">Không tìm thấy ai.</p>'}`}
 function hsCard(){const d=hsData(),n=d.rows.filter(r=>hsMatch(r).st==='ok').length;
@@ -2791,9 +2771,9 @@ SH.hoso=()=>{if(!hsCan())return {t:'Hồ sơ nhân sự',h:'<p class="sub">Chỉ
  return {t:'Hồ sơ nhân sự',h:`<div class="stack">
   <div class="note ${d.real?'ok':''}">${d.real?`Đang có <b>${d.rows.length} hồ sơ</b> lưu trên Supabase, có khoá bảo vệ: chỉ Sếp và Trợ lý đọc được.`:'Chưa có hồ sơ nào. Bấm “Nhập file Excel” để đưa hồ sơ lên Supabase (chỉ Sếp và Trợ lý xem được).'}</div>
   <div class="row"><label class="btn ghost sm grow" style="display:grid;place-items:center">📥 Nhập file Excel<input type="file" accept=".xlsx,.xls" data-hs="1" hidden></label>${d.real?'<button class="btn ghost sm" data-a="hsClear">Xoá hết hồ sơ</button>':''}</div>
-  <div class="sub">Tên hiện <b style="color:var(--green)">xanh lá</b> khi anh em đã tham gia app: trùng ngày sinh và có chữ trong tên khớp (kể cả tên thương hiệu như “Tuyền bds nè!” hay Gmail).</div>
+  <div class="sub">Tên hiện <b style="color:var(--green)">xanh lá</b> khi anh em đăng ký app với họ tên và ngày sinh trùng hồ sơ.</div>
   <input class="in" id="hsq" placeholder="Tìm theo tên, số điện thoại, số hồ sơ" value="${esc(U.hsq||'')}" autocomplete="off">
-  <div class="picks">${[['all','Tất cả'],['ok','Đã đăng ký'],['no','Chưa đăng ký'],['hd','Chưa ký HĐ']].map(([k,l])=>`<button class="${f===k?'on':''}" data-a="hsF" data-v="${k}">${l}</button>`).join('')}</div>
+  <div class="picks">${[['all','Tất cả'],['ok','Đã đăng ký'],['no','Chưa đăng ký']].map(([k,l])=>`<button class="${f===k?'on':''}" data-a="hsF" data-v="${k}">${l}</button>`).join('')}</div>
   <div id="hslist">${hsList()}</div></div>`}};
 A.hsOpen=v=>{U.hsOpen=U.hsOpen===+v?null:+v;U.hsShow=null;render()};
 A.hsShow=v=>{U.hsShow=U.hsShow===+v?null:+v;render()};
@@ -2804,10 +2784,9 @@ function loadXlsx(cb){if(window.XLSX)return cb();const s=document.createElement(
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.hs||!el.files||!el.files[0])return;const file=el.files[0];
  loadXlsx(()=>{const fr=new FileReader();fr.onload=()=>{try{
   const wb=XLSX.read(fr.result,{type:'array',cellDates:true});const ws=wb.Sheets[wb.SheetNames[0]];const A_=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'dd/mm/yyyy',defval:''});
-  const isTen=c=>/^(ho va ten|ho ten|ho & ten|ten nhan vien|ten)$/.test(noDau(c));
-  const hi=A_.findIndex(r=>r.some(isTen));if(hi<0){toast('Không thấy cột "HỌ VÀ TÊN" trong file');return}
-  const H=A_[hi].map(noDau),col=(...k)=>{for(const x of k){const i=H.findIndex(h=>h.includes(x));if(i>=0)return i}return -1};
-  const C={so:col('ho so so','so ho so','stt'),ky:col('thoi gian ky','ngay ky'),ten:H.findIndex(h=>isTen(h)),sinh:col('ngay sinh','nam sinh','ngay thang nam sinh'),que:col('que quan','que'),dc:col('dia chi'),cccd:col('can cuoc','cccd','cmnd'),sdt:col('so dien thoai','sdt','dien thoai'),mst:col('ma so thue','mst'),stk:col('stk','so tai khoan'),nh:col('ngan hang'),drive:col('drive')};
+  const hi=A_.findIndex(r=>r.some(c=>noDau(c)==='ho va ten'));if(hi<0){toast('Không thấy cột "HỌ VÀ TÊN" trong file');return}
+  const H=A_[hi].map(noDau),col=k=>H.findIndex(h=>h.includes(k));
+  const C={so:col('ho so so'),ky:col('thoi gian ky'),ten:col('ho va ten'),sinh:col('nam sinh'),que:col('que quan'),dc:col('dia chi'),cccd:col('can cuoc'),sdt:col('so dien thoai'),mst:col('ma so thue'),stk:col('stk'),nh:col('ngan hang'),drive:col('drive')};
   const rows=A_.slice(hi+1).filter(r=>String(r[C.ten]||'').trim()).map(r=>{const o={};for(const k in C)o[k]=C[k]>=0?String(r[C[k]]??'').trim():'';return o});
   hsUpload(rows);
  }catch(err){toast('File này chưa đọc được, Di gửi lại bản .xlsx nhé')}};fr.readAsArrayBuffer(file)})});
@@ -4399,7 +4378,7 @@ function mau73(f){return (S.kho||[]).filter(h=>(!f.q||!f.q.length||f.q.some(x=>n
 async function tim73(src,f){const r=U.l73[src]={loading:true,list:[],f};render();
  try{if(pk72Demo&&!dtkTok()){await new Promise(x=>setTimeout(x,600));r.list=mau73(f)}
   else if(!dtkTok())r.can=true;
-  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:20,offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location={district:ids};if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
+  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:ph105(f.ph)?60:20,offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location={district:ids};if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
    const j=await dtkApi('tim',body);if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};r.list=Array.isArray(dd.data)?dd.data:[];r.hieu=dd.hieu||''}}
  catch(e){if(e.status===401)r.can=true;else r.err=e.message||'Chưa lọc được, thử lại sau ít phút nha'}
  if(U.l73[src]!==r)return;r.loading=false;render()}
@@ -4450,7 +4429,7 @@ SH.can73=v=>{const c=kh73(v);if(!c)return {t:'Căn khách hỏi',h:''};const d=c
  <div style="margin-top:6px">${ds73('c1:'+c.name,c.name)}</div>`}};
 A.can73Luu=v=>{const c=kh73(v);if(!c)return;const n=x=>{const t=parseFloat(String(val(x)).replace(',','.'));return isFinite(t)&&t>0?t:0};const d={q:val('c1q'),dc:val('c1dc').trim().slice(0,80),dt:n('c1dt'),g:n('c1g'),kc:val('c1kc').trim().slice(0,120)};
  if(!d.q||!d.dt||!d.kc||!d.g){toast('Điền đủ Vị trí, Diện tích, Kết cấu và Giá nha');return}c.can1=d;c.last=today();save();
- tim73('c1:'+v,{q:[d.q],tu:d.g*0.85,den:d.g*1.15,tm:[d.kc,'khoảng '+d.dt+'m2',d.dc].filter(Boolean).join(', ')})};
+ tim73('c1:'+v,{q:[d.q],tu:d.g*0.85,den:d.g*1.15,tm:[d.kc,'khoảng '+d.dt+'m2',d.dc].filter(Boolean).join(', '),ph:d.dc})};
 /* 4: Cố vấn chăm khách (Trợ lý VinViLLa) */
 SH.cv73=v=>{const c=kh73(v);if(!c)return {t:'Cố vấn chăm khách',h:''};const L=(c.cv||[]).slice().reverse();const b=U.cv73b===v;
  return {t:'🤖 Cố vấn chăm khách',h:`<p class="sub" style="margin-top:0">Ghi vấn đề đang gặp khi chăm <b>${esc(c.name)}</b>. Trợ lý VinViLLa gợi ý cách trả lời phù hợp.</p>
@@ -5646,6 +5625,18 @@ A.vc103Bao=async()=>{const a=me();if(!laQL69(a))return;const d=vc103Doc();const 
  try{await vc103Bao(x,h,p);const n=vc103Cong(x,h,p);journey(a,'Báo vụ chốt cho '+x.name,h+' · +'+n+' 💎');save();await vc103Sau(x,p);U.vc103={};U.sheet=null;toast('🎉 Đã ghi vụ chốt cho '+x.name+': +1 vụ, +'+n+' 💎')}
  catch(e){toast(String(e&&e.message||e))}finally{U.vc103Dang=false;render()}};
 
+/* v105: lọc đúng phường. Gõ "Phường 12" thì chỉ giữ căn ở Phường 12 (đọc phường trong tiêu đề/địa chỉ tin ĐTK) */
+function bo105(t){return String(t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d')}
+function ph105(dc){if(!dc)return null;for(const p of String(dc).split(/[,;]/)){const t=bo105(p).trim();const m=t.match(/(?:^|\s)(?:phuong|p\.?|f\.?)\s*([0-9]{1,2}|[a-z][a-z ]{1,30})\s*$/)||t.match(/^(?:phuong|p\.?|f\.?)\s*([0-9]{1,2})$/);
+ if(m){const v=m[1].trim();return /^\d+$/.test(v)?{so:String(+v)}:{ten:v.replace(/\s+/g,' ')}}}return null}
+function kh105(it,w){const loc=it&&it.location||{};const tx=bo105([dtkField(it.title),it.address,loc.address,loc.ward_name,it.description].filter(x=>typeof x==='string').join(' | '));
+ if(w.so)return new RegExp('(?:^|[^a-z])(?:phuong|p\\.?|f\\.?)\\s*0?'+w.so+'(?!\\d)').test(tx);
+ return tx.includes('phuong '+w.ten)||tx.includes('p. '+w.ten)||tx.includes('p.'+w.ten)}
+const tim73_105=tim73;tim73=async function(src,f){await tim73_105(src,f);const w=ph105(f&&f.ph);const r=U.l73[src];
+ if(!w||!r||r.loading||!Array.isArray(r.list))return;const n0=r.list.length;r.list=r.list.filter(it=>kh105(it,w));
+ const ten=w.so?'Phường '+w.so:'Phường '+w.ten.replace(/\b\w/g,c=>c.toUpperCase());r.hieu=(r.hieu?r.hieu+' · ':'')+'chỉ giữ căn ở '+ten+(n0>r.list.length?' (bỏ '+(n0-r.list.length)+' căn phường khác)':'');
+ if(!r.list.length&&n0)r.err='Chưa có căn nào đúng '+ten+' trong tầm giá này. Thử nới giá hoặc bỏ ô phường để xem cả quận nha.';render()};
+
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
    Trợ lý/Sếp duyệt + chọn vai trò, danh bạ anh em, game của từng người,
@@ -5689,7 +5680,6 @@ async function sbLoad(){
    sb.from('khoa_dang_nhap').select('gmail,khoa_den').gt('khoa_den',new Date().toISOString()),
    sb.from('ho_so_nhan_su').select('*').order('id')]);
   (lk.data||[]).forEach(x=>{S.locks[x.gmail]=Date.parse(x.khoa_den)});
-  LIVE.tb={};try{const tb=await sb.rpc('ds_thiet_bi');(tb.data||[]).forEach(x=>{LIVE.tb[x.nguoi_dung_id]=x})}catch(e){}
   LIVE.hs=(hs.data||[]).map(r=>({so:r.so_ho_so||'',ky:r.ngay_ky_hd||'',ten:r.ho_ten||'',sinh:r.ngay_sinh||'',que:r.que_quan||'',dc:r.dia_chi||'',cccd:r.cccd||'',sdt:r.so_dien_thoai||'',mst:r.ma_so_thue||'',stk:r.so_tai_khoan||'',nh:r.ngan_hang||'',drive:r.link_drive||''}));
  }
  await loadVu(mine);
@@ -5823,12 +5813,7 @@ A.dealOk=async v=>{const d=S.dealQueue[+v];if(!d||d.done||LIVE.busy)return;busy(
  try{if(d.id){const {error}=await sb.rpc('duyet_vu_chot',{p_id:d.id,p_he_so_t:tierT(d.p),p_dong_y:true});if(error)throw error}
   busy(false);_dealOk(v);const x=d.email&&acct(d.email);if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x.id]=(LIVE.tNam[x.id]||0)+tierT(d.p)}await syncNow();render()}
  catch(err){busy(false);toast(/đã được xử lý|Chỉ Sếp/.test(err.message||'')?err.message:errVi(err));render()}};
-/* ---- 1 tài khoản chỉ đăng nhập 1 thiết bị: máy đầu tiên giữ tài khoản, máy khác bị chặn tới khi được reset ---- */
-function maMay(){const K='hoavinh-ma-may';try{let v=localStorage.getItem(K);if(!v){v=(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));localStorage.setItem(K,v)}return v}catch(e){return maMay._v||(maMay._v='tam-'+Date.now().toString(36)+Math.random().toString(36).slice(2))}}
-function tenMay(){const u=navigator.userAgent||'';const os=/iPhone/.test(u)?'iPhone':/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Mac/.test(u)?'Máy Mac':/Windows/.test(u)?'Máy Windows':'Thiết bị';const br=/Zalo/i.test(u)?'Zalo':/FBAN|FBAV/.test(u)?'Facebook':/CriOS|Chrome/.test(u)?'Chrome':/Safari/.test(u)?'Safari':/Firefox|FxiOS/.test(u)?'Firefox':'trình duyệt';return os+' · '+br}
-async function giuMay(){try{const {data,error}=await sb.rpc('giu_thiet_bi',{p_ma:maMay(),p_ten:tenMay()});if(error){console.warn('[Hoa Vinh] giu thiet bi',error);return true}return data!=='khac'}catch(e){return true}}
 async function afterLogin(fresh){
- if(!(await giuMay())){S.me=null;S.accts=[];LIVE.me=null;LIVE.hs=null;U.auth.step='email';U.auth.err='Tài khoản này đang đăng nhập trên một máy khác. Nhờ Trợ lý bấm “Reset đăng nhập” giúp bạn, rồi đăng nhập lại trên máy này nhé.';_save();await sb.auth.signOut();return}
  const mine=await sbLoad();
  if(!mine){S.me=null;U.auth.step='email';U.auth.err='Chưa thấy tài khoản. Bấm “Đăng ký mới” giúp mình nhé.';await sb.auth.signOut();return}
  if(mine.trang_thai==='tu_choi'||mine.trang_thai==='tam_ngung'){S.me=null;U.auth.step='email';
@@ -5897,7 +5882,7 @@ A.submitReg=async()=>{const A2=U.auth;const n=val('rn'),d=val('rd');A2.draft.nam
   const {error}=await sb.from('nguoi_dung').update({ho_ten:n,ngay_sinh:d,anh}).eq('id',user.id);if(error)throw error;
   A2.err='';A2.draft={};await afterLogin(false);
  }catch(err){A2.err=errVi(err)}finally{busy(false);render()}};
-A.logout=async()=>{try{await syncNow();if(sb){await sb.rpc('tha_thiet_bi',{p_ma:maMay()}).then(()=>{},()=>{});await sb.auth.signOut()}}catch(e){}LIVE.me=null;S.accts=[];S.locks={};LIVE.hs=null;_logout()};
+A.logout=async()=>{try{await syncNow();if(sb)await sb.auth.signOut()}catch(e){}LIVE.me=null;S.accts=[];S.locks={};LIVE.hs=null;_logout()};
 A.liveRefresh=async()=>{if(LIVE.busy)return;busy(true,'Đang tải lại…');
  try{await syncNow();await afterLogin(false);const m=me();toast(m&&m.status==='pending'?'Trợ lý chưa duyệt, đợi chút nha':'Đã cập nhật dữ liệu mới nhất')}
  catch(err){toast(errVi(err))}finally{busy(false);U.sheet=null;render()}};
