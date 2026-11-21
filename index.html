@@ -2744,18 +2744,28 @@ function hsLoad(){try{const x=JSON.parse(localStorage.getItem(HS_KEY));if(x&&x.r
 function hsData(){const x=hsLoad();return x?{rows:x.rows,real:true,file:x.file,at:x.at}:{rows:HS_SAMPLE,real:false}}
 const noDau=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().replace(/\s+/g,' ').trim();
 const noPre=s=>noDau(s).replace(/^(anh|chi|em|ban|co|chu|tro ly)\s+/,'');
-function dmyIso(s){const m=String(s||'').match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})/);return m?m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'):''}
+function dmyIso(s){s=String(s||'').trim();let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);if(m)return m[1]+'-'+m[2].padStart(2,'0')+'-'+m[3].padStart(2,'0');m=s.match(/(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})\b/);if(!m)return '';let y=m[3];if(y.length===2)y=(+y>40?'19':'20')+y;return y.length===4?y+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0'):''}
 function nameHit(full,reg){const f=noPre(full),r=noPre(reg);if(!f||!r)return false;return f===r||f.endsWith(' '+r)||r.endsWith(' '+f)}
-/* trạng thái 1 dòng hồ sơ: 'ok' khớp tên + ngày sinh với tài khoản app, 'name' chỉ trùng tên, '' chưa đăng ký */
-function hsMatch(row){let best=null;for(const a of S.accts){if(!nameHit(row.ten,a.name))continue;const ok=a.dob&&dmyIso(row.sinh)===a.dob;if(ok)return {st:'ok',a};best=best||{st:'name',a}}
- if(!best)for(const m of S.members)if(nameHit(row.ten,m.name))return {st:'name',m};return best||{st:''}}
-function hsOfAcct(a){const d=hsData();for(const r of d.rows){if(nameHit(r.ten,a.name)&&a.dob&&dmyIso(r.sinh)===a.dob)return r}return null}
+/* Khớp thông minh: anh em hay đăng ký bằng tên thương hiệu ("Tuyền bds nè!"), nên ngoài họ tên còn so từng chữ trong tên với tên app và Gmail.
+   'ok' = trùng ngày sinh + có chữ trong tên khớp (tên app hoặc Gmail); 'dob' = chỉ trùng ngày sinh; 'name' = trùng tên, khác ngày sinh; '' = chưa đăng ký */
+const hsTok=s=>noDau(s).replace(/[^a-z0-9 ]/g,' ').split(' ').filter(w=>w.length>=2);
+function hsHint(row,a){if(nameHit(row.ten,a.name))return 3;const T=hsTok(row.ten);if(!T.length)return 0;const N=hsTok(a.name),g=noDau(String(a.email||'').split('@')[0]).replace(/[^a-z]/g,'');
+ const ten=T[T.length-1];let sc=0;if(N.includes(ten))sc=2;else if(T.some(w=>N.includes(w)&&w.length>=3))sc=1;
+ if(g&&ten.length>=3&&g.includes(ten))sc=Math.max(sc,T[0].length>=2&&g.includes(T[0])?2:1);return sc}
+function hsMatch(row){const iso=dmyIso(row.sinh);let best=null,dob=null;
+ for(const a of S.accts){const h=hsHint(row,a),same=!!(a.dob&&iso&&iso===a.dob);
+  if(same&&h>0){if(!best||best.st!=='ok'||h>best.h)best={st:'ok',a,h};continue}
+  if(same){dob=dob||{st:'dob',a};continue}
+  if(h===3&&!best)best={st:'name',a,h}}
+ if(best&&best.st==='ok')return best;if(dob)return dob;if(best)return best;
+ for(const m of S.members)if(nameHit(row.ten,m.name))return {st:'name',m};return {st:''}}
+function hsOfAcct(a){const d=hsData();for(const r of d.rows){const m=hsMatch(r);if(m.st==='ok'&&m.a===a)return r}return null}
 function hsGreen(p){const a=p.email&&S.accts.find(x=>x.email===p.email);return !!(a&&hsOfAcct(a))}
 const hsCan=()=>{const a=me();return a&&(a.role==='sep'||a.role==='tl')};
 const mask=s=>{s=String(s||'');return s.length>4?'•••• '+s.slice(-4):s};
-function hsRow(r,i){const m=hsMatch(r),open=U.hsOpen===i;const st=m.st==='ok'?['ok','Đã đăng ký app']:m.st==='name'?['warn','Trùng tên, chưa khớp ngày sinh']:['','Chưa đăng ký app'];
+function hsRow(r,i){const m=hsMatch(r),open=U.hsOpen===i;const st=m.st==='ok'?['ok','✅ Đã tham gia app']:m.st==='dob'?['warn','Trùng ngày sinh, xem lại tên']:m.st==='name'?['warn','Trùng tên, chưa khớp ngày sinh']:['','Chưa đăng ký app'];
  return `<div class="hs ${m.st==='ok'?'hs-ok':''}"><button class="hs-hd" data-a="hsOpen" data-v="${i}" aria-expanded="${open}"><span class="hs-name">${esc(r.ten)}</span><span class="pill ${st[0]}">${st[1]}</span></button>
- <div class="sub">Hồ sơ số ${esc(r.so)} · ký HĐ ${esc(r.ky)} · sinh ${esc(r.sinh)}${m.a?' · tài khoản: '+esc(m.a.name):''}</div>
+ <div class="sub">Hồ sơ số ${esc(r.so)} · ký HĐ ${esc(r.ky)} · sinh ${esc(r.sinh)}${m.a?' · tài khoản app: <b>'+esc(m.a.name)+'</b>'+(m.a.email?' ('+esc(m.a.email)+')':''):''}</div>
  ${open?`<table class="tbl" style="margin-top:6px"><tr><td>Số điện thoại</td><td class="r">${r.sdt?`<a class="link" href="tel:${esc(r.sdt)}">${esc(r.sdt)}</a>`:'—'}</td></tr><tr><td>Quê quán</td><td class="r">${esc(r.que)||'—'}</td></tr><tr><td>Địa chỉ thường trú</td><td class="r">${esc(r.dc)||'—'}</td></tr>
   <tr><td>Căn cước</td><td class="r num">${U.hsShow===i?esc(r.cccd):mask(r.cccd)}</td></tr><tr><td>Mã số thuế</td><td class="r num">${U.hsShow===i?esc(r.mst):mask(r.mst)}</td></tr><tr><td>Số tài khoản</td><td class="r num">${U.hsShow===i?esc(r.stk):mask(r.stk)} · ${esc(r.nh)}</td></tr></table>
   <div class="row" style="margin-top:8px"><button class="btn ghost sm grow" data-a="hsShow" data-v="${i}">${U.hsShow===i?'Ẩn số riêng tư':'Hiện căn cước, STK'}</button>${/^https:\/\/drive\.google\.com\//.test(r.drive)?`<a class="btn gold sm grow" style="display:grid;place-items:center;text-decoration:none" href="${esc(r.drive)}" target="_blank" rel="noopener">Mở hồ sơ Drive</a>`:''}</div>`:''}</div>`}
@@ -2771,7 +2781,7 @@ SH.hoso=()=>{if(!hsCan())return {t:'Hồ sơ nhân sự',h:'<p class="sub">Chỉ
  return {t:'Hồ sơ nhân sự',h:`<div class="stack">
   <div class="note ${d.real?'ok':''}">${d.real?`Đang có <b>${d.rows.length} hồ sơ</b> lưu trên Supabase, có khoá bảo vệ: chỉ Sếp và Trợ lý đọc được.`:'Chưa có hồ sơ nào. Bấm “Nhập file Excel” để đưa hồ sơ lên Supabase (chỉ Sếp và Trợ lý xem được).'}</div>
   <div class="row"><label class="btn ghost sm grow" style="display:grid;place-items:center">📥 Nhập file Excel<input type="file" accept=".xlsx,.xls" data-hs="1" hidden></label>${d.real?'<button class="btn ghost sm" data-a="hsClear">Xoá hết hồ sơ</button>':''}</div>
-  <div class="sub">Tên hiện <b style="color:var(--green)">xanh lá</b> khi anh em đăng ký app với họ tên và ngày sinh trùng hồ sơ.</div>
+  <div class="sub">Tên hiện <b style="color:var(--green)">xanh lá</b> khi anh em đã tham gia app: trùng ngày sinh và có chữ trong tên khớp (kể cả tên thương hiệu như “Tuyền bds nè!” hay Gmail).</div>
   <input class="in" id="hsq" placeholder="Tìm theo tên, số điện thoại, số hồ sơ" value="${esc(U.hsq||'')}" autocomplete="off">
   <div class="picks">${[['all','Tất cả'],['ok','Đã đăng ký'],['no','Chưa đăng ký']].map(([k,l])=>`<button class="${f===k?'on':''}" data-a="hsF" data-v="${k}">${l}</button>`).join('')}</div>
   <div id="hslist">${hsList()}</div></div>`}};
@@ -2784,9 +2794,10 @@ function loadXlsx(cb){if(window.XLSX)return cb();const s=document.createElement(
 document.addEventListener('change',e=>{const el=e.target;if(!el.dataset.hs||!el.files||!el.files[0])return;const file=el.files[0];
  loadXlsx(()=>{const fr=new FileReader();fr.onload=()=>{try{
   const wb=XLSX.read(fr.result,{type:'array',cellDates:true});const ws=wb.Sheets[wb.SheetNames[0]];const A_=XLSX.utils.sheet_to_json(ws,{header:1,raw:false,dateNF:'dd/mm/yyyy',defval:''});
-  const hi=A_.findIndex(r=>r.some(c=>noDau(c)==='ho va ten'));if(hi<0){toast('Không thấy cột "HỌ VÀ TÊN" trong file');return}
-  const H=A_[hi].map(noDau),col=k=>H.findIndex(h=>h.includes(k));
-  const C={so:col('ho so so'),ky:col('thoi gian ky'),ten:col('ho va ten'),sinh:col('nam sinh'),que:col('que quan'),dc:col('dia chi'),cccd:col('can cuoc'),sdt:col('so dien thoai'),mst:col('ma so thue'),stk:col('stk'),nh:col('ngan hang'),drive:col('drive')};
+  const isTen=c=>/^(ho va ten|ho ten|ho & ten|ten nhan vien|ten)$/.test(noDau(c));
+  const hi=A_.findIndex(r=>r.some(isTen));if(hi<0){toast('Không thấy cột "HỌ VÀ TÊN" trong file');return}
+  const H=A_[hi].map(noDau),col=(...k)=>{for(const x of k){const i=H.findIndex(h=>h.includes(x));if(i>=0)return i}return -1};
+  const C={so:col('ho so so','so ho so','stt'),ky:col('thoi gian ky','ngay ky'),ten:H.findIndex(h=>isTen(h)),sinh:col('ngay sinh','nam sinh','ngay thang nam sinh'),que:col('que quan','que'),dc:col('dia chi'),cccd:col('can cuoc','cccd','cmnd'),sdt:col('so dien thoai','sdt','dien thoai'),mst:col('ma so thue','mst'),stk:col('stk','so tai khoan'),nh:col('ngan hang'),drive:col('drive')};
   const rows=A_.slice(hi+1).filter(r=>String(r[C.ten]||'').trim()).map(r=>{const o={};for(const k in C)o[k]=C[k]>=0?String(r[C[k]]??'').trim():'';return o});
   hsUpload(rows);
  }catch(err){toast('File này chưa đọc được, Di gửi lại bản .xlsx nhé')}};fr.readAsArrayBuffer(file)})});
