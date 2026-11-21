@@ -6,7 +6,29 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v101 hook tuyen*/
+<style>/*v102 bao cao nhiem vu*/
+.nv102b{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:12px 14px;border:0;border-radius:18px;background:linear-gradient(135deg,#145A3A,#1F7A4D);color:#fff;text-align:left;cursor:pointer;box-shadow:0 6px 16px rgba(20,90,58,.25)}
+.nv102b .ic{font-size:28px;flex:none}.nv102b b{font-size:16px;display:block}.nv102b small{display:block;font-size:12.5px;color:#D6F2E3;margin-top:2px}.nv102b .mui{font-size:22px;opacity:.8}
+.nv102b .bd{background:#FFD24A;color:#5A3A00;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:800;margin-left:6px}
+.nv102tb{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:13.5px}
+.nv102tb td{padding:8px 10px;background:var(--card,#fff);border-top:1.5px solid var(--line,#E5DED2);border-bottom:1.5px solid var(--line,#E5DED2)}
+.nv102tb td:first-child{border-left:1.5px solid var(--line,#E5DED2);border-radius:12px 0 0 12px;font-weight:800}
+.nv102tb td:last-child{border-right:1.5px solid var(--line,#E5DED2);border-radius:0 12px 12px 0;text-align:right;white-space:nowrap;font-weight:800}
+.nv102ch{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.nv102ch button{padding:10px 4px;border-radius:14px;border:1.5px solid var(--line,#E5DED2);background:var(--card,#fff);font-weight:800;font-size:13px;cursor:pointer;color:inherit;line-height:1.3}
+.nv102ch button.on{border-color:#1F7A4D;background:#E6F5EC;color:#145A3A}
+.nv102ch button span{display:block;font-size:22px}
+.nv102an{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.nv102an div{position:relative}.nv102an img{width:72px;height:72px;object-fit:cover;border-radius:12px;display:block}
+.nv102an button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;border:0;background:#222;color:#fff;font-size:12px;cursor:pointer}
+.nv102it{padding:10px 12px;border-radius:14px;border:1.5px solid var(--line,#E5DED2);margin-top:8px;background:var(--card,#fff)}
+.nv102it .tt{display:flex;justify-content:space-between;gap:8px;align-items:center;font-weight:800;font-size:14px}
+.nv102it .an{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.nv102it .an a img{width:60px;height:60px;object-fit:cover;border-radius:10px;display:block}
+.nv102p{border-radius:999px;padding:2px 9px;font-size:12px;font-weight:800;white-space:nowrap}
+.nv102p.cho{background:#FFF1D6;color:#7A4B00}.nv102p.ok{background:#E6F5EC;color:#145A3A}.nv102p.bo{background:#FDE7E7;color:#8A1F1F}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nv102ch button.on{background:#123A28;color:#BFF0D4}:root:not([data-theme="light"]) .nv102p.cho{background:#4A3510;color:#FFE2A8}:root:not([data-theme="light"]) .nv102p.ok{background:#123A28;color:#BFF0D4}:root:not([data-theme="light"]) .nv102p.bo{background:#4A1A1A;color:#FFC9C9}}
+:root[data-theme="dark"] .nv102ch button.on{background:#123A28;color:#BFF0D4}:root[data-theme="dark"] .nv102p.cho{background:#4A3510;color:#FFE2A8}:root[data-theme="dark"] .nv102p.ok{background:#123A28;color:#BFF0D4}:root[data-theme="dark"] .nv102p.bo{background:#4A1A1A;color:#FFC9C9}
+</style><style>/*v101 hook tuyen*/
 .hk101{margin-top:8px}
 .hk101t{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:12px;border:1.5px solid #3A1F5C;background:#F4EEFC;color:#3A1F5C;font-weight:800;font-size:13.5px;cursor:pointer;text-align:left}
 .hk101t small{font-weight:700;opacity:.75}.hk101t .mui{margin-left:auto;font-size:12px}
@@ -2159,7 +2181,7 @@ SH.clients=()=>{const a=me();const L=a.g.clients.map((c,i)=>[c,i]).reverse();
  <label class="row sub" style="gap:8px"><input type="checkbox" id="kr" checked> 🔔 Báo tôi đúng giờ dẫn khách</label>
  <button class="btn full" data-a="addClient">Lưu khách và lịch dẫn</button>
  <p class="sub" style="margin:0">Lịch dẫn khách tự gửi tới Trợ lý. ${nhacQuyen()==='granted'?'App sẽ báo bạn đúng giờ.':'Bật thông báo để app báo bạn đúng giờ.'}</p>${nhacNut()}</div>
- <h3 class="h3" style="margin:16px 0 4px">Lịch đã lưu</h3>${L.map(([c,i])=>{const tl=c.date+'T'+(c.time||'15:00')>=today()+'T00:00';return `<div class="li" style="flex-wrap:wrap"><span class="pill gold num">${esc(c.time||'')}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b> ${khSo(c)?`<span class="sub num">📱 ···${esc(khSo(c))}</span>`:''}<div class="sub">${esc(fmtD(c.date))} · ${esc(c.need)}${c.photos?' · đã gửi '+c.photos+' hình':''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap">${tl?`<button class="btn ghost sm" data-a="khIcs" data-v="${i}">📅 Lưu vào lịch máy</button>`:''}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`}).join('')||'<p class="sub">Chưa có lịch dẫn khách nào.</p>'}<p class="sub" style="margin-top:6px">Mỗi hình dẫn khách được 1 Vàng. Che mặt khách vẫn được tính.</p>`}};
+ <h3 class="h3" style="margin:16px 0 4px">Lịch đã lưu</h3>${L.map(([c,i])=>{const tl=c.date+'T'+(c.time||'15:00')>=today()+'T00:00';return `<div class="li" style="flex-wrap:wrap"><span class="pill gold num">${esc(c.time||'')}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b> ${khSo(c)?`<span class="sub num">📱 ···${esc(khSo(c))}</span>`:''}<div class="sub">${esc(fmtD(c.date))} · ${esc(c.need)}${c.photos?' · đã gửi '+c.photos+' hình':''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap">${tl?`<button class="btn ghost sm" data-a="khIcs" data-v="${i}">📅 Lưu vào lịch máy</button>`:''}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình đề xuất +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`}).join('')||'<p class="sub">Chưa có lịch dẫn khách nào.</p>'}<p class="sub" style="margin-top:6px">Gửi hình dẫn khách để Trợ lý duyệt: +1 Vàng và 💧 tưới cây 2 lần. Che mặt khách vẫn được tính.</p>`}};
 SH.survey=()=>{const a=me();const d=U.ksD||{anh:[],so:[]};const sua=!!d.id;const mine=htKsAll().filter(s=>s.byEmail===a.email);
  const HG=['Đông','Tây','Nam','Bắc','Đông Nam','Đông Bắc','Tây Nam','Tây Bắc'];
  return {t:sua?'✏️ Sửa khảo sát':'Khảo sát nhà',h:`${ksDriveNote(a)}${sua?'':`<div class="card" style="padding:10px;margin-bottom:12px"><label class="sub" for="kstim" style="font-weight:800">🔎 Tìm căn đã khảo sát (cả phòng · ${htKsAll().length} căn)</label><input class="in" id="kstim" type="search" enterkeyhint="search" autocomplete="off" placeholder="Gõ số nhà hoặc tên đường, vd: Phan Sào Nam" value="${esc(U.ksTim||'')}" style="margin-top:6px"><div id="kskq">${ksKetQua(U.ksTim)}</div></div>`}<div class="stack">
@@ -4327,7 +4349,7 @@ SH.clients=()=>{const a=me();const L=a.g.clients.map((c,i)=>[c,i]).reverse();con
  <div class="sub">🗓️ Ngày bắt đầu chăm khách tự ghi lúc bấm Lưu (bây giờ là ${esc(tgVi72(Date.now()))}).</div>
  <button class="btn full" data-a="addClient">Lưu khách</button></div>
  <div style="margin-top:12px">${vong72Note(false)}</div>
- <h3 class="h3" style="margin:16px 0 4px">Khách đã thêm (${L.length})</h3>${L.map(([c,i])=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">V${c.vong||1}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · 🗓️ Chăm từ ${esc(fmtD(bd80(c)))}</div><div class="sub">Vòng ${c.vong||1}: ${VONG72_GON[c.vong||1]}${String(c.phone||'').replace(/\D/g,'')?' · 📱 ···'+esc(String(c.phone).replace(/\D/g,'').slice(-4)):''}${pk78(c)?' · 💰 '+pk78(c):''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap;width:100%;padding-left:46px">${(c.vong||1)<5?`<button class="btn ghost sm" data-a="vong72Len" data-v="${i}">Lên vòng ${(c.vong||1)+1} ›</button>`:'<span class="pill ok">Vòng cuối</span>'}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`).join('')||'<p class="sub">Chưa có khách nào.</p>'}<p class="sub" style="margin-top:6px">Mỗi hình dẫn khách được 1 Vàng. Che mặt khách vẫn được tính.</p>`}};
+ <h3 class="h3" style="margin:16px 0 4px">Khách đã thêm (${L.length})</h3>${L.map(([c,i])=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">V${c.vong||1}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · 🗓️ Chăm từ ${esc(fmtD(bd80(c)))}</div><div class="sub">Vòng ${c.vong||1}: ${VONG72_GON[c.vong||1]}${String(c.phone||'').replace(/\D/g,'')?' · 📱 ···'+esc(String(c.phone).replace(/\D/g,'').slice(-4)):''}${pk78(c)?' · 💰 '+pk78(c):''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap;width:100%;padding-left:46px">${(c.vong||1)<5?`<button class="btn ghost sm" data-a="vong72Len" data-v="${i}">Lên vòng ${(c.vong||1)+1} ›</button>`:'<span class="pill ok">Vòng cuối</span>'}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình đề xuất +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`).join('')||'<p class="sub">Chưa có khách nào.</p>'}<p class="sub" style="margin-top:6px">Gửi hình dẫn khách để Trợ lý duyệt: +1 Vàng và 💧 tưới cây 2 lần. Che mặt khách vẫn được tính.</p>`}};
 A.vong72=v=>{U.vong72=+v;const n=val('kn'),q=val('kqq'),p=val('kp'),pk=val('kpt'),pd=val('kpd'),bd=val('kbd');render();setTimeout(()=>{const e=document.getElementById('kn');if(e)e.value=n;const s=document.getElementById('kqq');if(s&&q)s.value=q;const ep=document.getElementById('kp');if(ep)ep.value=p;const ek=document.getElementById('kpt');if(ek)ek.value=pk;const ed=document.getElementById('kpd');if(ed)ed.value=pd;const eb=document.getElementById('kbd');if(eb&&bd)eb.value=bd},0)};/*v80 moc cham*//*v76 sdt phan khuc*/
 A.vong72Len=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;c.vong=Math.min(5,(c.vong||1)+1);c.last=today();save();render();toast('👏 '+c.name+' lên Vòng '+c.vong+': '+VONG72_GON[c.vong])};
 A.addClient=()=>{const a=me();const n=val('kn').trim();if(!n){toast('Nhập tên khách nhé');return}const q=val('kqq')||kv72MacDinh(a);const vg=U.vong72||1;
@@ -4573,7 +4595,7 @@ A.ks75Xep=async()=>{const g=ks75S();const L=g.ds.filter(x=>x.st===''&&x.chon);if
 SH.ks75di=()=>{const g=ks75S();const T=ks75Tuyen();const xong=g.tuyen.map(k=>g.ds.find(x=>x.k===k)).filter(x=>x&&x.st);
  return {t:'3️⃣ Khảo sát, lưu Nhà Mục tiêu',h:`${ks75Back()}${T.length?ks75MapNut(T):''}
  ${T.map((x,i)=>`<div class="card ks75di"><div class="row" style="gap:10px;align-items:flex-start"><span class="ks75n sm">${i+1}</span><div class="grow" style="min-width:0"><div>${ks75Ten(x)}</div><div class="sub">📍 ${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}${x.dt?' · '+nf(x.dt)+' m²':''}</div>
-  <div class="row" style="gap:6px;margin-top:6px"><a class="btn ghost sm" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a><button class="btn ghost sm" data-a="ks75Ct" data-v="${esc(x.k)}">📄 Xem tin</button></div></div></div>
+  <div class="row" style="gap:6px;margin-top:6px"><a class="btn ghost sm" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a><button class="btn ghost sm" data-a="ks75Ct" data-v="${esc(x.k)}">📄 Xem tin</button><button class="btn ghost sm" data-a="nv102Mo" data-v="ks|${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}">📸 Gửi hình</button></div></div></div>
   <div class="ks75ba"><button class="ks75bo" data-a="ks75St" data-v="${esc(x.k)}|bo">⏭ Bỏ qua</button><button class="ks75ks" data-a="ks75St" data-v="${esc(x.k)}|ks">✅ Đã khảo sát</button><button class="ks75mt" data-a="ks75St" data-v="${esc(x.k)}|mt">🎯 Nhà mục tiêu</button></div></div>`).join('')||`<div class="note">Chưa có tuyến nào đang chờ. Vào bước 2 chọn căn và bấm AI sắp xếp đường đi nha.</div><button class="btn gold full" data-a="sheet" data-v="ks75tuyen">🚶 Xếp tuyến</button>`}
  ${xong.length?`<details class="ks75xong"><summary>Đã xử lý trong tuyến (${xong.length})</summary>${xong.map(x=>ks75The(x,x.st!=='ks'?`<button class="link" data-a="ks75St" data-v="${esc(x.k)}|lai">↩ Đưa lại vào tuyến</button>`:'')).join('')}</details>`:''}
  <p class="sub">⏭ <b>Bỏ qua</b>: không khảo sát căn này. ✅ <b>Đã khảo sát</b>: lưu vào Nhà Đã Khảo sát (anh em xem chung ở Hội trường). 🎯 <b>Nhà mục tiêu</b>: lưu vào danh sách Nhà Mục tiêu của bạn.</p>`}};
@@ -5442,7 +5464,7 @@ SH.qn100=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🎬 Đi quay nhà',h:'<
    +k.hooks.map((x,i)=>`<div class="qn100h"><div class="k"><span>Câu ${i+1}${x.kieu?' · <em>'+esc(x.kieu)+'</em>':''}</span><span>⏱ khoảng ${qn100Giay(x.cau)} giây</span></div><div class="c">“${esc(x.cau)}”</div><div class="nut"><button class="btn ghost sm" data-a="qn100Chep" data-v="${i}">📋 Chép</button><button class="btn ghost sm" data-a="qn100Nghe" data-v="${i}">🔊 Nghe thử</button></div></div>`).join('')
    +(q.chon&&q.chon.id||q.tuGo?`<label class="lb" for="qnGhi" style="margin-top:14px">👀 Tới nhà thấy thêm điểm hay? (không bắt buộc)</label><textarea class="in" id="qnGhi" placeholder="VD: sân thượng view thoáng, nhà mới sơn, cách chợ 2 phút">${esc(q.ghi)}</textarea>
    <button class="btn full" style="margin-top:8px;background:#3A1F5C;color:#fff" data-a="qn100Lai">↻ Viết bộ câu khác</button>`:'')
-   +`<button class="btn ghost full" style="margin-top:8px" data-a="qn100Khac">🏠 Chuẩn bị căn khác</button>`;}
+   +`<button class="btn full" style="margin-top:8px;background:#1F7A4D;color:#fff" data-a="nv102Mo" data-v="quay|${esc(q.chon&&q.chon.title||q.dc||'')}">📸 Báo cáo đã quay căn này (nhận thưởng)</button><button class="btn ghost full" style="margin-top:8px" data-a="qn100Khac">🏠 Chuẩn bị căn khác</button>`;}
  const L=a.g.qn100||[];
  if(L.length&&!q.dang)h+=`<h3 class="h3" style="margin:18px 2px 4px">🕘 Căn đã chuẩn bị gần đây</h3>`+L.slice(0,6).map((x,i)=>`<button class="qn100c" style="width:100%;text-align:left;cursor:pointer" data-a="qn100Cu" data-v="${i}"><div class="grow"><div class="t">${esc(x.ten)}</div><div class="m">${x.kq&&x.kq.hooks?x.kq.hooks.length+' câu hook · ':''}${esc(fmtD?fmtD(String(x.luc).slice(0,10)):String(x.luc).slice(0,10))}</div></div><span>›</span></button>`).join('');
  return {t:'🎬 Đi quay nhà',h:h+'</div>'}};
@@ -5503,7 +5525,7 @@ function qn101Part(a){const g=qn101S(a);const T=qn101Tuyen();const n=g.ds.filter
  <button class="btn gold full" data-a="qn101Loc">🔎 Lọc nhà trên Đại Thế Kỷ</button>`;
  if(T.length)h+=`<div class="card ks75kq" style="margin-top:12px"><div class="between"><b>🗺️ Tuyến đi quay · ${T.length} căn</b></div>${g.ai?`<p class="sub" style="margin:4px 0 0">${esc(g.ai)}</p>`:''}
   ${T.map((x,i)=>`<div class="qn101tu"><div class="row" style="gap:10px;align-items:flex-start"><span class="so">${i+1}</span><div class="grow" style="min-width:0"><b>${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}</b><div class="sub">${x.g?tyTxt(x.g)+' · ':''}${esc(String(x.t).slice(0,70))}</div>
-   <a class="btn ghost sm" style="margin-top:6px" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a></div></div>${hk101Box(x)}</div>`).join('')}
+   <a class="btn ghost sm" style="margin-top:6px" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a> <button class="btn ghost sm" style="margin-top:6px" data-a="nv102Mo" data-v="quay|${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}">📸 Báo cáo đã quay</button></div></div>${hk101Box(x)}</div>`).join('')}
   <div style="margin-top:10px">${ks75MapNut(T)}</div></div>`;
  h+=`<div class="between" style="margin:16px 2px 2px"><h3 class="h3" style="margin:0">📋 Danh sách đi quay (${g.ds.length})</h3>${g.ds.length?'<button class="link" style="font-size:12.5px" data-a="qn101Xoa">Xoá hết</button>':''}</div>`;
  if(!g.ds.length)h+=`<div class="note" style="margin-top:6px">Chưa có căn nào. Bấm <b>🔎 Lọc nhà trên Đại Thế Kỷ</b> rồi chọn <b>➕ Thêm vào danh sách</b> nha.</div>`;
@@ -5513,6 +5535,66 @@ function qn101Part(a){const g=qn101S(a);const T=qn101Tuyen();const n=g.ds.filter
 {const o=SH.qn100;SH.qn100=function(){const x=o.apply(this,arguments);const a=me();if(!a||!hasCtv(a)||!x||!x.h)return x;const q=qn100S();const m=q.mode==='ds'?'ds':'dc';
  const seg=`<div class="qn101seg" role="tablist"><button class="${m==='dc'?'on':''}" data-a="qn101Mode" data-v="dc" role="tab" aria-selected="${m==='dc'}">📍 Theo địa chỉ</button><button class="${m==='ds'?'on':''}" data-a="qn101Mode" data-v="ds" role="tab" aria-selected="${m==='ds'}">🔎 Lọc nhà & xếp tuyến</button></div>`;
  x.h=seg+(m==='ds'?`<div class="qn100">${qn101Part(a)}</div>`:x.h);return x}}
+
+/* ---- v102 📸 Báo cáo nhiệm vụ: gửi hình đề xuất → Trợ lý/Sếp duyệt → thưởng + tưới cây ---- */
+const NV102={quay:{ic:'🎬',ten:'Đi quay nhà',r:{bac:2},nuoc:1,goi:'Hình đang quay video căn nhà'},ks:{ic:'🏠',ten:'Khảo sát nhà',r:{vang:1},nuoc:1,goi:'Hình trước căn nhà hoặc trong nhà'},dan:{ic:'🤝',ten:'Dẫn khách',r:{vang:1},nuoc:2,goi:'Hình đi cùng khách (che mặt khách cũng được)'}};
+const NV102_NGAY=8,NV102_NUOC=3,NV102_ANH=4;
+const nv102Tien=r=>Object.entries(r).map(([k,v])=>'+'+v+' '+(k==='bac'?'🥈 Bạc':k==='vang'?'🥇 Vàng':k==='kc'?'💎 Kim cương':k)).join(', ');
+/* Demo: lưu chung trong S.nv102. Bản thật thay bằng nhat_ky (loai de_xuat_nv). */
+let nv102Ds=()=>S.nv102||(S.nv102=[]);
+let nv102Gui=async o=>{const a=me();nv102Ds().unshift({id:'nv'+Date.now(),email:a.email,name:a.name,nv:o.nv,ghi:o.ghi,anh:o.anh,ngay:today(),tt:'cho',luc:new Date().toISOString()});save()};
+let nv102Duyet=async(x,ok,ly)=>{const a=me();x.tt=ok?'ok':'bo';x.by=a.name;x.ly=ly||'';x.duyet=new Date().toISOString();if(ok){const o=S.accts.find(y=>y.email===x.email);if(o)nv102Cong(o,x)}save()};
+function nv102Nuoc(a,n){const d=today();const t=a.g.nv102t||(a.g.nv102t={});Object.keys(t).forEach(k=>{if(k!==d)delete t[k]});const con=Math.max(0,NV102_NUOC-(t[d]||0));const m=Math.min(con,n);if(m>0){t[d]=(t[d]||0)+m;const v=vuon85Of(a);v.nuoc+=m;lon85(v)}return m}
+function nv102Cong(o,x){const c=o.g.nv102c||(o.g.nv102c={});if(c[x.id])return 0;c[x.id]=1;const T=NV102[x.nv];if(!T)return 0;give(o,T.r,T.ten+' (đã duyệt)');const m=nv102Nuoc(o,T.nuoc);journey(o,'Báo cáo '+T.ten+' được duyệt',nv102Tien(T.r)+(m?' · 💧 tưới cây '+m+' lần':''));return m}
+function nv102S(){return U.nv102||(U.nv102={nv:'quay',ghi:'',anh:[],dang:false})}
+function nv102Keep(){const e=document.getElementById('nvGhi');if(e)nv102S().ghi=e.value}
+function nv102Cho(){return nv102Ds().filter(x=>x.tt==='cho')}
+/* Khảo sát vẫn +1 Thép ngay (chỉ tiêu nhà), Vàng chờ duyệt hình; hình dẫn khách không tự cộng nữa */
+{const o=give;give=function(a,obj,why){const w=String(why||'');if(w==='Hình dẫn khách')return;if(obj&&obj.vang&&!/\(đã duyệt\)$/.test(w)&&(w==='Khảo sát nhà'||/^Khảo sát /.test(w))){obj=Object.assign({},obj);delete obj.vang;if(!Object.keys(obj).length)return}return o.call(this,a,obj,w)}}
+A.nv102Mo=v=>{const d=nv102S();if(v){const i=String(v).indexOf('|');const k=i<0?v:v.slice(0,i);if(NV102[k]){d.nv=k;d.ghi=i<0?'':v.slice(i+1)}}U.sheet='nv102';render();if(typeof nv102Nap==='function')nv102Nap()};
+A.nv102Loai=v=>{nv102Keep();if(NV102[v])nv102S().nv=v;render()};
+A.nv102BoAnh=v=>{nv102Keep();nv102S().anh.splice(+v,1);render()};
+A.nv102Gui=async()=>{nv102Keep();const d=nv102S();const a=me();if(d.dang)return;
+ if(!d.anh.length){toast('Thêm ít nhất 1 hình nha');return}
+ const hn=nv102Ds().filter(x=>x.email===a.email&&x.ngay===today()).length;if(hn>=NV102_NGAY){toast('Hôm nay bạn đã gửi '+NV102_NGAY+' báo cáo rồi, mai gửi tiếp nha');return}
+ d.dang=true;render();
+ try{await nv102Gui({nv:d.nv,ghi:String(d.ghi||'').trim().slice(0,300),anh:d.anh.slice(0,NV102_ANH)});const T=NV102[d.nv];d.anh=[];d.ghi='';toast('📸 Đã gửi báo cáo '+T.ten+', chờ Trợ lý duyệt nha')}
+ catch(e){toast(String(e&&e.message||e))}finally{d.dang=false;render()}};
+A.nv102Ok=async v=>{const x=nv102Ds().find(y=>String(y.id)===String(v));if(!x||x.tt!=='cho')return;const a=me();if(!laQL69(a))return;
+ try{await nv102Duyet(x,true,'');const T=NV102[x.nv];toast('✅ Đã duyệt, '+x.name+' nhận '+nv102Tien(T.r))}catch(e){toast(String(e&&e.message||e))}render()};
+A.nv102Bo=async v=>{const x=nv102Ds().find(y=>String(y.id)===String(v));if(!x||x.tt!=='cho')return;if(!U.nv102Xn||U.nv102Xn.id!==v||Date.now()-U.nv102Xn.t>4000){U.nv102Xn={id:v,t:Date.now()};toast('Bấm lần nữa để không duyệt báo cáo này');return}U.nv102Xn=null;
+ try{await nv102Duyet(x,false,'Hình chưa rõ hoặc chưa đúng nhiệm vụ');toast('Đã trả lại báo cáo')}catch(e){toast(String(e&&e.message||e))}render()};
+function nv102The(x,ql){const T=NV102[x.nv]||{ic:'📸',ten:'Nhiệm vụ',r:{}};const st=x.tt==='ok'?['ok','✅ Đã duyệt']:x.tt==='bo'?['bo','✕ Chưa duyệt']:['cho','⏳ Chờ duyệt'];
+ return `<div class="nv102it"><div class="tt"><span>${T.ic} ${esc(T.ten)}${ql?' · '+esc(x.name||''):''}</span><span class="nv102p ${st[0]}">${st[1]}</span></div>
+ <div class="sub" style="margin-top:2px">${esc(fmtD(x.ngay))}${x.ghi?' · '+esc(x.ghi):''}</div>
+ ${(x.anh||[]).length?`<div class="an">${x.anh.map(u=>u?`<a href="${esc(u)}" target="_blank" rel="noopener"><img src="${esc(u)}" alt="Hình báo cáo" loading="lazy"></a>`:'').join('')}</div>`:''}
+ ${x.tt==='ok'?`<div class="sub" style="margin-top:4px">🎁 ${nv102Tien(T.r)} · 💧 tưới ${T.nuoc} lần${x.by?' · '+esc(x.by)+' duyệt':''}</div>`:x.tt==='bo'&&x.ly?`<div class="sub" style="margin-top:4px">${esc(x.ly)}</div>`:''}
+ ${ql&&x.tt==='cho'?`<div class="grid2" style="margin-top:8px"><button class="btn sm" style="background:#1F7A4D;color:#fff" data-a="nv102Ok" data-v="${esc(x.id)}">✅ Duyệt thưởng</button><button class="btn ghost sm" data-a="nv102Bo" data-v="${esc(x.id)}">✕ Không duyệt</button></div>`:''}</div>`}
+SH.nv102=()=>{const a=me();if(!a||!hasCtv(a))return {t:'📸 Báo cáo nhiệm vụ',h:'<p class="sub">Dành cho anh em trong phòng.</p>'};const d=nv102S();const T=NV102[d.nv];const ql=laQL69(a);
+ const mine=nv102Ds().filter(x=>x.email===a.email);const cho=ql?nv102Cho().filter(x=>x.email!==a.email||a.role==='sep'):[];
+ const v=vuon85Of(a);const tn=((a.g.nv102t||{})[today()])||0;
+ let h=`<p class="sub" style="margin:0 0 8px">Làm xong nhiệm vụ ngoài đường thì chụp hình gửi báo cáo. Trợ lý hoặc Sếp duyệt là bạn nhận thưởng và được tưới cây ở vườn Học viện.</p>
+ <table class="nv102tb">${Object.values(NV102).map(t=>`<tr><td>${t.ic} ${t.ten}</td><td>${nv102Tien(t.r)} · 💧${t.nuoc}</td></tr>`).join('')}<tr><td>💎 Vụ chốt</td><td>1 điểm hệ số T = 1 💎</td></tr></table>
+ <p class="sub" style="margin:4px 2px 0">💧 Tưới tối đa ${NV102_NUOC} lần mỗi ngày từ nhiệm vụ (hôm nay đã tưới ${tn}/${NV102_NUOC}). Cây lớn 1 bậc khi đủ 3 lần tưới và 1 lần bón (xem xong 1 video Học viện). Vườn đang có ${v.cay.length} cây${v.nuoc?', còn '+v.nuoc+' lượt nước chờ cây mới':''}.</p>
+ <button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="dealreport">💎 Báo vụ chốt để nhận Kim cương</button>
+ <h3 class="h3" style="margin:16px 2px 6px">1. Chọn nhiệm vụ</h3><div class="nv102ch">${Object.entries(NV102).map(([k,t])=>`<button class="${d.nv===k?'on':''}" data-a="nv102Loai" data-v="${k}"><span>${t.ic}</span>${t.ten}</button>`).join('')}</div>
+ <h3 class="h3" style="margin:14px 2px 6px">2. Gửi hình (tối đa ${NV102_ANH})</h3><p class="sub" style="margin:0 2px 6px">${T.goi}.</p>
+ ${d.anh.length?`<div class="nv102an">${d.anh.map((u,i)=>`<div><img src="${u}" alt="Hình ${i+1}"><button data-a="nv102BoAnh" data-v="${i}" aria-label="Bỏ hình">✕</button></div>`).join('')}</div>`:''}
+ ${d.anh.length<NV102_ANH?`<label class="btn ghost full" style="display:grid;place-items:center;cursor:pointer;margin-top:8px">📷 Chụp hoặc chọn hình<input type="file" accept="image/*" multiple hidden data-nv102f="1"></label>`:''}
+ <h3 class="h3" style="margin:14px 2px 6px">3. Ghi chú (căn nào, khách nào)</h3><textarea class="in" id="nvGhi" style="width:100%;box-sizing:border-box;min-height:64px" placeholder="VD: 125/4 Lũy Bán Bích, Tân Phú">${esc(d.ghi)}</textarea>
+ <button class="btn full" style="margin-top:10px;background:#1F7A4D;color:#fff" data-a="nv102Gui" ${d.dang?'disabled':''}>${d.dang?'⏳ Đang gửi hình…':'📸 Gửi báo cáo '+T.ten}</button>`;
+ if(ql)h+=`<h3 class="h3" style="margin:18px 2px 2px">🗂 Duyệt báo cáo của anh em (${cho.length})</h3>${cho.length?cho.map(x=>nv102The(x,true)).join(''):'<p class="sub" style="margin:4px 2px">Chưa có báo cáo nào chờ duyệt.</p>'}`;
+ h+=`<h3 class="h3" style="margin:18px 2px 2px">📋 Báo cáo của tôi (${mine.length})</h3>${mine.length?mine.slice(0,20).map(x=>nv102The(x,false)).join(''):'<p class="sub" style="margin:4px 2px">Bạn chưa gửi báo cáo nào.</p>'}`;
+ return {t:'📸 Báo cáo nhiệm vụ',h}};
+function nv102Anh(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const k=Math.min(1,1000/Math.max(img.width,img.height));c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.8))};img.onerror=()=>rej(new Error('Không đọc được hình này'));img.src=r.result};r.onerror=()=>rej(new Error('Không đọc được hình này'));r.readAsDataURL(file)})}
+document.addEventListener('change',async e=>{const el=e.target;if(!el||!el.files||!el.files.length)return;
+ if(el.dataset&&el.dataset.nv102f){nv102Keep();const d=nv102S();const fs=[...el.files].slice(0,NV102_ANH-d.anh.length);for(const f of fs){try{d.anh.push(await nv102Anh(f))}catch(err){toast(err.message)}}render();return}
+ if(el.dataset&&el.dataset.file==='clientPhoto'){const a=me();if(!a)return;const c=(a.g.clients||[])[+el.dataset.idx];const f=el.files[0];
+  const hn=nv102Ds().filter(x=>x.email===a.email&&x.ngay===today()).length;if(hn>=NV102_NGAY){toast('Hôm nay đã gửi đủ '+NV102_NGAY+' báo cáo, hình vẫn được lưu cho khách');return}
+  try{const u=await nv102Anh(f);await nv102Gui({nv:'dan',ghi:'Dẫn khách '+(c&&c.name||''),anh:[u]});toast('📸 Đã gửi hình dẫn khách, chờ Trợ lý duyệt +1 Vàng')}catch(err){toast(String(err&&err.message||err))}render()}},true);
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='nvGhi')nv102S().ghi=e.target.value});
+{const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;const n=laQL69(a)?nv102Cho().filter(x=>x.email!==a.email||a.role==='sep').length:0;
+ return `<button class="nv102b" data-a="nv102Mo"><span class="ic">📸</span><div class="grow"><b>Báo cáo nhiệm vụ${n?`<span class="bd">${n} chờ duyệt</span>`:''}</b><small>Gửi hình đi quay nhà, khảo sát, dẫn khách để nhận thưởng và tưới cây</small></div><span class="mui">›</span></button>`+h}}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -6469,6 +6551,42 @@ async function qn100Goi(body,ms){const hetGio=new Promise((_,rej)=>setTimeout(()
  qn100Hook=async o=>{if(!sb)return _h(o);const b={viec:'hook',ghi_chu:o.ghi_chu||'',lam_moi:!!o.lam_moi};if(o.id)b.id=String(o.id);if(o.mo_ta)b.mo_ta=o.mo_ta;return await qn100Goi(b,70000)}}
 
 /* v101: câu hook sổ xuống cho từng căn trong tuyến Khảo sát + Đi quay nhà dùng chung qn100Hook ở trên (gửi id ĐTK + mo_ta dự phòng). */
+
+/* ---- v102 📸 Báo cáo nhiệm vụ (21/11/2026): nhat_ky loai='de_xuat_nv', hình ở kho khao-sat/<uid>/nv/
+   noi_dung {nv:'quay'|'ks'|'dan', ghi, anh:[đường dẫn], tt:'cho'|'ok'|'bo', by, by_ten, ly, duyet}
+   Duyệt: Trợ lý/Sếp gọi rpc gui_thuong (CTV, CG-ĐC nhận Bạc/Vàng như thưởng Trợ lý) rồi cập nhật tt='ok'.
+   Người gửi mở app: báo cáo đã duyệt → tưới cây 1 lần duy nhất (a.g.nv102w); Trợ lý/Sếp tự cộng thưởng (gui_thuong chỉ gửi CTV, CG-ĐC). ---- */
+LIVE.nv102={ds:[],luc:0,dang:false};
+nv102Ds=()=>LIVE.nv102.ds;
+async function nv102Nap(ep){const L=LIVE.nv102;if(!LIVE.me||LIVE.me.trang_thai!=='hoat_dong'||LIVE.me.vai_tro==='hoc_vien'||L.dang)return;if(!ep&&Date.now()-L.luc<60000)return;L.dang=true;
+ try{const {data,error}=await sb.from('nhat_ky').select('id,nguoi_dung_id,ngay,noi_dung,tao_luc').eq('loai','de_xuat_nv').order('tao_luc',{ascending:false}).limit(300);if(error)throw error;
+  const ps=[...new Set((data||[]).flatMap(r=>(r.noi_dung&&r.noi_dung.anh)||[]))];const url={};
+  for(let i=0;i<ps.length;i+=100){const {data:su}=await sb.storage.from('khao-sat').createSignedUrls(ps.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x.signedUrl)url[x.path]=x.signedUrl})}
+  L.ds=(data||[]).map(r=>{const nd=r.noi_dung||{};const a=S.accts.find(x=>x.id===r.nguoi_dung_id)||{};return {id:r.id,uid:r.nguoi_dung_id,email:a.email||'',name:a.name||'Anh em',role:a.role||'',nv:nd.nv,ghi:nd.ghi||'',anh:(nd.anh||[]).map(p=>url[p]||''),path:nd.anh||[],nd,ngay:r.ngay,tt:nd.tt||'cho',by:nd.by_ten||'',ly:nd.ly||''}});
+  L.luc=Date.now();nv102TuCong()}
+ catch(e){console.warn('nv102',e)}finally{L.dang=false;render()}}
+function nv102TuCong(){const a=me();if(!a)return;const w=a.g.nv102w||(a.g.nv102w={});let doi=false,nuoc=0;
+ LIVE.nv102.ds.filter(x=>x.uid===LIVE.me.id&&x.tt==='ok').forEach(x=>{if(w[x.id])return;w[x.id]=1;doi=true;const T=NV102[x.nv];if(!T)return;
+  if(a.role==='tl'||a.role==='sep'){const c=a.g.nv102c||(a.g.nv102c={});if(!c[x.id]){c[x.id]=1;give(a,T.r,T.ten+' (đã duyệt)')}}
+  nuoc+=nv102Nuoc(a,T.nuoc)});
+ if(doi){_save();queueSync();if(nuoc)setTimeout(()=>toast('💧 Báo cáo được duyệt, cây trong vườn được tưới '+nuoc+' lần'),1800)}}
+nv102Gui=async o=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,'Đang gửi hình…');
+ try{const uid=LIVE.me.id;const ps=[];
+  for(let i=0;i<o.anh.length;i++){const p=uid+'/nv/'+Date.now()+'_'+i+'.jpg';const {error}=await sb.storage.from('khao-sat').upload(p,dataUrlBlob(o.anh[i]),{contentType:'image/jpeg',upsert:false});if(error)throw error;ps.push(p)}
+  const {error}=await sb.from('nhat_ky').insert({nguoi_dung_id:uid,loai:'de_xuat_nv',ngay:today(),noi_dung:{nv:o.nv,ghi:o.ghi||'',anh:ps,tt:'cho'}});
+  if(error){sb.storage.from('khao-sat').remove(ps).catch(()=>{});throw error}
+  await nv102Nap(true)}
+ catch(e){throw new Error(errVi(e))}finally{busy(false)}};
+nv102Duyet=async(x,ok,ly)=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,ok?'Đang duyệt thưởng…':'Đang trả lại…');
+ try{const {data:moi,error:e0}=await sb.from('nhat_ky').select('noi_dung').eq('id',x.id).maybeSingle();if(e0)throw e0;if(moi&&moi.noi_dung&&moi.noi_dung.tt&&moi.noi_dung.tt!=='cho'){await nv102Nap(true);throw new Error('Báo cáo này đã được duyệt rồi')}
+  const T=NV102[x.nv];
+  if(ok&&T&&(x.role==='ctv'||x.role==='cg')){for(const [k,v] of Object.entries(T.r)){const {error}=await sb.rpc('gui_thuong',{p_nhan:x.uid,p_loai:k==='kc'?'kim_cuong':k,p_so_luong:v,p_ly_do:'Báo cáo '+T.ten+' được duyệt'+(x.ghi?' · '+String(x.ghi).slice(0,60):'')});if(error)throw error}}
+  const nd=Object.assign({},(moi&&moi.noi_dung)||x.nd,{tt:ok?'ok':'bo',by:LIVE.me.id,by_ten:(me()||{}).name||'',ly:ly||'',duyet:new Date().toISOString()});
+  const {error}=await sb.from('nhat_ky').update({noi_dung:nd}).eq('id',x.id);if(error)throw error;
+  await nv102Nap(true)}
+ catch(e){throw new Error(/Chỉ |đã được duyệt/.test(e.message||'')?e.message:errVi(e))}finally{busy(false)}};
+{const _sl102=sbLoad;sbLoad=async function(){const r=await _sl102.apply(this,arguments);if(LIVE.me&&LIVE.me.trang_thai==='hoat_dong'&&LIVE.me.vai_tro!=='hoc_vien')nv102Nap(true);return r}}
+setInterval(()=>{if(U.sheet==='nv102'||U.tab==='viec')nv102Nap(false)},120000);
 
 render();
 })();
