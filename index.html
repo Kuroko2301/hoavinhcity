@@ -6,7 +6,15 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v91 tien ich*/
+<style>/*v92 quay lai*/
+.mg92nav{display:flex;align-items:center;gap:8px}.mg92nav span{font-size:13px;font-weight:700;min-width:30px;text-align:center;color:var(--muted)}
+.mg92nav button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold2,#C9A13B);background:transparent;color:inherit;font-size:22px;font-weight:800;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 3px}
+.mg92nav button:active{transform:scale(.94)}
+#mg92row .mg69lv{flex:0 0 100%}#mg92row{scroll-behavior:smooth}
+.sheet-h .nav92{flex:none;height:36px;padding:0 12px 0 10px;border-radius:999px;border:1.5px solid var(--line,#E5DED2);background:transparent;color:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-right:8px;white-space:nowrap}
+.sheet-h:has(.nav92){justify-content:flex-start}.sheet-h:has(.nav92) h2{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dl89pop .gd{font-size:11.5px;color:#9a6b00;margin-top:2px}
+</style><style>/*v91 tien ich*/
 .ti91tim{display:flex;gap:8px;margin:4px 0 10px}.ti91tim .in{flex:1;min-width:0}
 .ti91ds{display:flex;flex-direction:column;gap:10px}
 .ti91i{padding:12px 14px}.ti91i h3{margin:0;font-size:16px;line-height:1.35}.ti91i .ghi{margin:6px 0 0;line-height:1.5;font-size:14px}
@@ -3887,7 +3895,7 @@ let FOLD69=null;
 /* ---- Mini Game: 6 cấp thuyền + luật chơi ---- */
 function mgLuat69(a){const gia=(d)=>({id:'xem'+d,name:'Đội Hoa Vinh',color:'#8E1B1B',lead:'',members:[],paid:[],pay:[],diem:d});
  const lv=BOAT_CAP.map(([m,t],i)=>`<div class="mg69lv"><div class="mg69svg">${boatSVG(gia(m))}</div><b>${i+1}. ${t}</b><span class="sub">từ ${m} điểm</span></div>`).join('');
- return `<div class="card mg69"><div class="between"><div class="kicker" style="color:var(--gold2)">6 cấp thuyền của đội</div><span class="sub">Vuốt ngang →</span></div><div class="mg69row">${lv}</div></div>
+ return `<div class="card mg69"><div class="between"><div class="kicker" style="color:var(--gold2)">6 cấp thuyền của đội</div><div class="mg92nav"><button data-a="mg92" data-v="-1" aria-label="Thuyền trước">‹</button><span class="num" id="mg92n">1/${BOAT_CAP.length}</span><button data-a="mg92" data-v="1" aria-label="Thuyền sau">›</button></div></div><div class="mg69row" id="mg92row">${lv}</div></div>
  <details class="card mg69luat" data-k="mgluat" open><summary>📜 Luật chơi Mini Game</summary><ol>
  <li><b>Lập đội hoặc tìm đội có sẵn.</b> Người lập đội là Chỉ huy. Mỗi đội tối đa 6 người. Muốn vào đội khác thì bấm “Xin vào đội”, quá nửa thành viên đồng ý là được vào.</li>
  <li><b>Góp 200k để lên thuyền.</b> Bấm “Góp 200k lên thuyền”, Trợ lý xác nhận đã nhận thì tên bạn có dấu ✓.</li>
@@ -3913,14 +3921,12 @@ function tgbPart(a){if(!Array.isArray(a.g.schedule))a.g.schedule=[];const td=tod
   <button class="tgb69ck" data-a="tgbXong" data-v="${i}" aria-label="Đánh dấu xong" aria-pressed="${xong}" ${on?'':'disabled'}>${xong?'✓':''}</button>
   <span class="tgb69h num">${esc(s.time)}</span>
   <div class="grow" style="min-width:0"><b>${esc(s.t)}</b><div class="sub">${((TGB_LAP.find(x=>x[0]===(s.lap||'ngay'))||[])[1])||''} · ${t<0?'không nhắc':t?'nhắc trước '+t+' phút':'báo đúng giờ'}${on?'':' · nghỉ hôm nay'}</div></div>
-  <button class="tgb69b" data-a="tgbChuong" data-v="${i}" aria-label="Đổi giờ nhắc">${t<0?'🔕':'🔔'}</button><button class="tgb69b${U.tgbXoa===i?' xn':''}" data-a="tgbXoa" data-v="${i}" aria-label="Xoá">${U.tgbXoa===i?'Xoá?':'🗑'}</button></div>`}).join(''):'<p class="sub" style="margin:8px 0">Chưa có việc nào. Bấm một việc mẫu bên dưới cho nhanh nha.</p>'}</div></div>
+  <button class="tgb69b" data-a="tgbChuong" data-v="${i}" aria-label="Đổi giờ nhắc">${t<0?'🔕':'🔔'}</button><button class="tgb69b${U.tgbXoa===i?' xn':''}" data-a="tgbXoa" data-v="${i}" aria-label="Xoá">${U.tgbXoa===i?'Xoá?':'🗑'}</button></div>`}).join(''):'<p class="sub" style="margin:8px 0">Chưa có việc nào. Ghi giờ và việc cần làm ở ô bên dưới nha.</p>'}</div></div>
  <div class="card stack tgb69f"><b>➕ Thêm việc</b>
- <div class="sub" style="margin-top:-4px">Bấm 1 việc mẫu là thêm liền (hằng ngày, báo đúng giờ):</div>
- <div class="chips tgb69mau">${TGB_MAU.map(([h,t],k)=>`<button data-a="tgbMau" data-v="${k}"><b class="num">${h}</b> ${esc(t)}</button>`).join('')}</div>
  <div class="row" style="gap:8px"><input class="in" id="st" type="time" value="${esc(U.tgbGio||'10:00')}" style="width:120px;flex:0 0 auto" aria-label="Giờ"><input class="in grow" id="sx" placeholder="Việc cần làm" style="min-width:0" aria-label="Việc cần làm"></div>
  <div class="grid2"><select class="in" id="stTruoc" aria-label="Nhắc">${TGB_TRUOC.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select><select class="in" id="stLap" aria-label="Lặp lại">${TGB_LAP.map(([v,l])=>`<option value="${v}">${l}</option>`).join('')}</select></div>
  <button class="btn full" data-a="addSched">Thêm vào lịch</button>
- ${L.length?`<button class="btn ghost full" data-a="tgbIcs">📅 Lưu cả lịch vào điện thoại</button><p class="sub" style="margin:0">Khi app đang mở, Hoa Vinh tự báo đúng giờ. Bấm <b>Lưu cả lịch vào điện thoại</b> thì <b>dù đóng app</b> điện thoại vẫn báo.</p>`:''}</div>`}
+ <p class="sub" style="margin:0">🔔 Tới giờ, Hoa Vinh báo ngay trên app cho bạn nha.</p></div>`}
 {const o=diaryPart;diaryPart=function(a,seg){if(seg!=='tgb')return o(a,seg);const h=o(a,'tgb');const k=h.indexOf('<div class="card"><h2 class="h2">Nhật ký môi giới');return tgbPart(a)+(k>=0?h.slice(k):'')}}
 SH.tgb=()=>({t:'Thời gian biểu',h:tgbPart(me())});
 function tgbDaQua(s){const t=tgbMoc(s);if(t&&Date.now()>=t)s.nhacDa=today()+' '+s.time+' '+(s.truoc||0)}
@@ -4452,8 +4458,8 @@ SH.ks75di=()=>{const g=ks75S();const T=ks75Tuyen();const xong=g.tuyen.map(k=>g.d
 A.ks75St=async v=>{const i=v.lastIndexOf('|');const k=v.slice(0,i),st=v.slice(i+1);const g=ks75S();const x=ks75Get(k);if(!x)return;const a=me();
  if(st==='lai'){if(x.st==='mt')g.mt=g.mt.filter(y=>y.k!==x.k);x.st='';if(!g.tuyen.includes(k))g.tuyen.push(k);save();render();return}
  if(st==='bo'){x.st='bo';save();render();toast('⏭ Đã bỏ qua căn này');return}
- if(st==='mt'){x.st='mt';if(!g.mt.some(y=>y.k===x.k))g.mt.unshift(Object.assign({},x,{luc:today()}));save();render();toast('🎯 Đã lưu vào Nhà Mục tiêu');return}
- if(st==='ks'){if(U.ksBusy)return;U.ksBusy=true;const addr=ks75Dc(x).replace(', TP. Hồ Chí Minh','');
+ if(st==='mt'){x.st='mt';if(!g.mt.some(y=>y.k===x.k))g.mt.unshift(Object.assign({},x,{luc:today()}));save();render();toast(x.ksAddr?'🎯 Đã lưu vào Nhà Mục tiêu, tính luôn là Nhà Đã Khảo sát':'🎯 Đã lưu vào Nhà Mục tiêu');return}
+ if(st==='ks'){if(U.ksBusy)return;U.ksBusy=true;const addr=ks75Dc(x).replace(/, (TP\. )?Hồ Chí Minh$/,'');
   const dac=[sach74(x.t),[x.g?'Giá chào '+tyTxt(x.g):'',x.dt?nf(x.dt)+' m²':''].filter(Boolean).join(' · '),sach74(String(x.mo||'').startsWith(x.t)?String(x.mo).slice(x.t.length).replace(/^[\s.,]+/,''):x.mo).slice(0,300)].filter(Boolean).join('\n');
   try{await ksSave(a,{addr,dir:'',anh:[],so:[],dac,manh:'',yeu:'',ghi:''});x.st='ks';x.ksAddr=addr;give(a,{thep:1,vang:1},'Khảo sát nhà');save();toast('✅ Đã lưu vào Nhà Đã Khảo sát · về nhà bổ sung hình sổ ở bước 4 nha')}
   catch(e){toast(e&&e.message?e.message:'Chưa lưu được, thử lại nhé')}finally{U.ksBusy=false;render()}}};
@@ -4849,6 +4855,64 @@ document.addEventListener('input',e=>{const el=e.target;if(!el||!el.hasAttribute
  const dm=document.getElementById('ti91Dem');if(dm)dm.innerHTML=`<b>${n}</b> tiện ích${q.length?' phù hợp':''}`;const r=document.querySelector('.ti91rong');if(r){r.hidden=!!n;if(!n)r.textContent=ti91Ds().length?'Không tìm thấy tiện ích nào khớp. Thử gõ ít chữ hơn nha.':'Chưa có tiện ích nào. Bạn thêm tiện ích đầu tiên nha 🙌'}});
 document.addEventListener('change',e=>{const el=e.target;if(!el||!el.hasAttribute||!el.hasAttribute('data-ti91f')||!el.files)return;const f=el.files[0];el.value='';if(!f)return;
  if(!/^video\//.test(f.type||'')&&!/\.(mp4|mov|m4v|3gp|webm|avi|mkv)$/i.test(f.name)){toast('Chọn tệp video nha');return}if(f.size>2*1073741824){toast('Video tối đa 2GB nha');return}ti91Keep();TI91F=f;render()});
+
+/* ---- v92 Nút ← Quay lại: mở màn B từ màn A thì có nút về đúng A (giữ chỗ đang cuộn) ---- */
+const NAV92={st:[],cu:null,back:false,top:0};
+const renderSheet_92=renderSheet;
+renderSheet=function(){const w=$('#sheetwrap');const sc=w&&w.querySelector('.sheet');const top=sc?sc.scrollTop:0;const moi=U.sheet||null;
+ if(!moi||(!S.me&&moi!=='switch')){NAV92.st=[];NAV92.cu=null;NAV92.back=false;return renderSheet_92()}
+ let dat=null;
+ if(NAV92.back){dat=NAV92.top;NAV92.back=false}
+ else if(NAV92.cu&&moi!==NAV92.cu){const i=NAV92.st.findIndex(x=>x.k===moi);if(i>=0){dat=NAV92.st[i].top;NAV92.st=NAV92.st.slice(0,i)}else{NAV92.st.push({k:NAV92.cu,top});if(NAV92.st.length>20)NAV92.st.shift();dat=0}}
+ NAV92.cu=moi;renderSheet_92();
+ const h=w.querySelector('.sheet-h');if(h&&NAV92.st.length&&!h.querySelector('.nav92'))h.insertAdjacentHTML('afterbegin','<button class="nav92" data-a="nav92Back" aria-label="Quay lại màn trước">← Quay lại</button>');
+ if(dat!=null){const n=w.querySelector('.sheet');if(n){n.scrollTop=dat;requestAnimationFrame(()=>{n.scrollTop=dat})}}};
+A.nav92Back=()=>{const e=NAV92.st.pop();if(!e){U.sheet=null;render();return}NAV92.back=true;NAV92.top=e.top;NAV92.cu=e.k;U.sheet=e.k;render()};
+
+/* ---- v92 Thuyền: nút ‹ › ---- */
+A.mg92=v=>{const row=document.getElementById('mg92row');if(!row)return;row.scrollBy({left:(+v)*row.clientWidth,behavior:'smooth'})};
+document.addEventListener('scroll',e=>{const row=e.target;if(!row||row.id!=='mg92row')return;const n=document.getElementById('mg92n');if(n)n.textContent=(Math.round(row.scrollLeft/Math.max(1,row.clientWidth))+1)+'/'+BOAT_CAP.length},true);
+
+/* ---- v92 Google Maps chỉ đường: "93/9/53 Bờ Bao Tân Thắng, Tân Phú, Hồ Chí Minh" thay cho cả dòng tin ---- */
+const ks75Dc_92=ks75Dc;
+ks75Dc=function(x){const raw=x.raw||{};const l=raw.location||{};const st=String(l.street||'').trim();const tt=String(dtkField(raw.title)||x.t||'');
+ const so0=tt.match(/^\s*(\d+[A-Za-z]?(?:[.\/]\d+[A-Za-z]?){0,4})\s/);const q=x.q?String(x.q).split(' · ')[0]:'';
+ if(st&&!/^nan$/i.test(st)){let so=String(l.number||'').trim();if(so0&&(!so||so0[1].split(/[.\/]/)[0]===so.split(/[.\/]/)[0]))so=so0[1];so=so.replace(/\./g,'/');
+  return [(so?so+' ':'')+st.replace(/^(đường|duong)\s+/i,''),q,'Hồ Chí Minh'].filter(Boolean).join(', ')}
+ const m=tt.match(/^\s*(\d+[A-Za-z]?(?:[.\/]\d+[A-Za-z]?){0,4})\s+((?:[^\d\s,()]+\s*){1,5})/u);
+ if(m)return [m[1].replace(/\./g,'/')+' '+m[2].trim(),q,'Hồ Chí Minh'].filter(Boolean).join(', ');
+ return ks75Dc_92(x)};
+
+/* ---- v92 Nhà Mục tiêu tính luôn Nhà Đã Khảo sát ---- */
+const ks75St_92=A.ks75St;
+A.ks75St=async v=>{const i=v.lastIndexOf('|');const k=v.slice(0,i),st=v.slice(i+1);const x=ks75Get(k);
+ if(st==='mt'&&x&&!x.ksAddr){await ks75St_92(k+'|ks');if(!x.ksAddr)return}return ks75St_92(v)};
+/* Căn đã lưu Mục tiêu trước bản này: tự thêm vào Nhà Đã Khảo sát (mỗi căn thử 1 lần) */
+let KS92=false;
+async function ks92Bu(){if(KS92)return;const a=me();if(!a||!hasCtv(a))return;const g=ks75S();const can=g.ds.filter(x=>x.st==='mt'&&!x.ksAddr&&!x.ks92);if(!can.length)return;KS92=true;
+ try{for(const x of can){x.ks92=1;await ks75St_92(x.k+'|ks');x.st='mt'}save();render()}finally{KS92=false}}
+{const o=SH.survey;SH.survey=function(){setTimeout(()=>ks92Bu().catch(()=>{}),300);return o.apply(this,arguments)}}
+{const o=SH.ks75mt;SH.ks75mt=function(){setTimeout(()=>ks92Bu().catch(()=>{}),300);return o.apply(this,arguments)}}
+
+/* ---- v92 Bản đồ lọc: ghim đúng quận. Tìm tên đường TRONG khung quận; không thấy thì ghim giữa quận (ghi "gần đúng") ---- */
+const Q92={'1':[10.7769,106.7009,2.2],'3':[10.7843,106.6844,2],'4':[10.7578,106.7013,2],'5':[10.7540,106.6634,2],'6':[10.7480,106.6352,2.4],'7':[10.7340,106.7219,3.5],'8':[10.7240,106.6286,3.5],
+ '10':[10.7746,106.6679,2],'11':[10.7629,106.6503,2],'12':[10.8672,106.6413,5],'binh thanh':[10.8106,106.7091,3.5],'phu nhuan':[10.7992,106.6803,2],'tan binh':[10.8015,106.6527,3.5],
+ 'tan phu':[10.7915,106.6280,3],'go vap':[10.8387,106.6653,3.5],'binh tan':[10.7652,106.6038,4.5],'thu duc':[10.8494,106.7537,9],'2':[10.7872,106.7498,4],'9':[10.8428,106.8287,6],
+ 'nha be':[10.6950,106.7046,6],'binh chanh':[10.6874,106.5939,9],'hoc mon':[10.8862,106.5923,7],'cu chi':[10.9733,106.4931,13],'can gio':[10.4110,106.9540,18]};
+function q92(q){const t=noDau(String(q||'').split(' · ')[0]).replace(/^(quan|q\.?|huyen|tp\.?|thanh pho)\s*/,'').trim();return Q92[t]?{k:t,c:Q92[t]}:null}
+const DL92C=(()=>{try{return JSON.parse(localStorage.getItem('hv92geo')||'{}')}catch(e){return {}}})();
+for(const k in DL89C)delete DL89C[k];Object.assign(DL89C,DL92C);
+dl89Luu=function(){try{const k=Object.keys(DL89C);if(k.length>800)k.slice(0,k.length-800).forEach(x=>delete DL89C[x]);localStorage.setItem('hv92geo',JSON.stringify(DL89C))}catch(e){}};
+const kc92=(a,b,c,d)=>{const R=6371,x=(c-a)*Math.PI/180,y=(d-b)*Math.PI/180;const h=Math.sin(x/2)**2+Math.cos(a*Math.PI/180)*Math.cos(c*Math.PI/180)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(h))};
+dl89Tim=async function(p){if(window.__geo89)return window.__geo89(p);const Q=q92(p.q);
+ if(!Q){const tinh=/ - /.test(p.q)?p.q.replace(/ - /g,', '):p.q+', Thành phố Hồ Chí Minh';
+  const u='https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=vn&accept-language=vi&q='+encodeURIComponent(p.st+', '+tinh);
+  const r=await fetch(u,{headers:{Accept:'application/json'}});if(!r.ok)throw new Error('geo '+r.status);const j=await r.json();return j&&j[0]?[+j[0].lat,+j[0].lon]:0}
+ const [la,lo,rk]=Q.c;const dLa=(rk*1.3)/111,dLo=(rk*1.3)/109;
+ if(p.st){try{const u='https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=vn&accept-language=vi&bounded=1&viewbox='+[lo-dLo,la+dLa,lo+dLo,la-dLa].map(x=>x.toFixed(4)).join(',')+'&q='+encodeURIComponent(p.st);
+  const r=await fetch(u,{headers:{Accept:'application/json'}});if(r.ok){const j=await r.json();const ok=(j||[]).map(x=>[+x.lat,+x.lon]).filter(c=>kc92(la,lo,c[0],c[1])<=rk*1.3);if(ok.length)return ok[0]}}catch(e){}}
+ return [la,lo,1]};
+{const o=dl89Pop;dl89Pop=function(p){const h=o(p);const c=DL89C[dl89Khoa(p)];return c&&c[2]?h.replace('</b>','</b><div class="gd">📍 Gần đúng: chưa tìm ra đường này, ghim giữa quận '+esc(String(p.q||'').split(' · ')[0])+'</div>'):h}}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
