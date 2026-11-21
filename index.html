@@ -5576,7 +5576,7 @@ SH.nv102=()=>{const a=me();if(!a||!hasCtv(a))return {t:'📸 Báo cáo nhiệm v
  let h=`<p class="sub" style="margin:0 0 8px">Làm xong nhiệm vụ ngoài đường thì chụp hình gửi báo cáo. Trợ lý hoặc Sếp duyệt là bạn nhận thưởng và được tưới cây ở vườn Học viện.</p>
  <table class="nv102tb">${Object.values(NV102).map(t=>`<tr><td>${t.ic} ${t.ten}</td><td>${nv102Tien(t.r)} · 💧${t.nuoc}</td></tr>`).join('')}<tr><td>💎 Vụ chốt</td><td>1 điểm hệ số T = 1 💎</td></tr></table>
  <p class="sub" style="margin:4px 2px 0">💧 Tưới tối đa ${NV102_NUOC} lần mỗi ngày từ nhiệm vụ (hôm nay đã tưới ${tn}/${NV102_NUOC}). Cây lớn 1 bậc khi đủ 3 lần tưới và 1 lần bón (xem xong 1 video Học viện). Vườn đang có ${v.cay.length} cây${v.nuoc?', còn '+v.nuoc+' lượt nước chờ cây mới':''}.</p>
- <button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="dealreport">💎 Báo vụ chốt để nhận Kim cương</button>
+ ${ql?'<button class="btn ghost sm" style="margin-top:6px" data-a="sheet" data-v="dealreport">💎 Báo vụ chốt cho anh em</button>':'<p class="sub" style="margin:6px 2px 0">💎 Vụ chốt do Trợ lý báo: chốt được căn thì nhắn Trợ lý chọn tên bạn nha.</p>'}
  <h3 class="h3" style="margin:16px 2px 6px">1. Chọn nhiệm vụ</h3><div class="nv102ch">${Object.entries(NV102).map(([k,t])=>`<button class="${d.nv===k?'on':''}" data-a="nv102Loai" data-v="${k}"><span>${t.ic}</span>${t.ten}</button>`).join('')}</div>
  <h3 class="h3" style="margin:14px 2px 6px">2. Gửi hình (tối đa ${NV102_ANH})</h3><p class="sub" style="margin:0 2px 6px">${T.goi}.</p>
  ${d.anh.length?`<div class="nv102an">${d.anh.map((u,i)=>`<div><img src="${u}" alt="Hình ${i+1}"><button data-a="nv102BoAnh" data-v="${i}" aria-label="Bỏ hình">✕</button></div>`).join('')}</div>`:''}
@@ -5595,6 +5595,34 @@ document.addEventListener('change',async e=>{const el=e.target;if(!el||!el.files
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='nvGhi')nv102S().ghi=e.target.value});
 {const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;const n=laQL69(a)?nv102Cho().filter(x=>x.email!==a.email||a.role==='sep').length:0;
  return `<button class="nv102b" data-a="nv102Mo"><span class="ic">📸</span><div class="grow"><b>Báo cáo nhiệm vụ${n?`<span class="bd">${n} chờ duyệt</span>`:''}</b><small>Gửi hình đi quay nhà, khảo sát, dẫn khách để nhận thưởng và tưới cây</small></div><span class="mui">›</span></button>`+h}}
+
+/* ---- v103 Trợ lý báo vụ chốt: chọn người chốt → +1 vụ chốt, +hệ số T, +Kim cương ---- */
+function vc103Ds(){return S.accts.filter(x=>x.status==='active'&&['ctv','cg','tl','sep'].includes(x.role)).sort((p,q)=>String(p.name).localeCompare(String(q.name),'vi'))}
+const VC103_VAI={ctv:'CTV',cg:'CG-ĐC',tl:'Trợ lý',sep:'Trưởng phòng'};
+function vc103Cong(x,home,p){const n=tierT(p);x.g.T=(x.g.T||0)+n;x.g.kc=Math.round(((x.g.kc||0)+n)*10)/10;x.g.log=x.g.log||[];x.g.log.push({d:today(),o:{kc:n}});x.g.deals=x.g.deals||[];x.g.deals.push({d:today(),home,feel:'Vụ chốt Trợ lý báo, +'+n+' kim cương',ok:1});x.g.journey.push({d:today(),t:'Vụ chốt được ghi nhận',s:home+' · +'+n+' 💎'});
+ S.phao=(S.phao||[]).filter(q=>Date.now()-q.at<PHAO_GIO*36e5);S.phao.push({email:x.email||'',name:x.name,at:Date.now()});
+ S.ticker='Chúc mừng '+x.name+' chốt '+home+' ('+ty(p*1e9)+')!  ·  '+(S.ticker||'');return n}
+/* Demo: không cần máy chủ. Bản thật thay bằng chèn vu_chot đã duyệt. */
+let vc103Bao=async(x,home,p)=>{};
+let vc103Sau=async()=>{};
+function vc103Doc(){const g=id=>{const e=document.getElementById(id);return e?e.value:''};U.vc103=Object.assign(U.vc103||{},{w:g('drw'),h:g('drh'),p:g('drp')});return U.vc103}
+{const o=SH.dealreport;SH.dealreport=function(){const a=me();if(!a)return o.apply(this,arguments);
+ if(!laQL69(a))return {t:'Vụ chốt',h:`<div class="note">💎 Vụ chốt do <b>Trợ lý báo cáo</b>. Khi bạn chốt được căn, nhắn Trợ lý chọn tên bạn, số vụ chốt và Kim cương của bạn sẽ tự tăng.</div><p class="sub" style="margin:10px 2px 6px">Kim cương nhận theo hệ số T:</p>${tierTable()}`};
+ const d=U.vc103||{};const p=parseFloat(String(d.p||'').replace(',','.'));const ds=vc103Ds();const x=ds.find(y=>y.email===d.w);
+ return {t:'💎 Báo vụ chốt',h:`<p class="sub" style="margin:0 0 8px">Chọn người chốt, ghi căn và giá bán. Bấm báo là số vụ chốt, hệ số T và Kim cương của người đó tăng ngay, cả phòng thấy pháo hoa chúc mừng.</p>
+ <div class="stack"><label class="sub" for="drw" style="font-weight:800">👤 Người chốt</label><select class="in" id="drw" data-vc103="1"><option value="">Chọn người chốt…</option>${ds.map(y=>`<option value="${esc(y.email)}" ${y.email===d.w?'selected':''}>${esc(y.name)} · ${VC103_VAI[y.role]||''}</option>`).join('')}</select>
+ <label class="sub" for="drh" style="font-weight:800">🏠 Căn chốt</label><input class="in" id="drh" data-vc103="1" value="${esc(d.h||'')}" placeholder="VD: Nhà 4x16 Tân Sơn Nhì">
+ <label class="sub" for="drp" style="font-weight:800">💰 Giá bán (tỷ)</label><input class="in num" id="drp" data-vc103="1" type="number" step="0.1" inputmode="decimal" value="${esc(d.p||'')}" placeholder="VD: 6.2">
+ <div class="note" id="vc103xem">${x&&p>0?`${esc(x.name)} sẽ được <b>+1 vụ chốt</b> và <b>+${tierT(p)} 💎</b> (hệ số T ${tierT(p)})`:'Chọn người chốt và nhập giá để xem số Kim cương.'}</div>
+ <button class="btn gold full" data-a="vc103Bao">💎 Báo vụ chốt</button></div>
+ <p class="sub" style="margin:12px 2px 6px">Bảng hệ số T:</p>${tierTable()}`}}}
+document.addEventListener('input',e=>{if(e.target&&e.target.dataset&&e.target.dataset.vc103){const d=vc103Doc();const el=document.getElementById('vc103xem');if(!el)return;const p=parseFloat(String(d.p||'').replace(',','.'));const x=vc103Ds().find(y=>y.email===d.w);el.innerHTML=x&&p>0?`${esc(x.name)} sẽ được <b>+1 vụ chốt</b> và <b>+${tierT(p)} 💎</b> (hệ số T ${tierT(p)})`:'Chọn người chốt và nhập giá để xem số Kim cương.'}});
+document.addEventListener('change',e=>{if(e.target&&e.target.id==='drw'){vc103Doc();render()}});
+A.vc103Bao=async()=>{const a=me();if(!laQL69(a))return;const d=vc103Doc();const x=vc103Ds().find(y=>y.email===d.w);const h=String(d.h||'').trim();const p=parseFloat(String(d.p||'').replace(',','.'));
+ if(!x){toast('Chọn người chốt nha');return}if(!h){toast('Ghi căn chốt nha');return}if(!(p>0)){toast('Nhập giá bán (tỷ) nha');return}
+ if(U.vc103Dang)return;U.vc103Dang=true;
+ try{await vc103Bao(x,h,p);const n=vc103Cong(x,h,p);journey(a,'Báo vụ chốt cho '+x.name,h+' · +'+n+' 💎');save();await vc103Sau(x,p);U.vc103={};U.sheet=null;toast('🎉 Đã ghi vụ chốt cho '+x.name+': +1 vụ, +'+n+' 💎')}
+ catch(e){toast(String(e&&e.message||e))}finally{U.vc103Dang=false;render()}};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -6587,6 +6615,12 @@ nv102Duyet=async(x,ok,ly)=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ 
  catch(e){throw new Error(/Chỉ |đã được duyệt/.test(e.message||'')?e.message:errVi(e))}finally{busy(false)}};
 {const _sl102=sbLoad;sbLoad=async function(){const r=await _sl102.apply(this,arguments);if(LIVE.me&&LIVE.me.trang_thai==='hoat_dong'&&LIVE.me.vai_tro!=='hoc_vien')nv102Nap(true);return r}}
 setInterval(()=>{if(U.sheet==='nv102'||U.tab==='viec')nv102Nap(false)},120000);
+
+/* ---- v103 Trợ lý báo vụ chốt (21/11/2026): chèn vu_chot đã duyệt, nguoi_bao_id = người chốt (để bảng Top tháng/hệ số T năm chỉ tính người chốt) ---- */
+vc103Bao=async(x,home,p)=>{if(!x.id)throw new Error('Không tìm thấy tài khoản người chốt');if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,'Đang ghi vụ chốt…');
+ try{const a=me();const {error}=await sb.from('vu_chot').insert({dia_chi:home,gia:Math.round(p*1e9),he_so_t:tierT(p),trang_thai:'da_duyet',nguoi_bao_id:x.id,ctv_id:x.role==='ctv'?x.id:null,cg_dc_id:x.role==='cg'?x.id:null,nguoi_duyet_id:LIVE.me.id,duyet_luc:new Date().toISOString(),ghi_chu:'Trợ lý báo: '+((a&&a.name)||'')});if(error)throw error}
+ catch(e){throw new Error(errVi(e))}finally{busy(false)}};
+vc103Sau=async(x,p)=>{if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x.id]=(LIVE.tNam[x.id]||0)+tierT(p)}await syncNow()};
 
 render();
 })();
