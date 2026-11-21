@@ -4378,7 +4378,7 @@ function mau73(f){return (S.kho||[]).filter(h=>(!f.q||!f.q.length||f.q.some(x=>n
 async function tim73(src,f){const r=U.l73[src]={loading:true,list:[],f};render();
  try{if(pk72Demo&&!dtkTok()){await new Promise(x=>setTimeout(x,600));r.list=mau73(f)}
   else if(!dtkTok())r.can=true;
-  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:ph105(f.ph)?60:20,offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location={district:ids};if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
+  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:f.quet106?100:(ph105(f.ph)?60:20),offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location={district:ids};if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
    const j=await dtkApi('tim',body);if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};r.list=Array.isArray(dd.data)?dd.data:[];r.hieu=dd.hieu||''}}
  catch(e){if(e.status===401)r.can=true;else r.err=e.message||'Chưa lọc được, thử lại sau ít phút nha'}
  if(U.l73[src]!==r)return;r.loading=false;render()}
@@ -4438,7 +4438,7 @@ SH.cv73=v=>{const c=kh73(v);if(!c)return {t:'Cố vấn chăm khách',h:''};cons
  ${L.map(x=>`<div class="cv73"><div class="cvq">🙋 ${esc(x.q)}</div><div class="cva">🤖 ${esc(x.a)}</div><div class="sub" style="font-size:11.5px">${esc(fmtD(x.d))}</div></div>`).join('')}`}};
 A.cv73Hoi=async v=>{const c=kh73(v);if(!c)return;const q=val('cvq').trim();if(!q){toast('Ghi vấn đề cần cố vấn nha');return}U.cv73d=q;U.cv73b=v;render();
  const vg=c.vong||1;const st=(STG.find(x=>x[0]===c.stage)||STG[0])[1];
- const cau=`Mình là môi giới nhà phố Hoa Vinh, đang chăm khách ${c.name} (khu vực ${c.q||'chưa rõ'}, đang ở Vòng ${vg}: ${VONG72_GON[vg]} trong 5 Vòng dẫn khách Sổ Đỏ, bước ${st}${c.can1?', căn đầu tiên khách hỏi: '+c.can1.q+' '+c.can1.dt+'m2 '+c.can1.kc+' '+c.can1.g+' tỷ':''}). Vấn đề: ${q}\nHãy cố vấn ngắn gọn: nên nói gì với khách (có câu mẫu), làm gì tiếp theo để đưa khách gần hơn tới quyết định mua.`;
+ const cau=`Mình là môi giới nhà phố Hoa Vinh, đang chăm khách ${c.name} (khu vực ${c.q||'chưa rõ'}, đang ở Vòng ${vg}: ${VONG72_GON[vg]} trong 5 Vòng dẫn khách Sổ Đỏ, bước ${st}${c.can1?', căn đầu tiên khách hỏi: '+can106Txt(c.can1):''}). Vấn đề: ${q}\nHãy cố vấn ngắn gọn: nên nói gì với khách (có câu mẫu), làm gì tiếp theo để đưa khách gần hơn tới quyết định mua.`;
  let a='';try{a=await A.vvAnswer(cau,[])}catch(e){a='VinViLLa đang bận, thử lại sau ít phút nha ('+(e.message||e)+')'}
  c.cv=(c.cv||[]).concat([{q,a:String(a||'').slice(0,3000),d:today()}]).slice(-6);c.last=today();U.cv73d='';U.cv73b=null;save();render()};
 /* 7: Nhắc nhở riêng từng khách */
@@ -5636,6 +5636,36 @@ const tim73_105=tim73;tim73=async function(src,f){await tim73_105(src,f);const w
  if(!w||!r||r.loading||!Array.isArray(r.list))return;const n0=r.list.length;r.list=r.list.filter(it=>kh105(it,w));
  const ten=w.so?'Phường '+w.so:'Phường '+w.ten.replace(/\b\w/g,c=>c.toUpperCase());r.hieu=(r.hieu?r.hieu+' · ':'')+'chỉ giữ căn ở '+ten+(n0>r.list.length?' (bỏ '+(n0-r.list.length)+' căn phường khác)':'');
  if(!r.list.length&&n0)r.err='Chưa có căn nào đúng '+ten+' trong tầm giá này. Thử nới giá hoặc bỏ ô phường để xem cả quận nha.';render()};
+
+/* v106: Căn đầu tiên khách hỏi = Diện tích từ … trở lên, Giá từ … đến … tỷ, Ghi chú cho AI đọc */
+function can106(d){d=Object.assign({},d||{});if(d.g&&d.tu==null&&d.den==null){d.tu=Math.round(d.g*0.85*100)/100;d.den=Math.round(d.g*1.15*100)/100}if(d.kc&&d.ghi==null)d.ghi=d.kc;return d}
+function can106Txt(d){d=can106(d);return [d.q,d.dc,d.dt?'từ '+nf(d.dt)+' m² trở lên':'',(d.tu||d.den)?('giá '+(d.tu?'từ '+nf(d.tu)+' ':'')+(d.den?'đến '+nf(d.den)+' ':'')+'tỷ'):'',d.ghi?'ghi chú: '+d.ghi:''].filter(Boolean).join(', ')}
+SH.can73=v=>{const c=kh73(v);if(!c)return {t:'Căn khách hỏi',h:''};const d=can106(c.can1);const ds=kv72Ds(me());const du=d.q&&(d.dt||d.tu||d.den||d.ghi);
+ const so=x=>x!=null&&x!==''?nf(x):'';
+ return {t:'🏠 Căn đầu tiên khách hỏi',h:`<p class="sub" style="margin-top:0">Khách <b>${esc(c.name)}</b> hỏi căn nào đầu tiên? Điền yêu cầu, AI quét tất cả các căn và chỉ hiện căn <b>đúng yêu cầu</b> để bạn gửi khách.</p>
+ <div class="stack" style="gap:10px"><label class="f" for="c1q">📍 Vị trí<select class="in" id="c1q">${ds.map(q=>`<option ${q===(d.q||c.q)?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+ <input class="in" id="c1dc" value="${esc(d.dc||'')}" placeholder="Đường, phường (không bắt buộc), ví dụ Phường 12" aria-label="Đường, phường">
+ <label class="f" for="c1dt">📐 Diện tích từ (m²) trở lên<input class="in num" id="c1dt" inputmode="decimal" value="${so(d.dt)}" placeholder="50"></label>
+ <div class="f">💰 Giá (tỷ)</div><div class="grid2" style="margin-top:-6px"><label class="f" for="c1tu" style="font-weight:600">Từ<input class="in num" id="c1tu" inputmode="decimal" value="${so(d.tu)}" placeholder="10"></label><label class="f" for="c1den" style="font-weight:600">Đến<input class="in num" id="c1den" inputmode="decimal" value="${so(d.den)}" placeholder="14"></label></div>
+ <label class="f" for="c1ghi">📝 Ghi chú cho AI<textarea class="in" id="c1ghi" rows="3" maxlength="300" placeholder="Ví dụ: 3 phòng ngủ, hẻm xe hơi, nở hậu, gần chợ">${esc(d.ghi||'')}</textarea></label>
+ <p class="sub" style="margin:-4px 2px 0;font-size:12px">AI đọc ghi chú và lọc theo yêu cầu: số phòng ngủ, số tầng, hẻm xe hơi, mặt tiền, hướng…</p>
+ <button class="btn full" data-a="can73Luu" data-v="${esc(c.name)}">${c.can1?'💾 Lưu và AI lọc lại':'💾 Lưu và AI lọc căn đúng yêu cầu'}</button></div>
+ ${du?`<div class="note ok" style="margin-top:12px">🏠 ${esc(can106Txt(d))}</div>`:''}
+ <div style="margin-top:6px">${ds73('c1:'+c.name,c.name)}</div>`}};
+A.can73Luu=v=>{const c=kh73(v);if(!c)return;const n=x=>{const t=parseFloat(String(val(x)).replace(/\s/g,'').replace(',','.'));return isFinite(t)&&t>0?t:null};
+ const d={q:val('c1q'),dc:val('c1dc').trim().slice(0,80),dt:n('c1dt'),tu:n('c1tu'),den:n('c1den'),ghi:val('c1ghi').trim().slice(0,300)};
+ if(d.tu!=null&&d.den!=null&&d.tu>d.den){const t=d.tu;d.tu=d.den;d.den=t}
+ if(!d.q){toast('Chọn Vị trí nha');return}if(!d.dt&&!d.tu&&!d.den&&!d.ghi){toast('Điền Diện tích, Giá hoặc Ghi chú để AI lọc nha');return}
+ c.can1=d;c.last=today();save();
+ tim73('c1:'+v,{q:[d.q],tu:d.tu,den:d.den,dt106:d.dt,quet106:true,ph:d.dc,tm:[d.ghi,d.dt?'từ '+d.dt+'m2 trở lên':'',d.dc].filter(Boolean).join(', ')})};
+function gia106(it){const g=pk72Gia(it);return g||null}
+const tim73_106=tim73;tim73=async function(src,f){await tim73_106(src,f);if(!f||!f.quet106)return;const r=U.l73[src];if(!r||r.loading||!Array.isArray(r.list))return;
+ const n0=r.list.length;r.list=r.list.filter(it=>{const dt=Number(it.area)||0;const g=gia106(it);
+  if(f.dt106&&dt&&dt<f.dt106)return false;if(f.dt106&&!dt)return false;
+  if(g!=null){if(f.tu!=null&&g<f.tu-1e-9)return false;if(f.den!=null&&g>f.den+1e-9)return false}
+  return true});
+ const bo=n0-r.list.length;if(bo>0)r.hieu=(r.hieu?r.hieu+' · ':'')+'bỏ '+bo+' căn chưa đúng diện tích/giá';
+ if(!r.list.length&&n0&&!r.err)r.err='Chưa có căn nào đúng hết yêu cầu. Thử nới giá, giảm diện tích hoặc bớt ghi chú nha.';render()};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
