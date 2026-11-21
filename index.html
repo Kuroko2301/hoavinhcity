@@ -1321,7 +1321,6 @@ TAB.duyet=a=>{
    <label class="f" for="pg_${esc(p.email)}">Vai trò trong game<select class="in" id="pg_${esc(p.email)}">${GAME_ROLES.map(g=>`<option>${g}</option>`).join('')}</select></label>
    <div class="grid2"><button class="btn green" data-a="approve" data-v="${esc(p.email)}">Duyệt</button><button class="btn ghost" data-a="reject" data-v="${esc(p.email)}">Từ chối</button></div></div>`).join('')||'<p class="sub" style="margin-top:6px">Không có ai đang chờ.</p>'}</div>
   ${postAdminCard()}
-  ${(me()||{}).role==='sep'?mediaAdmin():''}
   ${lhAdmin(a)}
   ${tankAdmin()}
   ${flagApprovals(flags)}
@@ -5738,6 +5737,7 @@ async function sbLoad(){
  await loadThuong(mine);
  await loadLe(mine);
  await loadKho(mine);
+ await loadKyNiem(mine).catch(e=>console.warn('[Hoa Vinh] ky niem',e));
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadMauBai().catch(()=>{});
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadHoiTruong().catch(()=>{});
  if(mine&&mine.trang_thai==='hoat_dong'&&mine.vai_tro!=='hoc_vien')await loadVanDong().catch(e=>console.warn('[Hoa Vinh] van dong',e));
@@ -5991,6 +5991,55 @@ SH.switch=()=>{const m=me();if(!m)return {t:'Tài khoản',h:''};return {t:'Tài
  <div class="note ok" style="margin-top:12px">Bản thật đã nối máy chủ: tài khoản, vai trò, game xây nhà và hồ sơ nhân sự được lưu trên Supabase, đổi máy vẫn còn.</div>
  <div class="note" style="margin-top:8px">Đã nối thêm: báo vụ chốt, Trợ lý duyệt, bảng hệ số T năm có danh hiệu, Top 10 tháng, Trợ lý gửi thưởng. Đang nối dần: kho nhà, khách, bảng Vận hành, bài đăng, kỷ niệm… hiện vẫn là dữ liệu mẫu trên máy này.</div>
  <div class="grid2" style="margin-top:12px"><button class="btn ghost" data-a="liveRefresh">Tải lại dữ liệu</button><button class="btn ghost" data-a="logout">Đăng xuất</button></div>`}};
+
+/* ---- Kỷ niệm Hoa Vinh + Nhà Truyền Thống: lưu trên Supabase (bảng ky_niem, kho ky-niem), có nút Xoá ---- */
+LIVE.kn=null;
+const KN_TIM='hoavinh-tim';function knTim(){try{return JSON.parse(localStorage.getItem(KN_TIM))||{}}catch(e){return {}}}
+async function loadKyNiem(mine){LIVE.kn=null;if(!mine||mine.trang_thai!=='hoat_dong')return;
+ const {data,error}=await sb.from('ky_niem').select('id,khu,tieu_de,ngay,loai,duong_dan,nguoi_dang_id,tao_luc').order('tao_luc');if(error){console.warn('[Hoa Vinh] ky niem',error);return}
+ const paths=[...new Set(data.filter(r=>r.loai!=='video'&&r.duong_dan&&!/^(data:|https?:)/.test(r.duong_dan)).map(r=>r.duong_dan))];const url={};
+ if(paths.length){const s=await sb.storage.from('ky-niem').createSignedUrls(paths,86400).catch(()=>({data:[]}));(s.data||[]).forEach(x=>{if(x.signedUrl)url[x.path]=x.signedUrl})}
+ const tim=knTim();const nm=id=>{const a=S.accts.find(x=>x.id===id);return a?a.name:'Anh em Hoa Vinh'};
+ const it=r=>{const v=r.loai==='video';const p=r.duong_dan||'';return {id:'r'+r.id,rid:r.id,khu:r.khu,cap:r.tieu_de||'',t:r.tieu_de||'',by:nm(r.nguoi_dang_id),who:'',uid:r.nguoi_dang_id,d:r.ngay||(r.tao_luc||'').slice(0,10),type:v?'video':'img',link:v?p:'',path:p,src:v?'':(/^(data:|https?:)/.test(p)?p:url[p]||''),em:v?'🎬':'📷',hue:v?280:20,hearts:tim['r'+r.id]||0,media:[]}};
+ LIVE.kn=data.map(it);const ntt={vd:[],tt:[],dl:[]};LIVE.kn.forEach(x=>{if(ntt[x.khu])ntt[x.khu].push(x)});
+ /* không lưu ảnh vào bộ nhớ máy: để thuộc tính ẩn khỏi JSON */
+ Object.defineProperty(S,'kyniem',{value:LIVE.kn.filter(x=>x.khu==='ky_niem'),writable:true,enumerable:false,configurable:true});Object.defineProperty(S,'ntt',{value:ntt,writable:true,enumerable:false,configurable:true});
+}
+function knInNtt(k){if(!LIVE.kn)return null;return LIVE.kn.find(x=>x.khu!=='ky_niem'&&(x.path===k.path||x.path.includes('/kn'+k.rid+'-')))}
+const KHU_TEN={vd:'Khu 1',tt:'Khu 2',dl:'Khu 3'};
+SH.kyniem=()=>{const a=me();if(!a||a.role==='hv')return {t:'Kỷ niệm Hoa Vinh',h:'<p class="sub">Mục này dành cho anh em trong phòng.</p>'};const adm=a.role==='tl'||a.role==='sep';
+ return {t:'📸 Kỷ niệm Hoa Vinh',h:`<div class="card stack" style="gap:10px"><b>Chia sẻ kỷ niệm</b><input class="in" id="knc" placeholder="Viết vài dòng về khoảnh khắc này"><div class="grid2"><label class="btn ghost sm" style="display:grid;place-items:center">📷 Chọn ảnh<input type="file" accept="image/*" data-kn2="1" hidden></label><button class="btn ghost sm" data-a="knVideo">🎬 Thêm link video</button></div><input class="in" id="knl" placeholder="Link video YouTube (nếu là video)"></div>
+ <div class="kfeed">${S.kyniem.slice().reverse().map(k=>{const inN=knInNtt(k);const mine=k.uid&&LIVE.me&&k.uid===LIVE.me.id;return `<div class="kitem">${k.type==='video'&&k.link?`<a href="${esc(k.link)}" target="_blank" rel="noopener" style="text-decoration:none">${tile(k)}</a>`:tile(k)}<div class="kcap"><b>${esc(k.by)}</b> <span class="sub">${fmtD(k.d)}</span><div>${esc(k.cap)}</div><div class="row" style="gap:6px;margin-top:6px;flex-wrap:wrap"><button class="btn ghost sm" data-a="knHeart" data-v="${k.id}">❤️ ${k.hearts||0}</button>${adm?(inN?`<span class="pill ok" style="align-self:center">✓ Đã ở Nhà TT · ${KHU_TEN[inN.khu]}</span>`:`<select class="in" id="kz_${k.id}" style="min-height:34px;font-size:12px;padding:4px 8px;flex:1"><option value="tt">Khu 2: Tập thể</option><option value="vd">Khu 1: Vinh danh</option><option value="dl">Khu 3: Du lịch</option></select><button class="btn sm" data-a="knToNtt" data-v="${k.id}">Đưa vào Nhà TT</button>`):''}${adm||mine?`<button class="btn ghost sm" data-a="knDel" data-v="${k.id}">🗑️ Xoá</button>`:''}</div></div></div>`}).join('')||'<p class="sub">Chưa có kỷ niệm nào. Chia sẻ tấm đầu tiên nha!</p>'}</div>`}};
+SH.ntt=()=>{const a=me();const z=U.ntz||'vd',adm=a&&(a.role==='tl'||a.role==='sep');const L=(S.ntt[z]||[]).slice().sort((x,y)=>String(y.d).localeCompare(String(x.d)));
+ const byYear={};L.forEach(x=>{const y=String(x.d).slice(0,4);(byYear[y]=byYear[y]||[]).push(x)});
+ return {t:'🏛️ Nhà Truyền Thống',h:`<p class="sub" style="margin:0 0 10px">Nơi lưu giữ hình ảnh và video kỷ niệm của Phòng Hoa Vinh.</p><div class="zones">${NTT_Z.map(([k,n,l,e])=>`<button class="${z===k?'on':''}" data-a="ntz" data-v="${k}"><span>${e}</span><em>${n}</em><b>${l}</b></button>`).join('')}</div>
+ ${Object.keys(byYear).sort().reverse().map(y=>`<div class="yr">${y}</div>${byYear[y].map(x=>`<div class="nitem ${z==='vd'?'vd':''}">${x.type==='video'&&x.link?`<a href="${esc(x.link)}" target="_blank" rel="noopener" style="text-decoration:none">${tile(x,z==='vd'?'medal':'')}</a>`:tile(x,z==='vd'?'medal':'')}<div class="grow"><b>${esc(x.t)}</b><div class="sub">📅 ${fmtD(x.d)}</div>${adm?`<button class="btn ghost sm" style="margin-top:6px" data-a="knDel" data-v="${x.id}">🗑️ Xoá</button>`:''}</div></div>`).join('')}`).join('')||'<p class="sub">Chưa có kỷ niệm nào.</p>'}
+ ${adm?`<div class="card stack" style="margin-top:12px;gap:8px"><b>Thêm vào ${NTT_Z.find(q=>q[0]===z)[2]}</b><input class="in" id="nt_t" placeholder="Tên kỷ niệm"><input class="in" id="nt_d" type="date" value="${today()}"><label class="btn gold full" style="display:grid;place-items:center">📷 Chọn ảnh để lưu<input type="file" accept="image/*" data-ntt2="${z}" hidden></label></div>`:''}`}};
+function knBlob(dataUrl){return dataUrlBlob(dataUrl)}
+async function knUpload(folder,src){const m=LIVE.me;const path=folder+'/'+(folder==='ky-niem'?m.id+'/':'')+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+'.jpg';
+ const {error}=await sb.storage.from('ky-niem').upload(path,knBlob(src),{contentType:'image/jpeg'});if(error)throw error;return path}
+document.addEventListener('change',e=>{const el=e.target;if(!el.dataset||!(el.dataset.kn2||el.dataset.ntt2)||!el.files||!el.files[0])return;const file=el.files[0];el.value='';
+ const z=el.dataset.ntt2;const t=z?val('nt_t'):'';if(z&&!t){toast('Đặt tên kỷ niệm trước rồi chọn ảnh nha');return}const cap=val('knc')||'Kỷ niệm cùng anh em',d=z?(val('nt_d')||today()):today();
+ shrinkBig(file,async src=>{if(LIVE.busy)return;busy(true,'Đang lưu ảnh…');
+  try{const path=await knUpload(z?'truyen-thong':'ky-niem',src);
+   const {error}=await sb.from('ky_niem').insert({khu:z||'ky_niem',tieu_de:z?t:cap,ngay:d,loai:'anh',duong_dan:path});if(error)throw error;
+   if(!z){const a=me();give(a,{bac:1},'Chia sẻ kỷ niệm');save()}await loadKyNiem(LIVE.me);toast(z?'Đã lưu vào Nhà Truyền Thống':'Đã đăng kỷ niệm 📸')}
+  catch(err){toast(errVi(err))}finally{busy(false);render()}})});
+A.knVideo=async()=>{const l=val('knl');if(!/^https?:\/\//.test(l)){toast('Dán link video vào ô bên dưới nhé');return}if(LIVE.busy)return;busy(true);
+ try{const {error}=await sb.from('ky_niem').insert({khu:'ky_niem',tieu_de:val('knc')||'Video kỷ niệm',ngay:today(),loai:'video',duong_dan:l});if(error)throw error;await loadKyNiem(LIVE.me);toast('Đã đăng video kỷ niệm')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+A.knHeart=v=>{const t=knTim();t[v]=(t[v]||0)+1;try{localStorage.setItem(KN_TIM,JSON.stringify(t))}catch(e){}const k=(LIVE.kn||[]).find(x=>x.id===v);if(k)k.hearts=t[v];render()};
+A.knToNtt=async v=>{const k=(LIVE.kn||[]).find(x=>x.id===v);if(!k||LIVE.busy)return;const z=val('kz_'+v)||'tt';busy(true,'Đang đưa vào Nhà Truyền Thống…');
+ try{let p=k.type==='video'||/^(data:|https?:)/.test(k.path)?k.path:'truyen-thong/kn'+k.rid+'-'+Date.now().toString(36)+'.jpg';
+  if(p!==k.path){const c=await sb.storage.from('ky-niem').copy(k.path,p);if(c.error)throw c.error}
+  const {error}=await sb.from('ky_niem').insert({khu:z,tieu_de:k.cap,ngay:k.d,loai:k.type==='video'?'video':'anh',duong_dan:p});if(error)throw error;
+  await loadKyNiem(LIVE.me);confetti();toast('Đã đưa vào Nhà Truyền Thống')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
+A.knDel=async v=>{const k=(LIVE.kn||[]).find(x=>x.id===v);if(!k||LIVE.busy)return;if(U.knDelAsk!==v){U.knDelAsk=v;toast('Bấm “Xoá” lần nữa để xoá hẳn');setTimeout(()=>{if(U.knDelAsk===v)U.knDelAsk=null},6000);return}U.knDelAsk=null;busy(true,'Đang xoá…');
+ try{const {error}=await sb.from('ky_niem').delete().eq('id',k.rid);if(error)throw error;
+  if(k.type!=='video'&&k.path&&!/^(data:|https?:)/.test(k.path)&&!LIVE.kn.some(x=>x!==k&&x.path===k.path))await sb.storage.from('ky-niem').remove([k.path]).catch(()=>{});
+  await loadKyNiem(LIVE.me);toast('Đã xoá')}
+ catch(err){toast(errVi(err))}finally{busy(false);render()}};
 
 /* ---- khởi động ---- */
 if(!S.live){S.accts=[];S.members=[];S.locks={};S.me=null;S.live=1;_save()}
