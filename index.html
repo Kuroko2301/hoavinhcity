@@ -6,7 +6,22 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v90 ql khach*/
+<style>/*v91 tien ich*/
+.ti91tim{display:flex;gap:8px;margin:4px 0 10px}.ti91tim .in{flex:1;min-width:0}
+.ti91ds{display:flex;flex-direction:column;gap:10px}
+.ti91i{padding:12px 14px}.ti91i h3{margin:0;font-size:16px;line-height:1.35}.ti91i .ghi{margin:6px 0 0;line-height:1.5;font-size:14px}
+.ti91i .nut{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}.ti91i .nut .btn{flex:1;min-width:0;white-space:nowrap}
+.ti91vthumb{display:flex;align-items:center;gap:10px;margin-top:8px;padding:10px 12px;border-radius:14px;background:#1F1A17;color:#fff;font-weight:700;font-size:14px;width:100%;border:0;cursor:pointer;text-align:left}
+.ti91vthumb span{width:34px;height:34px;border-radius:50%;background:var(--red);display:grid;place-items:center;flex:none;font-size:14px}
+.ti91vthumb small{display:block;font-weight:500;opacity:.75;font-size:12px}
+.ti91f .ti91op{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.ti91f .ti91op.ba{grid-template-columns:1fr 1fr 1fr}
+.ti91f .ti91op button{border:1.5px solid var(--line,#E5DED2);background:#fff;border-radius:12px;padding:9px 6px;font-weight:700;font-size:13px;line-height:1.3;color:inherit;cursor:pointer}
+.ti91f .ti91op button.on{border-color:var(--red);background:#FFF1EE;color:var(--red)}
+.ti91chon{display:flex;align-items:center;gap:10px;border:1.5px dashed #C9BFAF;border-radius:14px;padding:12px;margin-top:8px;cursor:pointer;font-weight:700;font-size:14px}
+.ti91chon input{display:none}.ti91chon .sub{font-weight:500}
+.ti91xem{width:100%;border-radius:14px;overflow:hidden;background:#000;margin-bottom:10px}
+.ti91xem iframe,.ti91xem video{display:block;width:100%;height:min(68vh,560px);border:0;background:#000}
+</style><style>/*v90 ql khach*/
 .ql78b{white-space:nowrap;position:relative;overflow:visible;padding-left:6px;padding-right:6px}
 .ql78b b{position:absolute;top:-9px;right:-4px;font-size:11.5px;padding:2px 7px;margin:0;line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:1}
 @media(max-width:370px){.ql78b{font-size:13.5px;letter-spacing:-.2px}}
@@ -4376,7 +4391,7 @@ function ks75Pill(x){const g=ks75S();if(KS75_ST[x.st])return `<span class="pill 
  return {t:'📍 Khảo sát nhà',h:`${ksDriveNote(a)}<div class="ks75">
  <button class="btn full ks75tao" data-a="ks75Mo" data-v="ks75tao">📋 Tạo danh sách</button>
  <div class="grid2"><button class="ks75o" data-a="sheet" data-v="ks75ds">🗺️ Danh sách đã lưu${g.ds.length?` <b>${g.ds.length}</b>`:''}</button><button class="ks75o" data-a="sheet" data-v="ks75da">🏠 Nhà Đã Khảo sát${mine.length?` <b>${mine.length}</b>`:''}</button></div>
- <div class="grid2"><button class="ks75o" data-a="sheet" data-v="ks75mt">🎯 Nhà Mục tiêu${g.mt.length?` <b>${g.mt.length}</b>`:''}</button><div></div></div>
+ <div class="grid2"><button class="ks75o" data-a="sheet" data-v="ks75mt">🎯 Nhà Mục tiêu${g.mt.length?` <b>${g.mt.length}</b>`:''}</button><button class="ks75o" data-a="ti91Mo" data-v="">🌳 Tiện ích${ti91Ds().length?` <b>${ti91Ds().length}</b>`:''}</button></div>
  ${buoc(1,'Tạo danh sách đi','Bấm Tạo danh sách, lọc nhà Đại Thế Kỷ (ô lọc y như Kho nhà), căn nào muốn đi thì bấm Thêm vào danh sách.',['ks75Mo','ks75tao'])}
  ${buoc(2,'Xếp tuyến, đi lần lượt','Chọn căn trong Danh sách đã lưu, AI sắp xếp đường đi tiện nhất, Chỉ đường mở Google Maps.',['sheet','ks75tuyen'])}
  ${buoc(3,'Khảo sát, lưu Nhà Mục tiêu',`Đi theo tuyến${tu?' ('+tu+' căn đang chờ)':''}, mỗi căn bấm Bỏ qua, Đã khảo sát hoặc Nhà mục tiêu.`,['sheet','ks75di'])}
@@ -4761,6 +4776,79 @@ const tim73_90=tim73;tim73=async function(src,f){await q90Nap();f=Object.assign(
  if(ten.length){f.q=(f.q||[]).filter(q=>!ten.includes(q));f.tm=(ten.join(', ')+(f.tm?', '+f.tm:'')).slice(0,190)}
  return tim73_90(src,f)};
 const pk72Tim_90=pk72Tim;pk72Tim=async function(){await q90Nap();return pk72Tim_90()};
+
+/* ---- v91 Tiện ích (Khảo sát nhà): Tên tiện ích + Video Drive; Thêm, Sửa, Xoá, Tìm kiếm; cả phòng xem chung ---- */
+if(!Array.isArray(S.ti91))S.ti91=[
+ {id:'ti1',ten:'Công viên Đầm Sen',khu:'Quận 11',ghi:'Cách Tân Phú khoảng 5 phút, khách có con nhỏ rất thích.',vid:'',by:'Trợ lý Thủy',byEmail:'',d:today()},
+ {id:'ti2',ten:'Aeon Mall Tân Phú',khu:'Tân Phú',ghi:'Trung tâm thương mại lớn: siêu thị, rạp phim, khu vui chơi.',vid:'',by:'Anh Huy',byEmail:'',d:today()}];
+const TI91BLOB={};let TI91F=null;
+let ti91Ds=()=>S.ti91||[];
+let ti91CuaToi=x=>!!(x&&me()&&x.byEmail&&x.byEmail===me().email);
+let ti91Tat=()=>false;
+let ti91DriveOk=()=>true;
+const ti91Api={
+ luu:async(d,x)=>{const a=me();const o=x||{id:'ti'+Date.now().toString(36),by:a.name,byEmail:a.email,d:today()};Object.assign(o,{ten:d.ten,khu:d.khu,ghi:d.ghi,sua:x?today():''});
+  if(d.mode==='file'){o.vid='';TI91BLOB[o.id]=URL.createObjectURL(d.file);o.vten=d.file.name}else if(d.mode==='link'){o.vid=d.link;delete TI91BLOB[o.id];o.vten=''}else if(d.mode==='bo'){o.vid='';delete TI91BLOB[o.id];o.vten=''}
+  if(!x)S.ti91.unshift(o);save()},
+ xoa:async x=>{S.ti91=S.ti91.filter(y=>y.id!==x.id);delete TI91BLOB[x.id];save()}};
+const ti91DriveId=l=>{const m=String(l||'').match(/\/d\/([\w-]{15,})/)||String(l||'').match(/[?&]id=([\w-]{15,})/);return m?m[1]:''};
+const ti91Co=x=>!!(TI91BLOB[x.id]||x.vid);
+const ti91S=x=>boDau69([x.ten,x.khu,x.ghi,x.by].join(' '));
+const ti91Mb=n=>n>=1073741824?(n/1073741824).toFixed(1)+' GB':Math.max(1,Math.round(n/1048576))+' MB';
+function ti91Keep(){const d=U.ti91D;if(!d)return;const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};[['ten','tiTen'],['khu','tiKhu'],['ghi','tiGhi'],['link','tiLink']].forEach(([k,id])=>{const v=g(id);if(v!==undefined)d[k]=v})}
+function ti91Form(){const d=U.ti91D;const x=d.id?ti91Ds().find(y=>y.id===d.id):null;const co=x&&ti91Co(x);const dOk=ti91DriveOk();
+ const QL=[...new Set(QUAN.concat(ti91Ds().map(y=>y.khu).filter(Boolean)))];
+ const opts=[...(co?[['giu','✅ Giữ video cũ']]:[]),['file','📤 Tải video từ máy'],['link','🔗 Dán link Drive']];
+ return `<div class="card stack ti91f" id="ti91Form"><div class="between"><b>${x?'✏️ Sửa tiện ích':'➕ Thêm tiện ích mới'}</b><button class="x" data-a="ti91Dong" aria-label="Đóng">×</button></div>
+ <label class="f" for="tiTen">Tên tiện ích *<input class="in" id="tiTen" value="${esc(d.ten||'')}" maxlength="120" placeholder="Ví dụ: Công viên Đầm Sen, Chợ Tân Hương" autocomplete="off"></label>
+ <label class="f" for="tiKhu">Khu vực<select class="in" id="tiKhu"><option value="">Chọn quận (không bắt buộc)</option>${QL.map(q=>`<option ${d.khu===q?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+ <label class="f" for="tiGhi">Ghi chú<textarea class="in" id="tiGhi" rows="2" maxlength="1000" placeholder="Cách bao xa, giờ mở cửa, điểm hay để kể cho khách… (không bắt buộc)">${esc(d.ghi||'')}</textarea></label>
+ <div class="f">Video về tiện ích *<div class="ti91op${opts.length===3?' ba':''}">${opts.map(([k,l])=>`<button class="${d.mode===k?'on':''}" data-a="ti91Mode" data-v="${k}">${l}</button>`).join('')}</div>
+ ${d.mode==='file'?(dOk?`<label class="ti91chon">🎬<div class="grow">${TI91F?`${esc(TI91F.name)}<div class="sub">${ti91Mb(TI91F.size)} · bấm để chọn video khác</div>`:'Chọn video trong máy<div class="sub">Video tự lưu vào Google Drive chính của phòng</div>'}</div><input type="file" accept="video/*" data-ti91f></label>`
+   :`<div class="note" style="margin-top:8px">Google Drive chính của phòng chưa kết nối nên chưa tải video từ máy được. Sếp hoặc Trợ lý bấm <b>Kết nối Google Drive chính</b> ở màn Khảo sát nhà. Trong lúc chờ, bạn dán link Drive nha.</div>`):''}
+ ${d.mode==='link'?`<input class="in" id="tiLink" style="margin-top:8px" value="${esc(d.link||'')}" placeholder="Dán link video Google Drive" autocomplete="off" inputmode="url"><div class="sub" style="margin-top:4px">Nhớ mở quyền "Bất kỳ ai có đường liên kết" để anh em xem được nha.</div>`:''}
+ ${x&&co?`<button class="link" style="margin-top:6px;font-size:13px" data-a="ti91Mode" data-v="bo">${d.mode==='bo'?'✓ Sẽ bỏ video này':'Bỏ video khỏi tiện ích'}</button>`:''}</div>
+ <button class="btn gold full" data-a="ti91Luu">${x?'💾 Lưu thay đổi':'💾 Lưu tiện ích'}</button></div>`}
+function ti91The(x,a,an){const sua=ti91CuaToi(x)||laQL69(a);const co=ti91Co(x);
+ return `<div class="card ti91i" data-s="${esc(ti91S(x))}"${an?' hidden':''}><h3>🌳 ${esc(x.ten)}</h3>${x.khu?`<div class="sub" style="margin-top:2px">📍 ${esc(x.khu)}</div>`:''}${x.ghi?`<p class="ghi">${esc(x.ghi)}</p>`:''}
+ ${co?`<button class="ti91vthumb" data-a="sheet" data-v="ti91v:${esc(x.id)}"><span>▶</span><div>Xem video<small>${TI91BLOB[x.id]?'Video trên máy này (bản demo)':'Lưu trên Google Drive'}</small></div></button>`:'<div class="sub" style="margin-top:8px">🎬 Chưa có video</div>'}
+ <div class="sub" style="margin-top:8px">Thêm bởi <b>${esc(x.by||'Anh em')}</b> · ${fmtD(x.d)}${x.sua?' · đã sửa':''}</div>
+ ${sua?`<div class="nut"><button class="btn ghost sm" data-a="ti91Sua" data-v="${esc(x.id)}">✏️ Sửa</button><button class="btn ghost sm${U.ti91Xoa===x.id?' roidoi xn':''}" data-a="ti91Xoa" data-v="${esc(x.id)}">${U.ti91Xoa===x.id?'Bấm lần nữa để xoá':'🗑️ Xoá'}</button></div>`:''}</div>`}
+SH.ti91=()=>{const a=me();if(!a||!hasCtv(a))return {t:'Tiện ích',h:'<p class="sub">Mục Tiện ích dành cho anh em trong phòng.</p>'};
+ const back=typeof ks75Back==='function'?ks75Back('survey','Về Khảo sát nhà'):'';
+ if(ti91Tat())return {t:'🌳 Tiện ích',h:back+'<div class="note">Mục Tiện ích chưa được bật trên máy chủ. Nhờ Di chạy file SQL Tiện ích một lần là dùng được nha.</div>'};
+ const all=ti91Ds();const q=boDau69(U.ti91Q||'').trim().split(/\s+/).filter(Boolean);const L=all.filter(x=>!q.length||q.every(w=>ti91S(x).includes(w)));
+ return {t:'🌳 Tiện ích',h:`${back}<p class="sub" style="margin-top:4px">Anh em lưu tiện ích quanh nhà (công viên, chợ, trường, bệnh viện, siêu thị…) kèm video để giới thiệu cho khách. 👥 Cả phòng xem chung.</p>
+ <div class="ti91tim"><input class="in" id="tiQ" type="search" enterkeyhint="search" placeholder="🔍 Tìm tên tiện ích, quận…" value="${esc(U.ti91Q||'')}" data-ti91q autocomplete="off" aria-label="Tìm tiện ích"></div>
+ ${U.ti91D?ti91Form():`<button class="btn gold full" data-a="ti91Them">➕ Thêm tiện ích</button>`}
+ <div class="sub" id="ti91Dem" style="margin:12px 2px 6px"><b>${L.length}</b> tiện ích${q.length?' phù hợp':''}</div>
+ <div class="ti91ds">${all.map(x=>ti91The(x,a,!L.includes(x))).join('')}</div><div class="note ti91rong" ${L.length?'hidden':''}>${all.length?'Không tìm thấy tiện ích nào khớp. Thử gõ ít chữ hơn nha.':'Chưa có tiện ích nào. Bạn thêm tiện ích đầu tiên nha 🙌'}</div>`}};
+SH.ti91v=id=>{const x=ti91Ds().find(y=>y.id===id);const back=`<button class="btn ghost sm" data-a="sheet" data-v="ti91" style="margin-bottom:8px">← Tiện ích</button>`;if(!x)return {t:'Tiện ích',h:back+'<p class="sub">Tiện ích này không còn nữa.</p>'};
+ const b=TI91BLOB[x.id],fid=ti91DriveId(x.vid);
+ const v=b?`<video src="${esc(b)}" controls playsinline></video>`:fid?`<iframe src="https://drive.google.com/file/d/${esc(fid)}/preview" allow="autoplay; fullscreen" allowfullscreen title="Video ${esc(x.ten)}"></iframe>`:'';
+ return {t:'🎬 '+x.ten,h:`${back}${v?`<div class="ti91xem">${v}</div>`:''}${x.vid?`<a class="btn ghost full" href="${esc(x.vid)}" target="_blank" rel="noopener">↗️ Mở video trên Google Drive</a>`:''}
+ ${x.ghi?`<p style="line-height:1.55">${esc(x.ghi)}</p>`:''}<div class="sub">${x.khu?'📍 '+esc(x.khu)+' · ':''}Thêm bởi ${esc(x.by||'Anh em')} · ${fmtD(x.d)}</div>`}};
+A.ti91Mo=()=>{U.ti91D=null;TI91F=null;U.sheet='ti91';render()};
+A.ti91Them=()=>{U.ti91D={ten:'',khu:'',ghi:'',link:'',mode:'file'};TI91F=null;render();setTimeout(()=>{const e=document.getElementById('tiTen');if(e)e.focus()},80)};
+A.ti91Sua=v=>{const x=ti91Ds().find(y=>y.id===v);if(!x)return;U.ti91D={id:x.id,ten:x.ten,khu:x.khu||'',ghi:x.ghi||'',link:x.vid||'',mode:ti91Co(x)?'giu':'file'};TI91F=null;render();
+ setTimeout(()=>{const e=document.getElementById('ti91Form');if(e)e.scrollIntoView({behavior:'smooth',block:'start'})},80)};
+A.ti91Dong=()=>{U.ti91D=null;TI91F=null;render()};
+A.ti91Mode=v=>{ti91Keep();const d=U.ti91D;if(!d)return;d.mode=(v==='bo'&&d.mode==='bo')?'giu':v;render()};
+A.ti91Luu=async()=>{ti91Keep();const d=U.ti91D;if(!d)return;const ten=String(d.ten||'').trim().slice(0,120);
+ if(!ten){toast('Ghi tên tiện ích nha');const e=document.getElementById('tiTen');if(e)e.focus();return}
+ const x=d.id?ti91Ds().find(y=>y.id===d.id):null;const link=String(d.link||'').trim();
+ if(d.mode==='file'&&!TI91F){if(!ti91DriveOk()){toast('Drive chính chưa kết nối, bạn dán link Drive nha');return}toast('Chọn video về tiện ích nha 🎬');return}
+ if(d.mode==='link'){if(!link){toast('Dán link video Drive nha');return}if(!/^https?:\/\/(drive|docs)\.google\.com\//i.test(link)){toast('Link phải là link Google Drive nha');return}}
+ if(d.mode==='bo'&&!x)d.mode='file';
+ try{await ti91Api.luu({ten,khu:d.khu||'',ghi:String(d.ghi||'').trim().slice(0,1000),mode:d.mode,link,file:TI91F},x);U.ti91D=null;TI91F=null;render();toast(x?'Đã lưu thay đổi ✨':'Đã thêm tiện ích, cảm ơn bạn 🙌')}
+ catch(e){toast(e.message||'Chưa lưu được, thử lại nha')}};
+A.ti91Xoa=async v=>{if(U.ti91Xoa!==v){U.ti91Xoa=v;render();setTimeout(()=>{if(U.ti91Xoa===v){U.ti91Xoa=null;render()}},4000);return}U.ti91Xoa=null;const x=ti91Ds().find(y=>y.id===v);if(!x)return;
+ try{await ti91Api.xoa(x);if(U.ti91D&&U.ti91D.id===v)U.ti91D=null;render();toast('Đã xoá tiện ích')}catch(e){toast(e.message||'Chưa xoá được')}};
+document.addEventListener('input',e=>{const el=e.target;if(!el||!el.hasAttribute||!el.hasAttribute('data-ti91q'))return;U.ti91Q=el.value;const q=boDau69(el.value).trim().split(/\s+/).filter(Boolean);let n=0;
+ document.querySelectorAll('.ti91ds .ti91i').forEach(c=>{const ok=!q.length||q.every(w=>(c.dataset.s||'').includes(w));c.hidden=!ok;if(ok)n++});
+ const dm=document.getElementById('ti91Dem');if(dm)dm.innerHTML=`<b>${n}</b> tiện ích${q.length?' phù hợp':''}`;const r=document.querySelector('.ti91rong');if(r){r.hidden=!!n;if(!n)r.textContent=ti91Ds().length?'Không tìm thấy tiện ích nào khớp. Thử gõ ít chữ hơn nha.':'Chưa có tiện ích nào. Bạn thêm tiện ích đầu tiên nha 🙌'}});
+document.addEventListener('change',e=>{const el=e.target;if(!el||!el.hasAttribute||!el.hasAttribute('data-ti91f')||!el.files)return;const f=el.files[0];el.value='';if(!f)return;
+ if(!/^video\//.test(f.type||'')&&!/\.(mp4|mov|m4v|3gp|webm|avi|mkv)$/i.test(f.name)){toast('Chọn tệp video nha');return}if(f.size>2*1073741824){toast('Video tối đa 2GB nha');return}ti91Keep();TI91F=f;render()});
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -5634,6 +5722,46 @@ doc88=async function(img){const hetGio=new Promise((_,rej)=>setTimeout(()=>rej(n
  const {data,error}=await Promise.race([sb.functions.invoke('doc-nha-tu-anh',{body:{anh_base64:img}}),hetGio]);if(error||!data||!data.nha)return null;return data.nha};
 tim88Goi=async function(kw){const r=await dtkApi('tim',{size:40,offset:0,keyword:kw});const d=(r&&r.detail&&r.detail.data)||(r&&r.data)||[];return Array.isArray(d)?d:[]};
 chi88=async function(id){if(!id)return null;try{return await dtkApi('chi_tiet',{id})}catch(e){return null}};
+
+/* ---- v91 Tiện ích (bảng tien_ich, SQL ctv-gon/tien-ich-bang.sql). Video gửi thẳng từ điện thoại lên Google Drive chính
+   qua Edge Function khao-sat-drive (ti_mo → đường gửi, ti_xong → mở quyền xem bằng link, ti_bo → bỏ video cũ) ---- */
+LIVE.ti91={ds:[],off:false,at:0,dang:false};
+async function loadTi91(){const {data,error}=await sb.from('tien_ich').select('*').order('tao_luc',{ascending:false}).limit(1000);
+ if(error){if(thieuBang69(error,'tien_ich')){LIVE.ti91.off=true;LIVE.ti91.ds=[];LIVE.ti91.at=Date.now();return}throw error}
+ LIVE.ti91.off=false;LIVE.ti91.ds=(data||[]).map(r=>({id:'ti'+r.id,dbId:r.id,ten:r.ten,khu:r.khu_vuc||'',ghi:r.ghi_chu||'',vid:r.drive_link||'',fid:r.drive_file_id||'',byId:r.nguoi_id,by:nguoiTen69(r.nguoi_id),
+  d:String(r.tao_luc||'').slice(0,10),sua:r.cap_nhat_luc&&r.tao_luc&&Date.parse(r.cap_nhat_luc)-Date.parse(r.tao_luc)>60000?String(r.cap_nhat_luc).slice(0,10):''}));LIVE.ti91.at=Date.now()}
+function ti91Nen(){if(LIVE.ti91.dang||!LIVE.me||LIVE.me.trang_thai!=='hoat_dong'||Date.now()-LIVE.ti91.at<60000)return;LIVE.ti91.dang=true;
+ loadTi91().catch(e=>{LIVE.ti91.at=Date.now();console.warn('[Hoa Vinh] tien ich',e)}).finally(()=>{LIVE.ti91.dang=false;const k=String(U.sheet||'');if(k==='survey'||k.startsWith('ti91'))render()})}
+ti91Ds=()=>{ti91Nen();return LIVE.ti91.ds};
+ti91CuaToi=x=>!!(x&&LIVE.me&&x.byId===LIVE.me.id);
+ti91Tat=()=>LIVE.ti91.off;
+ti91DriveOk=()=>{const k=ksDriveKenh();return !!(k&&k.trang_thai!=='can_ket_noi_lai')};
+async function ti91GuiDrive(f,ten){const ty=f.type||'video/mp4';let wl=null;window._upTen='Google Drive';ytTien(0,f);try{if(navigator.wakeLock)wl=await navigator.wakeLock.request('screen')}catch(e){}
+ try{const {data,error}=await sb.functions.invoke('khao-sat-drive',{body:{action:'ti_mo',ten,size:f.size,type:ty}});
+  if(data&&data.chua_ket_noi)throw new Error('Google Drive chính chưa kết nối. Sếp hoặc Trợ lý kết nối ở màn Khảo sát nhà nha');
+  if(error||!data||!data.upload_url)throw new Error(await ytFnLoi(error,data)||'Không mở được đường gửi video lên Drive');
+  const res=await new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('PUT',data.upload_url);x.setRequestHeader('Content-Type',ty);
+   x.upload.onprogress=e=>{if(e.lengthComputable)ytTien(e.loaded/e.total,f)};
+   x.onload=()=>{if(x.status>=200&&x.status<300){try{ok(JSON.parse(x.responseText))}catch(e){ok({})}}else no(new Error('Google Drive báo lỗi '+x.status))};
+   x.onerror=()=>no(new Error('Mạng bị ngắt khi đang gửi video, thử lại bằng Wi-Fi nhé'));x.send(f)});
+  if(!res||!res.id)throw new Error('Google Drive chưa nhận video');ytTien(1,f);
+  const {data:d2,error:e2}=await sb.functions.invoke('khao-sat-drive',{body:{action:'ti_xong',file_id:res.id}});
+  if(e2||!d2||!d2.ok)throw new Error(await ytFnLoi(e2,d2)||'Video đã lên Drive nhưng chưa mở quyền xem được');
+  return {fid:res.id,link:d2.link||('https://drive.google.com/file/d/'+res.id+'/view')}}
+ finally{ytTien(-1);try{wl&&wl.release()}catch(e){}}}
+const ti91Bo=fid=>{if(fid)sb.functions.invoke('khao-sat-drive',{body:{action:'ti_bo',file_id:fid}}).catch(()=>{})};
+ti91Api.luu=async(d,x)=>{if(LIVE.busy)throw new Error('Đang lưu, chờ chút nha');
+ let fid=x?x.fid:'',link=x?x.vid:'',moi='';
+ if(d.mode==='file'){const r=await ti91GuiDrive(d.file,d.ten);fid=moi=r.fid;link=r.link}
+ else if(d.mode==='link'){fid='';link=d.link}else if(d.mode==='bo'){fid='';link=''}
+ busy(true,'Đang lưu tiện ích…');
+ try{const rec={ten:d.ten,khu_vuc:d.khu||null,ghi_chu:d.ghi||null,drive_file_id:fid||null,drive_link:link||null,cap_nhat_luc:new Date().toISOString()};
+  const {error}=x?await sb.from('tien_ich').update(rec).eq('id',x.dbId):await sb.from('tien_ich').insert(rec);if(error)throw error;
+  if(x&&x.fid&&x.fid!==fid)ti91Bo(x.fid);await loadTi91()}
+ catch(e){if(moi)ti91Bo(moi);throw new Error(errVi(e))}finally{busy(false)}};
+ti91Api.xoa=async x=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,'Đang xoá…');
+ try{if(x.fid){try{await sb.functions.invoke('khao-sat-drive',{body:{action:'ti_bo',file_id:x.fid}})}catch(e){}}
+  const {error}=await sb.from('tien_ich').delete().eq('id',x.dbId);if(error)throw error;await loadTi91()}catch(e){throw new Error(errVi(e))}finally{busy(false)}};
 
 render();
 })();
