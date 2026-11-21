@@ -1321,7 +1321,7 @@ TAB.duyet=a=>{
    <label class="f" for="pg_${esc(p.email)}">Vai trò trong game<select class="in" id="pg_${esc(p.email)}">${GAME_ROLES.map(g=>`<option>${g}</option>`).join('')}</select></label>
    <div class="grid2"><button class="btn green" data-a="approve" data-v="${esc(p.email)}">Duyệt</button><button class="btn ghost" data-a="reject" data-v="${esc(p.email)}">Từ chối</button></div></div>`).join('')||'<p class="sub" style="margin-top:6px">Không có ai đang chờ.</p>'}</div>
   ${postAdminCard()}
-  ${mediaAdmin()}
+  ${(me()||{}).role==='tl'?'':mediaAdmin()}
   ${lhAdmin(a)}
   ${tankAdmin()}
   ${flagApprovals(flags)}
@@ -2769,7 +2769,11 @@ function hsRow(r,i){const m=hsMatch(r),open=U.hsOpen===i;const st=m.st==='ok'?['
  ${open?`<table class="tbl" style="margin-top:6px"><tr><td>Số điện thoại</td><td class="r">${r.sdt?`<a class="link" href="tel:${esc(r.sdt)}">${esc(r.sdt)}</a>`:'—'}</td></tr><tr><td>Quê quán</td><td class="r">${esc(r.que)||'—'}</td></tr><tr><td>Địa chỉ thường trú</td><td class="r">${esc(r.dc)||'—'}</td></tr>
   <tr><td>Căn cước</td><td class="r num">${U.hsShow===i?esc(r.cccd):mask(r.cccd)}</td></tr><tr><td>Mã số thuế</td><td class="r num">${U.hsShow===i?esc(r.mst):mask(r.mst)}</td></tr><tr><td>Số tài khoản</td><td class="r num">${U.hsShow===i?esc(r.stk):mask(r.stk)} · ${esc(r.nh)}</td></tr></table>
   <div class="row" style="margin-top:8px"><button class="btn ghost sm grow" data-a="hsShow" data-v="${i}">${U.hsShow===i?'Ẩn số riêng tư':'Hiện căn cước, STK'}</button>${/^https:\/\/drive\.google\.com\//.test(r.drive)?`<a class="btn gold sm grow" style="display:grid;place-items:center;text-decoration:none" href="${esc(r.drive)}" target="_blank" rel="noopener">Mở hồ sơ Drive</a>`:''}</div>`:''}</div>`}
+function hsNoHd(){const d=hsData();return S.accts.filter(a=>a.status==='active'&&!d.rows.some(r=>{const m=hsMatch(r);return m.st==='ok'&&m.a===a}))}
 function hsList(){const d=hsData(),q=noDau(U.hsq||''),f=U.hsf||'all';
+ if(f==='hd'){const A_=hsNoHd().filter(a=>!q||noDau(a.name).includes(q)),R=d.rows.map((r,i)=>[r,i]).filter(([r])=>!String(r.ky||'').trim()&&(!q||noDau(r.ten).includes(q)));
+  if(!A_.length&&!R.length)return '<p class="sub">Ai trong app cũng đã có hồ sơ ký hợp đồng 🎉</p>';
+  return `<div class="sub" style="margin:2px 0 6px">${A_.length+R.length} người chưa ký hợp đồng · đã vào app nhưng chưa có hồ sơ</div>${A_.map(a=>`<div class="hs"><div class="hs-hd" style="cursor:default"><span class="hs-name">${esc(a.name)}</span><span class="pill warn">Chưa ký HĐ</span></div><div class="sub">${esc(ROLES[a.role]||'')}${a.email?' · '+esc(a.email):''}${a.dob?' · sinh '+esc(a.dob.split('-').reverse().join('/')):''}</div></div>`).join('')}${R.map(([r,i])=>hsRow(r,i)).join('')}`}
  const L=d.rows.map((r,i)=>[r,i,hsMatch(r).st]).filter(([r,i,st])=>(!q||noDau(r.ten).includes(q)||String(r.sdt).includes(q)||String(r.so)===q)&&(f==='all'||(f==='ok'?st==='ok':st!=='ok')));
  return `<div class="sub" style="margin:2px 0 6px">${L.length} người</div>${L.map(([r,i])=>hsRow(r,i)).join('')||'<p class="sub">Không tìm thấy ai.</p>'}`}
 function hsCard(){const d=hsData(),n=d.rows.filter(r=>hsMatch(r).st==='ok').length;
@@ -2783,7 +2787,7 @@ SH.hoso=()=>{if(!hsCan())return {t:'Hồ sơ nhân sự',h:'<p class="sub">Chỉ
   <div class="row"><label class="btn ghost sm grow" style="display:grid;place-items:center">📥 Nhập file Excel<input type="file" accept=".xlsx,.xls" data-hs="1" hidden></label>${d.real?'<button class="btn ghost sm" data-a="hsClear">Xoá hết hồ sơ</button>':''}</div>
   <div class="sub">Tên hiện <b style="color:var(--green)">xanh lá</b> khi anh em đã tham gia app: trùng ngày sinh và có chữ trong tên khớp (kể cả tên thương hiệu như “Tuyền bds nè!” hay Gmail).</div>
   <input class="in" id="hsq" placeholder="Tìm theo tên, số điện thoại, số hồ sơ" value="${esc(U.hsq||'')}" autocomplete="off">
-  <div class="picks">${[['all','Tất cả'],['ok','Đã đăng ký'],['no','Chưa đăng ký']].map(([k,l])=>`<button class="${f===k?'on':''}" data-a="hsF" data-v="${k}">${l}</button>`).join('')}</div>
+  <div class="picks">${[['all','Tất cả'],['ok','Đã đăng ký'],['no','Chưa đăng ký'],['hd','Chưa ký HĐ']].map(([k,l])=>`<button class="${f===k?'on':''}" data-a="hsF" data-v="${k}">${l}</button>`).join('')}</div>
   <div id="hslist">${hsList()}</div></div>`}};
 A.hsOpen=v=>{U.hsOpen=U.hsOpen===+v?null:+v;U.hsShow=null;render()};
 A.hsShow=v=>{U.hsShow=U.hsShow===+v?null:+v;render()};
