@@ -6,7 +6,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v92 quay lai*/
+<style>/*v94*/
+.sheet .ks75back{display:none!important}
+</style><style>/*v92 quay lai*/
 .mg92nav{display:flex;align-items:center;gap:8px}.mg92nav span{font-size:13px;font-weight:700;min-width:30px;text-align:center;color:var(--muted)}
 .mg92nav button{width:38px;height:38px;border-radius:50%;border:1.5px solid var(--gold2,#C9A13B);background:transparent;color:inherit;font-size:22px;font-weight:800;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 3px}
 .mg92nav button:active{transform:scale(.94)}
@@ -4918,9 +4920,15 @@ dl89Tim=async function(p){if(window.__geo89)return window.__geo89(p);const Q=q92
 {const o=dl89Pop;dl89Pop=function(p){const h=o(p);const c=DL89C[dl89Khoa(p)];return c&&c[2]?h.replace('</b>','</b><div class="gd">📍 Gần đúng: chưa tìm ra đường này, ghim giữa quận '+esc(String(p.q||'').split(' · ')[0])+'</div>'):h}}
 
 /* ---- v93 Tiện ích nhiều quận ---- */
-const TI93Q=['Tân Phú','Tân Bình','Bình Tân','Phú Nhuận','Gò Vấp','Bình Thạnh','Quận 1','Quận 3','Quận 4','Quận 5','Quận 6','Quận 7','Quận 8','Quận 10','Quận 11','Quận 12','Thủ Đức','Bình Chánh','Hóc Môn','Nhà Bè','Củ Chi','Cần Giờ'];
+const TI93Q=['Tân Phú','Tân Bình','Bình Tân','Phú Nhuận','Gò Vấp','Bình Thạnh','Quận 1','Quận 3','Quận 4','Quận 5','Quận 6','Quận 7','Quận 8','Quận 10','Quận 11','Quận 12','Thủ Đức','Bình Chánh','Hóc Môn','Nhà Bè','Củ Chi','Cần Giờ','Đồng Nai'];
 const ti93Ds=k=>Array.isArray(k)?k:String(k||'').split(/\s*,\s*/).filter(Boolean);
 A.ti93Q=v=>{ti91Keep();const d=U.ti91D;if(!d)return;let L=ti93Ds(d.khu);if(L.includes(v))L=L.filter(x=>x!==v);else{if(L.length>=5){toast('Chọn tối đa 5 quận nha');return}L=L.concat(v)}d.khu=L.join(', ');render()};
+
+/* ---- v94 Chỉ giữ nút "← Quay lại": bỏ các nút/chữ "← Về …" ở đầu màn; nếu chưa có màn trước thì nút Quay lại làm đúng việc của chữ vàng ---- */
+{const o=renderSheet;renderSheet=function(){o();const w=$('#sheetwrap');const sh=w&&w.querySelector('.sheet');if(!sh)return;
+ const L=[...sh.querySelectorAll('button[data-a],a[data-a]')].filter(e=>!e.classList.contains('nav92')&&e.dataset.a!=='quizNav'&&!e.classList.contains('full')&&/^\s*←/.test(e.textContent||''));
+ if(!L.length)return;const e0=L[0];L.forEach(e=>e.remove());const h=sh.querySelector('.sheet-h');
+ if(h&&!h.querySelector('.nav92'))h.insertAdjacentHTML('afterbegin',`<button class="nav92" data-a="${esc(e0.dataset.a)}"${e0.dataset.v!=null?` data-v="${esc(e0.dataset.v)}"`:''} aria-label="Quay lại màn trước">← Quay lại</button>`)}}
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
@@ -5532,7 +5540,7 @@ ksPrepMax=1600;ksSoMax=2000;
 LIVE.ks={rows:[],url:{},t:0};
 async function loadKs(){if(!sb||!LIVE.me)return;LIVE.ks.t=Date.now();
  const {data,error}=await sb.from('khao_sat_nha').select('id,nguoi_tao_id,dia_chi,hem_truoc_nha,huong,anh_so,anh_so_ds,ghi_chu,dac_diem,diem_manh,diem_yeu,anh,vi_do,kinh_do,do_chinh_xac,drive_link,drive_trang_thai,drive_loi,tao_luc,cap_nhat_luc').order('tao_luc',{ascending:false}).limit(300);
- if(error){console.warn(error);return}LIVE.ks.rows=data||[];
+ if(error){console.warn(error);return}LIVE.ks.rows=(data||[]).filter(r=>r.drive_trang_thai!=='xoa_drive');
  const need=[...new Set(LIVE.ks.rows.flatMap(r=>Array.isArray(r.anh)?r.anh:[]))].filter(p=>!LIVE.ks.url[p]);
  for(let i=0;i<need.length;i+=100){const {data:su}=await sb.storage.from('khao-sat').createSignedUrls(need.slice(i,i+100),60*60*24);(su||[]).forEach(x=>{if(x&&x.signedUrl&&x.path)LIVE.ks.url[x.path]=x.signedUrl})}
  // ảnh sổ: chỉ người đăng + Sếp/Trợ lý mới xin link xem
@@ -5834,6 +5842,19 @@ ti91Api.luu=async(d,x)=>{if(LIVE.busy)throw new Error('Đang lưu, chờ chút n
 ti91Api.xoa=async x=>{if(LIVE.busy)throw new Error('Đang xử lý, chờ chút nha');busy(true,'Đang xoá…');
  try{if(x.fid){try{await sb.functions.invoke('khao-sat-drive',{body:{action:'ti_bo',file_id:x.fid}})}catch(e){}}
   const {error}=await sb.from('tien_ich').delete().eq('id',x.dbId);if(error)throw error;await loadTi91()}catch(e){throw new Error(errVi(e))}finally{busy(false)}};
+
+
+/* ---- v94 Đồng bộ xoá 2 chiều với Google Drive (Edge Function khao-sat-drive bản 13):
+   • Xoá khảo sát trong app → thư mục căn đó trên Drive vào thùng rác (ks_bo). Tiện ích: đã bỏ video vào thùng rác từ v91 (ti_bo).
+   • Xoá trên Drive → app mất theo: kiem_drive (máy chủ tự kiểm, tối đa 1 lần / 90 giây cho cả phòng).
+     Khảo sát: thư mục ở thùng rác → ẩn khỏi app (lấy lại từ thùng rác thì hiện lại); xoá vĩnh viễn → xoá hẳn. ---- */
+{const o=ksDel;ksDel=async s=>{try{await sb.functions.invoke('khao-sat-drive',{body:{action:'ks_bo',id:s.id}})}catch(e){}return o(s)}}
+let DRV94=0,DRV94D=false;
+function drive94Kiem(){if(DRV94D||!sb||!LIVE.me||LIVE.me.trang_thai!=='hoat_dong'||Date.now()-DRV94<120000)return;DRV94=Date.now();DRV94D=true;
+ sb.functions.invoke('khao-sat-drive',{body:{action:'kiem_drive'}}).then(async({data})=>{if(data&&data.doi>0){await Promise.all([loadKs().catch(()=>{}),loadTi91().catch(()=>{})]);render()}}).catch(()=>{}).finally(()=>{DRV94D=false})}
+{const o=ksLamMoi;ksLamMoi=function(f){drive94Kiem();return o(f)}}
+{const o=ti91Nen;ti91Nen=function(){drive94Kiem();return o()}}
+setTimeout(()=>drive94Kiem(),8000);
 
 render();
 })();
