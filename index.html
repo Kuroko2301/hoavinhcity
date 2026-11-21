@@ -23,8 +23,11 @@
 .ti91vthumb span{width:34px;height:34px;border-radius:50%;background:var(--red);display:grid;place-items:center;flex:none;font-size:14px}
 .ti91vthumb small{display:block;font-weight:500;opacity:.75;font-size:12px}
 .ti91f .ti91op{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.ti91f .ti91op.ba{grid-template-columns:1fr 1fr 1fr}
-.ti91f .ti91op button{border:1.5px solid var(--line,#E5DED2);background:#fff;border-radius:12px;padding:9px 6px;font-weight:700;font-size:13px;line-height:1.3;color:inherit;cursor:pointer}
-.ti91f .ti91op button.on{border-color:var(--red);background:#FFF1EE;color:var(--red)}
+.ti91f .ti91op button{border:1.5px solid var(--line,#E5DED2);background:transparent;border-radius:12px;padding:9px 6px;font-weight:700;font-size:13px;line-height:1.3;color:inherit;cursor:pointer}
+.ti91f .ti91op button.on{border-color:var(--red);background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red)}
+.ti93q{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;padding:2px}
+.ti93q button{border:1.5px solid var(--line,#E5DED2);background:transparent;color:inherit;border-radius:999px;padding:6px 11px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.ti93q button.on{border-color:var(--red);background:var(--red);color:#fff}
 .ti91chon{display:flex;align-items:center;gap:10px;border:1.5px dashed #C9BFAF;border-radius:14px;padding:12px;margin-top:8px;cursor:pointer;font-weight:700;font-size:14px}
 .ti91chon input{display:none}.ti91chon .sub{font-weight:500}
 .ti91xem{width:100%;border-radius:14px;overflow:hidden;background:#000;margin-bottom:10px}
@@ -4801,13 +4804,13 @@ const ti91DriveId=l=>{const m=String(l||'').match(/\/d\/([\w-]{15,})/)||String(l
 const ti91Co=x=>!!(TI91BLOB[x.id]||x.vid);
 const ti91S=x=>boDau69([x.ten,x.khu,x.ghi,x.by].join(' '));
 const ti91Mb=n=>n>=1073741824?(n/1073741824).toFixed(1)+' GB':Math.max(1,Math.round(n/1048576))+' MB';
-function ti91Keep(){const d=U.ti91D;if(!d)return;const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};[['ten','tiTen'],['khu','tiKhu'],['ghi','tiGhi'],['link','tiLink']].forEach(([k,id])=>{const v=g(id);if(v!==undefined)d[k]=v})}
+function ti91Keep(){const d=U.ti91D;if(!d)return;const g=id=>{const e=document.getElementById(id);return e?e.value:undefined};[['ten','tiTen'],['ghi','tiGhi'],['link','tiLink']].forEach(([k,id])=>{const v=g(id);if(v!==undefined)d[k]=v})}
 function ti91Form(){const d=U.ti91D;const x=d.id?ti91Ds().find(y=>y.id===d.id):null;const co=x&&ti91Co(x);const dOk=ti91DriveOk();
  const QL=[...new Set(QUAN.concat(ti91Ds().map(y=>y.khu).filter(Boolean)))];
  const opts=[...(co?[['giu','✅ Giữ video cũ']]:[]),['file','📤 Tải video từ máy'],['link','🔗 Dán link Drive']];
  return `<div class="card stack ti91f" id="ti91Form"><div class="between"><b>${x?'✏️ Sửa tiện ích':'➕ Thêm tiện ích mới'}</b><button class="x" data-a="ti91Dong" aria-label="Đóng">×</button></div>
  <label class="f" for="tiTen">Tên tiện ích *<input class="in" id="tiTen" value="${esc(d.ten||'')}" maxlength="120" placeholder="Ví dụ: Công viên Đầm Sen, Chợ Tân Hương" autocomplete="off"></label>
- <label class="f" for="tiKhu">Khu vực<select class="in" id="tiKhu"><option value="">Chọn quận (không bắt buộc)</option>${QL.map(q=>`<option ${d.khu===q?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+ <div class="f">Khu vực <span class="sub" style="font-weight:500">(chọn được nhiều quận, không bắt buộc)</span><div class="ti93q">${ti93Ds(d.khu).concat(TI93Q.filter(q=>!ti93Ds(d.khu).includes(q))).map(q=>`<button class="${ti93Ds(d.khu).includes(q)?'on':''}" data-a="ti93Q" data-v="${esc(q)}" aria-pressed="${ti93Ds(d.khu).includes(q)}">${ti93Ds(d.khu).includes(q)?'✓ ':''}${esc(q)}</button>`).join('')}</div></div>
  <label class="f" for="tiGhi">Ghi chú<textarea class="in" id="tiGhi" rows="2" maxlength="1000" placeholder="Cách bao xa, giờ mở cửa, điểm hay để kể cho khách… (không bắt buộc)">${esc(d.ghi||'')}</textarea></label>
  <div class="f">Video về tiện ích *<div class="ti91op${opts.length===3?' ba':''}">${opts.map(([k,l])=>`<button class="${d.mode===k?'on':''}" data-a="ti91Mode" data-v="${k}">${l}</button>`).join('')}</div>
  ${d.mode==='file'?(dOk?`<label class="ti91chon">🎬<div class="grow">${TI91F?`${esc(TI91F.name)}<div class="sub">${ti91Mb(TI91F.size)} · bấm để chọn video khác</div>`:'Chọn video trong máy<div class="sub">Video tự lưu vào Google Drive chính của phòng</div>'}</div><input type="file" accept="video/*" data-ti91f></label>`
@@ -4913,6 +4916,11 @@ dl89Tim=async function(p){if(window.__geo89)return window.__geo89(p);const Q=q92
   const r=await fetch(u,{headers:{Accept:'application/json'}});if(r.ok){const j=await r.json();const ok=(j||[]).map(x=>[+x.lat,+x.lon]).filter(c=>kc92(la,lo,c[0],c[1])<=rk*1.3);if(ok.length)return ok[0]}}catch(e){}}
  return [la,lo,1]};
 {const o=dl89Pop;dl89Pop=function(p){const h=o(p);const c=DL89C[dl89Khoa(p)];return c&&c[2]?h.replace('</b>','</b><div class="gd">📍 Gần đúng: chưa tìm ra đường này, ghim giữa quận '+esc(String(p.q||'').split(' · ')[0])+'</div>'):h}}
+
+/* ---- v93 Tiện ích nhiều quận ---- */
+const TI93Q=['Tân Phú','Tân Bình','Bình Tân','Phú Nhuận','Gò Vấp','Bình Thạnh','Quận 1','Quận 3','Quận 4','Quận 5','Quận 6','Quận 7','Quận 8','Quận 10','Quận 11','Quận 12','Thủ Đức','Bình Chánh','Hóc Môn','Nhà Bè','Củ Chi','Cần Giờ'];
+const ti93Ds=k=>Array.isArray(k)?k:String(k||'').split(/\s*,\s*/).filter(Boolean);
+A.ti93Q=v=>{ti91Keep();const d=U.ti91D;if(!d)return;let L=ti93Ds(d.khu);if(L.includes(v))L=L.filter(x=>x!==v);else{if(L.length>=5){toast('Chọn tối đa 5 quận nha');return}L=L.concat(v)}d.khu=L.join(', ');render()};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
