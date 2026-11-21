@@ -1172,9 +1172,10 @@ function tasksCard(a){
   return `<div class="card"><div class="between"><h2 class="h2" style="margin:0">Nhiệm vụ hằng ngày · Bạc</h2><span class="pill ${d.length===list.length?'ok':''}">${d.length}/${list.length}</span></div><p class="sub" style="margin:4px 0 6px">Làm mỗi ngày để nhận Bạc. Bạc, Vàng, Kim cương dùng mua đồ ở Siêu thị.</p>
   ${list.map(t=>{const on=d.includes(t.id);return `<div class="task"><span class="tick ${on?'on':''}">${on?'✓':''}</span><div class="grow"><div style="font-weight:700;font-size:13.5px">${t.t}</div><div class="rw">${Object.entries(t.r).map(([k,v])=>'+'+v+' '+MATS.find(m=>m[0]===k)[1]).join(' · ')}</div></div>${on?'':`<button class="btn ghost sm" data-a="goTask" data-v="${t.go}">Làm</button>`}</div>`}).join('')}
   <h3 class="h3" style="margin:14px 0 2px">Kiếm Vàng và Kim cương</h3>
-  <div class="task"><span class="tick">🥇</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Khảo sát nhà</div><div class="rw">+1 Vàng mỗi căn · nhận nhiệm vụ khảo sát được thêm</div></div><button class="btn ghost sm" data-a="sheet" data-v="survey">Khảo sát</button></div>
-  <div class="task"><span class="tick">🥇</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Gửi hình dẫn khách</div><div class="rw">+1 Vàng mỗi hình · che mặt khách vẫn được</div></div><button class="btn ghost sm" data-a="sheet" data-v="clients">Gửi hình</button></div>
-  <div class="task"><span class="tick">💎</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Báo vụ chốt</div><div class="rw">+1 đến 9 Kim cương theo hệ số T</div></div><button class="btn ghost sm" data-a="sheet" data-v="dealreport">Báo</button></div></div>`;
+  <div class="task"><span class="tick">🎬</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Đi quay nhà</div><div class="rw">+2 Bạc · 💧 tưới cây khi Trợ lý duyệt hình</div></div><button class="btn ghost sm" data-a="nv102Mo" data-v="quay|">Báo cáo</button></div>
+  <div class="task"><span class="tick">🥇</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Khảo sát nhà</div><div class="rw">+1 Vàng khi Trợ lý duyệt hình · +1 Thép ngay khi lưu</div></div><button class="btn ghost sm" data-a="sheet" data-v="survey">Khảo sát</button></div>
+  <div class="task"><span class="tick">🥇</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Gửi hình dẫn khách</div><div class="rw">+1 Vàng khi Trợ lý duyệt hình · che mặt khách vẫn được</div></div><button class="btn ghost sm" data-a="sheet" data-v="clients">Gửi hình</button></div>
+  <div class="task"><span class="tick">💎</span><div class="grow"><div style="font-weight:700;font-size:13.5px">Vụ chốt</div><div class="rw">${laQL69(a)?'+1 đến 9 Kim cương theo hệ số T cho người chốt':'+1 đến 9 Kim cương theo hệ số T · Trợ lý báo giúp bạn'}</div></div>${laQL69(a)?'<button class="btn ghost sm" data-a="sheet" data-v="dealreport">Báo</button>':''}</div></div>`;
 }
 function remindersCard(a){
   const items=[];
@@ -1198,7 +1199,7 @@ const FEATS=[
  {k:'lochang',em:'🔎',t:'Đăng ký lọc hàng',s:'3 lần mỗi tháng, Trợ lý tiếp nhận'},
  {k:'hoc',em:'🧠',t:'Học tình huống',s:'Trắc nghiệm, đúng +1 Bạc'},
  {k:'hocvien',em:'🎓',t:'Học viện Hoa Vinh',s:'Video và điểm danh Zoom'},
- {k:'dealreport',em:'💎',t:'Báo vụ chốt',s:'Xét duyệt theo hệ số T'},
+ {k:'dealreport',em:'💎',t:'Vụ chốt',s:'Trợ lý báo, Kim cương theo hệ số T'},
  {k:'muctieu',em:'⭐',t:'Sản phẩm mục tiêu',s:'Căn ngon bạn đã chọn lọc'},
  {k:'hoitruong',em:'🏛️',t:'Hội Trường',s:'Nhà khảo sát, giá chốt, nhà ngon, trò chuyện'},
  {k:'vandong',em:'🏅',t:'Vận động trường',s:'Đá banh, chạy bộ, đạp xe, cầu lông, pickleball'}
@@ -2401,7 +2402,7 @@ A.bellAdd=()=>{U.bellAdd=true;render()};
 A.addGoal=()=>{const a=me();const t=val('gt');if(!t){toast('Nhập mục tiêu nhé');return}const steps=val('gs').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>({t:x,done:false}));a.g.goals.push({t,steps});U.bellAdd=false;toast('Đã lưu mục tiêu');save();render()};
 A.delGoal=v=>{const a=me();a.g.goals.splice(+v,1);save();render();toast('Đã xoá mục tiêu')};
 A.step=v=>{const a=me();const [g,s]=v.split(':').map(Number);const st=a.g.goals[g].steps[s];st.done=!st.done;const go=a.g.goals[g];if(go.steps.every(x=>x.done))journey(a,'Hoàn thành mục tiêu',go.t);save();render()};
-A.addDeal=()=>{const a=me();const h=val('dh');if(!h){toast('Nhập căn nhà nhé');return}a.g.deals.push({d:today(),home:h,feel:val('df')});journey(a,'Kỷ niệm vụ chốt',h);save();render();toast('Đã lưu kỷ niệm. Nhớ bấm Báo vụ chốt để nhận Kim cương nhé')};
+A.addDeal=()=>{const a=me();const h=val('dh');if(!h){toast('Nhập căn nhà nhé');return}a.g.deals.push({d:today(),home:h,feel:val('df')});journey(a,'Kỷ niệm vụ chốt',h);save();render();toast('Đã lưu kỷ niệm. Nhắn Trợ lý báo vụ chốt để bạn nhận Kim cương nhé')};
 /* CG */
 /* Trợ lý */
 A.actCheck=()=>{const a=me();a.g.actCheck=today();a.g.act=Math.min(100,a.g.act+2);save();render();toast('Đã điểm danh hoạt động')};
@@ -4692,7 +4693,7 @@ A.ch84Bo=v=>{const d=ch84Keep();d.anh.splice(+v,1);render()};
 let ch84Luu=async anh=>Promise.all(anh.map(x=>thuNhoAnh(x.url,640,640)));
 {const o=A.addDeal;A.addDeal=async()=>{const d=ch84Keep();const h=(d.h||'').trim();if(!h){toast('Nhập căn nhà nhé');return}
  let anh=[];if(d.anh.length){try{anh=await ch84Luu(d.anh)}catch(e){toast('Chưa lưu được hình: '+(e.message||e));return}}
- const a=me();a.g.deals.push({d:today(),home:h,feel:(d.f||'').trim(),anh});journey(a,'Kỷ niệm vụ chốt',h);U.ch84={anh:[]};save();render();toast('Đã lưu kỷ niệm. Nhớ bấm Báo vụ chốt để nhận Kim cương nhé')}}
+ const a=me();a.g.deals.push({d:today(),home:h,feel:(d.f||'').trim(),anh});journey(a,'Kỷ niệm vụ chốt',h);U.ch84={anh:[]};save();render();toast('Đã lưu kỷ niệm. Nhắn Trợ lý báo vụ chốt để bạn nhận Kim cương nhé')}}
 
 /* ===== v85: Thuật toán game Hoa Vinh — đủ chỉ tiêu 1 năm = Nhà 4 lầu ===== */
 const nam85=()=>today().slice(0,4);
