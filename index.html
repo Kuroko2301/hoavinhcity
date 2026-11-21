@@ -2755,7 +2755,7 @@ function hsHint(row,a){if(nameHit(row.ten,a.name))return 3;const T=hsTok(row.ten
 function hsMatch(row){const iso=dmyIso(row.sinh);let best=null,dob=null;
  for(const a of S.accts){const h=hsHint(row,a),same=!!(a.dob&&iso&&iso===a.dob);
   if(same&&h>0){if(!best||best.st!=='ok'||h>best.h)best={st:'ok',a,h};continue}
-  if(same){dob=dob||{st:'dob',a};continue}
+  if(same){if(!dob&&!hsData().rows.some(o=>o!==row&&dmyIso(o.sinh)===a.dob&&hsHint(o,a)>0))dob={st:'dob',a};continue}
   if(h===3&&!best)best={st:'name',a,h}}
  if(best&&best.st==='ok')return best;if(dob)return dob;if(best)return best;
  for(const m of S.members)if(nameHit(row.ten,m.name))return {st:'name',m};return {st:''}}
