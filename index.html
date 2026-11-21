@@ -6,7 +6,9 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Lora:wght@600;700&display=swap">
-<style>/*v94*/
+<style>/*v95*/
+.ql95n{display:flex;flex-direction:column;gap:6px;align-items:stretch;flex:none}.ql95x{font-size:12.5px;white-space:nowrap}.ql95x.xn{border-color:var(--red);color:var(--red);font-weight:800}
+</style><style>/*v94*/
 .sheet .ks75back{display:none!important}
 </style><style>/*v92 quay lai*/
 .mg92nav{display:flex;align-items:center;gap:8px}.mg92nav span{font-size:13px;font-weight:700;min-width:30px;text-align:center;color:var(--muted)}
@@ -4513,7 +4515,7 @@ SH.qlk78=()=>{const a=me();const f=ql78S();const all=(a.g.clients||[]).map((c,i)
  <p class="sub" style="margin:8px 0">${L.length} khách${f.tab==='cham'?' đang chăm':' đã chốt'}</p>
  ${L.map(([c,i])=>{const tt=tt73(c);const so=String(c.phone||'').replace(/\D/g,'').slice(-4);return `<div class="card ql78it"><div class="grow" style="min-width:0"><div class="row" style="gap:4px 6px;flex-wrap:wrap">${f.tab==='cham'?`<span class="tt73 ${tt}" style="font-size:12px;padding:2px 8px">${TT73[tt][0]} ${TT73[tt][1]}</span>`:'<span class="pill ok">🎉 Đã chốt</span>'}<b>${esc(c.name)}</b>${so?`<span class="sub num">📱 ···${esc(so)}</span>`:''}</div>
   <div class="sub">📍 ${esc(c.q||'Chưa ghi khu vực')}${pk78(c)?' · 💰 '+pk78(c):''} · Vòng ${c.vong||1}</div><div class="sub">🗓️ Chăm từ <b>${esc(fmtD(bd80(c)))}</b> · ${ngay80(c)}</div>${c.chot?`<div class="sub">🎉 Chốt ngày ${esc(fmtD(c.chot))}</div>`:''}</div>
-  ${c.chot?`<button class="btn ghost sm" data-a="ql78Chot" data-v="${i}">↩ Bỏ chốt</button>`:`<button class="btn sm ql78ok ql79do" data-a="ql78Chot" data-v="${i}">✅ Đã chốt</button>`}</div>`}).join('')||`<div class="note">${f.tab==='chot'?'Chưa có khách nào chốt. Cố lên nha, vụ chốt đầu tiên đang tới gần rồi! 💪':'Không có khách nào khớp bộ lọc.'}</div>`}`}};
+  <div class="ql95n">${c.chot?`<button class="btn ghost sm" data-a="ql78Chot" data-v="${i}">↩ Bỏ chốt</button>`:`<button class="btn sm ql78ok ql79do" data-a="ql78Chot" data-v="${i}">✅ Đã chốt</button>`}<button class="btn ghost sm ql95x${U.ql95X===i?' xn':''}" data-a="ql95Xoa" data-v="${i}" aria-label="Xoá khách ${esc(c.name)}">${U.ql95X===i?'Bấm lần nữa để xoá':'🗑️ Xoá khách'}</button></div></div>`}).join('')||`<div class="note">${f.tab==='chot'?'Chưa có khách nào chốt. Cố lên nha, vụ chốt đầu tiên đang tới gần rồi! 💪':'Không có khách nào khớp bộ lọc.'}</div>`}`}};
 A.ql78f=v=>{const i=v.indexOf('|');const k=v.slice(0,i),x=v.slice(i+1);const f=ql78S();if(k==='pk')f.pk=+x;else f[k]=x;if(k==='tab'){f.tt='';}render()};
 A.ql78Chot=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;if(c.chot){c.chot='';toast('Đã đưa '+c.name+' về danh sách đang chăm')}else{c.chot=today();c.last=today();confetti();toast('🎉 Chúc mừng! '+c.name+' đã vào Khách đã chốt')}save();render()};
 /* ===== /v78 quan ly khach ===== */
@@ -4929,6 +4931,11 @@ A.ti93Q=v=>{ti91Keep();const d=U.ti91D;if(!d)return;let L=ti93Ds(d.khu);if(L.inc
  const L=[...sh.querySelectorAll('button[data-a],a[data-a]')].filter(e=>!e.classList.contains('nav92')&&e.dataset.a!=='quizNav'&&!e.classList.contains('full')&&/^\s*←/.test(e.textContent||''));
  if(!L.length)return;const e0=L[0];L.forEach(e=>e.remove());const h=sh.querySelector('.sheet-h');
  if(h&&!h.querySelector('.nav92'))h.insertAdjacentHTML('afterbegin',`<button class="nav92" data-a="${esc(e0.dataset.a)}"${e0.dataset.v!=null?` data-v="${esc(e0.dataset.v)}"`:''} aria-label="Quay lại màn trước">← Quay lại</button>`)}}
+
+/* ---- v95 Xoá khách (bấm 2 lần trong 4 giây) ---- */
+A.ql95Xoa=v=>{const i=+v;const a=me();const c=(a.g.clients||[])[i];if(!c)return;
+ if(U.ql95X!==i){U.ql95X=i;render();setTimeout(()=>{if(U.ql95X===i){U.ql95X=null;render()}},4000);return}
+ U.ql95X=null;a.g.clients.splice(i,1);save();render();toast('Đã xoá khách '+c.name)};
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
