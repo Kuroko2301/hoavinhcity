@@ -6959,6 +6959,12 @@ vc103Sau=async(x,p)=>{if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x
 .dc111li .ic{font-size:22px;flex:none;width:34px;text-align:center}.dc111li .nut{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .dc111note{font-size:12.5px;color:var(--muted);line-height:1.45;margin-top:8px}
 .dc111pill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:40;border:0;border-radius:999px;padding:9px 16px;background:#7A2A0C;color:#fff;font-weight:800;font-size:13.5px;box-shadow:0 6px 18px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap}
+.dc111pin{background:transparent;border:0}.dc111pin span{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:#C2410C;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.dc111pin span b{transform:rotate(45deg);color:#fff;font:800 12px/1 system-ui,sans-serif}.dc111pin.cuoi span{background:#2563EB}.dc111pin.dau span{background:#16A34A}
+.dc111diem{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}.dc111diem span{display:inline-flex;align-items:center;gap:5px;background:var(--soft);border-radius:999px;padding:4px 10px 4px 4px;font-size:12.5px;font-weight:700}
+.dc111diem span i{font-style:normal;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#C2410C;color:#fff;font-size:11.5px}
+.dc111vd{padding:14px;border-radius:18px;background:linear-gradient(135deg,#7A2A0C,#C2410C);color:#fff;margin:0 0 12px}.dc111vd .sub{color:#FFE4D2}
+.dc111vd .btn{background:#fff!important;background-image:none!important;color:#9A3412!important;font-weight:800;text-shadow:none!important}.dc111vd .btn.ghost{background:rgba(255,255,255,.12)!important;color:#fff!important;border:1.5px solid rgba(255,255,255,.6)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .dc111loai button.on{background:#3A1A0C;color:#FFD3B8}}
 :root[data-theme="dark"] .dc111loai button.on{background:#3A1A0C;color:#FFD3B8}
 `;document.head.appendChild(s)})();
@@ -6966,13 +6972,17 @@ vc103Sau=async(x,p)=>{if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x
 const DC_LOAI=[['ks','🛵','Đi khảo sát'],['dan','🤝','Dẫn khách'],['quay','🎬','Đi quay nhà'],['bo','🚶','Đi bộ'],['chay','🏃','Chạy bộ'],['xe','🚴','Đạp xe'],['khac','📍','Việc khác']];
 const dcLoai=k=>DC_LOAI.find(x=>x[0]===k)||DC_LOAI[6];
 const DC_KEY='hv-dc111';
-const DC={rec:null,watch:null,wl:null,tick:null,map:null,el:null,lyr:null,live:null,acc:0,off:false,loi:'',chk:''};
+const DC={rec:null,cham:null,lay:false,watch:null,wl:null,tick:null,map:null,el:null,lyr:null,live:null,acc:0,off:false,loi:'',chk:''};
+const dcChu=i=>{let s='';i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+function dcLuuCham(){const o=dcLs();o.cham=DC.cham?{...DC.cham,who:dcWho()}:null;dcLsSet(o)}
+const dcLaCham=t=>t&&(t.ghi==='cham'||t.cham);
+function dcKmDiem(p){let k=0;for(let i=1;i<p.length;i++)k+=dcM(p[i-1],p[i]);return k/1000}
 function dcLs(){try{return JSON.parse(localStorage.getItem(DC_KEY)||'{}')||{}}catch(e){return {}}}
 function dcLsSet(o){try{localStorage.setItem(DC_KEY,JSON.stringify(o))}catch(e){}}
 const dcWho=()=>{const a=me();return a?a.email:''};
 function dcLuuRec(){const o=dcLs();o.rec=DC.rec?{...DC.rec,who:dcWho()}:null;dcLsSet(o)}
 function dcCho(){return (dcLs().cho||[]).filter(t=>t.who===dcWho())}
-function dcS(){return U.dc||(U.dc={xem:'ngay',moc:today(),loai:'ks',ai:'',ds:[],khoa:'',dang:false,chon:'',xoa:'',xong:false})}
+function dcS(){return U.dc||(U.dc={xem:'ngay',moc:today(),loai:'ks',che:'cham',loc:'',ai:'',ds:[],khoa:'',dang:false,chon:'',xoa:'',xong:false})}
 function dcM(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r;const x=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 12742000*Math.asin(Math.sqrt(Math.min(1,x)))}
 const dcKm=v=>(Math.round((+v||0)*10)/10).toFixed(1).replace('.',',');
 function dcTg(s){s=Math.max(0,Math.round(+s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h?h+'h'+String(m).padStart(2,'0'):m+'p'+String(x).padStart(2,'0')}
@@ -7007,7 +7017,8 @@ function dcCapNhat(){const r=DC.rec;const set=(id,t)=>{const e=document.getEleme
  set('dcPillKm',dcKm(r.km)+' km · '+dcDongHo(g));
  set('dcGps',DC.loi||(r.dung?'Đang tạm dừng':DC.acc?('GPS sai số khoảng '+DC.acc+' m'+(DC.acc>65?' (đang chờ sóng tốt hơn)':'')):'Đang dò sóng GPS…'))}
 function dcPhucHoi(){const w=dcWho();if(!w||DC.chk===w)return;DC.chk=w;const o=dcLs();
- if(o.rec&&o.rec.who===w&&!DC.rec){DC.rec=o.rec;if(!DC.rec.dung){const s=DC.rec.seg.flat();const t=s.length?s[s.length-1][2]:Date.now();DC.rec.dung=true;DC.rec.dungLuc=Math.max(t,DC.rec.bd)}dcLuuRec()}}
+ if(o.rec&&o.rec.who===w&&!DC.rec){DC.rec=o.rec;if(!DC.rec.dung){const s=DC.rec.seg.flat();const t=s.length?s[s.length-1][2]:Date.now();DC.rec.dung=true;DC.rec.dungLuc=Math.max(t,DC.rec.bd)}dcLuuRec()}
+ if(o.cham&&o.cham.who===w&&!DC.cham)DC.cham=o.cham}
 
 /* ---- rút gọn điểm trước khi lưu (giữ hình đường, bớt dung lượng) ---- */
 function dcGon(pts,tol){if(pts.length<3)return pts;const k=Math.cos(pts[0][0]*Math.PI/180)*111320,y=111320;
@@ -7024,18 +7035,28 @@ function dcGan(){const ho=document.getElementById('dcHo');if(!ho)return;
  bdNap().then(()=>{const LF=window.L;if(!DC.map){DC.el.innerHTML='';DC.map=LF.map(DC.el,{zoomControl:true});
    LF.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(DC.map);DC.map.setView([10.795,106.66],12);DC.khoaVe=''}
   setTimeout(()=>{try{DC.map.invalidateSize()}catch(e){}},60);dcVe();dcVeLive()}).catch(e=>{DC.el.innerHTML='<div class="note" style="margin:12px">'+esc(e.message)+'. Kiểm tra mạng rồi mở lại nha.</div>'})}
-function dcVe(){if(!DC.map||!window.L)return;const q=dcS();const kh=q.khoa+'|'+q.chon+'|'+q.ds.length;if(DC.khoaVe===kh)return;DC.khoaVe=kh;
+function dcPin(LF,p,i,n,lyr,tip){const c=i===0?' dau':i===n-1?' cuoi':'';return LF.marker([p[0],p[1]],{icon:LF.divIcon({className:'dc111pin'+c,html:'<span><b>'+dcChu(i)+'</b></span>',iconSize:[26,26],iconAnchor:[4,26]})}).addTo(lyr).bindTooltip(tip||('Điểm '+dcChu(i)+(p[2]?' · '+dcGio(p[2]):'')))}
+const dcDsLoc=q=>q.loc?q.ds.filter(t=>t.loai===q.loc):q.ds;
+function dcVe(){if(!DC.map||!window.L)return;const q=dcS();const ds=dcDsLoc(q);const kh=q.khoa+'|'+q.chon+'|'+ds.length+'|'+q.loc;if(DC.khoaVe===kh)return;DC.khoaVe=kh;
  const LF=window.L;if(DC.lyr)DC.lyr.remove();DC.lyr=LF.layerGroup().addTo(DC.map);const all=[];let chonPts=[];
- q.ds.forEach(t=>{const on=q.chon&&String(t.id)===q.chon;const segs=(t.diem||[]).filter(s=>s&&s.length);
+ ds.forEach(t=>{const on=q.chon&&String(t.id)===q.chon;
+  if(dcLaCham(t)){const p=(t.diem||[]).flat().filter(x=>x&&x.length>1);if(!p.length)return;const ll=p.map(x=>[x[0],x[1]]);all.push(...ll);if(on)chonPts.push(...ll);
+   if(ll.length>1)LF.polyline(ll,{color:on?'#2563EB':'#E8590C',weight:on?5:4,opacity:on?.95:.8}).addTo(DC.lyr);
+   if(on||q.xem==='ngay')p.forEach((x,i)=>dcPin(LF,x,i,p.length,DC.lyr));return}
+  const segs=(t.diem||[]).filter(s=>s&&s.length);
   segs.forEach((s,i)=>{const ll=s.map(p=>[p[0],p[1]]);all.push(...ll);if(on)chonPts.push(...ll);
    LF.polyline(ll,{color:on?'#2563EB':'#E8590C',weight:on?6:4,opacity:on?.95:.75}).addTo(DC.lyr);
    if(i>0){const tr=segs[i-1];LF.polyline([tr[tr.length-1],s[0]].map(p=>[p[0],p[1]]),{color:on?'#2563EB':'#E8590C',weight:3,opacity:.6,dashArray:'6 8'}).addTo(DC.lyr)}});
   if(on&&segs.length){const a=segs[0][0],b=segs[segs.length-1].slice(-1)[0];
    LF.circleMarker([a[0],a[1]],{radius:7,color:'#fff',weight:3,fillColor:'#16A34A',fillOpacity:1}).addTo(DC.lyr).bindTooltip('Bắt đầu '+dcGio(t.bd));
    LF.circleMarker([b[0],b[1]],{radius:7,color:'#fff',weight:3,fillColor:'#DC2626',fillOpacity:1}).addTo(DC.lyr).bindTooltip('Kết thúc '+dcGio(t.kt))}});
- if(DC.rec&&DC.rec.seg.flat().length)return;
+ if(DC.rec&&DC.rec.seg.flat().length||DC.cham&&DC.cham.pts.length)return;
  const f=chonPts.length?chonPts:all;if(f.length>1)DC.map.fitBounds(f,{padding:[24,24],maxZoom:17});else if(f.length)DC.map.setView(f[0],16)}
-function dcVeLive(){if(!DC.map||!window.L)return;const LF=window.L;if(DC.live)DC.live.remove();DC.live=null;const r=DC.rec;if(!r)return;
+function dcVeLive(){if(!DC.map||!window.L)return;const LF=window.L;if(DC.live)DC.live.remove();DC.live=null;
+ const c=DC.cham;if(c&&c.pts.length){DC.live=LF.layerGroup().addTo(DC.map);const ll=c.pts.map(p=>[p[0],p[1]]);
+  if(ll.length>1)LF.polyline(ll,{color:'#C2410C',weight:5,opacity:.95}).addTo(DC.live);c.pts.forEach((p,i)=>dcPin(LF,p,i,c.pts.length,DC.live));
+  if(U.sheet==='dc111'){if(ll.length>1)DC.map.fitBounds(ll,{padding:[34,34],maxZoom:17});else DC.map.setView(ll[0],16)}return}
+ const r=DC.rec;if(!r)return;
  DC.live=LF.layerGroup().addTo(DC.map);const segs=r.seg.filter(s=>s.length);
  segs.forEach((s,i)=>{LF.polyline(s.map(p=>[p[0],p[1]]),{color:'#C2410C',weight:6,opacity:.95}).addTo(DC.live);
   if(i>0){const tr=segs[i-1];LF.polyline([[tr[tr.length-1][0],tr[tr.length-1][1]],[s[0][0],s[0][1]]],{color:'#C2410C',weight:3,dashArray:'6 8'}).addTo(DC.live)}});
@@ -7075,7 +7096,7 @@ function dcQL(a){return a&&(a.role==='sep'||a.role==='tl')}
 function dcCot(q){const [a]=dcKhoang(q.xem,q.moc);let n,ten,khoa;
  if(q.xem==='nam'){n=12;khoa=t=>new Date(t.bd).getMonth();ten=['T1','T6','T12']}
  else{n=new Date(a.getFullYear(),a.getMonth()+1,0).getDate();khoa=t=>new Date(t.bd).getDate()-1;ten=['1',String(Math.ceil(n/2)),String(n)]}
- const v=Array(n).fill(0);q.ds.forEach(t=>{const i=khoa(t);if(i>=0&&i<n)v[i]+=t.km});const mx=Math.max(...v,.1);
+ const v=Array(n).fill(0);dcDsLoc(q).forEach(t=>{const i=khoa(t);if(i>=0&&i<n)v[i]+=t.km});const mx=Math.max(...v,.1);
  return `<div class="dc111cot" aria-label="Biểu đồ quãng đường">${v.map((x,i)=>`<i class="${x?'':'k'}" style="height:${x?Math.max(6,x/mx*100):2}%" title="${q.xem==='nam'?'Tháng '+(i+1):'Ngày '+(i+1)}: ${dcKm(x)} km"></i>`).join('')}</div><div class="dc111cotn"><span>${ten[0]}</span><span>${ten[1]}</span><span>${ten[2]}</span></div>`}
 function dcGgMap(t){const p=(t.diem||[]).flat();if(p.length<2)return '';const n=Math.min(8,p.length-2),wp=[];for(let i=1;i<=n;i++)wp.push(p[Math.round(i*(p.length-1)/(n+1))]);
  const f=x=>x[0]+','+x[1];return 'https://www.google.com/maps/dir/?api=1&origin='+f(p[0])+'&destination='+f(p[p.length-1])+(wp.length?'&waypoints='+encodeURIComponent(wp.map(f).join('|')):'')}
@@ -7087,9 +7108,23 @@ SH.dc111=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🗺️ Đánh dấu di 
   h+=`<label class="sub" for="dcAi" style="font-weight:700">👀 Xem đường đi của</label><select class="in" id="dcAi" style="width:100%;margin:4px 0 10px" onchange="__A.dcAi(this.value)"><option value="">Tôi (${esc(a.name)})</option>${ae.map(x=>`<option value="${esc(x.id)}"${q.ai===x.id?' selected':''}>${esc(x.name)}</option>`).join('')}</select>`}
  h+='<div class="dc111map" id="dcHo"></div>';
  if(toi){h+='<div class="dc111card">';
-  if(!r){h+=`<b style="font-size:15px">Hôm nay bạn đi đâu?</b><div class="dc111loai" style="margin-top:8px">${DC_LOAI.map(([k,i,l])=>`<button data-a="dcLoai" data-v="${k}" class="${q.loai===k?'on':''}"><span>${i}</span>${l}</button>`).join('')}</div>
-   <button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcBat">▶ Bắt đầu ghi đường</button>
-   <div class="dc111note">📱 Lúc ghi đường, bạn <b>để app mở và màn hình sáng</b> nha (app tự giữ màn hình không tắt trên máy hỗ trợ). Đổi qua app khác hay khoá máy thì GPS tạm ngưng, mở lại app sẽ ghi tiếp và nối đoạn bị hở bằng nét đứt.</div>`}
+  const c=DC.cham;
+  if(c){const L=dcLoai(c.loai);const n=c.pts.length;
+   h+=`<div class="between"><b>📍 ${L[1]} ${L[2]}</b><span class="sub">từ ${dcGio(c.bd)}</span></div>
+   <div class="dc111so" style="margin-top:10px"><div><b>${n}</b><small>điểm</small></div><div><b>${dcKm(dcKmDiem(c.pts))}</b><small>km</small></div><div><b>${n>1?dcTg((c.pts[n-1][2]-c.pts[0][2])/1000):'0p00'}</b><small>thời gian</small></div></div>
+   ${n?`<div class="dc111diem">${c.pts.map((p,i)=>`<span><i>${dcChu(i)}</i>${dcGio(p[2])}</span>`).join('')}</div>`:''}
+   <button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcCham" ${DC.lay?'disabled':''}>${DC.lay?'⏳ Đang lấy vị trí…':'📍 Chấm điểm '+dcChu(n)+' tại chỗ này'}</button>
+   <div style="display:flex;gap:8px;margin-top:8px">${n?`<button class="btn ghost" style="flex:1" data-a="dcChamBo">↩ Bỏ điểm ${dcChu(n-1)}</button>`:''}
+   <button class="btn" style="flex:1;background:#1F2A44;color:#fff" data-a="dcChamXong">${q.xong?'✔ Bấm lần nữa để lưu':'⏹ Kết thúc & lưu'}</button></div>
+   ${q.xong?'<button class="link" style="display:block;margin:8px auto 0;font-size:13px" data-a="dcChamHuy">🗑 Bỏ hết các điểm, không lưu</button>':''}
+   <div class="dc111note">Tới mỗi nơi (nhà khảo sát, điểm hẹn khách…) bạn bấm <b>Chấm điểm</b> một lần. App nối các điểm A → B → C… thành đường đi. Giữa hai lần chấm, bạn có thể tắt màn hình hay dùng app khác thoải mái.</div>`}
+  else if(!r){const ch=q.che||'cham';
+   h+=`<div class="dc111seg" style="margin-top:0"><button data-a="dcChe" data-v="cham" class="${ch==='cham'?'on':''}">📍 Chấm điểm</button><button data-a="dcChe" data-v="tu" class="${ch==='tu'?'on':''}">🛰 Tự ghi đường</button></div>
+   <b style="font-size:15px">Hôm nay bạn đi đâu?</b><div class="dc111loai" style="margin-top:8px">${DC_LOAI.map(([k,i,l])=>`<button data-a="dcLoai" data-v="${k}" class="${q.loai===k?'on':''}"><span>${i}</span>${l}</button>`).join('')}</div>`;
+   if(ch==='cham')h+=`<button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcCham" ${DC.lay?'disabled':''}>${DC.lay?'⏳ Đang lấy vị trí…':'📍 Chấm điểm A tại chỗ này'}</button>
+   <div class="dc111note">Bấm mỗi khi tới một nơi: điểm A, rồi tới chỗ khác bấm điểm B, C… App lưu lại và nối thành đường đi. <b>Không cần mở app suốt đường.</b></div>`;
+   else h+=`<button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcBat">▶ Bắt đầu ghi đường</button>
+   <div class="dc111note">📱 App tự vẽ theo từng khúc đường bạn đi. Lúc ghi, bạn <b>để app mở và màn hình sáng</b> nha (app tự giữ màn hình không tắt trên máy hỗ trợ). Đổi qua app khác hay khoá máy thì GPS tạm ngưng, mở lại app sẽ ghi tiếp và nối đoạn bị hở bằng nét đứt.</div>`}
   else{const L=dcLoai(r.loai);const g=dcGiay(r);
    h+=`<div class="between"><b>${r.dung?'⏸':'<span class="dc111dot"></span>'}${L[1]} ${L[2]}</b><span class="sub">từ ${dcGio(r.bd)}</span></div>
    <div class="dc111so" style="margin-top:10px"><div><b id="dcTg">${dcDongHo(g)}</b><small>Thời gian</small></div><div><b id="dcKmL">${dcKm(r.km)}</b><small>km</small></div><div><b id="dcTd">${g>20&&r.km>.05?dcKm(r.km/(g/3600)):'0,0'}</b><small>km/h</small></div></div>
@@ -7103,7 +7138,8 @@ SH.dc111=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🗺️ Đánh dấu di 
  h+=`<div class="dc111seg">${[['ngay','Ngày'],['thang','Tháng'],['nam','Năm']].map(([k,l])=>`<button data-a="dcXem" data-v="${k}" class="${q.xem===k?'on':''}">${l}</button>`).join('')}</div>
  <div class="dc111nav"><button data-a="dcLui" aria-label="Trước">‹</button><b>${esc(dcNhan(q.xem,q.moc))}</b><button data-a="dcToi" aria-label="Sau" ${dcDoi(q.xem,q.moc,1)>today()&&dcKhoang(q.xem,dcDoi(q.xem,q.moc,1))[0]>new Date()?'disabled':''}>›</button></div>`;
  if(DC.off)h+=`<div class="note" style="margin-bottom:10px">Máy chủ chưa bật bảng lưu đường đi, nên chuyến của bạn đang <b>tạm giữ trên máy này</b>. Khi Trưởng phòng chạy file SQL xong, app tự gửi lên.</div>`;
- const ds=q.ds,km=ds.reduce((s,t)=>s+t.km,0),gi=ds.reduce((s,t)=>s+t.giay,0),ngay=new Set(ds.map(t=>isoD(new Date(t.bd)))).size;
+ if(q.loc){const L=dcLoai(q.loc);h+=`<div class="dc111chip"><span>Chỉ xem: ${L[1]} ${L[2]}</span><button class="link" style="font-size:13px" data-a="dcLoc" data-v="">✕ Xem tất cả</button></div>`}
+ const ds=dcDsLoc(q),km=ds.reduce((s,t)=>s+t.km,0),gi=ds.reduce((s,t)=>s+t.giay,0),ngay=new Set(ds.map(t=>isoD(new Date(t.bd)))).size;
  h+=`<div class="dc111so"><div><b>${dcKm(km)}</b><small>km</small></div><div><b>${ds.length}</b><small>chuyến</small></div><div><b>${q.xem==='ngay'?dcTg(gi):ngay}</b><small>${q.xem==='ngay'?'di chuyển':'ngày có đi'}</small></div></div>`;
  if(q.xem!=='ngay')h+=dcCot(q)+`<div class="sub" style="margin:-4px 2px 10px">Tổng thời gian di chuyển: <b>${dcTg(gi)}</b></div>`;
  const tl={};ds.forEach(t=>{tl[t.loai]=(tl[t.loai]||0)+t.km});const kl=Object.keys(tl);
@@ -7113,7 +7149,7 @@ SH.dc111=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🗺️ Đánh dấu di 
  else{h+=`<h3 class="h3" style="margin:6px 2px 0">Các chuyến${q.xem!=='ngay'?' ('+ds.length+')':''}</h3>`;
   h+=ds.slice(0,q.xem==='nam'?150:500).map(t=>{const L=dcLoai(t.loai);const on=q.chon===String(t.id);const gg=dcGgMap(t);
    return `<div class="dc111li${on?' on':''}"><span class="ic">${L[1]}</span><div class="grow" style="min-width:0"><div class="between"><b>${L[2]}</b><b class="num">${dcKm(t.km)} km</b></div>
-   <div class="sub">${q.xem!=='ngay'?dcNgay(t.bd)+' · ':''}${dcGio(t.bd)} – ${dcGio(t.kt)} · ${dcTg(t.giay)}${t.cho?' · <span class="pill">Chờ gửi lên</span>':''}</div>
+   <div class="sub">${q.xem!=='ngay'?dcNgay(t.bd)+' · ':''}${dcGio(t.bd)} – ${dcGio(t.kt)} · ${dcLaCham(t)?'📍 '+(t.diem||[]).flat().length+' điểm':dcTg(t.giay)}${t.cho?' · <span class="pill">Chờ gửi lên</span>':''}</div>
    <div class="nut"><button class="btn ghost sm" data-a="dcChon" data-v="${esc(String(t.id))}">${on?'✓ Đang xem':'🗺️ Xem đường'}</button>${gg?`<a class="btn ghost sm" href="${esc(gg)}" target="_blank" rel="noopener">📍 Google Maps</a>`:''}
    ${toi||dcQL(a)?`<button class="btn ghost sm" data-a="dcXoa" data-v="${esc(String(t.id))}">${q.xoa===String(t.id)?'Bấm lần nữa để xoá':'🗑'}</button>`:''}</div></div></div>`}).join('')}
  h+=`<details style="margin-top:14px"><summary class="sub" style="font-weight:700;cursor:pointer">❓ Vì sao phải giữ app mở khi ghi đường?</summary><div class="dc111note">App Hoa Vinh chạy trên trình duyệt điện thoại. Điện thoại chỉ cho trình duyệt lấy vị trí khi app đang mở trên màn hình. Nếu khoá máy hoặc chuyển qua app khác, việc ghi tạm ngưng; lúc mở lại app sẽ nối tiếp, đoạn hở được vẽ bằng nét đứt và tính theo đường thẳng. Mẹo: cắm sạc, gắn điện thoại lên giá xe và giảm độ sáng màn hình.</div></details></div>`;
@@ -7122,12 +7158,34 @@ SH.dc111=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🗺️ Đánh dấu di 
 /* ---- nút bấm ---- */
 A.dcMo=()=>{dcS();U.sheet='dc111';render()};
 A.dcLoai=v=>{dcS().loai=v;render()};
+A.dcChe=v=>{dcS().che=v;render()};
+A.dcLoc=v=>{const q=dcS();q.loc=v;q.chon='';render()};
+A.dcCham=()=>{if(DC.lay)return;if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}if(DC.rec){toast('Bạn đang Tự ghi đường, kết thúc chuyến đó trước nha');return}
+ DC.lay=true;render();
+ navigator.geolocation.getCurrentPosition(p=>{DC.lay=false;const q=dcS();const co=p.coords;
+  if(!DC.cham){DC.cham={loai:q.loai||'ks',bd:Date.now(),pts:[]};q.xem='ngay';q.moc=today();q.dang=false}
+  const pt=[+co.latitude.toFixed(6),+co.longitude.toFixed(6),Date.now()];DC.cham.pts.push(pt);q.xong=false;dcLuuCham();render();
+  toast('Đã chấm điểm '+dcChu(DC.cham.pts.length-1)+(co.accuracy>100?' (sóng GPS yếu, lệch khoảng '+Math.round(co.accuracy)+' m)':' 📍'))},
+ e=>{DC.lay=false;render();toast(e&&e.code===1?'Máy chưa cho app dùng Vị trí. Vào Cài đặt điện thoại → bật Vị trí cho trình duyệt rồi thử lại nha.':'Chưa lấy được vị trí, bạn ra chỗ thoáng rồi bấm lại nha')},
+ {enableHighAccuracy:true,timeout:20000,maximumAge:0})};
+A.dcChamBo=()=>{const c=DC.cham;if(!c||!c.pts.length)return;c.pts.pop();dcS().xong=false;dcLuuCham();render()};
+A.dcChamHuy=()=>{DC.cham=null;dcLuuCham();dcS().xong=false;render();toast('Đã bỏ các điểm vừa chấm')};
+A.dcChamXong=async()=>{const c=DC.cham;if(!c)return;const q=dcS();if(!q.xong){q.xong=true;render();setTimeout(()=>{if(q.xong){q.xong=false;if(U.sheet==='dc111')render()}},6000);return}
+ q.xong=false;if(c.pts.length<2){toast('Cần ít nhất 2 điểm (A và B) mới thành đường đi nha');return}
+ const P=c.pts;const t={id:'l'+Date.now(),who:dcWho(),loai:c.loai,bd:new Date(P[0][2]).toISOString(),kt:new Date(P[P.length-1][2]).toISOString(),km:Math.round(dcKmDiem(P)*100)/100,giay:Math.round((P[P.length-1][2]-P[0][2])/1000),diem:[P],ghi:'cham'};
+ const o=dcLs();o.cho=(o.cho||[]).concat([t]);o.cham=null;dcLsSet(o);DC.cham=null;
+ q.xem='ngay';q.moc=isoD(new Date(P[0][2]));q.chon='';
+ try{await dcGuiCho()}catch(e){}
+ const con=dcCho().some(x=>x.id===t.id);toast(con?'Đã lưu trên máy này, có mạng app tự gửi lên 👍':'Đã lưu đường đi '+P.length+' điểm 🎉');
+ await dcNap(true);render()};
+A.dcChay=()=>{const q=dcS();q.loai='chay';q.che='tu';q.loc='chay';if(DC.rec||DC.cham){A.dcMo();return}A.dcBat();U.sheet='dc111';render()};
+A.dcXemChay=()=>{const q=dcS();q.loc='chay';q.xem='thang';q.moc=today();q.dang=false;q.chon='';A.dcMo()};
 A.dcAi=v=>{const q=dcS();q.ai=v;q.chon='';q.ds=[];q.khoa='';q.dang=false;render()};
 A.dcXem=v=>{const q=dcS();q.xem=v;q.chon='';q.xoa='';q.dang=false;render()};
 A.dcLui=()=>{const q=dcS();q.moc=dcDoi(q.xem,q.moc,-1);q.chon='';q.xoa='';q.dang=false;render()};
 A.dcToi=()=>{const q=dcS();const m=dcDoi(q.xem,q.moc,1);q.moc=m>today()?today():m;q.chon='';q.xoa='';q.dang=false;render()};
 A.dcChon=v=>{const q=dcS();q.chon=q.chon===v?'':v;render();if(q.chon){const sc=document.querySelector('.sheet');if(sc)sc.scrollTo({top:0,behavior:'smooth'})}};
-A.dcBat=()=>{if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}const q=dcS();
+A.dcBat=()=>{if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}if(DC.cham){toast('Bạn đang chấm điểm, kết thúc đường đó trước nha');return}const q=dcS();
  DC.rec={loai:q.loai||'ks',bd:Date.now(),seg:[[]],km:0,dung:false,dungMs:0};DC.loi='';DC.acc=0;q.xong=false;
  if(q.xem!=='ngay'||q.moc!==today()){q.xem='ngay';q.moc=today();q.dang=false}
  dcLuuRec();dcTheo();dcGiuMan();dcChayDongHo();render();toast('Bắt đầu ghi đường, đi an toàn nha! 🛵')};
@@ -7151,14 +7209,23 @@ A.dcXoa=async v=>{const q=dcS();if(q.xoa!==v){q.xoa=v;render();return}q.xoa='';
  if(q.chon===v)q.chon='';toast('Đã xoá chuyến');await dcNap(true)};
 
 /* ---- gắn vào tab Công việc + Làm nhanh + nút nổi khi đang ghi ---- */
-{const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;dcPhucHoi();const r=DC.rec;
- return `<button class="dc111b" data-a="dcMo"><span class="ic">🗺️</span><div class="grow"><b>Đánh dấu di chuyển${r?'<span class="rec">● '+(r.dung?'Tạm dừng':'Đang ghi')+'</span>':''}</b><small>Ghi lại đường đi trên bản đồ, tổng kết ngày, tháng, năm</small></div><span class="mui">›</span></button>`+h}}
+{const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;dcPhucHoi();const r=DC.rec,c=DC.cham;
+ return `<button class="dc111b" data-a="dcMo"><span class="ic">🗺️</span><div class="grow"><b>Đánh dấu di chuyển${r?'<span class="rec">● '+(r.dung?'Tạm dừng':'Đang ghi')+'</span>':c?'<span class="rec">📍 '+c.pts.length+' điểm</span>':''}</b><small>Chấm điểm A, B, C… hoặc tự ghi đường đi, tổng kết ngày, tháng, năm</small></div><span class="mui">›</span></button>`+h}}
 {const o=SH.quick;SH.quick=function(){const x=o.apply(this,arguments);if(hasCtv(me())&&x&&x.h)x.h=x.h.replace('</div>','<button data-a="dcMo"><span>🗺️</span>Đánh dấu di chuyển</button></div>');return x}}
 {const o=render;render=function(){const r=o.apply(this,arguments);try{
   if(U.sheet==='dc111')setTimeout(dcGan,0);
   const app=document.getElementById('app');const a=me();
+  if(app&&!DC.rec&&DC.cham&&a&&U.sheet!=='dc111'&&!app.querySelector('.dc111pill')){const b=document.createElement('button');b.className='dc111pill';b.setAttribute('data-a','dcMo');b.textContent='📍 Đang chấm điểm · '+DC.cham.pts.length+' điểm · bấm để chấm tiếp';app.appendChild(b)}
   if(app&&DC.rec&&a&&U.sheet!=='dc111'&&!app.querySelector('.dc111pill')){const b=document.createElement('button');b.className='dc111pill';b.setAttribute('data-a','dcMo');
    b.innerHTML=(DC.rec.dung?'⏸ Tạm dừng · ':'<span class="dc111dot"></span>Đang ghi đường · ')+'<span id="dcPillKm">'+dcKm(DC.rec.km)+' km · '+dcDongHo(dcGiay(DC.rec))+'</span>';app.appendChild(b)}}catch(e){}return r}}
+
+/* ---- v118 (22/11/2026): Vận động trường, môn chạy bộ → ghi đường chạy trực tiếp ---- */
+{const o=SH.vandong;SH.vandong=function(){const x=o.apply(this,arguments);const a=me();const f=U.vdF||'';
+ if(!x||!x.h||!hasCtv(a)||(f&&f!=='chay_bo'))return x;dcPhucHoi();const r=DC.rec;
+ const card=r&&r.loai==='chay'?`<div class="dc111vd"><b style="font-size:16px"><span class="dc111dot" style="background:#fff"></span>Đang ghi đường chạy bộ · ${dcKm(r.km)} km</b><div class="sub" style="margin:4px 0 10px">${r.dung?'Đang tạm dừng':'Từ '+dcGio(r.bd)+'. Giữ app mở và màn hình sáng khi chạy nha.'}</div><button class="btn full" data-a="dcMo">🗺️ Xem bản đồ đường chạy</button></div>`
+  :`<div class="dc111vd"><b style="font-size:16px">🏃 Ghi đường chạy bộ</b><div class="sub" style="margin:4px 0 10px">Bấm <b>Bắt đầu chạy</b> là app vẽ đường chạy trên bản đồ, tính km, tốc độ và cộng dồn theo ngày, tháng, năm.</div>
+  <div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-a="dcChay">▶ Bắt đầu chạy</button><button class="btn ghost" style="flex:1" data-a="dcXemChay">📊 Đường chạy của tôi</button></div></div>`;
+ const i=x.h.indexOf('</p>');x.h=i<0?card+x.h:x.h.slice(0,i+4)+card+x.h.slice(i+4);return x}}
 /* v115: Khu vực của khách chọn được nhiều quận */
 function kq115Ds(c){if(!c)return [];if(Array.isArray(c.qs)&&c.qs.length)return c.qs;return String(c.q||'').split(/\s*,\s*/).filter(Boolean)}
 function kq115Dau(c){return kq115Ds(c)[0]||''}
