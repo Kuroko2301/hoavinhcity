@@ -6939,8 +6939,8 @@ vc103Sau=async(x,p)=>{if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x
 .dc111map{height:300px;border-radius:16px;overflow:hidden;border:1.5px solid var(--line);background:var(--soft);margin:4px 0 12px;position:relative}
 .dc111el{width:100%;height:100%}
 .dc111card{padding:14px;border-radius:18px;background:var(--card);border:1.5px solid var(--line);margin-bottom:12px}
-.dc111loai{display:flex;gap:8px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none}.dc111loai::-webkit-scrollbar{display:none}
-.dc111loai button{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:70px;padding:8px 6px;border-radius:14px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer}
+.dc111loai{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:2px 0 10px}
+.dc111loai button{min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 2px;line-height:1.2;text-align:center;border-radius:14px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font-size:12px;font-weight:700;cursor:pointer}
 .dc111loai button span{font-size:22px}.dc111loai button.on{border-color:#C2410C;background:#FFF0E6;color:#9A3412}
 .dc111so{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center;margin:4px 0 12px}
 .dc111so div{padding:8px 4px;border-radius:14px;background:var(--soft)}.dc111so b{display:block;font-size:20px;font-variant-numeric:tabular-nums}.dc111so small{font-size:11.5px;color:var(--muted);font-weight:700}
@@ -6969,7 +6969,7 @@ vc103Sau=async(x,p)=>{if(x&&x.id){LIVE.vu[x.id]=(LIVE.vu[x.id]||0)+1;LIVE.tNam[x
 :root[data-theme="dark"] .dc111loai button.on{background:#3A1A0C;color:#FFD3B8}
 `;document.head.appendChild(s)})();
 
-const DC_LOAI=[['ks','🛵','Đi khảo sát'],['dan','🤝','Dẫn khách'],['quay','🎬','Đi quay nhà'],['bo','🚶','Đi bộ'],['chay','🏃','Chạy bộ'],['xe','🚴','Đạp xe'],['khac','📍','Việc khác']];
+const DC_LOAI=[['ks','🛵','Đi khảo sát'],['dan','🤝','Dẫn khách'],['quay','🎬','Đi quay nhà'],['bo','🚶','Đi bộ'],['chay','🏃','Chạy bộ'],['xe','🚴','Đạp xe'],['khac','📍','Đường đi']];
 const dcLoai=k=>DC_LOAI.find(x=>x[0]===k)||DC_LOAI[6];
 const DC_KEY='hv-dc111';
 const DC={rec:null,cham:null,lay:false,watch:null,wl:null,tick:null,map:null,el:null,lyr:null,live:null,acc:0,off:false,loi:'',chk:''};
@@ -6982,7 +6982,7 @@ function dcLsSet(o){try{localStorage.setItem(DC_KEY,JSON.stringify(o))}catch(e){
 const dcWho=()=>{const a=me();return a?a.email:''};
 function dcLuuRec(){const o=dcLs();o.rec=DC.rec?{...DC.rec,who:dcWho()}:null;dcLsSet(o)}
 function dcCho(){return (dcLs().cho||[]).filter(t=>t.who===dcWho())}
-function dcS(){return U.dc||(U.dc={xem:'ngay',moc:today(),loai:'ks',che:'cham',loc:'',ai:'',ds:[],khoa:'',dang:false,chon:'',xoa:'',xong:false})}
+function dcS(){return U.dc||(U.dc={xem:'ngay',moc:today(),loai:'khac',che:'cham',loc:'',ai:'',ds:[],khoa:'',dang:false,chon:'',xoa:'',xong:false})}
 function dcM(a,b){const r=Math.PI/180,dl=(b[0]-a[0])*r,dn=(b[1]-a[1])*r;const x=Math.sin(dl/2)**2+Math.cos(a[0]*r)*Math.cos(b[0]*r)*Math.sin(dn/2)**2;return 12742000*Math.asin(Math.sqrt(Math.min(1,x)))}
 const dcKm=v=>(Math.round((+v||0)*10)/10).toFixed(1).replace('.',',');
 function dcTg(s){s=Math.max(0,Math.round(+s||0));const h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h?h+'h'+String(m).padStart(2,'0'):m+'p'+String(x).padStart(2,'0')}
@@ -7120,7 +7120,7 @@ SH.dc111=()=>{const a=me();if(!a||!hasCtv(a))return {t:'🗺️ Đánh dấu di 
    <div class="dc111note">Tới mỗi nơi (nhà khảo sát, điểm hẹn khách…) bạn bấm <b>Chấm điểm</b> một lần. App nối các điểm A → B → C… thành đường đi. Giữa hai lần chấm, bạn có thể tắt màn hình hay dùng app khác thoải mái.</div>`}
   else if(!r){const ch=q.che||'cham';
    h+=`<div class="dc111seg" style="margin-top:0"><button data-a="dcChe" data-v="cham" class="${ch==='cham'?'on':''}">📍 Chấm điểm</button><button data-a="dcChe" data-v="tu" class="${ch==='tu'?'on':''}">🛰 Tự ghi đường</button></div>
-   <b style="font-size:15px">Hôm nay bạn đi đâu?</b><div class="dc111loai" style="margin-top:8px">${DC_LOAI.map(([k,i,l])=>`<button data-a="dcLoai" data-v="${k}" class="${q.loai===k?'on':''}"><span>${i}</span>${l}</button>`).join('')}</div>`;
+`;
    if(ch==='cham')h+=`<button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcCham" ${DC.lay?'disabled':''}>${DC.lay?'⏳ Đang lấy vị trí…':'📍 Chấm điểm A tại chỗ này'}</button>
    <div class="dc111note">Bấm mỗi khi tới một nơi: điểm A, rồi tới chỗ khác bấm điểm B, C… App lưu lại và nối thành đường đi. <b>Không cần mở app suốt đường.</b></div>`;
    else h+=`<button class="btn full" style="background:#C2410C;color:#fff;font-size:17px;min-height:52px" data-a="dcBat">▶ Bắt đầu ghi đường</button>
@@ -7163,7 +7163,7 @@ A.dcLoc=v=>{const q=dcS();q.loc=v;q.chon='';render()};
 A.dcCham=()=>{if(DC.lay)return;if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}if(DC.rec){toast('Bạn đang Tự ghi đường, kết thúc chuyến đó trước nha');return}
  DC.lay=true;render();
  navigator.geolocation.getCurrentPosition(p=>{DC.lay=false;const q=dcS();const co=p.coords;
-  if(!DC.cham){DC.cham={loai:q.loai||'ks',bd:Date.now(),pts:[]};q.xem='ngay';q.moc=today();q.dang=false}
+  if(!DC.cham){DC.cham={loai:'khac',bd:Date.now(),pts:[]};q.xem='ngay';q.moc=today();q.dang=false}
   const pt=[+co.latitude.toFixed(6),+co.longitude.toFixed(6),Date.now()];DC.cham.pts.push(pt);q.xong=false;dcLuuCham();render();
   toast('Đã chấm điểm '+dcChu(DC.cham.pts.length-1)+(co.accuracy>100?' (sóng GPS yếu, lệch khoảng '+Math.round(co.accuracy)+' m)':' 📍'))},
  e=>{DC.lay=false;render();toast(e&&e.code===1?'Máy chưa cho app dùng Vị trí. Vào Cài đặt điện thoại → bật Vị trí cho trình duyệt rồi thử lại nha.':'Chưa lấy được vị trí, bạn ra chỗ thoáng rồi bấm lại nha')},
@@ -7185,7 +7185,7 @@ A.dcXem=v=>{const q=dcS();q.xem=v;q.chon='';q.xoa='';q.dang=false;render()};
 A.dcLui=()=>{const q=dcS();q.moc=dcDoi(q.xem,q.moc,-1);q.chon='';q.xoa='';q.dang=false;render()};
 A.dcToi=()=>{const q=dcS();const m=dcDoi(q.xem,q.moc,1);q.moc=m>today()?today():m;q.chon='';q.xoa='';q.dang=false;render()};
 A.dcChon=v=>{const q=dcS();q.chon=q.chon===v?'':v;render();if(q.chon){const sc=document.querySelector('.sheet');if(sc)sc.scrollTo({top:0,behavior:'smooth'})}};
-A.dcBat=()=>{if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}if(DC.cham){toast('Bạn đang chấm điểm, kết thúc đường đó trước nha');return}const q=dcS();
+A.dcBat=()=>{const q0=dcS();if(q0.loc!=='chay')q0.loai='khac';if(!navigator.geolocation){toast('Máy này chưa lấy được vị trí');return}if(DC.cham){toast('Bạn đang chấm điểm, kết thúc đường đó trước nha');return}const q=dcS();
  DC.rec={loai:q.loai||'ks',bd:Date.now(),seg:[[]],km:0,dung:false,dungMs:0};DC.loi='';DC.acc=0;q.xong=false;
  if(q.xem!=='ngay'||q.moc!==today()){q.xem='ngay';q.moc=today();q.dang=false}
  dcLuuRec();dcTheo();dcGiuMan();dcChayDongHo();render();toast('Bắt đầu ghi đường, đi an toàn nha! 🛵')};
