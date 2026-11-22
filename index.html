@@ -209,6 +209,12 @@
 <style>/*v84 chot hinh*/.ch84{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.ch84 .t{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:var(--line)}.ch84 .t img{width:100%;height:100%;object-fit:cover;display:block}.ch84 .t button{position:absolute;top:4px;right:4px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:24px;padding:0}.ch84 label.add{aspect-ratio:1;border:1.5px dashed var(--line);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:12px;color:var(--muted);cursor:pointer}.ch84 label.add span{font-size:24px}.ch84v{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.ch84v a{aspect-ratio:1;border-radius:9px;overflow:hidden;display:block;background:var(--line)}.ch84v img{width:100%;height:100%;object-fit:cover;display:block}</style>
 <style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
 nav.tabs button{min-width:0}nav.tabs button{padding:0 1px}nav.tabs button span{white-space:nowrap;font-size:9.6px;letter-spacing:-.2px}nav.tabs svg{width:21px;height:21px}</style>
+<style>/*v115 khach nhieu quan*/
+.kq115{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
+.kq115 .chip115{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:#FFF1CF;border:1.5px solid #E5B84B;color:#5E0F12;font-weight:700;font-size:14px}
+.kq115 .chip115 button{border:0;background:#8E1B1B;color:#fff;width:22px;height:22px;border-radius:50%;font-size:12px;line-height:22px;padding:0;cursor:pointer}
+.kq115 .chip115 button:focus-visible{outline:2px solid #2E7D4F;outline-offset:2px}
+</style>
 <style>/*v82 van hoa gon*/.splash.vh82{padding:max(12px,env(safe-area-inset-top)) 10px 12px;align-items:flex-start}
 .vh82 .vh82hd{display:flex;align-items:center;gap:10px;justify-content:center;margin-bottom:14px}
 .vh82 .vh81logo{width:48px;height:48px;margin:0;border-width:2px;box-shadow:0 0 0 2px rgba(226,185,90,.25)}.vh82 .vh81logo b{font-size:18px}.vh82 .vh81logo small{font-size:4.5px;letter-spacing:.6px;margin-top:1px}
@@ -4365,8 +4371,7 @@ const tgVi72=t=>{const d=new Date(t);if(isNaN(d))return '';const z=n=>String(n).
 SH.clients=()=>{const a=me();const L=a.g.clients.map((c,i)=>[c,i]).reverse();const kv=kv72MacDinh(a);const vg=U.vong72||1;
  return {t:'🤝 Thêm khách',h:`<div class="stack" style="gap:10px">
  <label class="f" for="kn">Tên khách<input class="in" id="kn" placeholder="Ví dụ: Anh Tuấn Tân Phú" autocomplete="off"></label>
- <label class="f" for="kqq">Khu vực<select class="in" id="kqq">${kv72Ds(a).map(q=>`<option ${q===kv?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
- <div class="kv72note">💡 Khu vực đã chọn sẵn theo khu vực bạn làm (${esc(kv)}). Khách tìm khu khác thì bấm vào ô để đổi nha.</div>
+ ${kq115Part(a,kv)}
  <div class="grid2" style="margin:0"><label class="f" for="kp">📱 4 số cuối SĐT<input class="in num" id="kp" inputmode="numeric" maxlength="4" pattern="[0-9]*" placeholder="Không bắt buộc" autocomplete="off"></label>
  <label class="f" for="kpt">💰 Phân khúc khách (tỷ)<div class="pk78"><input class="in num" id="kpt" inputmode="decimal" placeholder="Từ" aria-label="Phân khúc từ (tỷ)" autocomplete="off"><span>–</span><input class="in num" id="kpd" inputmode="decimal" placeholder="Đến" aria-label="Phân khúc đến (tỷ)" autocomplete="off"></div></label></div>
  <div><div class="sub" style="font-weight:800;margin-bottom:6px">🚶 Vòng dẫn khách</div><div class="v72pick">${[1,2,3,4,5].map(n=>`<button class="${vg===n?'on':''}" data-a="vong72" data-v="${n}" aria-pressed="${vg===n}"><b>Vòng ${n}</b><small>${VONG72_GON[n]}</small></button>`).join('')}</div></div>
@@ -4376,11 +4381,11 @@ SH.clients=()=>{const a=me();const L=a.g.clients.map((c,i)=>[c,i]).reverse();con
  <h3 class="h3" style="margin:16px 0 4px">Khách đã thêm (${L.length})</h3>${L.map(([c,i])=>`<div class="li" style="flex-wrap:wrap"><span class="pill gold num">V${c.vong||1}</span><div class="grow" style="min-width:0"><b>${esc(c.name)}</b><div class="sub">📍 ${esc(c.q||c.need||'Chưa ghi khu vực')} · 🗓️ Chăm từ ${esc(fmtD(bd80(c)))}</div><div class="sub">Vòng ${c.vong||1}: ${VONG72_GON[c.vong||1]}${String(c.phone||'').replace(/\D/g,'')?' · 📱 ···'+esc(String(c.phone).replace(/\D/g,'').slice(-4)):''}${pk78(c)?' · 💰 '+pk78(c):''}</div></div><div class="row" style="gap:6px;flex-wrap:wrap;width:100%;padding-left:46px">${(c.vong||1)<5?`<button class="btn ghost sm" data-a="vong72Len" data-v="${i}">Lên vòng ${(c.vong||1)+1} ›</button>`:'<span class="pill ok">Vòng cuối</span>'}<label class="btn ghost sm" for="cph${i}" style="display:inline-flex;align-items:center">📷 Gửi hình đề xuất +1 Vàng</label><input type="file" id="cph${i}" accept="image/*" hidden data-file="clientPhoto" data-idx="${i}"></div></div>`).join('')||'<p class="sub">Chưa có khách nào.</p>'}<p class="sub" style="margin-top:6px">Gửi hình dẫn khách để Trợ lý duyệt: +1 Vàng và 💧 tưới cây 2 lần. Che mặt khách vẫn được tính.</p>`}};
 A.vong72=v=>{U.vong72=+v;const n=val('kn'),q=val('kqq'),p=val('kp'),pk=val('kpt'),pd=val('kpd'),bd=val('kbd');render();setTimeout(()=>{const e=document.getElementById('kn');if(e)e.value=n;const s=document.getElementById('kqq');if(s&&q)s.value=q;const ep=document.getElementById('kp');if(ep)ep.value=p;const ek=document.getElementById('kpt');if(ek)ek.value=pk;const ed=document.getElementById('kpd');if(ed)ed.value=pd;const eb=document.getElementById('kbd');if(eb&&bd)eb.value=bd},0)};/*v80 moc cham*//*v76 sdt phan khuc*/
 A.vong72Len=v=>{const a=me();const c=a.g.clients[+v];if(!c)return;c.vong=Math.min(5,(c.vong||1)+1);c.last=today();save();render();toast('👏 '+c.name+' lên Vòng '+c.vong+': '+VONG72_GON[c.vong])};
-A.addClient=()=>{const a=me();const n=val('kn').trim();if(!n){toast('Nhập tên khách nhé');return}const q=val('kqq')||kv72MacDinh(a);const vg=U.vong72||1;
+A.addClient=()=>{const a=me();const n=val('kn').trim();if(!n){toast('Nhập tên khách nhé');return}const qs=kq115Lay(a);const q=qs.join(', ');const vg=U.vong72||1;
  const so=String(val('kp')||'').replace(/\D/g,'');if(so&&so.length!==4){toast('Số điện thoại chỉ cần đúng 4 số cuối nha');return}
  const t1=parseFloat(String(val('kpt')).replace(',','.'))||0,t2=parseFloat(String(val('kpd')).replace(',','.'))||0;if(t1&&t2&&t2<t1){toast('Ô "Đến" phải lớn hơn ô "Từ" nha');return}
  const mn=t1||0,mx=t2||99;const pkt=pk78({min:mn,max:mx});let bd=String(val('kbd')||'');if(!/^\d{4}-\d{2}-\d{2}$/.test(bd)||bd>today())bd=today();
- a.g.kv72=q;a.g.clients.push({name:n,phone:so,bd,need:[q,pkt].filter(Boolean).join(', '),q,min:mn,max:mx,stage:'gui',last:today(),hot:false,tt:'nguoi',vong:vg,them:new Date().toISOString(),date:'',time:'',remind:false});
+ a.g.kv72=qs[0];U.kq115=null;a.g.clients.push({name:n,phone:so,bd,need:[q,pkt].filter(Boolean).join(', '),q,qs,min:mn,max:mx,stage:'gui',last:today(),hot:false,tt:'nguoi',vong:vg,them:new Date().toISOString(),date:'',time:'',remind:false});
  U.vong72=1;toast('Đã lưu khách '+n+' · Vòng '+vg);save();render()};
 /* ===== /v72 ===== */
 
@@ -4443,7 +4448,7 @@ A.tt73Tim=v=>{const c=kh73(v);if(!c)return;const L=(c.lt||[]).filter(x=>x.xem&&x
 /* 3: Căn đầu tiên khách hỏi */
 SH.can73=v=>{const c=kh73(v);if(!c)return {t:'Căn khách hỏi',h:''};const d=c.can1||{};const ds=kv72Ds(me());const du=d.q&&d.dt&&d.kc&&d.g;
  return {t:'🏠 Căn đầu tiên khách hỏi',h:`<p class="sub" style="margin-top:0">Khách <b>${esc(c.name)}</b> hỏi căn nào đầu tiên? Điền đủ 4 ô, AI lọc ra những căn tương tự để bạn gửi khách.</p>
- <div class="stack" style="gap:10px"><label class="f" for="c1q">📍 Vị trí<select class="in" id="c1q">${ds.map(q=>`<option ${q===(d.q||c.q)?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+ <div class="stack" style="gap:10px"><label class="f" for="c1q">📍 Vị trí<select class="in" id="c1q">${ds.map(q=>`<option ${q===(d.q||kq115Dau(c))?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
  <input class="in" id="c1dc" value="${esc(d.dc||'')}" placeholder="Đường, phường (không bắt buộc), ví dụ Lũy Bán Bích" aria-label="Đường, phường">
  <div class="grid2"><label class="f" for="c1dt">📐 Diện tích (m²)<input class="in num" id="c1dt" inputmode="decimal" value="${d.dt?nf(d.dt):''}" placeholder="64"></label><label class="f" for="c1g">💰 Giá (tỷ)<input class="in num" id="c1g" inputmode="decimal" value="${d.g?nf(d.g):''}" placeholder="5,8"></label></div>
  <label class="f" for="c1kc">🏗️ Kết cấu<input class="in" id="c1kc" value="${esc(d.kc||'')}" placeholder="1 trệt 2 lầu, 4 phòng ngủ, hẻm xe hơi"></label>
@@ -4469,7 +4474,7 @@ A.nh73=v=>{U.nh73=U.nh73===v?null:v;U.dk73=null;render()};
 A.nh73Luu=v=>{const c=kh73(v);if(!c)return;c.nhac=val('nh73_'+v.length).trim().slice(0,600);c.nhacLuc=today();U.nh73=null;save();render();toast(c.nhac?'🔔 Đã lưu nhắc nhở cho '+v:'Đã xoá nhắc nhở')};
 function dk73Part(c){const o=U.dk73&&U.dk73.ten===c.name?U.dk73.o:0;const n=c.name.length;const gy=c.gy||{};const L=(c.lt||[]).filter(x=>!x.xem),X=(c.lt||[]).filter(x=>x.xem);const ds=kv72Ds(me());const v=esc(c.name);
  const o1=`<div class="dk73o${o===1?' mo':''}"><button class="dk73h" data-a="dk73o" data-v="${v}|1"><b>1</b><span>💡 Gợi ý dẫn nhà<small>Khu vực, phân khúc, ghi chú → AI lọc nhà</small></span><i>${o===1?'▲':'▼'}</i></button>${o===1?`<div class="dk73b">
-  <div class="grid2"><select class="in" id="gyq_${n}" aria-label="Khu vực">${ds.map(q=>`<option ${q===(gy.q||c.q)?'selected':''}>${esc(q)}</option>`).join('')}</select><select class="in" id="gys_${n}" aria-label="Phân khúc"><option value="">💰 Mọi phân khúc</option>${TIERS.map((t,i)=>`<option value="${i}" ${String(gy.sg)===String(i)?'selected':''}>${esc(t[1])}</option>`).join('')}</select></div>
+  <div class="grid2"><select class="in" id="gyq_${n}" aria-label="Khu vực">${ds.map(q=>`<option ${q===(gy.q||kq115Dau(c))?'selected':''}>${esc(q)}</option>`).join('')}</select><select class="in" id="gys_${n}" aria-label="Phân khúc"><option value="">💰 Mọi phân khúc</option>${TIERS.map((t,i)=>`<option value="${i}" ${String(gy.sg)===String(i)?'selected':''}>${esc(t[1])}</option>`).join('')}</select></div>
   <input class="in" id="gyg_${n}" style="margin-top:8px" value="${esc(gy.tm||'')}" placeholder="Ghi chú: hẻm xe hơi, 4 phòng ngủ, gần chợ…" aria-label="Ghi chú">
   <button class="btn full" style="margin-top:8px" data-a="gy73" data-v="${v}">🤖 AI lọc nhà để dẫn</button>${ds73('gy:'+c.name,c.name)}</div>`:''}</div>`;
  const o2=`<div class="dk73o${o===2?' mo':''}"><button class="dk73h" data-a="dk73o" data-v="${v}|2"><b>2</b><span>🗺️ Lộ trình dẫn khách<small>${L.length?L.length+' căn chờ dẫn':'Thêm căn từ ô 1'}</small></span><i>${o===2?'▲':'▼'}</i></button>${o===2?`<div class="dk73b">
@@ -4662,7 +4667,7 @@ function ql79Txt(f){return (f.tu<=0&&f.den>=QL79_MAX)?'Mọi mức giá':(f.tu<=
 function ql79Khop(c,f){if(f.tu<=0&&f.den>=QL79_MAX)return true;const a=+c.min||0,b=+c.max||99;if(!a&&b>=99)return false;const den=f.den>=QL79_MAX?999:f.den;return a<=den&&b>=f.tu}
 SH.qlk78=()=>{const a=me();const f=ql78S();const all=(a.g.clients||[]).map((c,i)=>[c,i]);const chot=all.filter(([c])=>c.chot);const dang=all.filter(([c])=>!c.chot);
  const src=f.tab==='chot'?chot:dang;const Q=[...new Set(all.map(([c])=>c.q||'').filter(Boolean))];
- const L=src.filter(([c])=>(f.tab==='chot'||!f.tt||tt73(c)===f.tt)&&ql79Khop(c,f)&&(!f.q||noDau72(c.q)===noDau72(f.q))&&(!f.th||bd80(c).slice(0,7)===f.th));
+ const L=src.filter(([c])=>(f.tab==='chot'||!f.tt||tt73(c)===f.tt)&&ql79Khop(c,f)&&(!f.q||kq115Co(c,f.q))&&(!f.th||bd80(c).slice(0,7)===f.th));
  if(f.tab==='chot')L.sort((x,y)=>String(y[0].chot).localeCompare(String(x[0].chot)));
  const chip=(k,v,l,on)=>`<button class="ql78c${on?' on':''}" data-a="ql78f" data-v="${k}|${v}">${l}</button>`;
  const dem=t=>dang.filter(([c])=>tt73(c)===t).length;
@@ -5666,7 +5671,7 @@ function can106Txt(d){d=can106(d);return [d.q,d.dc,d.dt?'từ '+nf(d.dt)+' m² t
 SH.can73=v=>{const c=kh73(v);if(!c)return {t:'Căn khách hỏi',h:''};const d=can106(c.can1);const ds=kv72Ds(me());const du=d.q&&(d.dt||d.tu||d.den||d.ghi);
  const so=x=>x!=null&&x!==''?nf(x):'';
  return {t:'🏠 Căn đầu tiên khách hỏi',h:`<p class="sub" style="margin-top:0">Khách <b>${esc(c.name)}</b> hỏi căn nào đầu tiên? Điền yêu cầu, AI quét tất cả các căn và chỉ hiện căn <b>đúng yêu cầu</b> để bạn gửi khách.</p>
- <div class="stack" style="gap:10px"><label class="f" for="c1q">📍 Vị trí<select class="in" id="c1q">${ds.map(q=>`<option ${q===(d.q||c.q)?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
+ <div class="stack" style="gap:10px"><label class="f" for="c1q">📍 Vị trí<select class="in" id="c1q">${ds.map(q=>`<option ${q===(d.q||kq115Dau(c))?'selected':''}>${esc(q)}</option>`).join('')}</select></label>
  <input class="in" id="c1dc" value="${esc(d.dc||'')}" placeholder="Đường, phường (không bắt buộc), ví dụ Phường 12" aria-label="Đường, phường">
  <label class="f" for="c1dt">📐 Diện tích từ (m²) trở lên<input class="in num" id="c1dt" inputmode="decimal" value="${so(d.dt)}" placeholder="50"></label>
  <div class="f">💰 Giá (tỷ)</div><div class="grid2" style="margin-top:-6px"><label class="f" for="c1tu" style="font-weight:600">Từ<input class="in num" id="c1tu" inputmode="decimal" value="${so(d.tu)}" placeholder="10"></label><label class="f" for="c1den" style="font-weight:600">Đến<input class="in num" id="c1den" inputmode="decimal" value="${so(d.den)}" placeholder="14"></label></div>
@@ -6980,6 +6985,20 @@ A.dcXoa=async v=>{const q=dcS();if(q.xoa!==v){q.xoa=v;render();return}q.xoa='';
   const app=document.getElementById('app');const a=me();
   if(app&&DC.rec&&a&&U.sheet!=='dc111'&&!app.querySelector('.dc111pill')){const b=document.createElement('button');b.className='dc111pill';b.setAttribute('data-a','dcMo');
    b.innerHTML=(DC.rec.dung?'⏸ Tạm dừng · ':'<span class="dc111dot"></span>Đang ghi đường · ')+'<span id="dcPillKm">'+dcKm(DC.rec.km)+' km · '+dcDongHo(dcGiay(DC.rec))+'</span>';app.appendChild(b)}}catch(e){}return r}}
+/* v115: Khu vực của khách chọn được nhiều quận */
+function kq115Ds(c){if(!c)return [];if(Array.isArray(c.qs)&&c.qs.length)return c.qs;return String(c.q||'').split(/\s*,\s*/).filter(Boolean)}
+function kq115Dau(c){return kq115Ds(c)[0]||''}
+function kq115Co(c,q){const t=noDau72(q);return kq115Ds(c).some(x=>noDau72(x)===t)}
+function kq115Part(a,kv){if(!Array.isArray(U.kq115))U.kq115=kv?[kv]:[];const L=U.kq115;const con=kv72Ds(a).filter(q=>!L.includes(q));
+ return `<div class="f" id="kq115lb">📍 Khu vực khách tìm <span class="sub" style="font-weight:600">(chọn bao nhiêu quận cũng được)</span></div>
+ <div class="kq115" role="list" aria-labelledby="kq115lb">${L.length?L.map(q=>`<span class="chip115" role="listitem">${esc(q)}<button type="button" data-a="kq115Bo" data-v="${esc(q)}" aria-label="Bỏ ${esc(q)}">✕</button></span>`).join(''):'<span class="sub">Chưa chọn quận nào</span>'}</div>
+ <select class="in" id="kqq" data-kq115="1" aria-label="Thêm quận cho khách"><option value="">＋ Thêm quận…</option>${con.map(q=>`<option>${esc(q)}</option>`).join('')}</select>
+ <div class="kv72note">💡 Đã chọn sẵn khu vực bạn làm (${esc(kv)}). Khách tìm thêm khu nào thì bấm <b>＋ Thêm quận</b>, bấm ✕ để bỏ.</div>`}
+function kq115Lay(a){const L=(Array.isArray(U.kq115)?U.kq115:[]).slice();const x=val('kqq');if(x&&!L.includes(x))L.push(x);if(!L.length)L.push(kv72MacDinh(a));return L}
+function kq115Ve(){const ids=['kn','kp','kpt','kpd'];const v={};ids.forEach(i=>{const e=document.getElementById(i);if(e)v[i]=e.value});render();ids.forEach(i=>{const e=document.getElementById(i);if(e&&v[i]!=null)e.value=v[i]})}
+A.kq115Bo=v=>{U.kq115=(U.kq115||[]).filter(q=>q!==v);kq115Ve()};
+document.addEventListener('change',e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.kq115)return;const v=el.value;if(!v)return;U.kq115=Array.isArray(U.kq115)?U.kq115:[];if(!U.kq115.includes(v))U.kq115.push(v);kq115Ve()});
+
 render();
 })();
 
