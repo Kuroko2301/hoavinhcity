@@ -210,6 +210,7 @@
 <style>/*v83 ptt*/.ptt83 .vh81{margin-top:16px}.ptt83 .vh81s{background:#5A0D12}.ptt83hd{display:flex;gap:10px;align-items:center}.ptt83hd span{font-size:30px}
 nav.tabs button{min-width:0}nav.tabs button{padding:0 1px}nav.tabs button span{white-space:nowrap;font-size:9.6px;letter-spacing:-.2px}nav.tabs svg{width:21px;height:21px}</style>
 <style>/*v115 khach nhieu quan*/
+.ns126r{display:flex;gap:4px 10px;align-items:center;flex-wrap:wrap;margin-top:3px}.ns126r .link{font-size:13px;font-weight:800}.dk73b .ns126f{font-weight:800;font-size:13px;margin:8px 0 4px}.gy126g{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}.gy126g>*{min-width:0}.gy126g summary{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .kq115{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 8px}
 .kq115 .chip115{display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:#FFF1CF;border:1.5px solid #E5B84B;color:#5E0F12;font-weight:700;font-size:14px}
 .kq115 .chip115 button{border:0;background:#8E1B1B;color:#fff;width:22px;height:22px;border-radius:50%;font-size:12px;line-height:22px;padding:0;cursor:pointer}
@@ -4623,7 +4624,7 @@ function mau73(f){return (S.kho||[]).filter(h=>(!f.q||!f.q.length||f.q.some(x=>n
 async function tim73(src,f){const r=U.l73[src]={loading:true,list:[],f};render();
  try{if(pk72Demo&&!dtkTok()){await new Promise(x=>setTimeout(x,600));r.list=mau73(f)}
   else if(!dtkTok())r.can=true;
-  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:f.quet106?100:(ph105(f.ph)?60:20),offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location={district:ids};if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
+  else{const ids=(f.q||[]).map(q73Id).filter(x=>x!=null);const body={size:f.quet106?100:(ph105(f.ph)?60:20),offset:0,thong_minh:String(f.tm||'').slice(0,190),sorts:{created:'desc'}};if(ids.length)body.location=Object.assign({district:ids},Array.isArray(f.wd)&&f.wd.length?{ward:f.wd}:{});if(f.tu!=null||f.den!=null)body.price={from:Math.round((f.tu||0)*1000),to:f.den!=null?Math.round(f.den*1000):null};
    const j=await dtkApi('tim',body);if(j&&j.success===false)throw new Error(j.message||'Đại Thế Kỷ chưa trả được tin');const dd=(j&&j.detail)||{};r.list=Array.isArray(dd.data)?dd.data:[];r.hieu=dd.hieu||''}}
  catch(e){if(e.status===401)r.can=true;else r.err=e.message||'Chưa lọc được, thử lại sau ít phút nha'}
  if(U.l73[src]!==r)return;r.loading=false;render()}
@@ -5911,6 +5912,61 @@ const tim73_106=tim73;tim73=async function(src,f){await tim73_106(src,f);if(!f||
   return true});
  const bo=n0-r.list.length;if(bo>0)r.hieu=(r.hieu?r.hieu+' · ':'')+'bỏ '+bo+' căn chưa đúng diện tích/giá';
  if(!r.list.length&&n0&&!r.err)r.err='Chưa có căn nào đúng hết yêu cầu. Thử nới giá, giảm diện tích hoặc bớt ghi chú nha.';render()};
+
+/* ===== v126 nhu cau khach (23/11/2026): Sửa nhu cầu khách + Gợi ý dẫn nhà lọc Quận, Phường, Giá từ/đến tỷ (mọi vai hasCtv) ===== */
+const n126=x=>{const t=parseFloat(String(x==null?'':x).replace(/\s/g,'').replace(',','.'));return isFinite(t)&&t>0?t:null};
+const r126=x=>x==null||x===0||x===''?'':String(x);
+/* 1. Sửa nhu cầu khách (khu vực, tài chính, nhu cầu khác) */
+SH.ns126=v=>{const c=kh73(v);if(!c)return {t:'Sửa nhu cầu khách',h:''};const a=me();
+ if(!U.ns126||U.ns126.v!==v)U.ns126={v,qs:kq115Ds(c).slice(),tu:r126(+c.min||''),den:(+c.max&&+c.max<99)?String(+c.max):'',need:c.need||''};const d=U.ns126;
+ const con=kv72Ds(a).filter(q=>!d.qs.includes(q));const ls=(c.doi126||[]).slice().reverse();
+ return {t:'✏️ Nhu cầu của '+c.name,h:`<p class="sub" style="margin-top:0">Khách đổi khu vực hay tài chính sau mấy lần đi xem nhà thì sửa ở đây nha. Ô <b>Gợi ý dẫn nhà</b> sẽ lọc theo nhu cầu mới.</p>
+ <div class="stack" style="gap:10px">
+ <div class="f">📍 Khu vực khách tìm <span class="sub" style="font-weight:600">(chọn bao nhiêu quận cũng được)</span></div>
+ <div class="kq115">${d.qs.length?d.qs.map(q=>`<span class="chip115">${esc(q)}<button type="button" data-a="ns126Bo" data-v="${esc(q)}" aria-label="Bỏ ${esc(q)}">✕</button></span>`).join(''):'<span class="sub">Chưa chọn quận nào</span>'}</div>
+ <select class="in" id="ns126q" data-ns126="q" aria-label="Thêm quận cho khách"><option value="">＋ Thêm quận…</option>${con.map(q=>`<option>${esc(q)}</option>`).join('')}</select>
+ <div class="f">💰 Tài chính (tỷ)</div><div class="grid2" style="margin-top:-6px"><label class="f" for="ns126t" style="font-weight:600">Từ<input class="in num" id="ns126t" data-ns126="tu" inputmode="decimal" value="${esc(d.tu)}" placeholder="6" autocomplete="off"></label><label class="f" for="ns126d" style="font-weight:600">Đến<input class="in num" id="ns126d" data-ns126="den" inputmode="decimal" value="${esc(d.den)}" placeholder="8" autocomplete="off"></label></div>
+ <label class="f" for="ns126n">📝 Nhu cầu khác<textarea class="in" id="ns126n" data-ns126="need" rows="2" maxlength="300" placeholder="Ví dụ: 4 phòng ngủ, hẻm xe hơi, gần trường">${esc(d.need)}</textarea></label>
+ <button class="btn full" data-a="ns126Luu" data-v="${esc(c.name)}">💾 Lưu nhu cầu mới</button></div>
+ ${ls.length?`<h3 class="h3" style="margin:16px 0 4px">🕘 Những lần khách đổi nhu cầu</h3><div class="list">${ls.map(x=>`<div class="li"><span class="pill gold num">${esc(fmtD(x.d))}</span><div class="grow sub">Trước đó: ${esc(x.q||'chưa ghi khu vực')} · ${esc(x.pk||'chưa ghi tài chính')}</div></div>`).join('')}</div>`:''}`}};
+document.addEventListener('input',e=>{const el=e.target;const k=el&&el.dataset&&el.dataset.ns126;if(!k||k==='q'||!U.ns126)return;U.ns126[k]=el.value});
+document.addEventListener('change',e=>{const el=e.target;if(!el||!el.dataset||el.dataset.ns126!=='q'||!U.ns126)return;const v=el.value;if(v&&!U.ns126.qs.includes(v))U.ns126.qs.push(v);render()});
+A.ns126Bo=q=>{if(!U.ns126)return;U.ns126.qs=U.ns126.qs.filter(x=>x!==q);render()};
+A.ns126Luu=v=>{const c=kh73(v);const d=U.ns126;if(!c||!d)return;const tu=n126(d.tu),den=n126(d.den);if(tu&&den&&den<tu){toast('Ô "Đến" phải lớn hơn ô "Từ" nha');return}
+ if(!d.qs.length){toast('Chọn ít nhất 1 quận nha');return}
+ const cu={q:kq115Ds(c).join(', '),pk:pk78(c)};const qs=d.qs.slice();const moi={q:qs.join(', '),pk:pk78({min:tu||0,max:den||99})};
+ if(cu.q!==moi.q||cu.pk!==moi.pk)c.doi126=(c.doi126||[]).concat([{d:today(),q:cu.q,pk:cu.pk}]).slice(-8);
+ c.qs=qs;c.q=moi.q;c.min=tu||0;c.max=den||99;c.need=String(d.need||'').trim().slice(0,300);
+ const g=c.gy||{};c.gy={q:qs.includes(g.q)?g.q:qs[0],wd:qs.includes(g.q)?(g.wd||[]):[],tu,den,tm:g.tm||''};if(U.gy126)delete U.gy126[c.name];
+ c.last=today();U.ns126=null;U.sheet=null;save();render();toast('💾 Đã lưu nhu cầu mới của '+c.name)};
+{const o=khachPart;khachPart=function(a){const h=o.apply(this,arguments);const st=U.kst||'all';const cs=(a.g.clients||[]).filter(c=>!c.chot&&(st==='all'||c.stage===st));let i=0;
+ return h.replace(/<div class="sub" style="margin-top:4px">📍 ([^<]*)<\/div>/g,(m,t)=>{const c=cs[i++];if(!c)return m;const pk=pk78(c);
+  return `<div class="sub" style="margin-top:4px">📍 ${t}</div><div class="ns126r"><span class="sub">💰 ${esc(pk||'Chưa ghi tài chính')}</span><button class="link" data-a="sheet" data-v="ns126:${esc(c.name)}">✏️ Sửa nhu cầu</button></div>`})}}
+/* 2. Gợi ý dẫn nhà: Quận + Phường của quận + Giá từ … đến … tỷ */
+function ph126(q){const tc=dlS().tc;if(!tc||!q)return [];const id=q73Id(q);if(id==null)return [];const x=dlQuanAll(tc).find(z=>String(z.id)===String(id));return x&&Array.isArray(x.phuong)?x.phuong:[]}
+function gy126S(c){U.gy126=U.gy126||{};let d=U.gy126[c.name];if(d)return d;const gy=c.gy||{};
+ const R=[[0,3],[3,6],[6,10],[10,20],[20,null]];const k=gy.tu==null&&gy.den==null&&gy.sg!==''&&gy.sg!=null?R[+gy.sg]:null;const mx=+c.max&&+c.max<99?+c.max:'';
+ return U.gy126[c.name]={q:gy.q||kq115Dau(c),wd:(gy.wd||[]).map(String),ph:gy.ph||'',tu:r126(gy.tu!=null?gy.tu:(k?k[0]:(+c.min||''))),den:r126(gy.den!=null?gy.den:(k?k[1]:mx)),tm:gy.tm||''}}
+function gy126Form(c){const n=c.name.length,v=esc(c.name);const d=gy126S(c);const L=[...new Set(kq115Ds(c).concat(kv72Ds(me())))];if(d.q&&!L.includes(d.q))L.unshift(d.q);
+ if(!dlS().tc&&!U.gy126tc){U.gy126tc=1;Promise.resolve(q90Nap()).then(()=>{if(dlS().tc)render()}).catch(()=>{})}
+ const P=ph126(d.q);const cur=(d.wd||[]).filter(id=>P.some(w=>String(w.id)===id));const nP=cur.length;
+ const pTxt=nP?P.filter(w=>cur.includes(String(w.id))).map(w=>w.name).slice(0,2).join(', ')+(nP>2?' +'+(nP-2):''):'🏘️ Tất cả phường';
+ return `<div class="grid2 gy126g"><select class="in" id="gyq_${n}" data-gy126="q|${v}" aria-label="Quận">${L.map(q=>`<option ${q===d.q?'selected':''}>${esc(q)}</option>`).join('')}</select>
+ ${P.length?`<details class="dlm" data-k="gy126-${n}"><summary class="in">${esc(pTxt)}</summary><div class="dlmb">${P.map(w=>`<label><input type="checkbox" data-a="gy126P" data-v="${v}|${esc(String(w.id))}" ${cur.includes(String(w.id))?'checked':''}> ${esc(w.name)}</label>`).join('')}</div></details>`:`<input class="in" id="gyp_${n}" data-gy126="ph|${v}" value="${esc(d.ph||'')}" placeholder="Phường, vd Phường 12" aria-label="Phường" autocomplete="off">`}</div>
+ <div class="ns126f">💰 Tài chính (tỷ)</div><div class="grid2"><input class="in num" id="gyt_${n}" data-gy126="tu|${v}" inputmode="decimal" value="${esc(d.tu)}" placeholder="Từ … tỷ" aria-label="Giá từ (tỷ)" autocomplete="off"><input class="in num" id="gyd_${n}" data-gy126="den|${v}" inputmode="decimal" value="${esc(d.den)}" placeholder="Đến … tỷ" aria-label="Giá đến (tỷ)" autocomplete="off"></div>
+ <input class="in" id="gyg_${n}" data-gy126="tm|${v}" style="margin-top:8px" value="${esc(d.tm||'')}" placeholder="Ghi chú: hẻm xe hơi, 4 phòng ngủ, gần chợ…" aria-label="Ghi chú">`}
+{const o=dk73Part;dk73Part=function(c){const h=o.apply(this,arguments);const i=h.indexOf('<div class="grid2"><select class="in" id="gyq_');if(i<0)return h;const E='aria-label="Ghi chú">';const j=h.indexOf(E,i);if(j<0)return h;
+ return h.slice(0,i)+gy126Form(c)+h.slice(j+E.length)}}
+document.addEventListener('input',e=>{const el=e.target;const k=el&&el.dataset&&el.dataset.gy126;if(!k)return;const i=k.indexOf('|');const f=k.slice(0,i),ten=k.slice(i+1);if(f==='q')return;const c=kh73(ten);if(c)gy126S(c)[f]=el.value});
+document.addEventListener('change',e=>{const el=e.target;const k=el&&el.dataset&&el.dataset.gy126;if(!k)return;const i=k.indexOf('|');const f=k.slice(0,i),ten=k.slice(i+1);if(f!=='q')return;const c=kh73(ten);if(!c)return;const d=gy126S(c);d.q=el.value;d.wd=[];render()});
+A.gy126P=v=>{const k=v.lastIndexOf('|');const ten=v.slice(0,k),id=v.slice(k+1);const c=kh73(ten);if(!c)return;const d=gy126S(c);d.wd=(d.wd||[]).map(String);d.wd=d.wd.includes(id)?d.wd.filter(x=>x!==id):d.wd.concat([id]);render()};
+A.gy73=v=>{const c=kh73(v);if(!c)return;const d=gy126S(c);const tu=n126(d.tu),den=n126(d.den);if(tu&&den&&den<tu){toast('Ô "Đến" phải lớn hơn ô "Từ" nha');return}
+ const P=ph126(d.q);const wd=(d.wd||[]).filter(id=>P.some(w=>String(w.id)===id));const wdTen=P.filter(w=>wd.includes(String(w.id))).map(w=>w.name);const ph=P.length?'':String(d.ph||'').trim().slice(0,60);
+ c.gy={q:d.q,wd,ph,tu,den,tm:String(d.tm||'').trim().slice(0,190)};c.last=c.last||today();save();
+ tim73('gy:'+v,{q:d.q?[d.q]:[],wd:wd.map(x=>isNaN(+x)?x:+x),wdTen,ph,tu,den,tm:[c.gy.tm,ph].filter(Boolean).join(', '),quet106:true})};
+const tim73_126=tim73;tim73=async function(src,f){await tim73_126(src,f);const r=U.l73[src];if(!f||!f.wdTen||!f.wdTen.length||!r||r.loading)return;
+ r.hieu=(r.hieu?r.hieu+' · ':'')+'chỉ '+f.wdTen.join(', ');if(!r.list.length&&!r.err)r.err='Chưa có căn nào ở '+f.wdTen.join(', ')+' trong tầm giá này. Thử chọn thêm phường hoặc nới giá nha.';render()};
+/* ===== /v126 ===== */
 
 /* ===================== BẢN THẬT: NỐI SUPABASE (chèn vào cuối app) =====================
    Đã nối: đăng nhập/đăng ký bằng mã OTP 6 số qua Gmail, sai 5 lần khoá 30 phút,
