@@ -1004,6 +1004,9 @@ input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{f
 <div id="sheetwrap"></div>
 <div id="toast" role="status" aria-live="polite"></div>
 
+<style>/* v134 */.zl134{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(46,139,87,.18);border:1px solid rgba(46,139,87,.6);font-size:14.5px;line-height:1.45}
+.btn.zl134b,.btn.zl134b:hover{margin-top:8px;padding:14px 10px;font-size:16.5px;font-weight:800;color:#fff!important;border:0;border-radius:14px;background:linear-gradient(135deg,#0068FF,#3D8BFF)!important;animation:zl134n 1.4s ease-in-out 3}
+@keyframes zl134n{50%{box-shadow:0 0 0 6px rgba(0,104,255,.35)}}</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function(){var __hvErr=function(msg){try{var a=document.getElementById('app');if(a&&a.innerHTML.length>50)return;var b=document.body||document.documentElement;var m=document.createElement('div');m.style.cssText='position:fixed;inset:0;background:#fff;color:#c0392b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:24px;z-index:99999;overflow:auto;white-space:pre-wrap';m.textContent='Hoa Vinh chưa mở được. Lỗi:\n\n'+msg+'\n\nChụp màn hình này gửi lại để được sửa giúp nhé.';b.appendChild(m)}catch(e){}};window.addEventListener('error',function(ev){__hvErr((ev&&ev.message||ev)+' @ '+(ev&&ev.filename||'')+':'+(ev&&ev.lineno||''))});window.addEventListener('unhandledrejection',function(ev){__hvErr('Promise: '+(ev&&ev.reason&&(ev.reason.message||ev.reason)||ev))});
@@ -2624,6 +2627,9 @@ A.ksXoa=async v=>{const s=ksGet(v);if(!s)return;if(s.byEmail!==me().email){toast
  if(U.ksDelAsk!==v){U.ksDelAsk=v;toast('Bấm “Xoá” lần nữa để xoá căn này');setTimeout(()=>{if(U.ksDelAsk===v)U.ksDelAsk=null},6000);return}
  U.ksDelAsk=null;try{await ksDel(s);U.sheet='survey';save();toast('Đã xoá khảo sát')}catch(e){toast(e&&e.message?e.message:'Chưa xoá được')}render()};
 A.copySurvey=v=>{const [ad,al,dir]=v.split('|');copy(`Khảo sát nhà: ${ad}\nHướng ${dir}\nBản đồ: https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ad)}`)};
+/* v134: chép chữ chắc chắn trên iPhone (Safari/Zalo): cách cũ textarea chạy ngay trong cú bấm + clipboard API */
+function chepNgay(t){let ok=false;try{const e=document.createElement('textarea');e.value=t;e.setAttribute('readonly','');e.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(e);e.focus();e.select();try{e.setSelectionRange(0,t.length)}catch(x){}ok=document.execCommand('copy');e.remove()}catch(x){}
+ try{navigator.clipboard&&navigator.clipboard.writeText(t).catch(()=>{})}catch(x){}return ok}
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>toast('Đã chép, dán vào Zalo hoặc Facebook nhé'),()=>toast('Máy chưa cho chép, giữ tay vào chữ để chép'))}catch(e){toast('Máy chưa cho chép')}}
 A.aiWrite=()=>{const t=val('ain');U.aiIn=t;if(!t){toast('Dán tin vào trước nhé');return}U.aiOut=aiRewrite(t);render()};
 function aiRewrite(t){
@@ -3531,8 +3537,11 @@ function dlNhanShare(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình
 function dlNut(c,n){const s=c.shf&&c.shf.length;
  return `<div class="grid2" style="margin-top:8px"><button class="btn gold" data-a="dlCopy">📋 Copy nội dung</button><button class="btn" data-a="dlTaoMoi" ${c.taoMoi?'disabled':''}>${c.taoMoi?'✨ AI đang viết…':'✨ Tạo mới mô tả'}</button></div>
  <button class="btn full" style="margin-top:8px;background:#0068FF;color:#fff" data-a="dlShare" ${c.shDang?'disabled':''}>${dlNhanShare(c,n)}</button>
- <button class="btn ghost full" style="margin-top:6px" data-a="dlShareChu">📝 Gửi riêng bài viết qua Zalo</button>
- <p class="sub" style="margin-top:6px">💡 Zalo hay bỏ phần chữ khi gửi kèm hình. Bài viết luôn được <b>chép sẵn</b>: vào Zalo nhấn giữ ô viết, chọn <b>Dán</b>. Gửi vào nhóm/chat thì bấm thêm “Gửi riêng bài viết”.</p>
+ ${c.b2134?`<div class="zl134"><b>✅ Bước 1 xong: đã gửi hình.</b><br>Zalo luôn bỏ chữ khi gửi kèm hình, nên mình gửi bài viết riêng nha 👇</div>
+ <button class="btn full zl134b" data-a="dlShareChu">📝 Bước 2: Gửi bài viết qua Zalo</button>
+ <p class="sub" style="margin-top:6px">Chọn <b>đúng nhóm/người</b> vừa gửi hình. Hoặc mở Zalo, nhấn giữ ô <b>Nhập tin nhắn</b> → <b>Dán</b> (bài đã chép sẵn).</p>`:
+ `<button class="btn ghost full" style="margin-top:6px" data-a="dlShareChu">📝 Gửi riêng bài viết qua Zalo</button>
+ <p class="sub" style="margin-top:6px">💡 Zalo luôn bỏ phần chữ khi gửi kèm hình. Gửi hình xong app hiện nút <b>Bước 2: Gửi bài viết</b>. Bài cũng được <b>chép sẵn</b>: trong ô <b>Nhập tin nhắn</b> của Zalo nhấn giữ → <b>Dán</b>.</p>`}
  ${c.cu&&c.cu.length>1?`<p class="sub" style="margin-top:6px">Đã có ${c.cu.length} phiên bản mô tả. Bấm “Tạo mới” để AI viết thêm bản khác.</p>`:''}`}
 /* v53: Tạo mới mô tả. Bản thật: trạm dtk-tim-nha viec viet_lai (Gemini, góc nhìn ngẫu nhiên, tránh trùng các bản cũ) */
 const DL_TIEU_DE=['{Q}: CĂN NÀY LÀM NHIỀU NGƯỜI PHẢI TÍNH LẠI CHUYỆN MUA CHUNG CƯ?','AI NÓI {Q} HẾT NHÀ ĐẸP GIÁ HỢP LÝ? XEM CĂN NÀY RỒI HÃY KẾT LUẬN','ĐẦU TƯ HAY ĐỂ Ở? CĂN NÀY Ở {Q} TRẢ LỜI ĐƯỢC CẢ HAI','HIẾM LẮM MỚI CÓ MỘT CĂN NHƯ VẦY Ở {Q}','GIA ĐÌNH TRẺ Ở {Q} ĐANG TÌM CHÍNH LÀ CĂN NÀY?'];
@@ -3566,17 +3575,17 @@ async function dlGuiDot(c,key,text,tuDong){const f=c.shf;if((c[key]||0)>=f.lengt
   else toast('Chưa mở được bảng chia sẻ ('+((e&&e.name)||'lỗi')+'), bấm lại nhé');return 'loi'}
  c[key]=i+dot.length;render();return c[key]<f.length?'con':'xong'}
 A.dlShare=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const bk=c.bk||c.it||{};const text=c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n');
- try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
+ chepNgay(text);c.b2134=false;
  const daCo=!!(c.shf&&c.shf.length);const f=await dlChuanBi(c);
  if(!f.length){if(navigator.share){navigator.share({text}).catch(()=>{})}else copy(text);return}
  if(!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+f.length+' hình về máy và chép sẵn bài viết');return}
  const kq=await dlGuiDot(c,'shi','',!daCo); /* v121: chỉ gửi hình, bài viết đã chép sẵn để dán (Zalo hay lỗi khi gửi hình kèm chữ dài) */
  if(kq==='cho')toast('✅ '+f.length+' hình đã sẵn sàng. Bấm nút xanh lần nữa để mở Zalo nhé');
  else if(kq==='con')toast('Đã gửi '+c.shi+'/'+f.length+' hình. Bấm nút xanh để gửi tiếp vào cùng chỗ nhé');
- else if(kq==='xong')toast('✅ Đã gửi đủ hình. Bài viết đã chép sẵn: trong Zalo nhấn giữ ô nhắn tin, chọn Dán rồi gửi nhé',6000)};
+ else if(kq==='xong'){c.b2134=true;render();toast('✅ Đã gửi hình. Bấm nút “Bước 2: Gửi bài viết” để gửi chữ nhé',6000);setTimeout(()=>{const b=document.querySelector('.zl134b');b&&b.scrollIntoView({block:'center',behavior:'smooth'})},150)}};
 A.dlShareChu=()=>{const c=U.dlCt;if(!c)return;const bk=c.bk||c.it||{};const text=c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n');
- try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
- if(navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy(text)});else copy(text)};
+ chepNgay(text);
+ if(navigator.share)navigator.share({text}).then(()=>{if(c.b2134){c.b2134=false;render();toast('🎉 Đã gửi đủ hình + bài viết')}}).catch(e=>{if(e&&e.name!=='AbortError')copy(text)});else copy(text)};
 A.dlTaiHet=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const daCo=!!(c.shf&&c.shf.length);const f=await dlChuanBi(c);
  if(!f.length){toast('Chưa tải được hình, thử lại sau nha');return}
  if(!laIOS()||!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Đã tải '+f.length+' hình về máy 📥');return}
@@ -5852,10 +5861,9 @@ A.hk101ChepHet=k=>{const c=hk101C()[k];if(c)copy(c.hooks.map((h,i)=>(i+1)+'. '+h
  x.h=x.h.replace(/<div class="ks75ba">/g,()=>hk101Box(T[i++])+'<div class="ks75ba">');return x}}
 /* 2) Đi quay nhà: Lọc nhà → Thêm vào danh sách → AI xếp đường → hook từng căn */
 function qn101Tuyen(){const g=qn101S();return (g.tuyen||[]).map(k=>g.ds.find(x=>x.k===k)).filter(Boolean)}
-SH.qn101loc=()=>{const g=qn101S();return {t:'🔎 Lọc nhà đi quay',h:`<p class="sub" style="margin-top:4px">Gõ yêu cầu như nói chuyện (VD: "nhà Tân Phú hẻm xe hơi dưới 6 tỷ"), AI lọc trên Đại Thế Kỷ. Căn nào muốn đi quay thì bấm <b>➕ Thêm vào danh sách</b>.</p>
+SH.qn101loc=()=>{const g=qn101S();return {t:'🔎 Lọc nhà đi quay',h:`<p class="sub" style="margin-top:4px">Gõ yêu cầu như nói chuyện (VD: "nhà Tân Phú hẻm xe hơi dưới 6 tỷ"), AI lọc trên Đại Thế Kỷ. Căn nào muốn đi quay thì bấm nút tím <b>🎬 Danh sách đi quay</b>.</p>
  <button class="ks75o full" style="margin-bottom:10px" data-a="qn101Ve">🎬 Danh sách đi quay <b>${g.ds.length}</b> <span class="sub" style="margin-left:auto">Xem →</span></button>${dlFormPart()}${dlResultsPart()}`}};
-{const o=dlResultsPart;dlResultsPart=function(){if(U.sheet!=='qn101loc')return o.apply(this,arguments);const d=U.dl;if(!d)return '';const ids=new Set(qn101S().ds.map(x=>x.k));const da0=d.da;d.da={};(d.list||[]).forEach((it,i)=>{if(ids.has(String(it.id||it._id)))d.da[i]=1});
- let h;try{h=o.apply(this,arguments)}finally{d.da=da0}return h.replace(/data-a="dlAdd" data-v="(\d+)">➕ Thêm (?:căn này )?vào Kho/g,'data-a="qn101Them" data-v="$1">➕ Thêm vào danh sách').replace(/✅ Đã thêm[^<]*/g,'✅ Đã có trong danh sách')}}
+/* v134: qn101loc dùng thẻ căn y như Kho (nút tím do v120 thêm) */
 A.qn101Them=i=>{const it=dlS().list[+i];if(!it)return;const g=qn101S();const x=ks75Tu(it);if(g.ds.some(y=>y.k===x.k)){toast('Căn này đã có trong danh sách');return}
  if(g.ds.length>=30){toast('Danh sách đi quay tối đa 30 căn nha');return}x.chon=true;g.ds.push(x);save();render();toast('🎬 Đã thêm vào danh sách đi quay ('+g.ds.length+' căn)')};
 A.qn101Loc=()=>{U.sheet='qn101loc';render()};
@@ -5880,7 +5888,7 @@ function qn101Part(a){const g=qn101S(a);const T=qn101Tuyen();const n=g.ds.filter
    <a class="btn ghost sm" style="margin-top:6px" href="https://www.google.com/maps/dir/?api=1&travelmode=driving&destination=${encodeURIComponent(ks75Dc(x))}" target="_blank" rel="noopener">🧭 Chỉ đường</a> <button class="btn ghost sm" style="margin-top:6px" data-a="nv102Mo" data-v="quay|${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}">📸 Báo cáo đã quay</button></div></div>${hk101Box(x)}</div>`).join('')}
   <div style="margin-top:10px">${ks75MapNut(T)}</div></div>`;
  h+=`<div class="between" style="margin:16px 2px 2px"><h3 class="h3" style="margin:0">📋 Danh sách đi quay (${g.ds.length})</h3>${g.ds.length?'<button class="link" style="font-size:12.5px" data-a="qn101Xoa">Xoá hết</button>':''}</div>`;
- if(!g.ds.length)h+=`<div class="note" style="margin-top:6px">Chưa có căn nào. Bấm <b>🔎 Lọc nhà trên Đại Thế Kỷ</b> rồi chọn <b>➕ Thêm vào danh sách</b> nha.</div>`;
+ if(!g.ds.length)h+=`<div class="note" style="margin-top:6px">Chưa có căn nào. Bấm <b>🔎 Lọc nhà trên Đại Thế Kỷ</b> rồi bấm nút tím <b>🎬 Danh sách đi quay</b> nha.</div>`;
  else h+=`<p class="sub" style="margin:2px">Chạm vào căn để chọn hoặc bỏ chọn, rồi bấm AI sắp xếp đường.</p>`+g.ds.map(x=>`<div class="qn101it"><button class="tep74c" style="flex:none;margin-top:2px;cursor:pointer;border:0" data-a="qn101Chon" data-v="${esc(x.k)}" aria-label="Chọn căn">${x.chon?'✓':''}</button>${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:''}<div class="grow" style="min-width:0" data-a="qn101Chon" data-v="${esc(x.k)}"><div>${ks75Ten(x)}</div><div class="sub">📍 ${esc(ks75Dc(x).replace(', TP. Hồ Chí Minh',''))}</div></div><button class="x" data-a="qn101Bo" data-v="${esc(x.k)}" aria-label="Bỏ khỏi danh sách">✕</button></div>`).join('')
   +`<button class="btn full ks75ai" style="margin-top:10px" data-a="qn101Xep" ${n<1||U.qn101Dang?'disabled':''}>${U.qn101Dang?'⏳ AI đang sắp xếp đường đi…':'🤖 AI sắp xếp đường đi ('+n+' căn)'}</button>`;
  return h}
@@ -7489,7 +7497,7 @@ A.kq115Bo=v=>{U.kq115=(U.kq115||[]).filter(q=>q!==v);kq115Ve()};
 document.addEventListener('change',e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.kq115)return;const v=el.value;if(!v)return;U.kq115=Array.isArray(U.kq115)?U.kq115:[];if(!U.kq115.includes(v))U.kq115.push(v);kq115Ve()});
 
 /* ===== v120: nút "🎬 Danh sách đi quay" dưới mỗi căn lọc ĐTK (mọi vai hasCtv) ===== */
-{const o=dlResultsPart;dlResultsPart=function(){const h=o.apply(this,arguments);const a=me();if(!h||U.sheet==='qn101loc'||!a||!hasCtv(a))return h;const d=U.dl;if(!d||!d.list)return h;
+{const o=dlResultsPart;dlResultsPart=function(){const h=o.apply(this,arguments);const a=me();if(!h||!a||!hasCtv(a))return h;const d=U.dl;if(!d||!d.list)return h;
  let ids;try{ids=new Set(qn101S().ds.map(x=>x.k))}catch(e){return h}
  return h.replace(/(<div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="dlCt" data-v="(\d+)">📄 Xem chi tiết<\/button>(?:<div class="note[^"]*"[^>]*>[^<]*<\/div>|<button[^>]*>[^<]*<\/button>)<\/div>)/g,(m,g,i)=>{const it=d.list[+i];if(!it)return m;let k='';try{k=ks75Tu(it).k}catch(e){}
   return g+(k&&ids.has(k)?`<button class="btn full qn123 qn123ok" data-a="qn101Ve">✅ Đã vào Danh sách đi quay · Xem</button>`:`<button class="btn full qn123" data-a="qn123Them" data-v="${i}">🎬 Danh sách đi quay</button>`)})}}
