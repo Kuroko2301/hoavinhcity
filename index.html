@@ -3486,7 +3486,11 @@ function dlDiaChi(bk){const l=bk&&bk.location||{};let so='',du=String(dtkField(l
  const t=String(dtkField(bk&&bk.title)||'').normalize('NFC').replace(/^\s*\([^)]*\)\s*/,'');const m=t.match(/^\s*(?:số\s*)?(\d[0-9A-Za-z\/.\-]*)\s+([^\d,]{3,40}?)\s+\d/i);
  if(m){so=m[1].replace(/[.]+$/,'').replace(/\./g,'/');if(!du)du=m[2].trim()}if(!so)so=String(dtkField(l.number)||'').trim();
  let ph='';const wd=dtkField(l.ward);const tc=dlS().tc;if(wd){if(tc){for(const q of dlQuanAll(tc)){const x=(q.phuong||[]).find(z=>String(z.id!=null?z.id:z.value)===String(wd));if(x){ph=x.name||x.title||'';break}}}if(!ph&&!/^\d+$/.test(String(wd)))ph=String(wd)}
- const q=pk72Quan(bk||{});const dc=[[so,du].filter(Boolean).join(' '),ph?(/^(phường|xã|p\.)/i.test(ph)?ph:'Phường '+ph):'',q].filter(Boolean).join(', ');return {dc,du:!!(so&&du)}}
+ const q=pk72Quan(bk||{});const dc=[[so,du].filter(Boolean).join(' '),ph?(/^(phường|xã|p\.)/i.test(ph)?ph:'Phường '+ph):'',q].filter(Boolean).join(', ');return {dc,so,du:!!(so&&du)}}
+/* v131: tên căn gợi ý có số nhà trước tên đường (nội bộ; tin gửi khách vẫn bỏ số nhà) */
+function tenCan131(it){let t=String(dtkField(it&&it.title)||'').normalize('NFC').replace(/^\s*\([^)]*\)\s*/,'');
+ t=t.replace(/(?:\+?84[\s.\-]?|\b0)\d{2,3}[\s.\-]?\d{3}[\s.\-]?\d{3,4}\b/g,'').replace(/https?:\/\/\S+|www\.\S+/gi,'').replace(/\bH\s?\d+(?:[.,]\d+)?\s?%|HĐMG\w*|HDMG\w*|\bHĐ\b|\bNNP\b|hoa h[ồo]ng[^\n.,]*/gi,'').replace(/[Cc]huy[êe]n [Gg]ia:?\s+[\p{Lu}][\p{L}]*(?:\s+[\p{Lu}][\p{L}]*)?/gu,'').replace(/(zalo|inbox|li[êe]n h[ệe])[^\n]*/gi,'');
+ const D=dlDiaChi(it||{});t=t.replace(/^\s*\d[\dA-Za-z.\/\-]*\s+(?=\p{L})/u,'');t=t.replace(/[ \t]{2,}/g,' ').replace(/\s+([.,])/g,'$1').replace(/[,\s]+$/,'').trim();return D.so?D.so+' '+t:t}
 SH.dlCt=()=>{const c=U.dlCt;if(!c)return {t:'Chi tiết nhà',h:''};const bk=c.bk||c.it||{};const u=dlUser(bk);
  const imgs=(Array.isArray(bk.images)?bk.images:[]).map((im,i)=>({im,i,ok:!c.hn||c.hn[i]!==false}));const nha=imgs.filter(x=>x.ok);const an=imgs.length-nha.length;
  const loc=[dtkField(bk.location&&bk.location.district)||dtkField(bk.district),dlTc('zone_group',bk.zone_group)||dtkField(bk.agency)].filter(Boolean).join(' - ');
@@ -4754,11 +4758,11 @@ function it74(v){const k=String(v).lastIndexOf('|');const src=v.slice(0,k),i=+v.
 function tep74Nut(v,nho){const a=me();const n=a?(a.g.clients||[]).length:0;const it=it74(v);const id=it&&String(it.id||it._id||'');const co=id?(a.g.clients||[]).filter(c=>(c.gui||[]).some(x=>String(x.k)===id)).length:0;
  return `<button class="btn full tep74${nho?' sm':''}" data-a="sheet" data-v="tep74:${esc(v)}">👥 Cho vào Kho theo tệp khách <span>${co?co+'/':''}${n} khách</span></button>`}
 /* làm sạch tin trước khi gửi khách: bỏ SĐT, số nhà, hoa hồng, tên chuyên gia, mã nội bộ */
-function sach74(t){return String(t||'').replace(/(?:\+?84|0)(?:[\s.\-]?\d){8,10}/g,'').replace(/https?:\/\/\S+|www\.\S+/gi,'').replace(/\bH\s?\d+(?:[.,]\d+)?\s?%|\bH\s?\d{2,3}\b|HĐMG\w*|\bHĐ\b|\bNNP\b|hoa h[ồo]ng[^\n.,]*/gi,'').replace(/[Cc]huy[êe]n [Gg]ia:?\s+[\p{Lu}][\p{L}]*(?:\s+[\p{Lu}][\p{L}]*)?/gu,'')
+function sach74(t){return String(t||'').replace(/(?:\+?84[\s.\-]?|\b0)\d{2,3}[\s.\-]?\d{3}[\s.\-]?\d{3,4}\b/g,'').replace(/https?:\/\/\S+|www\.\S+/gi,'').replace(/\bH\s?\d+(?:[.,]\d+)?\s?%|\bH\s?\d{2,3}\b|HĐMG\w*|\bHĐ\b|\bNNP\b|hoa h[ồo]ng[^\n.,]*/gi,'').replace(/[Cc]huy[êe]n [Gg]ia:?\s+[\p{Lu}][\p{L}]*(?:\s+[\p{Lu}][\p{L}]*)?/gu,'')
  .replace(/^\s*\d+[\dA-Za-z.\/\-]*\s+(?=\p{L})/u,'').replace(/(zalo|inbox|li[êe]n h[ệe])[^\n]*/gi,'').replace(/[ \t]{2,}/g,' ').replace(/\s+([.,])/g,'$1').replace(/\n{3,}/g,'\n\n').trim()}
 SH.tep74=v=>{const a=me();const it=it74(v);if(!it)return {t:'Cho vào Kho theo tệp khách',h:'<p class="sub">Không tìm thấy căn này, lọc lại rồi thử nha.</p>'};const id=String(it.id||it._id||'');const L=(a.g.clients||[]).map((c,i)=>[c,i]);
  const g=pk72Gia(it);const q=pk72Quan(it);
- return {t:'👥 Cho vào Kho theo tệp khách',h:`<div class="note" style="margin-top:0">🏠 <b>${g?tyTxt(g):''}</b> ${(t=>esc(t)+(q&&!t.includes(q)?' · '+esc(q):''))(sach74(dtkField(it.title)).slice(0,110))}</div>
+ return {t:'👥 Cho vào Kho theo tệp khách',h:`<div class="note" style="margin-top:0">🏠 <b>${g?tyTxt(g):''}</b> ${(t=>esc(t)+(q&&!t.includes(q)?' · '+esc(q):''))(tenCan131(it).slice(0,110))}</div>
  <p class="sub">Bạn có <b>${L.length} khách</b>. Chạm vào khách để thêm căn này vào <b>📨 Nhà gửi khách</b> của khách đó (chạm lần nữa để bỏ).</p>
  <div class="list">${L.map(([c,i])=>{const co=(c.gui||[]).some(x=>String(x.k)===id);const tt=tt73(c);return `<button class="tep74k${co?' on':''}" data-a="tep74Chon" data-v="${esc(v)}|${i}"><span class="tep74c">${co?'✓':''}</span><div class="grow" style="text-align:left;min-width:0"><b>${esc(c.name)}</b> <span class="tt73 ${tt}" style="font-size:11px;padding:2px 8px">${TT73[tt][0]} ${TT73[tt][1]}</span><div class="sub">📍 ${esc(c.q||c.need||'')} · Vòng ${c.vong||1} · ${(c.gui||[]).length} căn đã gửi</div></div></button>`}).join('')||'<p class="sub">Chưa có khách nào. Bấm ＋ Thêm khách ở tab Khách trước nha.</p>'}</div>
  <button class="btn ghost full" style="margin-top:12px" data-a="sheet" data-v="">Xong</button>`}};
@@ -5173,7 +5177,7 @@ function dl89Card(d){if(!d.list||!d.list.length)return '';const L=dl89Ds(d);cons
  L.forEach(p=>{if(p.cho&&p.st&&!DL89Q.some(x=>dl89Khoa(x)===dl89Khoa(p)))DL89Q.push(p)});setTimeout(()=>{dl89Chay();dl89Gan()},0);
  return `<div class="card dl89"><div class="hd between"><div><b>🗺️ Bản đồ các căn đã lọc</b><div class="sub">${co}/${L.length} căn đã ghim${cho?` · ⏳ đang định vị ${cho} căn…`:''}</div></div><button class="btn ghost sm" data-a="dl89Toi">📍 Tôi</button></div>
   <div class="dl89ho" id="dl89Ho"></div><div class="ft sub">Vị trí gần đúng theo tên đường + quận (tin ĐTK không có toạ độ). Chạm ghim để xem căn, mở Google Maps để tìm đúng nhà.</div></div>`}
-function dl89Pop(p){const g=(p.it.price&&+p.it.price.value)||'';return `<div class="dl89pop"><b>${p.n}. ${esc(sach74(dtkField(p.it.title)).slice(0,110))}</b><div>${esc([p.st,p.q].filter(Boolean).join(', '))}${g?' · 💰 '+esc(String(g).replace('.',','))+' tỷ':''}</div>
+function dl89Pop(p){const g=(p.it.price&&+p.it.price.value)||'';return `<div class="dl89pop"><b>${p.n}. ${esc(tenCan131(p.it).slice(0,110))}</b><div>${esc([p.st,p.q].filter(Boolean).join(', '))}${g?' · 💰 '+esc(String(g).replace('.',','))+' tỷ':''}</div>
  <div class="bt"><button type="button" data-dl89ct="${p.i}">📄 Chi tiết</button><a href="${dl89Gg(p)}" target="_blank" rel="noopener">🗺️ Google Maps</a></div></div>`}
 function dl89Gan(){const ho=document.getElementById('dl89Ho');if(!ho)return;if(!DL89EL){DL89EL=document.createElement('div');DL89EL.className='dl89el';DL89EL.innerHTML='<div class="bd71cho" style="padding:12px">🗺️ Đang mở bản đồ…</div>'}
  if(DL89EL.parentNode!==ho)ho.appendChild(DL89EL);
@@ -5518,7 +5522,7 @@ SH.dg99=v=>{const d=U.dg99||(U.dg99={});if(v&&v!=='tay'&&d.v!==v){const it=it74(
    ${k.lech!=null?`<div style="margin-top:8px">${k.lech>=0.03?`<span class="re99" style="font-size:14px">Giá chào rẻ hơn ${Math.round(k.lech*100)}%</span>`:k.lech<=-0.03?`<span class="cao99" style="font-size:14px">Giá chào cao hơn ${Math.round(-k.lech*100)}%</span>`:'<span class="re99" style="background:#666">Giá chào sát giá khu</span>'}</div>`:''}</div>
   <p class="sub">Đơn giá trung bình ${esc(o.q)}: <b>${nf(Math.round(k.med*10)/10)} triệu/m²</b>${k.tat?' (gộp cả hẻm và mặt tiền vì chưa đủ căn cùng loại)':o.loai==='mt'?' (nhà mặt tiền)':' (nhà hẻm)'}, tính từ <b>${k.n} căn</b> đang chào.</p>
   <h3 class="h3" style="margin:12px 0 4px">Căn tham khảo gần giống nhất</h3>
-  <table class="dg99tb"><tr><th>Căn</th><th>DT</th><th>Giá</th><th>Đơn giá</th></tr>${k.gan.map(x=>`<tr><td>${esc(sach74(dtkField(x.it.title)).slice(0,60)||'Tin nhà')}</td><td class="num">${nf(x.dt)}m²</td><td class="num">${tyTxt(x.g)}</td><td class="num">${nf(Math.round(x.dg))}tr</td></tr>`).join('')}</table>
+  <table class="dg99tb"><tr><th>Căn</th><th>DT</th><th>Giá</th><th>Đơn giá</th></tr>${k.gan.map(x=>`<tr><td>${esc(tenCan131(x.it).slice(0,70)||'Tin nhà')}</td><td class="num">${nf(x.dt)}m²</td><td class="num">${tyTxt(x.g)}</td><td class="num">${nf(Math.round(x.dg))}tr</td></tr>`).join('')}</table>
   <p class="sub" style="margin-top:10px">ℹ️ So với các căn <b>đang chào</b> cùng quận trên Kho Đại Thế Kỷ (chưa phải giá đã bán), chỉ để tham khảo nhanh. Hẻm, hướng, nở hậu, pháp lý… sẽ làm giá lệch, nhớ xem thực tế nha.</p>`:''}`}};
 async function dgChay99(){const d=U.dg99;if(!d||!d.o)return;const o=d.o;if(!o.q){d.dang=false;d.loi='Tin chưa ghi quận, chưa định giá được';render();return}if(!o.dt){d.dang=false;d.loi='Tin chưa ghi diện tích, chưa định giá được';render();return}
  d.dang=true;render();try{d.kq=await dgTinh99(o)}catch(e){d.loi=(e&&e.status===401)?'Cần đăng nhập Đại Thế Kỷ để định giá':'Chưa định giá được ('+(e&&e.message||'lỗi mạng')+')'}d.dang=false;if(U.dg99===d)render()}
@@ -5527,7 +5531,7 @@ A.dg99Tay=()=>{const d=U.dg99||(U.dg99={v:'tay'});const o=d.o=Object.assign(d.o|
 A.dg99Mo=()=>{U.dg99={};A.sheet('dg99:tay')};
 
 /* ---------- thẻ tin dùng chung (Kèo giá tốt, Khớp khách) ---------- */
-function x99It(src,it,i,c){const gm=giaIt99(it);const cu=it._giam&&it._giam.cu;const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const tt=sach74(dtkField(it.title))||'Tin nhà';const q=pk72Quan(it)||dtkField(it.location&&it.location.district);const dt=dt99(it);const cr=dlCreated(it);const v=src+'|'+i;const da=((U.l73[src]||{}).da||{})[i];
+function x99It(src,it,i,c){const gm=giaIt99(it);const cu=it._giam&&it._giam.cu;const img=dlImgUrl(Array.isArray(it.images)&&it.images[0]);const tt=tenCan131(it)||'Tin nhà';const q=pk72Quan(it)||dtkField(it.location&&it.location.district);const dt=dt99(it);const cr=dlCreated(it);const v=src+'|'+i;const da=((U.l73[src]||{}).da||{})[i];
  return `<div class="card pk72it">${img?`<button class="pkimg" data-a="x99Ct" data-v="${esc(v)}"><img src="${esc(img)}" alt="" loading="lazy">${cu?`<b class="gcb">⬇ Giảm ${tyTxt(cu-gm)}</b>`:''}</button>`:''}
   <div class="pkgia">${cu?`<span class="cu num">${tyTxt(cu)}</span><span class="mt">→</span>`:''}<b class="moi num">${tyTxt(gm)}</b>${cu?`<span class="pill bad">-${Math.round((cu-gm)/cu*100)}%</span>`:''} ${reTag99(it)}</div>
   <button class="dlt" data-a="x99Ct" data-v="${esc(v)}">${esc(tt.slice(0,140))}</button>
