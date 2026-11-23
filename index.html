@@ -980,6 +980,11 @@ html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px)
 .ksn124ok{text-align:center;padding:18px 6px}.ksn124ok .ic{font-size:54px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ksn124la button.on{background:#123A28;color:#BFF0D4}}
 :root[data-theme="dark"] .ksn124la button.on{background:#123A28;color:#BFF0D4}
+</style><style>/*v133 mic*/
+.mic133{min-width:46px;font-size:18px;padding-left:10px;padding-right:10px}
+.mic133.on{background:linear-gradient(180deg,#d6453a,#a3221a)!important;color:#fff!important;border-color:#ff8a80!important;animation:mic133p 1.2s ease-in-out infinite}
+@keyframes mic133p{0%,100%{box-shadow:0 0 0 0 rgba(214,69,58,.55)}50%{box-shadow:0 0 0 8px rgba(214,69,58,0)}}
+.mic133s{margin-top:6px;font-size:12.5px}.mic133s b{color:#ff8a80}
 </style><style>/*v127 co dinh khung*/
 .vh81logo.vh127{background:none;border:0;padding:0;box-shadow:0 6px 18px rgba(0,0,0,.45);overflow:hidden}
 .vh81logo.vh127 img{width:100%;height:100%;display:block;border-radius:50%;object-fit:cover}
@@ -4024,12 +4029,69 @@ function vvMd(t){return esc(t).split('\n').map(l=>{let x=l.replace(/^\s*[-*]{3,}
  return x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\n]+?)\*(?!\*)/g,'$1<i>$2</i>')}).join('\n')}
 SH.vinvilla=()=>{const L=U.vv||[];return {t:'🤖 Trợ lý VinViLLa',h:`<p class="sub" style="margin-top:0">Hỏi gì cũng được: pháp lý, thương lượng, cách dẫn khách, viết tin… VinViLLa là trợ lý AI của Hoa Vinh.</p>
  <div class="stack" style="gap:8px;margin:10px 0">${L.length?L.map(m=>`<div class="note ${m.who==='me'?'':'ok'}" style="${m.who==='me'?'margin-left:18%;text-align:right':'margin-right:10%'};white-space:pre-wrap">${m.who==='me'?esc(m.t):'🤖 '+vvMd(m.t)}</div>`).join(''):`<div class="note">Ví dụ: “Chủ nhà chào 6 tỷ, khách trả 5,5 tỷ, nói sao cho hai bên gặp nhau?”</div>`}${U.vvBusy?'<div class="sub">VinViLLa đang suy nghĩ…</div>':''}</div>
- <div class="row" style="gap:6px"><input class="in grow" id="vvq" placeholder="Nhập câu hỏi cho VinViLLa" autocomplete="off"><button class="btn gold sm" data-a="vvAsk">Gửi</button></div>
+ <div class="row" style="gap:6px"><input class="in grow" id="vvq" placeholder="Nhập hoặc bấm 🎤 để nói" autocomplete="off">${micBtn('vvq','vvAsk','')}<button class="btn gold sm" data-a="vvAsk">Gửi</button></div>${micNote('vvq')}
  ${L.length?'<button class="link" style="font-size:12px;margin-top:8px" data-a="vvClear">Xoá cuộc trò chuyện</button>':''}`}};
 A.vvAsk=async()=>{const q=val('vvq');if(!q){toast('Nhập câu hỏi nha');return}U.vv=(U.vv||[]).concat([{who:'me',t:q}]);U.vvBusy=true;render();
  let ans='';try{ans=await A.vvAnswer(q,U.vv.slice(-8,-1))}catch(e){ans='Xin lỗi, VinViLLa đang bận: '+(e.message||e)}
  U.vvBusy=false;U.vv=U.vv.concat([{who:'ai',t:ans}]).slice(-30);render();setTimeout(()=>{const s=document.querySelector('#sheetwrap .sheet');if(s)s.scrollTop=s.scrollHeight;const i=document.getElementById('vvq');if(i)i.focus()},30)};
 A.vvAnswer=async q=>vvLocal(q);
+
+/*v133 mic: giọng nói → chữ → tự gửi VinViLLa. Ưu tiên nhận giọng nói của máy (Web Speech, miễn phí); máy không có (iPhone trong Zalo…) → ghi âm WAV gửi trạm giong-noi (Gemini) */
+const MIC133={};
+function micBtn(id,act,v,nhan){const m=U.mic;const on=m&&m.id===id;const xl=on&&m.st==='xl';
+ return `<button class="btn sm mic133${on&&!xl?' on':''}" data-a="micGhi" data-v="${esc(id+'|'+act+'|'+(v||''))}" aria-label="Hỏi bằng giọng nói" ${xl?'disabled':''}>${xl?'⏳':on?'⏹ Xong':(nhan||'🎤')}</button>`}
+function micNote(id){const m=U.mic;if(!m||m.id!==id)return '';
+ return `<div class="sub mic133s">${m.st==='xl'?'⏳ Đang chuyển giọng nói thành chữ…':'<b>●</b> Đang nghe… nói xong bấm <b>⏹ Xong</b>'+(m.sr?' hoặc dừng nói một chút':' (tự dừng khi im lặng)')}</div>`}
+function micSet(id,t){const e=document.getElementById(id);if(e)e.value=t;if(id==='cvq')U.cv73d=t}
+function micVe(){const m=U.mic;const g=m?m.goc:'';const t=m?(m.chu||''):'';render();if(m)micSet(m.id,(g&&t?g+' ':g)+t)}
+function micXong(chu){const m=U.mic;if(!m)return;U.mic=null;MIC133.r=null;chu=String(chu||'').trim();
+ const t=((m.goc&&chu)?m.goc+' ':m.goc)+chu;render();if(!document.getElementById(m.id))return;micSet(m.id,t);
+ if(!chu){toast('Chưa nghe thấy gì, bấm 🎤 nói lại nha');return}
+ const f=A[m.act];if(f)f(m.v)}
+function micHuy(msg){const m=U.mic;U.mic=null;MIC133.r=null;render();if(m)micSet(m.id,m.goc);if(msg)toast(msg,4500)}
+A.micGhi=v=>{const p=String(v||'').split('|');const id=p[0],act=p[1],vv=p.slice(2).join('|');
+ if(U.mic){if(U.mic.id===id&&U.mic.st==='nghe')return micDung();return}
+ U.mic={id,act,v:vv,goc:val(id),chu:'',st:'nghe'};
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(SR&&!MIC133.srHong){try{return micSR(SR)}catch(e){MIC133.srHong=true}}
+ micWav()};
+function micDung(){const m=U.mic;if(!m)return;if(m.sr){try{MIC133.r&&MIC133.r.stop()}catch(e){micXong(m.chu)}}else if(MIC133.dung)MIC133.dung()}
+function micSR(SR){const m=U.mic;m.sr=true;const r=new SR();MIC133.r=r;r.lang='vi-VN';r.interimResults=true;r.continuous=false;r.maxAlternatives=1;
+ let chot='',loi='',nghe=false;r.onaudiostart=()=>{nghe=true};
+ r.onresult=e=>{let tam='';for(let i=e.resultIndex;i<e.results.length;i++){const x=e.results[i];if(x.isFinal)chot+=x[0].transcript;else tam+=x[0].transcript}
+  if(U.mic!==m)return;m.chu=(chot+tam).trim();micSet(m.id,((m.goc&&m.chu)?m.goc+' ':m.goc)+m.chu)};
+ r.onerror=e=>{loi=e.error||'loi'};
+ r.onend=()=>{if(U.mic!==m)return;
+  if(!m.chu&&loi&&loi!=='no-speech'&&loi!=='aborted'){MIC133.srHong=true;m.sr=false;m.chu='';if(loi==='not-allowed'&&!navigator.mediaDevices){return micHuy('Chưa được phép dùng micro. Vào Cài đặt cho phép micro, hoặc bấm 🎤 trên bàn phím để nói nha')}return micWav()}
+  if(!m.chu&&!chot&&!nghe&&loi!=='no-speech'){MIC133.srHong=true;m.sr=false;toast('Chuyển sang ghi âm, anh em nói lại giúp nha',3000);return micWav()}
+  micXong(m.chu||chot)};
+ r.start();micVe()}
+async function micWav(){const m=U.mic;m.sr=false;const md=navigator.mediaDevices;const AC=window.AudioContext||window.webkitAudioContext;
+ if(!md||!md.getUserMedia||!AC)return micHuy('Máy này chưa cho ghi âm trong app. Bấm 🎤 trên bàn phím để nói, hoặc mở app bằng Safari/Chrome nha');
+ let ctx;try{ctx=new AC();ctx.resume&&ctx.resume()}catch(e){}
+ let st;try{st=await md.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}})}catch(e){try{ctx&&ctx.close()}catch(_){}
+  return micHuy(e&&e.name==='NotAllowedError'?'Chưa được phép dùng micro. Cho phép micro cho app (hoặc Safari/Zalo) trong Cài đặt rồi thử lại nha':'Không mở được micro. Bấm 🎤 trên bàn phím để nói nha')}
+ if(U.mic!==m){st.getTracks().forEach(t=>t.stop());try{ctx&&ctx.close()}catch(_){}return}
+ if(!ctx)ctx=new AC();const src=ctx.createMediaStreamSource(st);const pr=ctx.createScriptProcessor(4096,1,1);const buf=[];const sr=ctx.sampleRate;
+ let noi=false,im=0,tong=0,xong=false;
+ pr.onaudioprocess=e=>{const d=e.inputBuffer.getChannelData(0);buf.push(new Float32Array(d));const n=d.length;tong+=n;
+  let s=0;for(let i=0;i<n;i+=4)s+=d[i]*d[i];const rms=Math.sqrt(s/(n/4));
+  if(rms>0.03){noi=true;im=0}else if(noi){im+=n}
+  if((noi&&im>sr*1.8)||tong>sr*60||(!noi&&tong>sr*8))MIC133.dung()};
+ src.connect(pr);pr.connect(ctx.destination);
+ MIC133.dung=async()=>{if(xong)return;xong=true;MIC133.dung=null;try{pr.disconnect();src.disconnect()}catch(e){}st.getTracks().forEach(t=>t.stop());try{ctx.close()}catch(e){}
+  if(U.mic!==m)return;if(!noi)return micHuy('Chưa nghe thấy gì, bấm 🎤 nói lại gần micro hơn nha');
+  m.st='xl';micVe();
+  try{const b64=await micB64(micWavBlob(buf,sr));const chu=await A.micChuyen(b64,'audio/wav');if(U.mic===m)micXong(chu)}
+  catch(e){if(U.mic===m)micHuy((e&&e.message)||'Chưa chuyển được giọng nói, thử lại hoặc gõ chữ nha')}};
+ micVe()}
+function micWavBlob(buf,sr){let n=0;buf.forEach(b=>n+=b.length);const R=16000,k=sr/R,m=Math.floor(n/k);const all=new Float32Array(n);let o=0;buf.forEach(b=>{all.set(b,o);o+=b.length});
+ const v=new DataView(new ArrayBuffer(44+m*2));const w=(p,s)=>{for(let i=0;i<s.length;i++)v.setUint8(p+i,s.charCodeAt(i))};
+ w(0,'RIFF');v.setUint32(4,36+m*2,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,R,true);v.setUint32(28,R*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);w(36,'data');v.setUint32(40,m*2,true);
+ for(let i=0;i<m;i++){const a=Math.floor(i*k),b=Math.min(n,Math.floor((i+1)*k));let s=0;for(let j=a;j<b;j++)s+=all[j];let x=b>a?s/(b-a):0;x=Math.max(-1,Math.min(1,x));v.setInt16(44+i*2,x<0?x*0x8000:x*0x7FFF,true)}
+ return new Blob([v],{type:'audio/wav'})}
+function micB64(bl){return new Promise((ok,no)=>{const f=new FileReader();f.onload=()=>ok(String(f.result).split(',')[1]||'');f.onerror=()=>no(new Error('Không đọc được đoạn ghi âm'));f.readAsDataURL(bl)})}
+A.micChuyen=async()=>{throw new Error('Bản demo chưa chuyển giọng nói thành chữ. Bấm 🎤 trên bàn phím để nói nha')};
 A.vvClear=()=>{U.vv=[];render()};
 
 
@@ -4708,7 +4770,7 @@ A.can73Luu=v=>{const c=kh73(v);if(!c)return;const n=x=>{const t=parseFloat(Strin
 SH.cv73=v=>{const c=kh73(v);if(!c)return {t:'Cố vấn chăm khách',h:''};const L=(c.cv||[]).slice().reverse();const b=U.cv73b===v;
  return {t:'🤖 Cố vấn chăm khách',h:`<p class="sub" style="margin-top:0">Ghi vấn đề đang gặp khi chăm <b>${esc(c.name)}</b>. Trợ lý VinViLLa gợi ý cách trả lời phù hợp.</p>
  <textarea class="in" id="cvq" rows="4" maxlength="1200" placeholder="Ví dụ: Khách chê hẻm nhỏ, muốn chờ giá giảm thêm, mình nên nói gì?">${esc(U.cv73d||'')}</textarea>
- <button class="btn full" style="margin-top:8px" data-a="cv73Hoi" data-v="${esc(c.name)}" ${b?'disabled':''}>${b?'⏳ VinViLLa đang suy nghĩ…':'🤖 Hỏi Trợ lý VinViLLa'}</button>
+ <div class="row" style="gap:6px;margin-top:8px">${micBtn('cvq','cv73Hoi',c.name,'🎤 Nói')}<button class="btn grow" style="min-width:0" data-a="cv73Hoi" data-v="${esc(c.name)}" ${b?'disabled':''}>${b?'⏳ VinViLLa đang suy nghĩ…':'🤖 Hỏi Trợ lý VinViLLa'}</button></div>${micNote('cvq')}
  ${L.map(x=>`<div class="cv73"><div class="cvq">🙋 ${esc(x.q)}</div><div class="cva">🤖 ${esc(x.a)}</div><div class="sub" style="font-size:11.5px">${esc(fmtD(x.d))}</div></div>`).join('')}`}};
 A.cv73Hoi=async v=>{const c=kh73(v);if(!c)return;const q=val('cvq').trim();if(!q){toast('Ghi vấn đề cần cố vấn nha');return}U.cv73d=q;U.cv73b=v;render();
  const vg=c.vong||1;const st=(STG.find(x=>x[0]===c.stage)||STG[0])[1];
@@ -6455,6 +6517,12 @@ A.vvAnswer=async(q,hist)=>{if(!sb)return _vvLocal(q);
  if(data&&data.tra_loi)return data.tra_loi;
  let j=data;try{if(!j&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}
  if(error&&error.context&&error.context.status===404)return _vvLocal(q);
+ throw new Error((j&&j.loi)||errVi(error))};
+/*v133 mic: trạm giong-noi (Gemini) chuyển giọng nói thành chữ khi máy không tự nhận được*/
+A.micChuyen=async(b64,loai)=>{if(!sb)throw new Error('Chưa kết nối máy chủ');
+ const {data,error}=await sb.functions.invoke('giong-noi',{body:{am_thanh:b64,loai}});
+ if(data&&data.chu)return data.chu;
+ let j=data;try{if((!j||!j.loi)&&error&&error.context&&error.context.json)j=await error.context.json()}catch(e){}
  throw new Error((j&&j.loi)||errVi(error))};
 /* ---- v30: Kết nối mạng xã hội THẬT (Edge Function mxh-ket-noi + robot mxh-dang-bai, bảng kenh_mxh/bai_dang/dang_len_kenh) ---- */
 mxhThat=true;
