@@ -1696,6 +1696,7 @@ const BLD=[
  {k:'hoigiao',n:'Điện Hồi Giáo',sn:'Hồi Giáo',em:'🕌',i:0,j:7,h:18,c:'#F2EEE6',r:'dome'},
  {k:'sieuthi',n:'Siêu thị Hoa Vinh',sn:'Siêu thị',em:'🛒',i:3,j:7,h:18,c:'#2F6B3A',r:'flat'},
  {k:'bando',n:'Phòng bản đồ Hoa Vinh',sn:'Bản đồ',em:'🗺️',i:5,j:7,h:22,c:'#1F4E8C',r:'flat'},
+ {k:'hoitruong',n:'Hội Trường Hoa Vinh',sn:'Hội Trường',em:'🏛️',i:6,j:3,h:26,c:'#8E1B1B',r:'flat'},/*v132*/
  {k:'nha',n:'Nhà của bạn',sn:'Nhà bạn',em:'🏡',i:7,j:7,r:'home'}
 ];
 const SMALL=[[2,2],[1,4],[2,6],[6,1],[6,4],[4,6],[5,2]];
@@ -1820,11 +1821,11 @@ const C3c1=(CT3.A0+CT3.L1-CT3.h1)/2,C3c2=(CT3.L1+CT3.h1+CT3.L2-CT3.h2)/2,C3c3=(C
 const POS3U={tongbo:[0,0,0],
  tlthuy:[-C3c1,-C3c2,0],tldi:[C3c1,-C3c2,0],vanhanh:[C3c2,-C3c1,-PI3/2],loc:[C3c2,C3c1,-PI3/2],
  nha:[C3c1,C3c2,PI3],sieuthi:[-C3c1,C3c2,PI3],bando:[-C3c2,C3c1,PI3/2],tieplua:[-C3c2,-C3c1,PI3/2],
- nhatho:[-C3c2,-C3c3,0],chuong:[-C3c3,-C3c2,PI3/2],chua:[C3c2,-C3c3,0],hoahao:[C3c3,C3c2,-PI3/2],hoigiao:[-C3c2,C3c3,PI3]};
+ nhatho:[-C3c2,-C3c3,0],chuong:[-C3c3,-C3c2,PI3/2],chua:[C3c2,-C3c3,0],hoahao:[C3c3,C3c2,-PI3/2],hoigiao:[-C3c2,C3c3,PI3],hoitruong:[C3c2,C3c3,PI3]};/*v132 Hội Trường ở cung ngoài, đối xứng Hồi Giáo*/
 function pos3(k){const p=POS3U[k]||[0,0,0];return [CX3+p[0],CZ3+p[1],p[2]]}
 /* chỗ đặt nhà anh em (gần trung tâm trước) */
 const HS3=(()=>{const a=C3c1,b=C3c2,c=C3c3,H=PI3/2,o=[];
- [[a,-c,-H],[-a,-c,H],[c,a,PI3],[c,-a,0],[a,c,-H],[-a,c,H],[-c,a,PI3],[-c,-a,0],[c,-b,-H],[b,c,PI3],[-c,b,H]].forEach(p=>o.push(p));
+ [[a,-c,-H],[-a,-c,H],[c,a,PI3],[c,-a,0],[a,c,-H],[-a,c,H],[-c,a,PI3],[-c,-a,0],[c,-b,-H],[-c,b,H]].forEach(p=>o.push(p));
  [[1,-1],[1,1],[-1,1],[-1,-1]].forEach(([su,sv])=>{o.push([su*5.4,sv*6.7,su>0?-H:H]);o.push([su*6.7,sv*5.4,sv>0?PI3:0])});
  return o.map(([u,v,r])=>[CX3+u,CZ3+v,r])})();
 const RB3=(()=>{const o=[];[CT3.L2,CT3.L3].forEach(L=>[[L,L],[L,-L],[-L,L],[-L,-L],[0,L],[0,-L],[L,0],[-L,0]].forEach(p=>o.push(p)));return o})();
@@ -2027,7 +2028,7 @@ function win3(g,x,y,z,ry,s){s=s||1;const w=new THREE.Group();w.position.set(x,y,
 function doorM3(g,x,z,col,aw){g.add(m3(bx3(.26,.36,.02),'#FFFDF6',{p:[x,.18,z]}));g.add(m3(bx3(.19,.31,.02),col||'#7A4E2D',{p:[x,.155,z+.008]}));g.add(m3(new THREE.SphereGeometry(.018,6,4),'#F3C24B',{p:[x+.06,.15,z+.022]}));g.add(m3(bx3(.32,.035,.12),'#D9CFC0',{p:[x,.017,z+.06]}));
   if(aw){const m=m3(bx3(.36,.03,.16),aw,{p:[x,.4,z+.07],r:[.35,0,0]});g.add(m)}}
 function chim3(g,x,y,z,col){g.add(m3(bx3(.11,.28,.11),col||'#B5654A',{p:[x,y,z]}));g.add(m3(bx3(.14,.04,.14),'#8E4A36',{p:[x,y+.15,z]}));const mk=new THREE.Object3D();mk.position.set(x,y+.2,z);mk.userData.chim=true;g.add(mk)}
-const WALL3={tlthuy:'#F6D9B3',tldi:'#F8E3C4',vanhanh:'#EFE7D8',loc:'#E7EEF1',sieuthi:'#FBF3E2',bando:'#E8F0F7'};
+const WALL3={hoitruong:'#F7E7C6',tlthuy:'#F6D9B3',tldi:'#F8E3C4',vanhanh:'#EFE7D8',loc:'#E7EEF1',sieuthi:'#FBF3E2',bando:'#E8F0F7'};
 function bld3(b){const T=THREE;const g=new T.Group();const w=b.w||1,d=b.d||1,H=b.h/22;{const q=pos3(b.k);g.position.set(q[0],0,q[1]);g.rotation.y=q[2]}const W=w*.78,D=d*.78;
   const thin=b.r==='bell'?.5:1;const flat=b.r==='flat';const wall=flat?(WALL3[b.k]||'#F6EEDD'):b.c;
   g.add(m3(bx3(W*thin+.1,.07,D*thin+.1),'#D8CCB6',{p:[0,.035,0]}));
@@ -2385,6 +2386,7 @@ SHB.bando=()=>{const a=me();const L=[];S.accts.forEach(x=>x.g.surveys.forEach((s
  return {t:'Phòng bản đồ Hoa Vinh',h:`<div class="city"><svg viewBox="0 0 320 190" role="img" aria-label="Bản đồ khảo sát của phòng"><rect width="320" height="190" fill="#EFE6D4"/><path d="M0 60 H320 M0 130 H320 M70 0 V190 M240 0 V190" stroke="#fff" stroke-width="7"/><path d="M160 0 V190" stroke="#B8862A" stroke-width="1.5" stroke-dasharray="5 4"/><text x="80" y="18" class="lbl" text-anchor="middle">TÂN PHÚ</text><text x="240" y="18" class="lbl" text-anchor="middle">TÂN BÌNH</text>${pins.map(q=>`<g><path d="M${q.x} ${q.y} c-7 -9 -7 -17 0 -17 c7 0 7 8 0 17z" fill="#8E1B1B"/><text x="${q.x}" y="${q.y-8}" font-size="8" font-weight="800" fill="#fff" text-anchor="middle">${q.n}</text></g>`).join('')}</svg></div>
  <p class="sub">Bản đồ minh hoạ. Bản thật ghim đúng vị trí trên Google Maps.</p>${pins.map(q=>`<div class="li"><span class="pill gold num">${q.n}</span><div class="grow"><b>${esc(q.p.addr)}</b><div class="sub">${esc(q.p.who)} khảo sát${q.p.alley?' · hẻm '+esc(q.p.alley)+'m':''} · hướng ${esc(q.p.dir||'?')}</div><a class="link" style="font-size:12px" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q.p.addr)}" target="_blank" rel="noopener">Mở Google Maps</a></div></div>`).join('')}
  <button class="btn full" style="margin-top:10px" data-a="sheet" data-v="survey">Khảo sát căn mới và chia sẻ lên bản đồ</button>`}};
+SHB.hoitruong=()=>SH.hoitruong();/*v132*/
 SH.bld=k=>{try{return SHB[k]()}catch(e){console.warn('[bld]',k,e);return {t:'Phòng',h:'<p class="sub">Phòng này chưa mở được, Trợ lý Di đang sửa nha.</p>'}}};
 SH.bell=()=>{const a=me();const t0=new Date();t0.setHours(0,0,0,0);const days=Math.round((TET-t0)/864e5);const done=a.g.tasks[today()]||[];
  return {t:'🔔 Chuông 6 giờ sáng',h:`<div class="card tet"><div class="kicker">Chào buổi sáng</div><div class="h2" style="color:#fff;margin:6px 0">${esc(a.name)} ơi, ngày mới tới rồi!</div><div class="sub">Còn ${Math.floor(days/7)} tuần nữa là Tết. “${quote()}”</div></div>
