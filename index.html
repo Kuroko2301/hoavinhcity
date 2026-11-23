@@ -939,7 +939,20 @@ html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px)
 .dltt-b li.dang{opacity:1;border-color:#2E8B57;font-weight:700}.dltt-b li.xong{opacity:1;background:rgba(46,139,87,.16);border-color:transparent}.dltt-b li.xong::before{content:'✓ ';color:#2E8B57}
 @keyframes dlttC{0%{transform:translateX(-110%)}100%{transform:translateX(310%)}}@keyframes dlttN{50%{transform:scale(1.15)}}
 @media (prefers-reduced-motion:reduce){.dltt-ic,.dltt-bar i{animation:none}}
+</style><style>/*v120 kho to + ds di quay*/
+.seg.viec123{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:6px;overflow:visible}
+.seg.viec123 button{padding:13px 8px;font-size:15.5px}
+.seg.viec123 button.kho,.seg88.k123 button.kho{grid-column:1/-1;padding:18px 12px;font-size:22px;font-weight:900;letter-spacing:.2px;color:#FFE9A8;border-radius:14px;
+ background:linear-gradient(135deg,#D7263D 0%,#9E1B1B 60%,#6E0F0F 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 6px 16px -6px rgba(158,27,27,.7);opacity:.82}
+.seg.viec123 button.kho.on,.seg88.k123 button.kho.on{opacity:1;color:#FFF3C4;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 0 0 2.5px #F2C14E,0 8px 20px -6px rgba(158,27,27,.8)}
+.seg88.k123{grid-template-columns:repeat(4,1fr)}
+.seg88.k123 button.kho{flex-direction:row;justify-content:center;gap:8px}
+.seg88.k123 button.kho .i{font-size:26px}
+.btn.qn123,.btn.qn123:hover{margin-top:8px;padding:14px 10px;font-size:16.5px;font-weight:800;color:#fff;border:0;border-radius:14px;
+ background:linear-gradient(135deg,#3B2A8F 0%,#5B2C9E 55%,#2A1F6B 100%)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 6px 14px -6px rgba(59,42,143,.7)}
+.btn.qn123.qn123ok{background:linear-gradient(135deg,#1F6B45,#2E8B57)!important;font-size:15px}
 </style>
+
 
 <div id="app"></div>
 <div id="sheetwrap"></div>
@@ -3245,7 +3258,7 @@ A.tab2kho=v=>{U.tab='viec';U.seg.viec='kho';U.kf=U.kf||{};U.kf.cl=v;window.scrol
 /* --- Công việc: Kho nhà / Khách / Công cụ --- */
 TAB.ql=a=>{const L=QL[a.role]||[];const k=L.some(x=>x[0]===U.seg.ql)?U.seg.ql:L[0][0];
  return `<div class="seg big">${L.map(([x,l])=>`<button class="${k===x?'on':''}" data-a="seg" data-v="ql:${x}">${l}</button>`).join('')}</div>`+TAB[k](a)};
-TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const cg88=a.role==='cg';let seg=U.seg.viec||'kho';if(!cg88&&(seg==='chu'||seg==='ctv'))seg='kho';if(cg88&&(seg==='chu'||seg==='ctv'))return seg88Nav(seg)+(seg==='chu'?chu88Part(a):ctv88Part(a));return (cg88?seg88Nav(seg):`<div class="seg big">${[['kho','🏠 Kho nhà'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`)+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
+TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const cg88=a.role==='cg';let seg=U.seg.viec||'kho';if(!cg88&&(seg==='chu'||seg==='ctv'))seg='kho';if(cg88&&(seg==='chu'||seg==='ctv'))return seg88Nav(seg)+(seg==='chu'?chu88Part(a):ctv88Part(a));return (cg88?seg88Nav(seg):`<div class="seg big viec123">${[['kho','🏠 Kho nhà'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`)+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
 const gcOn=h=>!!(h&&h.gc&&h.gc.from>h.p&&daysSince2(h.gc.d)<=30);
 const gcAmt=(h,sh)=>{const d=Math.round((h.gc.from-h.p)*1000)/1000;return d<1?Math.round(d*1000)+(sh?'tr':' triệu'):nf(Math.round(d*100)/100)+' tỷ'};
 const khuList=()=>[...new Set(QUAN.concat((S.kho||[]).map(h=>h.q).filter(Boolean)))];
@@ -4991,7 +5004,7 @@ A.bau87=v=>{const m=me();const i=v.lastIndexOf('|');const em=v.slice(0,i),d=+v.s
 {const _j=A.joinGroup;A.joinGroup=v=>{const g=S.groups.find(q=>q.id===v);if(g&&g.members.length>=DOI87_MAX){toast('Đội đã đủ 6 người');return}return _j(v)}}
 
 /* ===== v88 CG-ĐC: tin đã lên Cổng trại, Kho nhà CG-ĐC quản lý (AI tìm căn trên ĐTK), Chủ, Cộng tác viên ===== */
-function seg88Nav(seg){return `<div class="seg88">${[['kho','🏠','Kho nhà'],['khach','🤝','Khách'],['chu','🔑','Chủ'],['ctv','🙋','Cộng tác viên'],['cc','🧰','Công cụ']].map(([k,i,l])=>`<button class="${seg===k?'on':''}" data-a="seg" data-v="viec:${k}"><span class="i">${i}</span>${l}</button>`).join('')}</div>`}
+function seg88Nav(seg){return `<div class="seg88 k123">${[['kho','🏠','Kho nhà'],['khach','🤝','Khách'],['chu','🔑','Chủ'],['ctv','🙋','Cộng tác viên'],['cc','🧰','Công cụ']].map(([k,i,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}"><span class="i">${i}</span>${l}</button>`).join('')}</div>`}
 const hs88=t=>{let h=0;for(const ch of String(t))h=(h*31+ch.charCodeAt(0))>>>0;return h};const gio88=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 function ngay88(c){return c.t?gio88(c.t)+' · '+fmtD(c.d):fmtD(c.d)}
 function hqua88(){const y=new Date();y.setDate(y.getDate()-1);return y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
@@ -7239,6 +7252,13 @@ function kq115Lay(a){const L=(Array.isArray(U.kq115)?U.kq115:[]).slice();const x
 function kq115Ve(){const ids=['kn','kp','kpt','kpd'];const v={};ids.forEach(i=>{const e=document.getElementById(i);if(e)v[i]=e.value});render();ids.forEach(i=>{const e=document.getElementById(i);if(e&&v[i]!=null)e.value=v[i]})}
 A.kq115Bo=v=>{U.kq115=(U.kq115||[]).filter(q=>q!==v);kq115Ve()};
 document.addEventListener('change',e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.kq115)return;const v=el.value;if(!v)return;U.kq115=Array.isArray(U.kq115)?U.kq115:[];if(!U.kq115.includes(v))U.kq115.push(v);kq115Ve()});
+
+/* ===== v120: nút "🎬 Danh sách đi quay" dưới mỗi căn lọc ĐTK (mọi vai hasCtv) ===== */
+{const o=dlResultsPart;dlResultsPart=function(){const h=o.apply(this,arguments);const a=me();if(!h||U.sheet==='qn101loc'||!a||!hasCtv(a))return h;const d=U.dl;if(!d||!d.list)return h;
+ let ids;try{ids=new Set(qn101S().ds.map(x=>x.k))}catch(e){return h}
+ return h.replace(/(<div class="grid2" style="margin-top:8px"><button class="btn ghost sm" data-a="dlCt" data-v="(\d+)">📄 Xem chi tiết<\/button>(?:<div class="note[^"]*"[^>]*>[^<]*<\/div>|<button[^>]*>[^<]*<\/button>)<\/div>)/g,(m,g,i)=>{const it=d.list[+i];if(!it)return m;let k='';try{k=ks75Tu(it).k}catch(e){}
+  return g+(k&&ids.has(k)?`<button class="btn full qn123 qn123ok" data-a="qn101Ve">✅ Đã vào Danh sách đi quay · Xem</button>`:`<button class="btn full qn123" data-a="qn123Them" data-v="${i}">🎬 Danh sách đi quay</button>`)})}}
+A.qn123Them=i=>A.qn101Them(i);
 
 render();
 })();
