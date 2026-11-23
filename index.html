@@ -956,7 +956,27 @@ html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px)
 .seg88.k123 button.kho{flex-wrap:wrap}.seg88.k123 button.kho small{flex-basis:100%;text-align:center}
 @keyframes kho122{0%{box-shadow:0 0 0 0 rgba(242,193,78,.9)}100%{box-shadow:0 0 0 14px rgba(242,193,78,0)}}
 .kho122{animation:kho122 .9s ease-out 2;border-radius:18px}
+</style><style>/*v124 khao sat nhanh*/
+.btn.ksn124b{background:linear-gradient(135deg,#1F7A4D,#145A3A)!important;color:#fff!important;font-size:16.5px;padding:14px;border-radius:16px;margin-top:8px}
+.btn.ksn124b small{display:block;font-size:12.5px;font-weight:600;color:#D6F2E3;margin-top:2px}
+.ksn124 .f{margin-top:12px}
+.ksn124h{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.ksn124s{position:relative;aspect-ratio:3/4;border:2px dashed var(--line);border-radius:16px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;font-weight:800;font-size:12.5px;line-height:1.25;color:var(--ink);cursor:pointer;overflow:hidden;padding:6px}
+.ksn124s .ic{font-size:26px}.ksn124s small{font-weight:600;color:var(--mute,#7A7468);font-size:11px}
+.ksn124s.co{border-style:solid;border-color:#1F7A4D;padding:0}
+.ksn124s img{width:100%;height:100%;object-fit:cover;display:block}
+.ksn124s .nh{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:11.5px;padding:14px 4px 5px}
+.ksn124s .x{position:absolute;top:5px;right:5px;width:26px;height:26px;border-radius:50%;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:13px;cursor:pointer}
+.ksn124la{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px;max-width:330px;margin-left:auto;margin-right:auto}
+.ksn124la button{padding:10px 2px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);font-weight:800;font-size:13px;cursor:pointer;line-height:1.2}
+.ksn124la button span{display:block;font-size:18px;margin-top:2px}
+.ksn124la button.on{border-color:#1F7A4D;background:#E6F5EC;color:#145A3A}
+.ksn124la .tam{display:grid;place-items:center;font-size:26px}
+.ksn124ok{text-align:center;padding:18px 6px}.ksn124ok .ic{font-size:54px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ksn124la button.on{background:#123A28;color:#BFF0D4}}
+:root[data-theme="dark"] .ksn124la button.on{background:#123A28;color:#BFF0D4}
 </style>
+
 
 
 
@@ -7274,6 +7294,54 @@ A.qn123Them=i=>A.qn101Them(i);
 {const o=A.seg;A.seg=v=>{o(v);if(v!=='viec:kho')return;setTimeout(()=>{const sg=document.querySelector('.seg.viec123,.seg88.k123');const el=sg&&sg.nextElementSibling;if(!el)return;
  let hh=0;document.querySelectorAll('header,.top,.hdr,[class*=head]').forEach(h=>{const cs=getComputedStyle(h);const r=h.getBoundingClientRect();if((cs.position==='sticky'||cs.position==='fixed')&&r.top<=4&&r.width>250)hh=Math.max(hh,r.bottom)});
  const y=el.getBoundingClientRect().top+window.scrollY-hh-12;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});el.classList.remove('kho122');void el.offsetWidth;el.classList.add('kho122');setTimeout(()=>el.classList.remove('kho122'),2000)},60)}}
+
+/* ===== v124: ⚡ Khảo sát nhanh — địa chỉ hẻm + 3 hình + hướng → Nhà Đã Khảo sát (+1 Thép) + tự gửi Báo cáo nhiệm vụ ===== */
+const KSN124_HINH=[['mt','🏠','Mặt tiền trước nhà','Đứng ngoài chụp cả mặt nhà'],['duong','🛣️','Đường trước nhà','Chụp hẻm, đường trước cửa'],['huong','🧭','Hình hướng','Chụp la bàn hoặc hướng cửa nhìn ra']];
+const KSN124_LA=[['Tây Bắc','↖'],['Bắc','↑'],['Đông Bắc','↗'],['Tây','←'],null,['Đông','→'],['Tây Nam','↙'],['Nam','↓'],['Đông Nam','↘']];
+function ksn124S(){return U.ksn124||(U.ksn124={dc:'',ghi:'',dir:'',h:{},lat:null,lng:null,acc:null,dang:false,xong:null})}
+function ksn124Keep(){const d=ksn124S();const a=document.getElementById('ksnDc'),b=document.getElementById('ksnGhi');if(a)d.dc=a.value;if(b)d.ghi=b.value;return d}
+SH.ksn124=()=>{const a=me();if(!a||!hasCtv(a))return {t:'⚡ Khảo sát nhanh',h:'<p class="sub">Dành cho anh em trong phòng.</p>'};const d=ksn124S();
+ if(d.xong){const x=d.xong;return {t:'⚡ Khảo sát nhanh',h:`${ks75Back('survey','Về Khảo sát nhà')}<div class="ksn124ok"><div class="ic">🎉</div><h2 class="h2" style="margin:6px 0">Đã lưu căn ${esc(x.dc)}</h2>
+  <p class="sub">+1 🔩 Thép vào chỉ tiêu khảo sát năm.${x.bc?' Báo cáo nhiệm vụ đã gửi, Trợ lý duyệt xong bạn nhận thêm +1 🥇 Vàng và 💧 tưới cây nha.':''}</p>${x.loi?`<div class="note" style="margin-top:8px">${esc(x.loi)}</div>`:''}
+  <button class="btn full ksn124b" data-a="ksn124Moi">⚡ Khảo sát căn tiếp theo</button>
+  <div class="grid2" style="margin-top:8px"><button class="btn ghost" data-a="sheet" data-v="ks75da">🏠 Nhà Đã Khảo sát</button><button class="btn ghost" data-a="nv102Mo" data-v="ks">📸 Báo cáo nhiệm vụ</button></div></div>`}}
+ const du=KSN124_HINH.every(([k])=>d.h[k]);
+ return {t:'⚡ Khảo sát nhanh',h:`${ks75Back('survey','Về Khảo sát nhà')}<div class="ksn124">
+ <p class="sub" style="margin:0">Điền địa chỉ hẻm, chụp 3 hình là xong. Căn sẽ vào <b>Nhà Đã Khảo sát</b> (+1 🔩 Thép) và tự gửi <b>Báo cáo nhiệm vụ</b> để Trợ lý duyệt +1 🥇 Vàng, 💧 tưới cây.</p>
+ <label class="f" for="ksnDc">📍 Địa chỉ hẻm<input class="in" id="ksnDc" value="${esc(d.dc)}" placeholder="VD: Hẻm 125/4 Lũy Bán Bích, Tân Phú" autocomplete="off"></label>
+ <button class="btn ghost sm" style="margin-top:6px" data-a="ksn124ViTri">${d.lat?'✓ Đã lấy vị trí ('+Math.round(d.acc||0)+'m) · Lấy lại':'📡 Lấy vị trí GPS tại nhà (không bắt buộc)'}</button>
+ <h3 class="h3" style="margin:16px 2px 0">📷 3 hình khảo sát</h3>
+ <div class="ksn124h">${KSN124_HINH.map(([k,ic,t,g])=>d.h[k]?`<div class="ksn124s co"><img src="${d.h[k].url}" alt="${t}"><div class="nh">${ic} ${t}</div><button class="x" data-a="ksn124Bo" data-v="${k}" aria-label="Bỏ hình ${t}">✕</button></div>`
+  :`<label class="ksn124s"><span class="ic">${ic}</span>${t}<small>${g}</small><input type="file" accept="image/*" hidden data-ksn124="${k}"></label>`).join('')}</div>
+ <h3 class="h3" style="margin:16px 2px 0">🧭 Hướng nhà <span class="sub" style="font-weight:600">(hướng cửa nhìn ra)</span></h3>
+ <div class="ksn124la">${KSN124_LA.map(x=>x?`<button class="${d.dir===x[0]?'on':''}" data-a="ksn124Huong" data-v="${x[0]}">${x[0]}<span>${x[1]}</span></button>`:'<div class="tam">🏠</div>').join('')}</div>
+ <label class="f" for="ksnGhi">📝 Ghi chú ngắn (không bắt buộc)<input class="in" id="ksnGhi" value="${esc(d.ghi)}" placeholder="VD: hẻm 4m, xe hơi vào được" maxlength="200"></label>
+ <button class="btn full ksn124b" data-a="ksn124Luu" ${d.dang?'disabled':''}>${d.dang?'⏳ Đang lưu hình…':'💾 Lưu khảo sát nhanh'}${!d.dang&&!du?'<small>Còn thiếu '+KSN124_HINH.filter(([k])=>!d.h[k]).map(x=>x[2]).join(', ')+'</small>':''}</button></div>`}};
+A.ksn124Mo=()=>{const d=ksn124S();if(d.xong)U.ksn124=null;U.ksD=null;U.sheet='ksn124';render()};
+A.ksn124Moi=()=>{U.ksn124=null;U.sheet='ksn124';render()};
+A.ksn124Huong=v=>{const d=ksn124Keep();d.dir=d.dir===v?'':v;render()};
+A.ksn124Bo=k=>{const d=ksn124Keep();delete d.h[k];render()};
+A.ksn124ViTri=()=>{const d=ksn124Keep();if(!navigator.geolocation){toast('Máy này chưa hỗ trợ lấy vị trí');return}toast('📍 Đang lấy vị trí…');
+ navigator.geolocation.getCurrentPosition(p=>{d.lat=p.coords.latitude;d.lng=p.coords.longitude;d.acc=p.coords.accuracy;render();toast(p.coords.accuracy>60?'Đã lấy vị trí, sai số hơi lớn ('+Math.round(p.coords.accuracy)+'m)':'✓ Đã lưu vị trí căn nhà')},()=>toast('Chưa lấy được vị trí, bật định vị cho app nha'),{enableHighAccuracy:true,timeout:15000,maximumAge:0})};
+document.addEventListener('change',async e=>{const el=e.target;if(!el||!el.dataset||!el.dataset.ksn124||!el.files||!el.files[0])return;const k=el.dataset.ksn124;const f=el.files[0];el.value='';const d=ksn124Keep();
+ try{d.h[k]=await ksImgResize(f,1280,.78)}catch(err){toast('Hình này chưa đọc được, chụp lại giúp nha')}render()},true);
+A.ksn124Luu=async()=>{const a=me();const d=ksn124Keep();if(d.dang)return;const dc=String(d.dc||'').trim();
+ if(!dc){toast('Điền địa chỉ hẻm giúp nha');const e=document.getElementById('ksnDc');if(e)e.focus();return}
+ const thieu=KSN124_HINH.filter(([k])=>!d.h[k]);if(thieu.length){toast('Còn thiếu hình '+thieu.map(x=>x[2]).join(', '));return}
+ d.dang=true;render();const H=KSN124_HINH.map(([k])=>d.h[k]);const ghi=String(d.ghi||'').trim();
+ const dac='⚡ Khảo sát nhanh · Hình 1: Mặt tiền trước nhà · Hình 2: Đường trước nhà · Hình 3: Hướng'+(d.dir?' ('+d.dir+')':'')+(ghi?'\n'+ghi:'');
+ try{await ksSave(a,{addr:dc,alley:'',dir:d.dir||'',anh:H.map(x=>({blob:x.blob,url:x.url})),so:[],dac,manh:'',yeu:'',ghi:'',lat:d.lat,lng:d.lng,acc:d.acc})}
+ catch(err){d.dang=false;render();toast(err&&err.message?err.message:'Chưa lưu được, thử lại nha');return}
+ give(a,{thep:1,vang:1},'Khảo sát nhà');save();
+ let bc=false,loi='';const hn=nv102Ds().filter(x=>x.email===a.email&&x.ngay===today()).length;
+ if(hn>=NV102_NGAY)loi='Hôm nay bạn đã gửi đủ '+NV102_NGAY+' báo cáo nhiệm vụ, căn này vẫn được lưu và tính chỉ tiêu khảo sát.';
+ else{try{await nv102Gui({nv:'ks',ghi:('Khảo sát nhanh · '+dc+(d.dir?' · Hướng '+d.dir:'')+(ghi?' · '+ghi:'')).slice(0,300),anh:H.map(x=>x.url)});bc=true}
+  catch(err){loi='Căn đã lưu, nhưng báo cáo nhiệm vụ chưa gửi được ('+String(err&&err.message||err)+'). Vào Báo cáo nhiệm vụ gửi lại hình giúp nha.'}}
+ U.ksn124={dc:'',ghi:'',dir:'',h:{},xong:{dc,bc,loi}};render();toast(bc?'⚡ Đã lưu khảo sát nhanh, chờ Trợ lý duyệt thưởng':'⚡ Đã lưu khảo sát nhanh')};
+{const o=SH.survey;SH.survey=function(){const x=o.apply(this,arguments);if(U.ksD||!x||!x.h)return x;const a=me();if(!a||!hasCtv(a))return x;
+ const m='>📋 Tạo danh sách</button>';if(x.h.includes(m))x.h=x.h.replace(m,m+'<button class="btn full ksn124b" data-a="ksn124Mo">⚡ Khảo sát nhanh<small>Địa chỉ hẻm + hình Mặt tiền, Đường trước nhà, Hướng · tự báo cáo nhiệm vụ</small></button>');return x}}
+{const o=SH.nv102;SH.nv102=function(){const x=o.apply(this,arguments);const a=me();if(!x||!x.h||!a||!hasCtv(a))return x;const d=nv102S();
+ if(d.nv==='ks')x.h=`<button class="btn full ksn124b" style="margin:0 0 10px" data-a="ksn124Mo">⚡ Khảo sát nhanh<small>Chụp 3 hình + hướng, lưu căn và tự gửi báo cáo này</small></button>`+x.h;return x}}
 
 render();
 })();
