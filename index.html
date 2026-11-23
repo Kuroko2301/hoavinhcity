@@ -974,7 +974,7 @@ const pct=v=>(v*100).toLocaleString('vi-VN',{maximumFractionDigits:2})+'%';
 const rnd=n=>Math.floor(Math.random()*n);
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=rnd(i+1);[a[i],a[j]]=[a[j],a[i]]}return a};
 const initials=n=>String(n||'?').trim().split(/\s+/).slice(-2).map(w=>w[0]).join('').toUpperCase();
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function toast(m,ms){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),ms||2200)}
 
 const ROLES={sep:'Trưởng phòng',tl:'Trợ lý',cg:'Đầu chủ - Chuyên gia',ctv:'Cộng tác viên',hv:'Học viên'};
 const ROLE_SHORT={sep:'Sếp',tl:'Trợ lý',cg:'CG - ĐC',ctv:'CTV',hv:'Học viên'};
@@ -3486,11 +3486,15 @@ A.dlTaoMoi=async()=>{const c=U.dlCt;if(!c||c.taoMoi)return;const bk=c.bk||c.it||
  catch(e){toast(e.message||'AI đang bận, thử lại nha')}
  finally{c.taoMoi=false;if(U.sheet==='dlCt')render()}};
 /* v53: Chia sẻ Zalo: gửi bài viết + tất cả hình nhà trong 1 lần */
+/* v121: Zalo iPhone báo "Có lỗi xảy ra" khi nhận nhiều hình gốc nặng (vài MB/hình, có hình webp) → đổi hình về JPEG cạnh dài tối đa 1600px trước khi gửi */
+async function dlNhe(b){try{if(!b||!/^image\//.test(b.type||'image/'))return null;const bm=await createImageBitmap(b);const k=Math.min(1,1600/Math.max(bm.width,bm.height));
+ const cv=document.createElement('canvas');cv.width=Math.round(bm.width*k);cv.height=Math.round(bm.height*k);cv.getContext('2d').drawImage(bm,0,0,cv.width,cv.height);try{bm.close()}catch(e){}
+ const o=await new Promise(ok=>cv.toBlob(ok,'image/jpeg',0.85));return o&&o.size?o:null}catch(e){return null}}
 async function dlChuanBi(c){if(c.shf&&c.shf.length)return c.shf;const bk=c.bk||c.it||{};
  const list=(bk.images||[]).map((im,i)=>({im,i})).filter(x=>!c.hn||c.hn[x.i]!==false).slice(0,30);if(!list.length)return [];
  c.shDang=true;render();const files=[];const ten=String(bk.id||'nha').slice(0,20);
  await Promise.all(list.map(async(x,k)=>{try{const b=await dlBlob(dlImgUrl(x.im,true));const t=/^image\//.test(b.type)?b.type:'image/jpeg';const ext=(t.split('/')[1]||'jpg').replace('jpeg','jpg');
-  files[k]=new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:t})}catch(e){}}));
+  const g=await dlNhe(b);files[k]=g?new File([g],`hoavinh-${ten}-${x.i+1}.jpg`,{type:'image/jpeg'}):new File([b],`hoavinh-${ten}-${x.i+1}.${ext}`,{type:t})}catch(e){}}));
  c.shDang=false;c.shf=files.filter(Boolean);c.shi=0;c.ti=0;c.lo=c.lo||(/iP(hone|ad|od)/.test(navigator.userAgent)?30:10);render();return c.shf}
 const laIOS=()=>{try{return /iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1)}catch(e){return false}};
 function dlCoChiaSeTep(f){try{return !!(navigator.share&&navigator.canShare&&navigator.canShare({files:f.slice(0,1)}))}catch(e){return false}}
@@ -3506,10 +3510,10 @@ A.dlShare=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const bk=c.bk||c.it||{
  const daCo=!!(c.shf&&c.shf.length);const f=await dlChuanBi(c);
  if(!f.length){if(navigator.share){navigator.share({text}).catch(()=>{})}else copy(text);return}
  if(!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+f.length+' hình về máy và chép sẵn bài viết');return}
- const kq=await dlGuiDot(c,'shi',text,!daCo);
+ const kq=await dlGuiDot(c,'shi','',!daCo); /* v121: chỉ gửi hình, bài viết đã chép sẵn để dán (Zalo hay lỗi khi gửi hình kèm chữ dài) */
  if(kq==='cho')toast('✅ '+f.length+' hình đã sẵn sàng. Bấm nút xanh lần nữa để mở Zalo nhé');
  else if(kq==='con')toast('Đã gửi '+c.shi+'/'+f.length+' hình. Bấm nút xanh để gửi tiếp vào cùng chỗ nhé');
- else if(kq==='xong')toast('✅ Đã gửi đủ hình. Bài viết đã chép sẵn: nhấn giữ ô viết trong Zalo rồi chọn Dán nhé')};
+ else if(kq==='xong')toast('✅ Đã gửi đủ hình. Bài viết đã chép sẵn: trong Zalo nhấn giữ ô nhắn tin, chọn Dán rồi gửi nhé',6000)};
 A.dlShareChu=()=>{const c=U.dlCt;if(!c)return;const bk=c.bk||c.it||{};const text=c.bai||[bk.title,bk.description].filter(Boolean).join('\n\n');
  try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
  if(navigator.share)navigator.share({text}).catch(e=>{if(e&&e.name!=='AbortError')copy(text)});else copy(text)};
