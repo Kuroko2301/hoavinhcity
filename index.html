@@ -4994,7 +4994,7 @@ function so86(a,tu){const g=a.g;const sau=d=>String(d||'')>=tu;
 const MOC86=[[3,1],[9,2],[15,3],[21,4],[28,5],[35,6],[42,7],[50,8],[60,9]];
 function dh86(T){let d=null;for(const [m,i] of MOC86)if(T>=m)d=DH[i-1];return d}
 A.ch86Luu=async v=>{const d=me().g.deals[+v];if(!d)return;const L=(d.anh||[]).map(ch84Url).filter(Boolean);if(!L.length)return;toast('⏳ Đang lưu '+L.length+' hình…');const files=[];
- for(let i=0;i<L.length;i++){try{const r=await fetch(L[i]);const b=await r.blob();if(b.size)files.push(new File([b],'ky-niem-chot-'+(d.d||today())+'-'+(i+1)+'.jpg',{type:b.type||'image/jpeg'}))}catch(e){}}
+ for(let i=0;i<L.length;i++){try{const b=(typeof gd125Blob==='function'&&gd125Id(L[i]))?await gd125Blob(L[i]):await (await fetch(L[i])).blob();if(b&&b.size)files.push(new File([b],'ky-niem-chot-'+(d.d||today())+'-'+(i+1)+'.jpg',{type:b.type||'image/jpeg'}))}catch(e){}}
  if(!files.length){toast('Chưa lưu được hình, thử lại sau nha');return}
  try{if(laIOS()&&navigator.canShare&&navigator.canShare({files})){await navigator.share({files});return}}catch(e){if(e&&e.name==='AbortError')return}
  files.forEach((f,k)=>setTimeout(()=>dlLuu(f,f.name),k*400));toast('Đã lưu '+files.length+' hình về máy 📥')};
@@ -5924,6 +5924,44 @@ const tim73_106=tim73;tim73=async function(src,f){await tim73_106(src,f);if(!f||
 const SB_URL='https://tvyitklexxtcbjyzjifp.supabase.co';
 const SB_KEY='sb_publishable_0sg-ypz1pOpBlouvkg-XqA_kB6WHKzv';
 const sb=(window.supabase&&window.supabase.createClient)?window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,storageKey:'hoavinh-phien-dang-nhap',detectSessionInUrl:false}}):null;
+/* ---- v125 Lưu hình/video anh em lên Google Drive chính của phòng (Di chốt 23/11):
+   Supabase chỉ giữ thông tin + hình căn nhà ĐTK. Kho 'khao-sat' (Khảo sát, Khảo sát nhanh, Báo cáo nhiệm vụ, Kho hẻm, Kho nhà, Vụ chốt)
+   và 'ky-niem' (Kỷ niệm, Nhà Truyền Thống) đi qua Edge Function luu-drive → Drive; bảng tep_drive: đường dẫn → mã tệp Drive.
+   Drive lỗi/chưa kết nối → lưu Supabase như cũ. ---- */
+const GD125={kho:{'khao-sat':1,'ky-niem':1},id:{},mime:{},khong:{},tat:false};
+const gd125Url=(id,m)=>/^video\//.test(m||'')?'https://drive.google.com/file/d/'+id+'/preview':'https://drive.google.com/thumbnail?id='+id+'&sz=w1600';
+const gd125Id=u=>{const m=String(u||'').match(/drive\.google\.com\/(?:thumbnail\?id=|file\/d\/)([A-Za-z0-9_-]{10,})/);return m?m[1]:''};
+async function gd125Fn(body){const {data,error}=await sb.functions.invoke('luu-drive',{body});if(error||!data||data.loi||data.chua_ket_noi||data.can_ket_noi_lai)throw new Error((data&&data.loi)||(data&&data.chua_ket_noi?'Drive chưa kết nối':'')||(error&&error.message)||'luu-drive lỗi');return data}
+async function gd125Tra(b,paths){const can=[...new Set(paths)].filter(p=>p&&typeof p==='string'&&!/^(data:|https?:)/.test(p)&&!GD125.id[b+':'+p]&&!GD125.khong[b+':'+p]);
+ for(let i=0;i<can.length;i+=100){const ch=can.slice(i,i+100);try{const {data,error}=await sb.from('tep_drive').select('path,file_id,mime').eq('bucket',b).in('path',ch);if(error)throw error;
+  (data||[]).forEach(x=>{GD125.id[b+':'+x.path]=x.file_id;GD125.mime[b+':'+x.path]=x.mime});ch.forEach(p=>{if(!GD125.id[b+':'+p])GD125.khong[b+':'+p]=1})}catch(e){console.warn('[v125] tep_drive',e)}}}
+async function gd125Gui(b,path,body,opts){const ty=(opts&&opts.contentType)||(body&&body.type)||'image/jpeg';const size=body&&body.size;if(!size)throw new Error('tệp rỗng');
+ const d=await gd125Fn({viec:'mo',bucket:b,path,size,type:ty});
+ const res=await new Promise((ok,no)=>{const x=new XMLHttpRequest();x.open('PUT',d.upload_url);x.setRequestHeader('Content-Type',ty);
+  x.onload=()=>{if(x.status>=200&&x.status<300){try{ok(JSON.parse(x.responseText))}catch(e){ok({})}}else no(new Error('Google Drive báo lỗi '+x.status))};
+  x.onerror=()=>no(new Error('Mạng bị ngắt khi gửi lên Drive'));x.send(body)});
+ if(!res||!res.id)throw new Error('Google Drive chưa nhận tệp');
+ await gd125Fn({viec:'xong',bucket:b,path,file_id:res.id});
+ GD125.id[b+':'+path]=res.id;GD125.mime[b+':'+path]=ty;delete GD125.khong[b+':'+path];return res.id}
+if(sb&&sb.storage){const goc=sb.storage.from.bind(sb.storage);sb.storage.from=function(b){const api=goc(b);if(!GD125.kho[b])return api;
+ const up=api.upload.bind(api),su=api.createSignedUrls.bind(api),rm=api.remove.bind(api),cp=api.copy.bind(api),ls=api.list.bind(api);
+ api.upload=async(path,body,opts)=>{if(!GD125.tat){try{await gd125Gui(b,path,body,opts);return {data:{path,fullPath:b+'/'+path,drive:GD125.id[b+':'+path]},error:null}}
+  catch(e){console.warn('[v125] Drive chưa nhận, lưu Supabase',e);if(/chưa kết nối|kết nối lại/i.test(String(e&&e.message)))GD125.tat=true}}return up(path,body,opts)};
+ api.createSignedUrls=async(paths,exp,o)=>{paths=paths||[];await gd125Tra(b,paths);const sup=paths.filter(p=>!GD125.id[b+':'+p]);let r={data:[],error:null};
+  if(sup.length)r=await su(sup,exp,o);const m={};(r.data||[]).forEach(x=>{if(x&&x.path)m[x.path]=x});
+  return {data:paths.map(p=>GD125.id[b+':'+p]?{path:p,signedUrl:gd125Url(GD125.id[b+':'+p],GD125.mime[b+':'+p]),error:null}:(m[p]||{path:p,signedUrl:null,error:'không thấy'})),error:sup.length?r.error:null}};
+ api.remove=async paths=>{paths=paths||[];await gd125Tra(b,paths);const dr=paths.filter(p=>GD125.id[b+':'+p]),sup=paths.filter(p=>!GD125.id[b+':'+p]);
+  if(dr.length){try{await gd125Fn({viec:'bo',bucket:b,paths:dr});dr.forEach(p=>{delete GD125.id[b+':'+p];GD125.khong[b+':'+p]=1})}catch(e){console.warn('[v125] bỏ Drive',e)}}
+  return sup.length?rm(sup):{data:[],error:null}};
+ api.copy=async(from,to,o)=>{await gd125Tra(b,[from]);if(GD125.id[b+':'+from]){try{const d=await gd125Fn({viec:'chep',bucket:b,from,to});GD125.id[b+':'+to]=d.file_id;GD125.mime[b+':'+to]=GD125.mime[b+':'+from];delete GD125.khong[b+':'+to];return {data:{path:to},error:null}}catch(e){return {data:null,error:e}}}return cp(from,to,o)};
+ api.list=async(folder,o,so)=>{const r=await ls(folder,o,so);try{const f=String(folder||'').replace(/\/+$/,'');const {data}=await sb.from('tep_drive').select('path,file_id,mime,tao_luc').eq('bucket',b).like('path',f+'/%').limit((o&&o.limit)||100);
+  const them=(data||[]).filter(x=>!x.path.slice(f.length+1).includes('/')).map(x=>{GD125.id[b+':'+x.path]=x.file_id;GD125.mime[b+':'+x.path]=x.mime;return {name:x.path.slice(f.length+1),id:x.file_id,created_at:x.tao_luc,metadata:{mimetype:x.mime}}});
+  if(them.length){const ds=[...(r.data||[]).filter(x=>!them.some(t=>t.name===x.name)),...them];if(o&&o.sortBy&&o.sortBy.column==='name')ds.sort((a,c)=>a.name<c.name?-1:a.name>c.name?1:0);return {data:ds,error:null}}}catch(e){console.warn('[v125] list',e)}return r};
+ return api}}
+async function gd125Blob(u){const id=gd125Id(u);if(!id)return null;try{const {data:{session}}=await sb.auth.getSession();
+ const r=await fetch(SB_URL+'/functions/v1/luu-drive',{method:'POST',headers:{'Content-Type':'application/json',apikey:SB_KEY,Authorization:'Bearer '+((session&&session.access_token)||SB_KEY)},body:JSON.stringify({viec:'tai',file_id:id})});
+ if(!r.ok||/json/.test(r.headers.get('content-type')||''))return null;return await r.blob()}catch(e){return null}}
+
 const R2A={sep:'sep',tro_ly:'tl',cg_dc:'cg',ctv:'ctv',hoc_vien:'hv'};const A2R={};for(const k in R2A)A2R[R2A[k]]=k;
 const LIVE={snap:{},me:null,hs:null,busy:false,t:null,lockUntil:0,lockEmail:''};
 const _save=save,_logout=A.logout;
