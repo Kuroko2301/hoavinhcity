@@ -5538,20 +5538,35 @@ A.x99Add=v=>{const k=v.lastIndexOf('|');const src=v.slice(0,k),i=+v.slice(k+1);c
 
 /* ---------- 4. Kèo giá tốt ---------- */
 const KEO99_MIN=0.10;
-function keoQ99(a){const p=pk72S(a);const k=a.g.keo99||(a.g.keo99={q:[]});return k.q.length?k.q:p.q}
-SH.keo99=()=>{const a=me();const Q=keoQ99(a);const r=U.keo99;if(Q.length&&(!r||r.key!==JSON.stringify(Q.map(x=>x.id))))setTimeout(()=>keoTim99(),0);
- const L=r&&r.list||[];U.l73.keo99=U.l73.keo99&&U.l73.keo99.list===L?U.l73.keo99:{list:L,da:{}};
+/* v129: Kèo giá tốt sửa: đổi tên quận → mã quận ĐTK (trước gửi tên nên trạm không ra căn nào) + ô Giá từ/đến tỷ, nhớ lựa chọn */
+function keoS99(a){const k=a.g.keo99||(a.g.keo99={q:[]});if(!Array.isArray(k.q))k.q=[];return k}
+function keoId99(x){if(!x)return null;if(!isNaN(+x.id))return {id:String(x.id),name:x.name};const id=qid99(x.name);return id!=null&&!isNaN(+id)?{id:String(id),name:x.name}:{id:String(x.id),name:x.name}}
+function keoQ99(a){const p=pk72S(a);const k=keoS99(a);const Q=(k.q.length?k.q:(p.q||[])).map(keoId99).filter(Boolean);if(k.q.length&&dlS().tc)k.q=Q;return Q}
+function keoGia99(a){const k=keoS99(a);const p=pk72S(a);const tu=k.tu!=null?k.tu:(p.tu!=null?p.tu:null),den=k.den!=null?k.den:(p.den!=null?p.den:null);return {tu,den}}
+SH.keo99=()=>{const a=me();if(!dlS().tc&&!demo99()&&!U.keoTc99){U.keoTc99=1;tc99().then(()=>{U.keo99=null;render()})}
+ const Q=keoQ99(a);const G=keoGia99(a);const r=U.keo99;const key=JSON.stringify([Q.map(x=>x.id),G.tu,G.den]);if(Q.length&&(!r||r.key!==key))setTimeout(()=>keoTim99(),0);
+ const L=r&&r.list||[];U.l73.keo99=U.l73.keo99&&U.l73.keo99.list===L?U.l73.keo99:{list:L,da:{}};const nM=L.filter(it=>!it._keoKhac).length,nK=L.length-nM;
+ const gv=v=>v==null?'':String(v).replace('.',',');
  return {t:'🔥 Kèo giá tốt',h:`<div class="keo99h"><b style="font-size:16px">Mới vào nghề, chưa biết bắt đầu từ đâu?</b><div class="sub" style="margin-top:4px">Bắt đầu từ những căn chủ vừa giảm chào từ ${Math.round(KEO99_MIN*100)}% trở lên. Nhà rẻ dễ đăng, dễ có khách, dễ chốt.</div>
   <div class="keo99b"><div><span>👀</span>1. Chọn căn ngon</div><div><span>📍</span>2. Đi khảo sát</div><div><span>📣</span>3. Đăng tin</div></div></div>
-  <div class="kicker" style="margin:12px 0 6px">📍 Khu vực (tối đa 3)</div><div class="lv99chips">${pk72Q().slice(0,40).map(q=>{const on=Q.some(x=>String(x.id)===String(q.id));return `<button class="${on?'on':''}" data-a="keo99Q" data-v="${esc(q.id)}">${esc(q.name)}</button>`}).join('')}</div>
+  <div class="kicker" style="margin:12px 0 6px">📍 Khu vực (tối đa 3)</div>${!dlS().tc&&!demo99()?'<p class="sub">⏳ Đang tải danh sách quận…</p>':`<div class="lv99chips">${pk72Q().slice(0,40).map(q=>{const on=Q.some(x=>String(x.id)===String(q.id));return `<button class="${on?'on':''}" data-a="keo99Q" data-v="${esc(q.id)}">${esc(q.name)}</button>`}).join('')}</div>`}
+  <div class="kicker" style="margin:12px 0 6px">💰 Giá (tỷ)</div><div class="grid2"><input class="in num" id="keoTu" inputmode="decimal" placeholder="Từ … tỷ" value="${esc(gv(G.tu))}" aria-label="Giá từ (tỷ)"><input class="in num" id="keoDen" inputmode="decimal" placeholder="Đến … tỷ" value="${esc(gv(G.den))}" aria-label="Giá đến (tỷ)"></div>
+  <button class="btn sm full" style="margin-top:8px" data-a="keo99Gia">🔎 Xem kèo theo giá này</button><div class="sub" style="margin-top:4px">Khu vực và giá bạn chọn được nhớ cho lần sau.</div>
   ${!Q.length?'<p class="sub" style="margin-top:10px">Chọn khu vực bạn làm để xem kèo nha.</p>':!r||r.loading?'<p class="sub" style="margin-top:10px">⏳ Đang tìm căn giảm chào mạnh…</p>':r.can?'<div class="note warn" style="margin-top:10px">Cần đăng nhập Đại Thế Kỷ để xem kèo. Vào Kho nhà, bấm Đăng nhập Đại Thế Kỷ nha.</div>':r.err?`<div class="note warn" style="margin-top:10px">${esc(r.err)} <button class="link" data-a="keo99Lai">Thử lại</button></div>`:
-  `<p class="sub" style="margin:10px 0 0">Có <b>${L.length} kèo</b> giảm từ ${Math.round(KEO99_MIN*100)}% trở lên, giảm mạnh nhất lên đầu.</p>${L.map((it,i)=>x99It('keo99',it,i)).join('')||'<p class="sub">Hôm nay chưa có căn nào giảm từ 10% ở khu này, thử thêm khu vực khác nha.</p>'}`}`}};
-A.keo99Q=v=>{const a=me();const k=a.g.keo99||(a.g.keo99={q:[]});if(!k.q.length)k.q=pk72S(a).q.slice();const j=k.q.findIndex(x=>String(x.id)===String(v));if(j>=0)k.q.splice(j,1);else{if(k.q.length>=3){toast('Tối đa 3 khu vực nha');return}const q=pk72Q().find(x=>String(x.id)===String(v));if(q)k.q.push({id:q.id,name:q.name})}
- if(!k.q.length)k.q=[];U.keo99=null;save();render()};
+  `<p class="sub" style="margin:10px 0 0">Có <b>${nM} kèo</b> giảm từ ${Math.round(KEO99_MIN*100)}% trở lên, giảm mạnh nhất lên đầu.</p>${L.map((it,i)=>(it._keoKhac&&(i===0||!L[i-1]._keoKhac)?`<div class="kicker" style="margin:14px 0 4px">🔻 Căn khác chủ ghi giảm chào (${nK})</div>`:'')+x99It('keo99',it,i)).join('')||'<p class="sub">Chưa có căn nào giảm chào ở khu và tầm giá này, thử thêm khu vực hoặc nới giá nha.</p>'}`}`}};
+A.keo99Q=v=>{const a=me();const k=keoS99(a);if(!k.q.length)k.q=keoQ99(a).slice();const j=k.q.findIndex(x=>String(x.id)===String(v));if(j>=0)k.q.splice(j,1);else{if(k.q.length>=3){toast('Tối đa 3 khu vực nha');return}const q=pk72Q().find(x=>String(x.id)===String(v));if(q)k.q.push({id:q.id,name:q.name})}
+ U.keo99=null;save();render()};
+A.keo99Gia=()=>{const a=me();const k=keoS99(a);const so=id=>{const t=val(id).trim().replace(',','.');if(!t)return null;const n=+t;return isFinite(n)&&n>=0?n:NaN};const tu=so('keoTu'),den=so('keoDen');
+ if(Number.isNaN(tu)||Number.isNaN(den)){toast('Giá ghi bằng số tỷ nha, ví dụ 5 hoặc 7,5');return}if(tu!=null&&den!=null&&den<tu){toast('Giá "đến" phải lớn hơn giá "từ" nha');return}
+ k.tu=tu;k.den=den;U.keo99=null;save();render();toast('Đã nhớ giá '+(tu!=null?tu:0)+' – '+(den!=null?den:'…')+' tỷ')};
 A.keo99Lai=()=>{U.keo99=null;render()};
-async function keoTim99(){const a=me();const Q=keoQ99(a);const key=JSON.stringify(Q.map(x=>x.id));if(U.keo99&&U.keo99.key===key)return;const r=U.keo99={key,loading:true,list:[]};render();
- try{let L=[];if(demo99())L=await lay99(Q.map(x=>x.name),0,500,true);else{for(let o=0;o<90&&L.length<40;o+=30){const k=await pk72Lay({q:Q,tu:0,den:200},o);L=L.concat(k.L);if(k.het)break}}
-  const pc=it=>{const g=it._giam;return g&&g.cu&&g.moi&&g.cu>g.moi?(g.cu-g.moi)/g.cu:0};r.list=L.filter(it=>pc(it)>=KEO99_MIN-1e-9).sort((x,y)=>pc(y)-pc(x)).slice(0,30);setTimeout(()=>napDg99(r.list),300)}
+async function keoTim99(){const a=me();await tc99();const Q=keoQ99(a);const G=keoGia99(a);const key=JSON.stringify([Q.map(x=>x.id),G.tu,G.den]);if(U.keo99&&U.keo99.key===key)return;const r=U.keo99={key,loading:true,list:[]};render();
+ const tu=G.tu!=null?G.tu:0,den=G.den!=null?G.den:200;
+ try{let L=[];if(demo99())L=await lay99(Q.map(x=>x.name),tu,den,true);else{for(let o=0;o<180&&L.length<120;o+=30){const k=await pk72Lay({q:Q,tu,den},o);L=L.concat(k.L);if(k.het)break}}
+  const pc=it=>{const g=it._giam;return g&&g.cu&&g.moi&&g.cu>g.moi?(g.cu-g.moi)/g.cu:0};const gi=it=>giaIt99(it);const trong=it=>{const g=gi(it);return !(g>0)||(g>=tu-1e-9&&g<=den+1e-9)};
+  const M=L.filter(it=>trong(it)&&pc(it)>=KEO99_MIN-1e-9).sort((x,y)=>pc(y)-pc(x)).slice(0,30);const ids=new Set(M);
+  const K=L.filter(it=>trong(it)&&!ids.has(it)&&it._giam).slice(0,20).map(it=>Object.assign(it,{_keoKhac:1}));
+  r.list=M.concat(K);setTimeout(()=>napDg99(r.list),300)}
  catch(e){if(e.status===401)r.can=true;else r.err=e.message||'Chưa tìm được, thử lại sau ít phút nha'}
  if(U.keo99!==r)return;r.loading=false;render()}
 
