@@ -1,7 +1,11 @@
 <!doctype html>
 <html lang="vi">
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#2B080C">
 <title>Hoa Vinh City</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -976,6 +980,16 @@ html.lite body nav.tabs,html.lite body .sheet{-webkit-backdrop-filter:blur(10px)
 .ksn124ok{text-align:center;padding:18px 6px}.ksn124ok .ic{font-size:54px}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ksn124la button.on{background:#123A28;color:#BFF0D4}}
 :root[data-theme="dark"] .ksn124la button.on{background:#123A28;color:#BFF0D4}
+</style><style>/*v127 co dinh khung*/
+.vh81logo.vh127{background:none;border:0;padding:0;box-shadow:0 6px 18px rgba(0,0,0,.45);overflow:hidden}
+.vh81logo.vh127 img{width:100%;height:100%;display:block;border-radius:50%;object-fit:cover}
+html{overflow-x:hidden;overscroll-behavior-x:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body{overflow-x:clip;max-width:100%;position:relative}
+#app,#sheetwrap{max-width:100%;overflow-x:clip}
+.sheet{overflow-x:hidden;overscroll-behavior:contain}
+img,video,canvas,svg,iframe,table{max-width:100%}
+input,select,textarea{font-size:max(16px,1em)}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{font-size:max(16px,1em)!important}
 </style>
 
 
@@ -4195,7 +4209,7 @@ function vh81Body(){return `<div class="vh81">
  <section class="vh81s"><h2 class="vh81tag">12 Đầu việc trọng tâm</h2><div class="vh81dv">${VH81_DV.map(([t,d])=>`<div class="vh81d"><b>${t}</b><small>${d}</small></div>`).join('')}</div></section>
  <section class="vh81s vh81sl"><h2 class="vh81tag">Slogan Hoa Vinh</h2><p>${VH81_SLOGAN.split(' · ').map(x=>`<span>${x}</span>`).join('')}</p></section></div>`}
 function splashHtml(){return `<div class="splash vh81bg vh82"><div class="sp-in vh81in">
- <div class="vh82hd"><div class="vh81logo" aria-hidden="true"><b>HV</b><small>HOA VINH<br>TEAM</small></div><div><h1 class="vh81h1">Văn hóa Hoa Vinh</h1><div class="vh81sub">6 giá trị · 3 phương châm · 12 đầu việc</div></div></div>
+ <div class="vh82hd"><div class="vh81logo vh127" aria-hidden="true"><img src="logo-hv.png" alt="" width="256" height="256" decoding="async"></div><div><h1 class="vh81h1">Văn hóa Hoa Vinh</h1><div class="vh81sub">6 giá trị · 3 phương châm · 12 đầu việc</div></div></div>
  ${vh81Body()}
  <button class="btn gold full sp-go" data-a="enterApp">Bước vào Hoa Vinh City</button></div></div>`}
 A.enterApp=()=>{U.splashDone=true;render()};
@@ -7441,3 +7455,10 @@ render();
 })();
 
 </script>
+<script>/*v127 chan phong to*/(function(){var pv=function(e){e.preventDefault()};
+['gesturestart','gesturechange','gestureend'].forEach(function(t){document.addEventListener(t,pv,{passive:false})});
+document.addEventListener('touchmove',function(e){if(e.touches&&e.touches.length>1&&!(e.target.closest&&e.target.closest('.leaflet-container,canvas')))e.preventDefault()},{passive:false});
+document.addEventListener('focusout',function(){setTimeout(function(){if(window.scrollX)window.scrollTo(0,window.scrollY)},60)});
+window.addEventListener('scroll',function(){if(window.scrollX)window.scrollTo(0,window.scrollY)},{passive:true});
+})();</script>
+
