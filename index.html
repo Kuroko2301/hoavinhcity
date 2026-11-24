@@ -7564,6 +7564,18 @@ A.ksn124Luu=async()=>{const a=me();const d=ksn124Keep();if(d.dang)return;const d
 {const o=SH.quick;SH.quick=function(){const x=o.apply(this,arguments);const a=me();if(!x||!x.h||!a||a.role==='hv'||x.h.includes('data-v="hocvien"'))return x;
  const m='<button data-a="sheet" data-v="hoc">';const b='<button data-a="sheet" data-v="hocvien"><span>🎓</span>Học viện Hoa Vinh</button>';x.h=x.h.includes(m)?x.h.replace(m,b+m):x.h.replace('</div>',b+'</div>');return x}}
 
+/* v138: căn đã cọc / đã bán / dừng bán → không hiện trong mọi bộ lọc (Kho nội bộ + cọc ghi trong app) */
+function khoaDc138(x){let k=String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase().split(/[,;|(\n]/)[0].replace(/\//g,'.').replace(/[^a-z0-9. ]/g,' ').replace(/\s+/g,' ').trim();
+ k=k.replace(/^(can|nha|so|so nha|hem|hxh|dia chi)\s+/,'').trim();return /\d/.test(k)&&/[a-z]{2}/.test(k)&&k.length>=6?k:''}
+S.coc138=S.coc138||[];
+function laCoc138(addr){const k=khoaDc138(addr);if(!k)return false;return S.coc138.some(c=>c===k||(' '+k+' ').includes(' '+c+' ')||(' '+c+' ').includes(' '+k+' '))}
+function locKho138(){if(!Array.isArray(S.kho)||!S.coc138.length)return 0;const n=S.kho.length;S.kho=S.kho.filter(h=>!laCoc138(h.addr));return n-S.kho.length}
+async function napCoc138(){try{if(typeof dtkTok!=='function'||dtkTok()!==DTK_TRAM)return;const j=await dtkApi('ds_coc',{});if(j&&Array.isArray(j.khoa)){S.coc138=j.khoa;if(locKho138())render()}}catch(e){console.warn('ds_coc',e)}}
+{const o=loadKho;loadKho=async function(m){const r=await o.apply(this,arguments);locKho138();napCoc138();return r}}
+{const o=A.cocSave;A.cocSave=function(v){const r=o.apply(this,arguments);try{const a=me();const c=a&&a.g&&a.g.clients.find(x=>x.name===v);const dc=c&&c.coc&&String(c.coc.nha||'').trim();
+  if(dc&&dc.length>=3){const k=khoaDc138(dc);if(k&&!S.coc138.includes(k)){S.coc138.push(k);locKho138()}
+   if(typeof sb!=='undefined'&&sb&&LIVE.me&&!c.coc.daGhi138){sb.from('nha_da_coc').insert({dia_chi:dc.slice(0,300),nguoi_dung_id:LIVE.me.id}).then(({error})=>{if(error){console.warn('nha_da_coc',error);return}c.coc.daGhi138=true;save();toast('Đã báo cả phòng: căn '+dc+' đã cọc, các bộ lọc sẽ không hiện căn này nữa')})}}}catch(e){console.warn(e)}return r}}
+
 render();
 })();
 
