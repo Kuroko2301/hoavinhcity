@@ -1226,7 +1226,15 @@ function daysSince(s){return Math.max(0,Math.round((new Date(today())-new Date(s
 const HOP_CO_DINH='Thông báo họp sáng 8h ngày Thứ 2 và Thứ 6 tại văn phòng 219 Thạch Lam và 110 Cao Thắng';
 function hopCard(){const t=new Date(),d=t.getDay(),hr=t.getHours(),hn=(d===1||d===5)&&hr<10,mai=(d===0||d===4)&&hr>=12;
  return `<div class="card hop"><div class="between"><div class="kicker" style="color:var(--gold2)">📣 Họp định kỳ</div><span class="pill ${hn?'warn':mai?'gold':''}">${hn?'Hôm nay họp':mai?'Sáng mai họp':'Thứ 2 · Thứ 6'}</span></div><div class="h3" style="margin-top:4px;line-height:1.45">${HOP_CO_DINH}</div><div class="hop-row"><span>🕗 8:00 sáng</span><span>📍 219 Thạch Lam</span><span>📍 110 Cao Thắng</span></div>${hop85Nut()}</div>`}
-function noticeCard(){const h=bangRonStrip()+phaoCard()+hopCard()+vdHomeCard();if(!S.notice||S.notice.t==='Họp toàn phòng đầu tuần')return h;return h+`<div class="card hl"><div class="between"><div class="kicker" style="color:var(--gold2)">Triệu tập họp</div><span class="pill warn">Mới</span></div><div class="h3" style="margin-top:4px">${esc(S.notice.t)}</div><div class="sub">${esc(S.notice.when)} · ${esc(S.notice.place)}</div></div>`}
+function bdayFw(){if(U.bdFw||S.phaoOff||!bdayToday().length)return;const a=me();if(!a||a.status!=='active')return;U.bdFw=1;
+ setTimeout(()=>{try{const c=document.createElement('canvas');c.setAttribute('aria-hidden','true');c.style.cssText='position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:9999';document.body.appendChild(c);
+  const x=c.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1);let W,H;const rs=()=>{W=innerWidth;H=innerHeight;c.width=W*dpr;c.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0)};rs();
+  const col=['#F3C24B','#FF5E7E','#7FD4FF','#B58CFF','#7CF29A','#FFFFFF'];const P=[];let t0=performance.now(),last=0,nx=0;
+  const boom=()=>{const cx=W*(.15+Math.random()*.7),cy=H*(.12+Math.random()*.35),k=col[Math.random()*col.length|0],n=64;for(let i=0;i<n;i++){const an=i/n*6.283,v=1.6+Math.random()*2.4;P.push({x:cx,y:cy,vx:Math.cos(an)*v,vy:Math.sin(an)*v,l:1,k})}};
+  const f=now=>{const e=now-t0;if(e<5200&&now>nx){boom();nx=now+380+Math.random()*320}x.clearRect(0,0,W,H);
+   for(let i=P.length-1;i>=0;i--){const p=P[i];p.x+=p.vx;p.y+=p.vy;p.vy+=.045;p.vx*=.985;p.l-=.013;if(p.l<=0){P.splice(i,1);continue}x.globalAlpha=p.l;x.fillStyle=p.k;x.beginPath();x.arc(p.x,p.y,3,0,6.283);x.fill()}
+   x.globalAlpha=1;if(e<7500||P.length)requestAnimationFrame(f);else c.remove()};requestAnimationFrame(f)}catch(e){}},600)}
+function noticeCard(){bdayFw();const h=bangRonStrip()+phaoCard()+hopCard()+vdHomeCard();if(!S.notice||S.notice.t==='Họp toàn phòng đầu tuần')return h;return h+`<div class="card hl"><div class="between"><div class="kicker" style="color:var(--gold2)">Triệu tập họp</div><span class="pill warn">Mới</span></div><div class="h3" style="margin-top:4px">${esc(S.notice.t)}</div><div class="sub">${esc(S.notice.when)} · ${esc(S.notice.place)}</div></div>`}
 function checkinCard(a,label){
   const done=a.g.lastCheck===today();const n=a.g.streak%7;
   return `<div class="card"><div class="between"><div><div class="h3">${label||'Điểm danh hôm nay'}</div><div class="sub">Chuỗi ${a.g.streak} ngày · +2 🥈 mỗi ngày, đủ 7 ngày thưởng 1 🥇</div></div><button class="btn ${done?'ghost':'gold'} sm" data-a="checkin" ${done?'disabled':''}>${done?'Đã điểm danh':'Điểm danh'}</button></div><div class="days">${[1,2,3,4,5,6,7].map(i=>`<span class="${i<=(done?(n||7):n)?'on':''}">N${i}</span>`).join('')}</div></div>`;
@@ -1741,19 +1749,20 @@ TAB.city=a=>{const seg=U.seg.city==='nha'||U.seg.city==='nv'?U.seg.city:'3d';ret
 
 /* --- Pháo hoa mừng vụ chốt + băng rôn ngày lễ (v19) --- */
 const PHAO_GIO=9;
-function phaoActive(){const t=Date.now();return (S.phao||[]).filter(p=>p&&t-p.at>=0&&t-p.at<PHAO_GIO*36e5).sort((x,y)=>x.at-y.at)}
-function phaoLeft(p){const m=Math.max(0,Math.round((p.at+PHAO_GIO*36e5-Date.now())/6e4));return (m>=60?Math.floor(m/60)+' giờ ':'')+(m%60)+' phút'}
+function bdayToday(){const md=today().slice(5);return (S.accts||[]).filter(x=>x&&x.status==='active'&&x.dob&&String(x.dob).slice(5,10)===md)}
+function phaoActive(){const t=Date.now();const d0=new Date();d0.setHours(0,0,0,0);const bd=bdayToday().map(x=>({email:x.email,name:x.name,at:+d0,end:+d0+864e5,bd:1}));return (S.phao||[]).filter(p=>p&&t-p.at>=0&&t-p.at<PHAO_GIO*36e5).sort((x,y)=>x.at-y.at).concat(bd)}
+function phaoLeft(p){const m=Math.max(0,Math.round(((p.end||p.at+PHAO_GIO*36e5)-Date.now())/6e4));return (m>=60?Math.floor(m/60)+' giờ ':'')+(m%60)+' phút'}
 function phaoSpots(){const a=me();const out=[],seen=new Set(),used=new Set();
  phaoActive().forEach(p=>{const key=p.email||p.name;if(seen.has(key))return;seen.add(key);
   if(a&&p.email&&p.email===a.email){{const q=pos3('nha');out.push({x:q[0],z:q[1],y:1.3,name:p.name,mine:1})}return}
   const hs=townPeople().find(t=>t.key===p.email||t.name===p.name);if(hs){used.add(HS3.findIndex(q=>q[0]===hs.x&&q[1]===hs.z));out.push({x:hs.x,z:hs.z,y:houseH(hs.lv)+.3,name:p.name,house:1});return}
   let h=0;for(const ch of String(key))h=(h*31+ch.charCodeAt(0))>>>0;let k=h%HS3.length,n=0;while(used.has(k)&&n<HS3.length){k=(k+1)%HS3.length;n++}used.add(k);
   const [i,j]=HS3[k];out.push({x:i,z:j,y:1,name:p.name})});return out}
-function phaoCard(){const l=phaoActive();if(!l.length)return'';const a=me();const city=a&&TABS[a.role].some(t=>t[0]==='city');const names=[...new Set(l.map(p=>p.name))];
- return `<div class="card phao"><div class="between"><b>🎆 Kinh thành đang bắn pháo hoa</b><span class="pill gold">${l.length} vụ chốt</span></div><div class="sub" style="margin-top:4px">Mừng ${names.map(n=>'<b style="color:#fff">'+esc(n)+'</b>').join(', ')} chốt giao dịch! Pháo bắn từ Sở chỉ huy (Tổng bộ) và nhà người chốt, còn ${phaoLeft(l[l.length-1])}.</div>${city?'<button class="btn gold full" style="margin-top:10px" data-a="phaoXem">Xem pháo hoa ở Thành phố</button>':''}</div>`}
+function phaoCard(){const l=phaoActive();if(!l.length)return'';const a=me();const city=a&&TABS[a.role].some(t=>t[0]==='city');const vc=l.filter(p=>!p.bd),bd=l.filter(p=>p.bd);const B=n=>'<b style="color:#fff">'+esc(n)+'</b>';const names=[...new Set(vc.map(p=>p.name))],bn=[...new Set(bd.map(p=>p.name))];
+ return `<div class="card phao"><div class="between"><b>🎆 Kinh thành đang bắn pháo hoa</b><span class="pill gold">${[vc.length?vc.length+' vụ chốt':'',bn.length?'🎂 '+bn.length+' sinh nhật':''].filter(Boolean).join(' · ')}</span></div>${bn.length?`<div class="sub" style="margin-top:4px">🎂 Chúc mừng sinh nhật ${bn.map(B).join(', ')}! Cả phòng Hoa Vinh chúc tuổi mới thật khoẻ, thật vui, chốt thật nhiều căn. Pháo bắn tới hết hôm nay (còn ${phaoLeft(bd[0])}).</div>`:''}${vc.length?`<div class="sub" style="margin-top:4px">Mừng ${names.map(B).join(', ')} chốt giao dịch! Pháo bắn từ Sở chỉ huy (Tổng bộ) và nhà người chốt, còn ${phaoLeft(vc[vc.length-1])}.</div>`:''}${city?'<button class="btn gold full" style="margin-top:10px" data-a="phaoXem">Xem pháo hoa ở Thành phố</button>':''}</div>`}
 function phaoBar(){const l=phaoActive();const demo='';
  if(!l.length)return demo?`<div class="row" style="justify-content:flex-end;margin-bottom:6px">${demo}</div>`:'';
- return `<div class="card phao" style="margin-bottom:10px"><div class="between"><b>🎆 Pháo hoa mừng vụ chốt</b><button class="btn ghost sm" data-a="phaoToggle">${S.phaoOff?'Bật pháo hoa':'Tắt pháo hoa'}</button></div><div class="sub" style="margin-top:4px">${l.map(p=>esc(p.name)+' · còn '+phaoLeft(p)).join('<br>')}</div><div class="sub" style="margin-top:2px">Bắn từ Sở chỉ huy (Tổng bộ) và nhà người chốt, mỗi vụ 9 tiếng.${S.phaoOff?' Đang tắt trên máy này.':''}</div>${demo?'<div style="margin-top:8px">'+demo+'</div>':''}</div>`}
+ return `<div class="card phao" style="margin-bottom:10px"><div class="between"><b>🎆 Pháo hoa ${l.some(p=>p.bd)?'mừng sinh nhật & vụ chốt':'mừng vụ chốt'}</b><button class="btn ghost sm" data-a="phaoToggle">${S.phaoOff?'Bật pháo hoa':'Tắt pháo hoa'}</button></div><div class="sub" style="margin-top:4px">${l.map(p=>(p.bd?'🎂 Sinh nhật ':'')+esc(p.name)+' · còn '+phaoLeft(p)).join('<br>')}</div><div class="sub" style="margin-top:2px">Bắn từ Sở chỉ huy (Tổng bộ) và nhà người được mừng: vụ chốt 9 tiếng, sinh nhật cả ngày.${S.phaoOff?' Đang tắt trên máy này.':''}</div>${demo?'<div style="margin-top:8px">'+demo+'</div>':''}</div>`}
 const BANG_RON_MD=[
  {id:'tdl',ten:'Tết Dương lịch',tu:'12-30',den:'01-02',chu:'🎉 Chúc Mừng Năm Mới · Hoa Vinh vững bước'},
  {id:'tet27',ten:'Tết Nguyên đán Đinh Mùi',tu:'2027-01-30',den:'2027-02-14',chu:'🧧 Cung Chúc Tân Xuân Đinh Mùi 2027'},
@@ -1767,8 +1776,8 @@ const BANG_RON_MD=[
 const BR_RE=/^(\d{4}-)?\d{2}-\d{2}$/;
 function bangRonList(){return Array.isArray(S.bangRon)?S.bangRon:BANG_RON_MD}
 function brActive(b,d){if(!b||b.on===false||!BR_RE.test(b.tu||'')||!BR_RE.test(b.den||''))return false;const t=d||today();if(b.tu.length>5)return t>=b.tu&&t<=b.den;const md=t.slice(5);return b.tu<=b.den?md>=b.tu&&md<=b.den:md>=b.tu||md<=b.den}
-function bangRonNow(){const l=bangRonList().filter(b=>brActive(b));if(U.brPreview){const p=(U.brDraft||[]).concat(bangRonList()).find(b=>b.id===U.brPreview);if(p&&!l.includes(p))l.unshift(p)}return l}
-function bangRonStrip(){return bangRonNow().map(b=>`<div class="bangron" role="note">${esc(b.chu)}${U.brPreview===b.id&&!brActive(b)?'<small>Đang xem thử trên máy bạn</small>':''}</div>`).join('')}
+function bangRonNow(){const l=bdayToday().map(x=>({id:'bd_'+x.email,ten:'Sinh nhật '+x.name,chu:'🎂 Chúc mừng sinh nhật '+x.name+' · Tuổi mới rực rỡ, chốt thật nhiều căn!',bd:1})).concat(bangRonList().filter(b=>brActive(b)));if(U.brPreview){const p=(U.brDraft||[]).concat(bangRonList()).find(b=>b.id===U.brPreview);if(p&&!l.includes(p))l.unshift(p)}return l}
+function bangRonStrip(){return bangRonNow().map(b=>`<div class="bangron" role="note">${esc(b.chu)}${U.brPreview===b.id&&!b.bd&&!brActive(b)?'<small>Đang xem thử trên máy bạn</small>':''}</div>`).join('')}
 function brFmt(x){return x.length>5?x.slice(8)+'/'+x.slice(5,7)+'/'+x.slice(0,4):x.slice(3)+'/'+x.slice(0,2)}
 function bangRonCard(){const l=bangRonList(),n=bangRonNow();return `<div class="card"><div class="between"><div><h2 class="h2" style="margin:0">🎌 Băng rôn ngày lễ</h2><p class="sub">${l.length} ngày lễ · ${n.length?'đang treo: '+esc(n.map(b=>b.ten).join(', ')):'hôm nay chưa treo'}</p></div><button class="btn ghost sm" data-a="brOpen">Sửa</button></div></div>`}
 SH.bangron=()=>{if(!U.brDraft)U.brDraft=JSON.parse(JSON.stringify(bangRonList()));const l=U.brDraft;
