@@ -1007,7 +1007,16 @@ input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{f
 <style>/* v135 */.zl135{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(232,180,60,.16);border:1px solid rgba(232,180,60,.7);font-size:14.5px;line-height:1.45}</style>
 <style>/* v134 */.zl134{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(46,139,87,.18);border:1px solid rgba(46,139,87,.6);font-size:14.5px;line-height:1.45}
 .btn.zl134b,.btn.zl134b:hover{margin-top:8px;padding:14px 10px;font-size:16.5px;font-weight:800;color:#fff!important;border:0;border-radius:14px;background:linear-gradient(135deg,#0068FF,#3D8BFF)!important;animation:zl134n 1.4s ease-in-out 3}
-@keyframes zl134n{50%{box-shadow:0 0 0 6px rgba(0,104,255,.35)}}</style>
+@keyframes zl134n{50%{box-shadow:0 0 0 6px rgba(0,104,255,.35)}}</style><style>/*v141 chu nut kho*/
+.seg.viec123 button.kho{display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 12px 15px;white-space:normal;font-family:var(--f-disp);font-size:25px;font-weight:700;line-height:1.1;letter-spacing:.3px;color:#FFF3C4;text-shadow:0 1px 0 rgba(0,0,0,.25),0 2px 10px rgba(0,0,0,.25)}
+.seg.viec123 button.kho .kt141{display:inline-flex;align-items:center;gap:8px}
+.seg.viec123 button.kho .kv141{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:rgba(242,193,78,.22);border:1px solid rgba(242,193,78,.55);font:700 10px/1 var(--f-body);color:#F7D774;text-shadow:none;transition:transform .3s}
+.seg.viec123 button.kho.on .kv141{background:#F2C14E;color:#7A1212}
+.seg.viec123 button.kho small,.seg88.k123 button.kho small{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0;font-family:var(--f-body);font-size:12px;font-weight:600;line-height:1.2;letter-spacing:0;color:#FFE9A8;opacity:1;text-shadow:none}
+.seg.viec123 button.kho small i,.seg88.k123 button.kho small i{font-style:normal;white-space:nowrap;padding:5px 9px;border-radius:999px;background:rgba(255,233,168,.13);border:1px solid rgba(242,193,78,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.seg88.k123 button.kho small{margin-top:6px;font-size:11px;gap:4px}.seg88.k123 button.kho small i{padding:3px 7px}
+@media (max-width:350px){.seg.viec123 button.kho{font-size:22px}.seg.viec123 button.kho small{font-size:11.5px}.seg.viec123 button.kho small i{padding:4px 8px}}
+</style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 (function(){var __hvErr=function(msg){try{var a=document.getElementById('app');if(a&&a.innerHTML.length>50)return;var b=document.body||document.documentElement;var m=document.createElement('div');m.style.cssText='position:fixed;inset:0;background:#fff;color:#c0392b;font:14px/1.6 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;padding:24px;z-index:99999;overflow:auto;white-space:pre-wrap';m.textContent='Hoa Vinh chưa mở được. Lỗi:\n\n'+msg+'\n\nChụp màn hình này gửi lại để được sửa giúp nhé.';b.appendChild(m)}catch(e){}};window.addEventListener('error',function(ev){__hvErr((ev&&ev.message||ev)+' @ '+(ev&&ev.filename||'')+':'+(ev&&ev.lineno||''))});window.addEventListener('unhandledrejection',function(ev){__hvErr('Promise: '+(ev&&ev.reason&&(ev.reason.message||ev.reason)||ev))});
@@ -3323,7 +3332,7 @@ A.tab2kho=v=>{U.tab='viec';U.seg.viec='kho';U.kf=U.kf||{};U.kf.cl=v;window.scrol
 /* --- Công việc: Kho nhà / Khách / Công cụ --- */
 TAB.ql=a=>{const L=QL[a.role]||[];const k=L.some(x=>x[0]===U.seg.ql)?U.seg.ql:L[0][0];
  return `<div class="seg big">${L.map(([x,l])=>`<button class="${k===x?'on':''}" data-a="seg" data-v="ql:${x}">${l}</button>`).join('')}</div>`+TAB[k](a)};
-TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const cg88=a.role==='cg';let seg=U.seg.viec||'kho';if(!cg88&&(seg==='chu'||seg==='ctv'))seg='kho';if(cg88&&(seg==='chu'||seg==='ctv'))return seg88Nav(seg)+(seg==='chu'?chu88Part(a):ctv88Part(a));return (cg88?seg88Nav(seg):`<div class="seg big viec123">${[['kho','🏠 Kho nhà<small>Lọc nhà Đại Thế Kỷ · Kho hàng cá nhân ▼</small>'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`)+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
+TAB.viec=a=>{if(!U.kf&&a.g.myKf)U.kf=JSON.parse(JSON.stringify(a.g.myKf));const cg88=a.role==='cg';let seg=U.seg.viec||'kho';if(!cg88&&(seg==='chu'||seg==='ctv'))seg='kho';if(cg88&&(seg==='chu'||seg==='ctv'))return seg88Nav(seg)+(seg==='chu'?chu88Part(a):ctv88Part(a));return (cg88?seg88Nav(seg):`<div class="seg big viec123">${[['kho','<span class="kt141">🏠 Kho nhà<b class="kv141">▼</b></span><small><i>🔎 Lọc nhà Đại Thế Kỷ</i><i>📦 Kho hàng cá nhân</i></small>'],['khach','🤝 Khách'],['cc','🧰 Công cụ']].map(([k,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}">${l}</button>`).join('')}</div>`)+(seg==='kho'?khoPart(a):seg==='khach'?khachPart(a):surveyTasksCard(a)+featGrid(a))};
 const gcOn=h=>!!(h&&h.gc&&h.gc.from>h.p&&daysSince2(h.gc.d)<=30);
 const gcAmt=(h,sh)=>{const d=Math.round((h.gc.from-h.p)*1000)/1000;return d<1?Math.round(d*1000)+(sh?'tr':' triệu'):nf(Math.round(d*100)/100)+' tỷ'};
 const khuList=()=>[...new Set(QUAN.concat((S.kho||[]).map(h=>h.q).filter(Boolean)))];
@@ -5148,7 +5157,7 @@ A.bau87=v=>{const m=me();const i=v.lastIndexOf('|');const em=v.slice(0,i),d=+v.s
 {const _j=A.joinGroup;A.joinGroup=v=>{const g=S.groups.find(q=>q.id===v);if(g&&g.members.length>=DOI87_MAX){toast('Đội đã đủ 6 người');return}return _j(v)}}
 
 /* ===== v88 CG-ĐC: tin đã lên Cổng trại, Kho nhà CG-ĐC quản lý (AI tìm căn trên ĐTK), Chủ, Cộng tác viên ===== */
-function seg88Nav(seg){return `<div class="seg88 k123">${[['kho','🏠','Kho nhà<small>Lọc nhà ĐTK · Kho hàng ▼</small>'],['khach','🤝','Khách'],['chu','🔑','Chủ'],['ctv','🙋','Cộng tác viên'],['cc','🧰','Công cụ']].map(([k,i,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}"><span class="i">${i}</span>${l}</button>`).join('')}</div>`}
+function seg88Nav(seg){return `<div class="seg88 k123">${[['kho','🏠','Kho nhà<small><i>🔎 Lọc nhà ĐTK</i><i>📦 Kho hàng</i></small>'],['khach','🤝','Khách'],['chu','🔑','Chủ'],['ctv','🙋','Cộng tác viên'],['cc','🧰','Công cụ']].map(([k,i,l])=>`<button class="${seg===k?'on':''} ${k}" data-a="seg" data-v="viec:${k}"><span class="i">${i}</span>${l}</button>`).join('')}</div>`}
 const hs88=t=>{let h=0;for(const ch of String(t))h=(h*31+ch.charCodeAt(0))>>>0;return h};const gio88=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 function ngay88(c){return c.t?gio88(c.t)+' · '+fmtD(c.d):fmtD(c.d)}
 function hqua88(){const y=new Date();y.setDate(y.getDate()-1);return y.getFullYear()+'-'+String(y.getMonth()+1).padStart(2,'0')+'-'+String(y.getDate()).padStart(2,'0')}
