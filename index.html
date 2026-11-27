@@ -2793,19 +2793,18 @@ function shrink(file,cb){const r=new FileReader();r.onload=()=>{const img=new Im
 })();
 const CATS=[['khao','Khảo sát nhiều nhất','📍','căn'],['khach','Dẫn khách nhiều nhất','🤝','khách'],['T','Chốt nhiều nhất','💎','T'],['ho','Hỗ trợ nhiều nhất','🫶','lần']];
 const TMARK=[[10,'Đồng','#B07A4A'],[25,'Bạc','#9AA4AE'],[50,'Vàng','#E0A82E'],[75,'Bạch kim','#6FB3C9'],[100,'Kim cương','#7B5CF0']];
-function compStats(){
-  const m=me(),arr=[];
-  S.accts.filter(a=>a.status==='active'&&a.role!=='hv'&&a.role!=='sep').forEach(a=>arr.push({name:a.name,role:a.role,acct:a,me:m&&m.email===a.email,khao:a.g.surveys.length+(a.g.khaoSeed||0),khach:a.g.clients.length+(a.g.khachSeed||0),T:tNamOf(a),ho:(a.g.help||[]).length+(a.g.hoSeed||0)}));
-  S.members.forEach(x=>arr.push({name:x.name,role:x.role,khao:x.khao||0,khach:x.khach||0,T:x.T||0,ho:x.ho||0}));
+function compStats(tu){
+  const m=me(),arr=[];tu=moc146(tu||tuKy146('thang'));const sau=d=>String(d||'').slice(0,10)>=tu;
+  S.accts.filter(a=>a.status==='active'&&a.role!=='hv'&&a.role!=='sep').forEach(a=>arr.push({name:a.name,role:a.role,acct:a,me:m&&m.email===a.email,khao:(a.g.surveys||[]).filter(x=>sau(x.d)).length,khach:(a.g.clients||[]).filter(c=>sau(c.bd||c.them||c.date)).length,T:tNamOf(a),ho:(a.g.help||[]).filter(h=>sau(h.d)).length}));
   return arr;
 }
-function rankOf(k){return compStats().filter(p=>k==='ho'||p.role==='ctv'||p.role==='cg').sort((x,y)=>y[k]-x[k]||x.name.localeCompare(y.name))}
+function rankOf(k,tu){return compStats(tu).filter(p=>k==='ho'||p.role==='ctv'||p.role==='cg').sort((x,y)=>y[k]-x[k]||x.name.localeCompare(y.name))}
 function face(p,cls){const a=p.acct||S.accts.find(x=>x.name===p.name);return a?avatar(a,cls):`<span class="av ${cls||''}">${esc(initials(p.name))}</span>`}
 function tMark(t){let r=null;for(const m of TMARK)if(t>=m[0])r=m;return r}
 function compBoard(){
   const k=U.seg.td||'khao',cat=CATS.find(c=>c[0]===k),per=U.rp||'thang',sc=U.rs||'khoi',PM={tuan:.3,thang:1,quy:2.7,nam:9.5};
   const hs=t=>{let h=0;for(const ch of t)h=(h*31+ch.charCodeAt(0))>>>0;return h};const mg=me()&&myGroup(me());
-  const L=rankOf(k).filter(p=>sc==='khoi'||!mg||mg.members.includes(p.name)).map(p=>Object.assign({},p,{[k]:per==='thang'?p[k]:Math.round(p[k]*PM[per]*(0.85+(hs(p.name+per)%30)/100)*10)/10})).sort((x,y)=>y[k]-x[k]),mx=Math.max(1,...L.map(p=>p[k]));
+  const L=rankOf(k,tuKy146(per)).filter(p=>sc==='khoi'||!mg||mg.members.includes(p.name)).map(p=>Object.assign({},p)).sort((x,y)=>y[k]-x[k]),mx=Math.max(1,...L.map(p=>p[k]));
   const med=['🥇','🥈','🥉'];
   return `<div class="card board"><div class="board-hd"><span class="board-ic">📢</span><div><div class="kicker" style="color:var(--gold)">Bảng thông báo</div><div class="h2" style="margin:0;color:#fff">Thi đua Hoa Vinh</div></div></div>
    <div class="wins">${CATS.map(c=>{const p=rankOf(c[0])[0];return `<button class="win ${c[0]===k?'on':''}" data-a="seg" data-v="td:${c[0]}"><span class="win-em">${c[2]}</span><span class="win-t">${c[1]}</span>${p?`<span class="win-p">${face(p,'sm')}<b>${esc(p.name)}</b></span><span class="win-v num">${nf(p[c[0]])} ${c[3]}</span>`:''}</button>`}).join('')}</div></div>
@@ -3130,7 +3129,7 @@ const PST={duyet:['Chờ duyệt','warn'],tra:['Bị trả lại','bad'],hen:['�
 const hhmm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
 (function migPost(){
   S.gold=S.gold||{cong:'07:30',fbpage:'11:30',tiktok:'20:00',youtube:'19:00',zalooa:'08:00',insta:'12:00'};if(!S.gold.threads)S.gold.threads='21:00';
-  S.media=S.media||[{id:'m1',link:'https://facebook.com/hoavinh/posts/demo-101',who:'Anh Huy',email:'',d:today(),st:'cho',why:''},{id:'m2',link:'https://tiktok.com/@hoavinh/video/demo-88',who:'Chị Thu Hương',email:'thuhuong.ctv@gmail.com',d:today(),st:'ok',why:''}];
+  S.media=S.media||[];
   S.thuong=S.thuong||{};
   if(!S.bai){const n=Date.now();S.bai=[
    {id:'b1',by:'Chị Thu Hương',email:'thuhuong.ctv@gmail.com',role:'ctv',loai:'video',nd:'Nhà phố hẻm xe hơi Lũy Bán Bích, 4x16m, 1 trệt 2 lầu, 5,2 tỷ. Inbox Hương xem nhà nha!',media:true,d:today(),st:'xong',appr:'Trợ lý Thủy',ch:[{k:'fbpage',st:'ok',hen:n-36e5,tries:0,link:'demo',views:412},{k:'tiktok',st:'ok',hen:n-36e5,tries:0,link:'demo',views:1280},{k:'fbme',st:'tay',hen:n-36e5,tries:0}]},
@@ -3212,14 +3211,14 @@ function postAdminCard(){const q=S.bai.filter(p=>p.st==='duyet').length,bad=S.ba
 /* Thưởng tháng */
 function monthEnd(){const n=new Date();return new Date(n.getFullYear(),n.getMonth()+1,0)}
 function daysTo(d){const t0=new Date();t0.setHours(0,0,0,0);return Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate())-t0)/864e5)}
-function thuongData(){const lb=leaderboard();const mOk=n=>S.media.filter(m=>m.who===n&&m.st==='ok').length;
+function thuongData(){const tu=moc146(tuKy146('thang'));const lb=leaderboard(tu);const mOk=n=>S.media.filter(m=>m.who===n&&m.st==='ok'&&String(m.d||'')>=tu).length;
  const pts=lb.map(p=>({name:p.name,v:p.pts+mOk(p.name),m:mOk(p.name)})).sort((x,y)=>y.v-x.v);
  const vu=lb.map(p=>({name:p.name,v:p.vu})).sort((x,y)=>y.v-x.v);
  const ky=allPeople().filter(p=>p.role==='cg').map(p=>({name:p.name,v:p.signed||0})).sort((x,y)=>y.v-x.v);
  return [['vu','🥇','Chốt nhiều nhất','vụ',vu],['pts','⭐','Điểm cao nhất','điểm',pts],['ky','🏠','CG - ĐC ký nhà nhiều nhất','căn',ky]]}
 function thuongCard(){const a=me(),n=new Date(),mk=n.getFullYear()+'-'+(n.getMonth()+1),done=S.thuong[mk],me_=monthEnd(),d25=new Date(n.getFullYear(),n.getMonth(),25);
- return `<div class="card prize"><div class="between"><div><div class="kicker" style="color:var(--gold2)">Thưởng tháng ${n.getMonth()+1}</div><h2 class="h2" style="margin:2px 0 0">🏆 2 giải × 500.000đ</h2></div></div>
-  <div class="prizes">${thuongData().filter(([k])=>k!=='vu').map(([k,ic,t,u,L])=>{const p=L[0];return `<div class="pz"><span class="pz-ic">${ic}</span><div class="grow"><div class="sub" style="font-weight:800">${t}</div>${p&&p.v>0?`<b>${esc(p.name)}</b> <span class="sub num">${nf(p.v)} ${u}</span>`:'<span class="sub">Chưa có ai</span>'}</div><b class="num" style="color:var(--gold2)">500k</b></div>`}).join('')}</div>
+ return `<div class="card prize"><div class="between"><div><div class="kicker" style="color:var(--gold2)">Thưởng tháng ${n.getMonth()+1}</div><h2 class="h2" style="margin:2px 0 0">🏆 2 giải · tổng 2.000.000đ</h2></div></div>
+  <div class="prizes">${thuongData().filter(([k])=>k!=='vu').map(([k,ic,t,u,L])=>{const p=L[0];return `<div class="pz"><span class="pz-ic">${ic}</span><div class="grow"><div class="sub" style="font-weight:800">${t}</div>${p&&p.v>0?`<b>${esc(p.name)}</b> <span class="sub num">${nf(p.v)} ${u}</span>`:'<span class="sub">Chưa có ai</span>'}</div><b class="num" style="color:var(--gold2)">${k==='ky'?'1,5tr':'500k'}</b></div>`}).join('')}</div>
   ${a&&a.role==='sep'?(done?`<div class="note ok" style="margin-top:10px">Đã duyệt thưởng tháng này ✓</div>`:`<button class="btn gold full" style="margin-top:10px" data-a="duyetThuong">Duyệt thưởng, chúc mừng cả phòng</button>`):''}</div>`}
 A.duyetThuong=()=>{const n=new Date(),mk=n.getFullYear()+'-'+(n.getMonth()+1);const w=thuongData().filter(([k])=>k!=='vu').map(([k,ic,t,u,L])=>L[0]&&L[0].v>0?t+': '+L[0].name:null).filter(Boolean);S.thuong[mk]={at:today(),w};S.ticker='🏆 Thưởng tháng '+(n.getMonth()+1)+': '+w.join(' · ')+' · '+S.ticker;save();render();confetti();toast('Đã duyệt thưởng, cả phòng nhận lời chúc mừng 🎉')};
 A.saveQc=()=>{S.quangcao={mau:val('qcm'),auto:!!(document.getElementById('qcauto')||{}).checked};save();toast('Đã lưu quảng cáo nhà ngon')};
@@ -5070,7 +5069,7 @@ let ch84Luu=async anh=>Promise.all(anh.map(x=>thuNhoAnh(x.url,640,640)));
 
 /* ===== v85: Thuật toán game Hoa Vinh — đủ chỉ tiêu 1 năm = Nhà 4 lầu ===== */
 const nam85=()=>today().slice(0,4);
-function dem85(a){const y=nam85();const L=(a.g.log||[]).filter(x=>String(x.d||'').startsWith(y));const s=k=>Math.round(L.reduce((t,x)=>t+(+((x.o||{})[k])||0),0)*10)/10;
+function dem85(a){const y=nam85();const L=(a.g.log||[]).filter(x=>String(x.d||'').startsWith(y)&&String(x.d||'')>=moc146(''));const s=k=>Math.round(L.reduce((t,x)=>t+(+((x.o||{})[k])||0),0)*10)/10;
  return {bai:s('gach'),ks:s('thep'),t:Math.round(tNamOf(a)*10)/10}}
 function baiDang85(a){give(a,{gach:1},'Đăng bài')}
 function vuon85Of(a){const v=a.g.vuon||(a.g.vuon={nuoc:0,phan:0,cay:[]});if(!v.cay)v.cay=[];return v}
@@ -5113,7 +5112,10 @@ A.top85=v=>{const n=new Date();const mk=n.getFullYear()+'-'+String(n.getMonth()+
 
 /* v86: thi đua theo 4 tiêu chí + danh hiệu theo mốc điểm T + lưu hình kỷ niệm chốt */
 function dauTuan86(){const t=new Date();const k=(t.getDay()+6)%7;t.setDate(t.getDate()-k);return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0')}
-function so86(a,tu){const g=a.g;const sau=d=>String(d||'')>=tu;
+const MOC146='2026-11-28';
+function moc146(tu){tu=String(tu||'');if(today()<MOC146)return tu;return tu>MOC146?tu:MOC146}
+function tuKy146(per){const t=today(),y=t.slice(0,4),m=+t.slice(5,7);if(per==='tuan')return dauTuan86();if(per==='quy')return y+'-'+String(m-(m-1)%3).padStart(2,'0')+'-01';if(per==='nam')return y+'-01-01';return t.slice(0,7)+'-01'}
+function so86(a,tu){tu=moc146(tu);const g=a.g;const sau=d=>String(d||'')>=tu;
  const ds=(g.deals||[]).filter(d=>sau(d.d));const ok=ds.filter(d=>d.ok);const vu=(g.deals||[]).some(d=>d.ok)?ok.length:ds.length;
  const khach=(g.clients||[]).filter(c=>sau(String(c.bd||c.them||c.date||'').slice(0,10))).length;
  const khao=(g.surveys||[]).filter(x=>sau(x.d)).length;
@@ -6508,8 +6510,23 @@ A.knDel=async v=>{const k=(LIVE.kn||[]).find(x=>x.id===v);if(!k||LIVE.busy)retur
   await loadKyNiem(LIVE.me);toast('Đã xoá')}
  catch(err){toast(errVi(err))}finally{busy(false);render()}};
 
+/* ---- v146: thi đua tính lại từ 28/11/2026 ---- */
+function reset146(a){if(!a||!a.g||today()<MOC146||a.g.r146)return false;const g=a.g;
+ g.r146={luc:today(),cu:{bac:g.bac,vang:g.vang,kc:g.kc,gach:g.gach,go:g.go,thep:g.thep,kinh:g.kinh,lv:g.lv,signed:g.signed,T:g.T}};
+ Object.assign(g,{bac:0,vang:0,kc:0,gach:6,go:4,thep:2,kinh:1,lv:1,signed:0});delete g.T;delete g.wk;delete g.top85;
+ (g.journey=g.journey||[]).push({d:today(),t:'Thi đua tính lại từ đầu',s:'Cả phòng cùng xuất phát lại từ 28/11'});return true}
+{const _sl146=sbLoad;sbLoad=async function(){const r=await _sl146.apply(this,arguments);let c=0;(S.accts||[]).forEach(a=>{if(reset146(a))c++});if(c)setTimeout(queueSync,800);return r}}
+{const _sn146=syncNow;syncNow=async function(){(S.accts||[]).forEach(reset146);return _sn146.apply(this,arguments)}}
+const MAU146=['Anh Huy','Chị Nhung','Anh Phát','Chị Mai','Anh Đạt','Trợ lý Thủy','Anh Minh Tú','Chị Thu Hương','Bạn Gia Bảo','Chị Trần Lan','Anh Quốc Vinh'];
+function donMau146(){if(S.mau146)return;let f=null;try{f=seed()}catch(e){}
+ const bo=x=>{let j='';try{j=JSON.stringify(x,(k,v)=>k==='d'?undefined:v)}catch(e){}return j};
+ ['flagQueue','dealQueue','fire','surveyTasks','msgs','pins','hang','deals','proposals','meetReq','calPush','media'].forEach(k=>{if(!Array.isArray(S[k]))return;const goc=f&&Array.isArray(f[k])?f[k].map(bo):[];
+  S[k]=S[k].filter(x=>{const j=bo(x);return !(goc.includes(j)||MAU146.some(n=>j.includes(n))||/demo-\d/.test(j))})});
+ if(S.ticker&&MAU146.some(n=>S.ticker.includes(n)))S.ticker='Chào mừng cả nhà Hoa Vinh · Thi đua tính lại từ đầu từ 28/11';
+ S.mau146=1;_save()}
 /* ---- khởi động ---- */
 if(!S.live){S.accts=[];S.members=[];S.locks={};S.me=null;S.live=1;_save()}
+try{donMau146()}catch(e){console.warn('[Hoa Vinh] don mau',e)}
 if(!S.me)S.accts=[];
 (async()=>{
  if(!sb){U.auth.err='Chưa tải được bộ kết nối Supabase. Kiểm tra mạng rồi tải lại trang nhé.';render();return}
