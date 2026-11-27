@@ -7489,7 +7489,7 @@ A.dcXoa=async v=>{const q=dcS();if(q.xoa!==v){q.xoa=v;render();return}q.xoa='';
 
 /* ---- gắn vào tab Công việc + Làm nhanh + nút nổi khi đang ghi ---- */
 {const o=TAB.viec;TAB.viec=a=>{const h=o(a);if(!hasCtv(a))return h;dcPhucHoi();const r=DC.rec,c=DC.cham;
- return `<button class="dc111b" data-a="dcMo"><span class="ic">🗺️</span><div class="grow"><b>Đánh dấu di chuyển${r?'<span class="rec">● '+(r.dung?'Tạm dừng':'Đang ghi')+'</span>':c?'<span class="rec">📍 '+c.pts.length+' điểm</span>':''}</b><small>Chấm điểm A, B, C… hoặc tự ghi đường đi, tổng kết ngày, tháng, năm</small></div><span class="mui">›</span></button>`+h}}
+ return `<button class="dc111b ht142b" data-a="sheet" data-v="hoitruong"><span class="ic">🏛️</span><div class="grow"><b>Hội trường</b><small>Khảo sát, giá chốt, nhà ngon, trò chuyện, vụ chốt, góp ý của cả phòng</small></div><span class="mui">›</span></button>`+h}}/*v142 nút Hội trường thay Đánh dấu di chuyển (vẫn ở Vận động trường + nút ＋)*/
 {const o=SH.quick;SH.quick=function(){const x=o.apply(this,arguments);if(hasCtv(me())&&x&&x.h)x.h=x.h.replace('</div>','<button data-a="dcMo"><span>🗺️</span>Đánh dấu di chuyển</button></div>');return x}}
 {const o=render;render=function(){const r=o.apply(this,arguments);try{
   if(U.sheet==='dc111')setTimeout(dcGan,0);
@@ -7595,6 +7595,50 @@ async function napCoc138(){try{if(typeof dtkTok!=='function'||dtkTok()!==DTK_TRA
 {const o=A.cocSave;A.cocSave=function(v){const r=o.apply(this,arguments);try{const a=me();const c=a&&a.g&&a.g.clients.find(x=>x.name===v);const dc=c&&c.coc&&String(c.coc.nha||'').trim();
   if(dc&&dc.length>=3){const k=khoaDc138(dc);if(k&&!S.coc138.includes(k)){S.coc138.push(k);locKho138()}
    if(typeof sb!=='undefined'&&sb&&LIVE.me&&!c.coc.daGhi138){sb.from('nha_da_coc').insert({dia_chi:dc.slice(0,300),nguoi_dung_id:LIVE.me.id}).then(({error})=>{if(error){console.warn('nha_da_coc',error);return}c.coc.daGhi138=true;save();toast('Đã báo cả phòng: căn '+dc+' đã cọc, các bộ lọc sẽ không hiện căn này nữa')})}}}catch(e){console.warn(e)}return r}}
+
+/* ---- v142 Thông báo quan trọng (27/11/2026): Sếp/Trợ lý đăng, lưu cai_dat_phong 'thong_bao_quan_trong' {ds:[{id,t,by,at}]}.
+   Trang chủ: ngay sau màn Văn hoá là thẻ Thông báo quan trọng (trên thẻ Họp định kỳ); chữ chạy vàng đầu app chạy thông báo quan trọng trước. ---- */
+S.tbqt=Array.isArray(S.tbqt)?S.tbqt:[];
+const TBQT_MAX=5;
+function tbqtQL(a){return !!a&&(a.role==='sep'||a.role==='tl')}
+function tbqtDs(){return (S.tbqt||[]).filter(x=>x&&x.t)}
+function tbqtGio(ms){try{const d=new Date(ms);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+' · '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')}catch(e){return ''}}
+async function loadTbqt(){try{const {data,error}=await sb.from('cai_dat_phong').select('gia_tri').eq('khoa','thong_bao_quan_trong').maybeSingle();if(!error)S.tbqt=data&&data.gia_tri&&Array.isArray(data.gia_tri.ds)?data.gia_tri.ds:[]}catch(e){console.warn('tbqt',e)}}
+{const o=sbLoad;sbLoad=async function(){const r=await o.apply(this,arguments);if(LIVE.me&&LIVE.me.trang_thai==='hoat_dong')await loadTbqt();return r}}
+async function tbqtGhi(ds){if(LIVE.busy)return false;busy(true,'Đang gửi thông báo…');
+ try{const {error}=await sb.from('cai_dat_phong').upsert({khoa:'thong_bao_quan_trong',gia_tri:{ds},cap_nhat_luc:new Date().toISOString()});if(error)throw error;S.tbqt=ds;_save();return true}
+ catch(err){toast(errVi(err));return false}finally{busy(false);render()}}
+async function tbqtThem(t){const a=me();t=String(t||'').trim();if(!t){toast('Viết nội dung thông báo trước nha');return false}
+ const ds=[{id:Date.now().toString(36),t:t.slice(0,300),by:(a&&a.name)||'Phòng Hoa Vinh',at:Date.now()}].concat(tbqtDs()).slice(0,TBQT_MAX);
+ return tbqtGhi(ds)}
+function tbqtCard(){const a=me(),ds=tbqtDs(),ql=tbqtQL(a);
+ if(!ds.length&&!ql)return '';
+ const moi=ds[0],cu=ds.slice(1,3);
+ return `<div class="card tbqt142"><div class="between"><div class="kicker" style="color:var(--gold2)">📢 Thông báo quan trọng</div>${moi&&Date.now()-moi.at<864e5*2?'<span class="pill warn">Mới</span>':''}</div>
+ ${moi?`<div class="h3" style="margin-top:6px;line-height:1.45">${esc(moi.t)}</div><div class="sub" style="margin-top:4px">✍️ ${esc(moi.by||'')} · ${tbqtGio(moi.at)}</div>`
+  :'<div class="sub" style="margin-top:6px">Chưa có thông báo nào. Sếp hoặc Trợ lý bấm nút bên dưới để gửi cho cả phòng nha 💌</div>'}
+ ${cu.map(x=>`<div class="tbqt142cu">• ${esc(x.t)} <small>${esc(x.by||'')} · ${tbqtGio(x.at)}</small></div>`).join('')}
+ ${ql?'<button class="btn gold sm" style="margin-top:10px" data-a="sheet" data-v="tbqt">＋ Đăng thông báo quan trọng</button>':''}</div>`}
+SH.tbqt=()=>{const ds=tbqtDs();return {t:'📢 Thông báo quan trọng',h:`<p class="sub">Thông báo hiện ngay đầu Trang chủ (sau màn Văn hoá) và chạy trên dải chữ vàng của cả phòng. Giữ ${TBQT_MAX} thông báo mới nhất.</p>
+ <label class="f" for="tbqtT">Nội dung<textarea class="in" id="tbqtT" rows="3" maxlength="300" placeholder="Ví dụ: Thứ 7 này 9h cả phòng đi khảo sát Tân Phú, nhớ mang sổ nha"></textarea></label>
+ <button class="btn gold full" style="margin-top:8px" data-a="tbqtGui">Gửi cho cả phòng</button>
+ ${ds.length?'<h3 class="h3" style="margin-top:14px">Đang hiển thị</h3>':''}
+ ${ds.map(x=>`<div class="li"><div class="grow"><b>${esc(x.t)}</b><div class="sub">${esc(x.by||'')} · ${tbqtGio(x.at)}</div></div><button class="btn ghost sm" data-a="tbqtXoa" data-v="${esc(x.id)}">Gỡ</button></div>`).join('')}`}};
+A.tbqtGui=async()=>{if(!tbqtQL(me())){toast('Chỉ Sếp và Trợ lý đăng thông báo nha');return}if(await tbqtThem(val('tbqtT'))){U.sheet=null;render();toast('Đã gửi thông báo cho cả phòng 📢')}};
+A.tbqtXoa=async v=>{if(!tbqtQL(me()))return;if(await tbqtGhi(tbqtDs().filter(x=>x.id!==v)))toast('Đã gỡ thông báo')};
+/* Sếp "Ra thông báo" + Trợ lý "Triệu tập họp" cũng thành Thông báo quan trọng cho cả phòng */
+A.notice=async()=>{const t=val('nt');if(!t){toast('Nhập thông báo nhé');return}const w=val('nw'),p=val('np');if(await tbqtThem(t+(w?' · 🕗 '+w:'')+(p?' · 📍 '+p:'')))toast('Đã ra thông báo cho cả phòng 📢')};
+A.meeting=async()=>{const t=val('mt');if(!t){toast('Nhập nội dung họp nhé');return}const w=val('mw'),p=val('mp');if(await tbqtThem('Triệu tập họp: '+t+(w?' · 🕗 '+w:'')+(p?' · 📍 '+p:'')))toast('Đã gửi thông báo họp cho cả phòng 📢')};
+/* Trang chủ: Thông báo quan trọng đứng thứ hai (ngay sau Văn hoá), Họp định kỳ xuống dưới */
+noticeCard=function(){bdayFw();return bangRonStrip()+phaoCard()+tbqtCard()+hopCard()+vdHomeCard()};
+/* Chữ chạy: thông báo quan trọng chạy trước, rồi tin chúc mừng, căn mới ký, lịch họp */
+tickerHtml=function(){
+ const tb=tbqtDs().map(x=>'📢 '+x.t);
+ const signed=S.accts.filter(a=>a.g.lastSigned).map(a=>'Căn mới ký: '+a.g.lastSigned+' ('+a.name+')');
+ const cu=String(S.ticker||'').replace(' · Họp toàn phòng 8h sáng thứ Hai','').split(/\s+·\s+/).map(x=>x.trim()).filter(x=>x&&!/Anh Huy chốt căn Tân Quý|Tuần này thi đua "Dẫn khách nhiều nhất"/.test(x));
+ const txt=tb.concat(cu,signed,['📣 '+HOP_CO_DINH]).join('  ·  ');
+ return `<div class="ticker gut${tb.length?' tbqt142tk':''}" aria-label="Chữ chạy Kinh Thành"><span>${esc(txt)}</span></div>`};
+{const st=document.createElement('style');st.textContent='.tbqt142{border:1.5px solid var(--gold);background:linear-gradient(135deg,rgba(212,160,23,.16),rgba(142,27,27,.18))}.tbqt142cu{margin-top:6px;font-size:14px;line-height:1.4;opacity:.9}.tbqt142cu small{opacity:.7;margin-left:4px}.ht142b{background:linear-gradient(135deg,#8E1B1B,#C0392B)!important}';document.head.appendChild(st)}
 
 render();
 })();
