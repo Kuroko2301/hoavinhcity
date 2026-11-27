@@ -7645,6 +7645,16 @@ tickerHtml=function(){
  return `<div class="ticker gut${tb.length?' tbqt142tk':''}" aria-label="Chữ chạy Kinh Thành"><span>${esc(txt)}</span></div>`};
 {const st=document.createElement('style');st.textContent='.tbqt142{border:1.5px solid var(--gold);background:linear-gradient(135deg,rgba(212,160,23,.16),rgba(142,27,27,.18))}.tbqt142cu{margin-top:6px;font-size:14px;line-height:1.4;opacity:.9}.tbqt142cu small{opacity:.7;margin-left:4px}.ht142b{background:linear-gradient(135deg,#8E1B1B,#C0392B)!important}';document.head.appendChild(st)}
 
+/* v144 (Di 27/11): dòng cuối Mô tả chi tiết = mã hoá số nhà: 9 + số nhà (chấm→0, chữ giữ nguyên) + 6. 20.4→920046 · 3A.5.6→93A05066. Không rõ số nhà thì bỏ qua */
+function maSoNha144(bk){const t=String(dtkField(bk&&bk.title)||'').normalize('NFC').replace(/^\s*\([^)]*\)\s*/u,'');
+ const m=t.match(/^\s*(?:số\s*)?(\d[0-9A-Za-z]*(?:\.[0-9A-Za-z]+)*)(?=[\s,]|$)/iu);return m?'9'+m[1].replace(/\./g,'0')+'6':''}
+function themMa144(bai,bk){const ma=maSoNha144(bk);bai=String(bai||'');if(!bai.trim()||!ma)return bai;
+ return bai.split('\n').filter(x=>x.trim()!==ma).join('\n').replace(/\s+$/,'')+'\n\n'+ma}
+{const _d144=dtkApi;dtkApi=async(viec,b)=>{const r=await _d144(viec,b);
+ try{if((viec==='chi_tiet'||viec==='viet_lai')&&r&&typeof r==='object'&&!(r instanceof Blob)&&r.bai_ai){const c=U.dlCt;
+  const bk=(r.bk&&r.bk.title?r.bk:null)||(b&&b.it&&b.it.title?b.it:null)||(viec==='viet_lai'&&c&&(c.bk||c.it))||null;if(bk)r.bai_ai=themMa144(r.bai_ai,bk)}}catch(e){}
+ return r}}
+
 render();
 })();
 
