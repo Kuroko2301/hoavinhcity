@@ -7663,6 +7663,8 @@ tickerHtml=function(){
 {const st=document.createElement('style');st.textContent='.tbqt142{border:1.5px solid var(--gold);background:linear-gradient(135deg,rgba(212,160,23,.16),rgba(142,27,27,.18))}.tbqt142cu{margin-top:6px;font-size:14px;line-height:1.4;opacity:.9}.tbqt142cu small{opacity:.7;margin-left:4px}.ht142b{background:linear-gradient(135deg,#8E1B1B,#C0392B)!important}';document.head.appendChild(st)}
 
 /* v144 (Di 27/11): dòng cuối Mô tả chi tiết = mã hoá số nhà: 9 + số nhà (chấm→0, chữ giữ nguyên) + 6. 20.4→920046 · 3A.5.6→93A05066. Không rõ số nhà thì bỏ qua */
+/* v150 (Di 28/11): chỉ tài khoản VINVILLA (Sếp) + Di (Trợ lý) thấy mã số nhà; anh em khác không hiện */
+const MA144_XEM=new Set(['3a9e54c1-8f5f-4359-b713-ec37513e7794','8e13f2c3-23bf-41a1-bb4b-2a77fbe9e406']);
 function maSoNha144(bk){/* v145: thêm "/"→0, "-" lấy số đầu, chấm thừa bỏ; tiêu đề mở đầu bằng diện tích (khuôn DT Tầng Ngang Dài Giá) thì không phải số nhà */
  const t=String(dtkField(bk&&bk.title)||'').normalize('NFC').replace(/^\s*\([^)]*\)\s*/u,'');
  const m=t.match(/^\s*(?:số\s*)?(\d[0-9A-Za-z\/.\-]*)(?=[\s,(]|$)/iu);if(!m)return '';
@@ -7673,7 +7675,7 @@ function themMa144(bai,bk){const ma=maSoNha144(bk);bai=String(bai||'');if(!bai.t
  return bai.split('\n').filter(x=>x.trim()!==ma).join('\n').replace(/\s+$/,'')+'\n\n'+ma}
 {const _d144=dtkApi;dtkApi=async(viec,b)=>{const r=await _d144(viec,b);
  try{if((viec==='chi_tiet'||viec==='viet_lai')&&r&&typeof r==='object'&&!(r instanceof Blob)&&r.bai_ai){const c=U.dlCt;
-  const bk=(r.bk&&r.bk.title?r.bk:null)||(b&&b.it&&b.it.title?b.it:null)||(viec==='viet_lai'&&c&&(c.bk||c.it))||null;if(bk)r.bai_ai=themMa144(r.bai_ai,bk)}}catch(e){}
+  const bk=(r.bk&&r.bk.title?r.bk:null)||(b&&b.it&&b.it.title?b.it:null)||(viec==='viet_lai'&&c&&(c.bk||c.it))||null;const ai=me();if(bk&&ai&&MA144_XEM.has(String(ai.id)))r.bai_ai=themMa144(r.bai_ai,bk)}}catch(e){}
  return r}}
 
 /* v147 (Di 28/11): Tính Thuế TNCN theo file Excel BANG_TINH_THUE_TNCN của Di (mọi vai hasCtv) */
