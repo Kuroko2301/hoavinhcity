@@ -7676,6 +7676,71 @@ function themMa144(bai,bk){const ma=maSoNha144(bk);bai=String(bai||'');if(!bai.t
   const bk=(r.bk&&r.bk.title?r.bk:null)||(b&&b.it&&b.it.title?b.it:null)||(viec==='viet_lai'&&c&&(c.bk||c.it))||null;if(bk)r.bai_ai=themMa144(r.bai_ai,bk)}}catch(e){}
  return r}}
 
+/* v147 (Di 28/11): Tính Thuế TNCN theo file Excel BANG_TINH_THUE_TNCN của Di (mọi vai hasCtv) */
+const TT147_BAN=15500000,TT147_NPT=6200000;
+const TT147_BAC=[[120e6,.05,0],[360e6,.1,6e6],[720e6,.2,42e6],[1200e6,.3,114e6],[Infinity,.35,174e6]];
+function tt147S(){return U.tt147||(U.tt147={th:Array(12).fill(''),ban:'186.000.000',npt:'0',thNpt:'12',bh:'',tt:'',da:''})}
+function tt147So(x){const t=String(x||'').toLowerCase().trim();if(!t)return 0;if(/[a-zỷđ]/.test(t))return lv99So(t);
+ const n=parseInt(t.replace(/[^\d]/g,''),10)||0;return n>0&&n<10000?n*1e6:n}
+function tt147Fmt(n){return Math.round(n||0).toLocaleString('vi-VN')}
+function tt147Thue(T){if(!(T>0))return 0;for(const [m,r,k] of TT147_BAC)if(T<=m)return T*r-k;return 0}
+function tt147Bac(T){if(!(T>0))return 0;return TT147_BAC.findIndex(b=>T<=b[0])+1}
+function tt147Doc(){const u=tt147S();const g=id=>{const e=document.getElementById(id);return e?e.value:null};
+ for(let i=0;i<12;i++){const v=g('tt147m'+i);if(v!==null)u.th[i]=v}
+ [['ban','tt147ban'],['npt','tt147npt'],['thNpt','tt147thn'],['bh','tt147bh'],['tt','tt147tt'],['da','tt147da']].forEach(([k,id])=>{const v=g(id);if(v!==null)u[k]=v});return u}
+A.tt147Tinh=()=>{const u=tt147Doc();
+ const M=u.th.reduce((s,x)=>s+tt147So(x),0);const N=tt147So(u.ban);const O=Math.max(0,parseInt(u.npt,10)||0);const Y=Math.max(0,Math.min(12,parseInt(u.thNpt,10)||0));
+ const P=Math.round(O*TT147_NPT*Y);const Q=tt147So(u.bh),R=tt147So(u.tt),V=tt147So(u.da);
+ if(!(M>0)){toast('Nhập thu nhập ít nhất 1 tháng nha');return}
+ const S2=N+P+Q+R,T=M-S2,Uu=Math.round(tt147Thue(T)),W=Uu-V;
+ u.kq={M,N,O,Y,P,Q,R,S:S2,T,U:Uu,V,W,bac:tt147Bac(T)};render();
+ setTimeout(()=>{const e=document.getElementById('tt147kq');if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'})},60)};
+A.tt147Deu=()=>{const u=tt147Doc();const v=u.th.find(x=>String(x).trim());if(!v){toast('Nhập Tháng 1 trước rồi bấm lại nha');return}u.th=u.th.map(()=>v);render()};
+A.tt147Xoa=()=>{U.tt147=null;render()};
+function tt147Txt(){const k=tt147S().kq;if(!k)return '';const f=tt147Fmt;
+ return `TÍNH THUẾ TNCN NĂM\nTổng thu nhập năm: ${f(k.M)}đ\nGiảm trừ bản thân: ${f(k.N)}đ\nGiảm trừ người phụ thuộc (${k.O} người × ${k.Y} tháng): ${f(k.P)}đ\nBảo hiểm được trừ: ${f(k.Q)}đ\nTừ thiện, khuyến học: ${f(k.R)}đ\nTổng giảm trừ: ${f(k.S)}đ\nThu nhập tính thuế: ${f(Math.max(0,k.T))}đ${k.bac?' (bậc '+k.bac+')':''}\nThuế TNCN phải nộp: ${f(k.U)}đ\nĐã tạm nộp: ${f(k.V)}đ\n${k.W>0?'Còn phải nộp thêm: '+f(k.W)+'đ':k.W<0?'Được hoàn thuế: '+f(-k.W)+'đ':'Đã nộp đủ'}`}
+A.tt147Chep=()=>chep99(tt147Txt());
+SH.tt147=()=>{const u=tt147S();const k=u.kq;const f=tt147Fmt;
+ const o=(id,lb,v,ph,im)=>`<label class="f" for="${id}">${lb}<input class="in num tt147in" id="${id}" inputmode="${im||'numeric'}" autocomplete="off" placeholder="${ph||''}" value="${esc(v)}"></label>`;
+ const dong=(l,v,c)=>`<div class="tt147r${c?' '+c:''}"><span>${l}</span><b class="num">${v}</b></div>`;
+ return {t:'🧾 Tính Thuế TNCN',h:`<p class="sub" style="margin-top:0">Nhập số vào các ô trắng, bấm <b>Tính thuế</b>. Công thức theo bảng tính Excel của phòng (giảm trừ bản thân 15,5 triệu/tháng, người phụ thuộc 6,2 triệu/tháng, biểu thuế luỹ tiến 5 bậc).</p>
+ <div class="card"><div class="kicker">💰 1. Thu nhập từng tháng (đồng)</div>
+ <div class="tt147m">${u.th.map((v,i)=>`<label class="f" for="tt147m${i}">Tháng ${i+1}<input class="in num tt147in" id="tt147m${i}" inputmode="numeric" autocomplete="off" placeholder="0" value="${esc(v)}"></label>`).join('')}</div>
+ <button class="link" style="margin-top:6px" data-a="tt147Deu">↳ Điền số Tháng 1 cho cả 12 tháng</button></div>
+ <div class="card" style="margin-top:10px"><div class="kicker">🧍 2. Các khoản giảm trừ</div><div class="lv99f">
+ ${o('tt147ban','Giảm trừ bản thân cả năm',u.ban,'186.000.000')}
+ <div class="grid2">${o('tt147npt','Số người phụ thuộc',u.npt,'0')}${o('tt147thn','Số tháng tính giảm trừ NPT',u.thNpt,'12')}</div>
+ ${o('tt147bh','Bảo hiểm được trừ (BHXH, BHYT, BHTN trích theo lương)',u.bh,'0')}
+ ${o('tt147tt','Từ thiện, nhân đạo, khuyến học (có chứng từ)',u.tt,'0')}</div>
+ <p class="sub" style="margin-bottom:0">Bảo hiểm: chỉ người có hợp đồng lao động, lấy số công ty đã trích trên bảng lương.</p></div>
+ <div class="card" style="margin-top:10px"><div class="kicker">🏛️ 3. Thuế đã tạm nộp</div>${o('tt147da','Thuế TNCN đã tạm nộp Ngân sách',u.da,'0')}</div>
+ <div class="grid2" style="margin-top:12px"><button class="btn" data-a="tt147Tinh">🧮 Tính thuế</button><button class="btn ghost" data-a="tt147Xoa">↺ Làm lại</button></div>
+ ${k?`<div class="card tt147kq" id="tt147kq" style="margin-top:12px"><div class="kicker">📋 Kết quả</div>
+  ${dong('Tổng thu nhập năm',f(k.M))}
+  ${dong('Giảm trừ bản thân',f(k.N))}
+  ${dong('Giảm trừ người phụ thuộc ('+k.O+' người × '+k.Y+' tháng)',f(k.P))}
+  ${dong('Bảo hiểm được trừ',f(k.Q))}
+  ${dong('Từ thiện, khuyến học',f(k.R))}
+  ${dong('Tổng các khoản giảm trừ',f(k.S),'tong')}
+  ${dong('Thu nhập tính thuế'+(k.bac?' · bậc '+k.bac+' ('+Math.round(TT147_BAC[k.bac-1][1]*100)+'%)':''),f(Math.max(0,k.T)),'tong')}
+  ${dong('Thuế TNCN phải nộp',f(k.U),'tong')}
+  ${dong('Thuế đã tạm nộp',f(k.V))}
+  <div class="tt147w ${k.W>0?'them':'hoan'}"><div class="sub">${k.W>0?'Còn phải nộp thêm':k.W<0?'Được hoàn thuế':'Đã nộp đủ'}</div><div class="num">${f(Math.abs(k.W))}đ</div></div>
+  <button class="btn ghost full" style="margin-top:10px" data-a="tt147Chep">📋 Chép kết quả</button></div>`:''}
+ <details style="margin-top:12px"><summary class="sub" style="font-weight:700;cursor:pointer">📖 Biểu thuế luỹ tiến từng phần</summary>
+ <table class="lv99tb"><tr><th>Bậc</th><th>Thu nhập tính thuế năm</th><th>Thuế suất</th><th>Tính nhanh</th></tr>
+ <tr><td>1</td><td>Đến 120 triệu</td><td>5%</td><td>5% × TNTT</td></tr><tr><td>2</td><td>Trên 120 đến 360 triệu</td><td>10%</td><td>10% × TNTT − 6 triệu</td></tr>
+ <tr><td>3</td><td>Trên 360 đến 720 triệu</td><td>20%</td><td>20% × TNTT − 42 triệu</td></tr><tr><td>4</td><td>Trên 720 triệu đến 1,2 tỷ</td><td>30%</td><td>30% × TNTT − 114 triệu</td></tr>
+ <tr><td>5</td><td>Trên 1,2 tỷ</td><td>35%</td><td>35% × TNTT − 174 triệu</td></tr></table></details>
+ <p class="sub" style="margin-top:10px">Mẹo: gõ <b>15tr</b> hoặc <b>1,2 tỷ</b> cũng được. Số dưới 10.000 hiểu là triệu.</p>`}};
+document.addEventListener('focusout',e=>{const el=e.target;if(!el||!el.classList||!el.classList.contains('tt147in')||el.id==='tt147npt'||el.id==='tt147thn')return;const n=tt147So(el.value);if(n>0)el.value=tt147Fmt(n);tt147Doc()});
+document.addEventListener('input',e=>{const el=e.target;if(el&&el.classList&&el.classList.contains('tt147in'))tt147Doc()});
+{const o=qk69;qk69=function(a){const h=o.apply(this,arguments);if(!hasCtv(a)||h.includes('data-v="tt147"'))return h;const b='<button data-a="sheet" data-v="tt147"><span>🧾</span><b>Tính Thuế TNCN</b></button>';
+ const m='<button data-a="sheet" data-v="hocvien"><span>🎓</span><b>Học viện Hoa Vinh</b></button>';if(h.includes(m))return h.replace(m,m+b);
+ const i=h.indexOf('<div class="qk69">');const j=i<0?-1:h.indexOf('</div>',i);return j<0?h:h.slice(0,j)+b+h.slice(j)}}
+{const o=SH.quick;SH.quick=function(){const x=o.apply(this,arguments);if(hasCtv(me())&&x&&x.h&&!x.h.includes('data-v="tt147"'))x.h=x.h.replace('</div>','<button data-a="sheet" data-v="tt147"><span>🧾</span>Tính Thuế TNCN</button></div>');return x}}
+{const st=document.createElement('style');st.textContent='.tt147m{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}.tt147m .f{font-size:12px}.tt147in{font-size:16px!important}.tt147r{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}.tt147r span{opacity:.85}.tt147r b{white-space:nowrap}.tt147r.tong{font-weight:800}.tt147r.tong span{opacity:1}.tt147w{margin-top:10px;padding:12px;border-radius:14px;text-align:center}.tt147w .num{font-size:24px;font-weight:800;margin-top:2px}.tt147w.them{background:rgba(192,57,43,.2);border:1.5px solid #C0392B}.tt147w.hoan{background:rgba(31,94,74,.25);border:1.5px solid #2E8B57}';document.head.appendChild(st)}
+
 render();
 })();
 
