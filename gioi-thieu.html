@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hoa Vinh City - Ứng dụng làm việc của Team Hoa Vinh</title>
+<meta name="description" content="Hoa Vinh City is the internal work app of the Hoa Vinh real estate brokerage team in Ho Chi Minh City. Members write property posts and publish their own videos to TikTok, YouTube and Facebook.">
+<link rel="icon" href="favicon.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{--do:#7a1418;--do2:#5a0d10;--vang:#d9a441;--nen:#fbf7f1;--chu:#2a1f1c;--mo:#6b5e58;--the:#fff;--vien:#eadfd2}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--chu);background:var(--nen);line-height:1.6}
+a{color:var(--do)}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header.top{background:var(--do2);color:#fff}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:700;font-size:18px}
+.brand img{width:36px;height:36px;border-radius:50%}
+nav.links{display:flex;gap:14px;flex-wrap:wrap;font-size:14px}
+nav.links a{color:#f6e3c0;text-decoration:none}
+.hero{background:linear-gradient(160deg,var(--do) 0%,var(--do2) 100%);color:#fff;padding:48px 0 56px}
+.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.15;margin:8px 0 12px}
+.hero .kicker{color:var(--vang);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:13px}
+.hero p{max-width:640px;margin:0 0 8px;color:#f8ece6}
+.hero p.en{color:#e9cfc6;font-size:15px}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.btn{display:inline-block;padding:12px 20px;border-radius:999px;font-weight:700;text-decoration:none}
+.btn.chinh{background:var(--vang);color:#2a1606}
+.btn.phu{border:1.5px solid #f2d9a8;color:#fff}
+section{padding:40px 0}
+h2{font-size:24px;margin:0 0 6px}
+h2 + .en{margin-top:0;color:var(--mo)}
+.en{color:var(--mo);font-size:15px}
+.luoi{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:20px}
+.the{background:var(--the);border:1px solid var(--vien);border-radius:14px;padding:18px}
+.the h3{margin:0 0 6px;font-size:17px}
+.the p{margin:0 0 6px}
+.the .icon{font-size:26px}
+.buoc{counter-reset:b;list-style:none;padding:0;margin:20px 0 0;display:grid;gap:12px}
+.buoc li{counter-increment:b;background:var(--the);border:1px solid var(--vien);border-radius:14px;padding:14px 16px 14px 58px;position:relative}
+.buoc li::before{content:counter(b);position:absolute;left:16px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--do);color:#fff;font-weight:700;display:grid;place-items:center}
+.ghichu{background:#fff6e3;border:1px solid #f0d9a6;border-radius:14px;padding:16px;margin-top:18px}
+footer{background:var(--do2);color:#f3e2dc;padding:28px 0;font-size:14px}
+footer a{color:#f6e3c0}
+footer .hang{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:10px}
+@media (max-width:560px){nav.links{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="gioi-thieu.html"><img src="logo-hv.png" alt="">Hoa Vinh City</a>
+  <nav class="links" aria-label="Menu">
+    <a href="#tinh-nang">Tính năng</a>
+    <a href="#tiktok">TikTok</a>
+    <a href="bao-mat.html">Privacy Policy</a>
+    <a href="dieu-khoan.html">Terms of Service</a>
+  </nav>
+</div></header>
+
+<div class="hero"><div class="wrap">
+  <div class="kicker">Team Hoa Vinh · Ho Chi Minh City</div>
+  <h1>Hoa Vinh City</h1>
+  <p>Ứng dụng làm việc hằng ngày của phòng môi giới bất động sản Hoa Vinh. Anh em tìm nhà, khảo sát, soạn bài giới thiệu căn nhà và tự đăng video lên kênh mạng xã hội của chính mình.</p>
+  <p class="en">Hoa Vinh City is the daily work app of the Hoa Vinh real estate brokerage team. Team members find listings, survey houses, write property posts with AI help, and publish their own house-tour videos to their own social media accounts, including TikTok.</p>
+  <div class="btns">
+    <a class="btn chinh" href="index.html">Mở ứng dụng · Open the app</a>
+    <a class="btn phu" href="#tiktok">Cách đăng lên TikTok · How TikTok posting works</a>
+  </div>
+</div></div>
+
+<main>
+<section id="tinh-nang"><div class="wrap">
+  <h2>Ứng dụng làm được gì</h2>
+  <p class="en">What the app does</p>
+  <div class="luoi">
+    <div class="the"><div class="icon">🏠</div><h3>Kho nhà</h3><p>Lọc nhà đang bán theo khu vực, phân khúc và giá để tư vấn cho khách.</p><p class="en">Search houses for sale by district, segment and price.</p></div>
+    <div class="the"><div class="icon">📍</div><h3>Khảo sát nhà</h3><p>Ghi lại hẻm, hướng nhà và hình ảnh khi đi khảo sát thực tế.</p><p class="en">Record on-site house surveys with photos and notes.</p></div>
+    <div class="the"><div class="icon">✍️</div><h3>Soạn bài bằng AI</h3><p>AI viết tiêu đề và mô tả căn nhà, anh em đọc lại và sửa trước khi đăng.</p><p class="en">AI drafts the title and description; the member reviews and edits it.</p></div>
+    <div class="the"><div class="icon">🎬</div><h3>Đăng video đa nền tảng</h3><p>Đăng video giới thiệu nhà lên TikTok, YouTube, Facebook của chính mình trong một lần bấm.</p><p class="en">Publish a house-tour video to your own TikTok, YouTube and Facebook.</p></div>
+    <div class="the"><div class="icon">👥</div><h3>Quản lý khách</h3><p>Theo dõi nhu cầu khách và lịch dẫn khách xem nhà.</p><p class="en">Track client needs and house viewing schedules.</p></div>
+    <div class="the"><div class="icon">🏆</div><h3>Thi đua và Học viện</h3><p>Điểm danh, nhiệm vụ, thi đua và bài học cho thành viên mới.</p><p class="en">Daily tasks, team leaderboard and training lessons for new members.</p></div>
+  </div>
+</div></section>
+
+<section id="tiktok" style="background:#fff;border-block:1px solid var(--vien)"><div class="wrap">
+  <h2>Đăng video lên TikTok</h2>
+  <p class="en">How the TikTok integration works (Login Kit + Content Posting API, Direct Post)</p>
+  <ol class="buoc">
+    <li><b>Kết nối tài khoản.</b> Thành viên vào <i>Đăng bài → Kết nối mạng xã hội</i> và bấm <i>TikTok</i>. TikTok mở màn đăng nhập và hỏi cho phép. Mỗi người chỉ kết nối tài khoản TikTok của chính mình.<br><span class="en"><b>Connect.</b> The member opens <i>Post → Connect social accounts</i> and taps TikTok. They sign in with TikTok Login Kit and approve the scopes <code>user.info.basic</code>, <code>video.upload</code> and <code>video.publish</code>. Each member connects only their own personal TikTok account.</span></li>
+    <li><b>Soạn bài.</b> Chọn video giới thiệu căn nhà do chính mình quay, viết hoặc nhờ AI soạn chú thích.<br><span class="en"><b>Compose.</b> The member picks a house-tour video they filmed and writes (or AI-drafts) the caption.</span></li>
+    <li><b>Xem lại trước khi đăng.</b> App hiện tên tài khoản TikTok sẽ đăng, cho chọn ai được xem (quyền riêng tư), bật tắt bình luận, Duet, Stitch, đánh dấu nội dung quảng cáo nếu có và hiện lời đồng ý với Chính sách âm nhạc của TikTok.<br><span class="en"><b>Review.</b> Before posting, the app shows the TikTok account nickname, lets the member choose the privacy level (from the options TikTok returns), toggle comments, Duet and Stitch, disclose branded or promotional content, and shows TikTok's Music Usage Confirmation.</span></li>
+    <li><b>Đăng ngay.</b> Chỉ khi thành viên bấm <i>Đăng</i>, video mới được gửi lên TikTok bằng Content Posting API (Direct Post). App không tự đăng thay người dùng và không hẹn giờ cho TikTok.<br><span class="en"><b>Post now.</b> The video is sent to TikTok with the Content Posting API (Direct Post) only after the member taps <i>Post</i>. Nothing is posted automatically and there is no scheduling for TikTok.</span></li>
+    <li><b>Ngắt kết nối bất cứ lúc nào.</b> Bấm <i>Ngắt</i> trong app thì mã truy cập TikTok bị xoá khỏi máy chủ ngay.<br><span class="en"><b>Disconnect anytime.</b> Tapping <i>Disconnect</i> deletes the TikTok access token from our server immediately. Uploaded video files are deleted automatically about 30 minutes after publishing.</span></li>
+  </ol>
+  <div class="ghichu">
+    <b>Ai dùng được ứng dụng?</b> Hoa Vinh City dành cho thành viên đã được phòng duyệt. Đăng nhập bằng mã OTP gửi về Gmail, không dùng mật khẩu.<br>
+    <span class="en"><b>Who can use it?</b> Hoa Vinh City is for approved members of the Hoa Vinh team. Members sign in with a one-time code sent to their Gmail, so there is no shared password. This page, the <a href="bao-mat.html">Privacy Policy</a> and the <a href="dieu-khoan.html">Terms of Service</a> are public.</span>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <h2>Liên hệ</h2>
+  <p class="en">Contact</p>
+  <p>Email: <a href="mailto:teamhoavinh369@gmail.com">teamhoavinh369@gmail.com</a></p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div class="hang">
+    <a href="gioi-thieu.html">Giới thiệu · About</a>
+    <a href="bao-mat.html">Chính sách bảo mật · Privacy Policy</a>
+    <a href="dieu-khoan.html">Điều khoản sử dụng · Terms of Service</a>
+    <a href="bao-mat.html#xoa-du-lieu">Xoá dữ liệu · Data deletion</a>
+    <a href="index.html">Mở ứng dụng · Open the app</a>
+  </div>
+  <div>© 2026 Team Hoa Vinh · Hoa Vinh City</div>
+</div></footer>
+</body>
+</html>
