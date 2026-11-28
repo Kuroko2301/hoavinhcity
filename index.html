@@ -3157,7 +3157,7 @@ function shNapTruoc(){try{(S.bai||[]).forEach(p=>{if(!SHF[p.id]&&p.ch.some(c=>c.
 function share1(text,via,files){if(files&&files.length&&navigator.canShare){
   let ok=false;try{ok=navigator.canShare({files})}catch(e){}
   if(ok){try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}
-   const data={files,text};let dung=data;try{if(!navigator.canShare(data))dung={files}}catch(e){dung={files}}
+   const data=via==='zalome'?{files}:{files,text};let dung=data; /* v149: Zalo lỗi khi kèm chữ */try{if(!navigator.canShare(data))dung={files}}catch(e){dung={files}}
    navigator.share(dung).then(()=>toast('Đã gửi ảnh qua '+(via==='zalome'?'Zalo':via==='mess'?'Messenger':'ứng dụng')+'. Nếu chưa thấy chữ, nhấn giữ ô viết rồi chọn Dán nhé (nội dung đã chép sẵn)')).catch(e=>{if(e&&e.name!=='AbortError')share1(text,via)});return}}
  const T={mess:['Messenger','https://www.messenger.com/'],fbme:['Facebook','https://www.facebook.com/'],fbgroup:['Facebook','https://www.facebook.com/groups/'],zalome:['Zalo','https://chat.zalo.me/']}[via]||['ứng dụng',''];
  const fb=()=>{try{navigator.clipboard&&navigator.clipboard.writeText(text)}catch(e){}if(T[1])window.open(T[1],'_blank','noopener');toast('Đã chép nội dung, mở '+T[0]+' rồi dán vào nha')};
@@ -3556,13 +3556,13 @@ function dlDep(t){t=String(t||'').replace(/\\r\\n|\\n|\\r/g,'\n').replace(/\\t/g
 function dlNhanTai(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!laIOS())return '⬇️ Tải tất cả '+n+' hình về máy';if(!f||!f.length||!c.taiSan)return '⬇️ Tải tất cả '+n+' hình về máy';
  const lo=c.lo||10,i=c.ti||0,con=f.length-i;if(con<=0)return '⬇️ Lưu lại '+f.length+' hình';const k=Math.min(lo,con);
  return f.length<=lo?'📥 Lưu '+f.length+' hình vào máy (bấm để mở)':(i===0?'📥 Lưu đợt 1 ('+k+'/'+f.length+' hình)':'📥 Lưu tiếp '+k+' hình (còn '+con+'/'+f.length+')')}
-function dlNhanShare(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!f||!f.length)return '📲 Chia sẻ Zalo (bài viết + '+n+' hình)';
+function dlNhanShare(c,n){if(c.shDang)return '⏳ Đang chuẩn bị '+n+' hình…';const f=c.shf;if(!f||!f.length)return '📲 Bước 1: Gửi '+n+' hình qua Zalo';
  const lo=c.lo||10,i=c.shi||0,con=f.length-i;if(con<=0)return '📲 Gửi lại qua Zalo';
- const k=Math.min(lo,con);if(f.length<=lo)return '📲 Gửi qua Zalo ngay ('+f.length+' hình + bài viết)';
- return i===0?'📲 Gửi qua Zalo đợt 1 ('+k+'/'+f.length+' hình + bài viết)':'📲 Gửi tiếp '+k+' hình (còn '+con+'/'+f.length+')'}
+ const k=Math.min(lo,con);if(f.length<=lo)return '📲 Bước 1: Gửi '+f.length+' hình qua Zalo';
+ return i===0?'📲 Bước 1: Gửi Zalo đợt 1 ('+k+'/'+f.length+' hình)':'📲 Gửi tiếp '+k+' hình (còn '+con+'/'+f.length+')'}
 function dlNut(c,n){const s=c.shf&&c.shf.length;
  return `<div class="grid2" style="margin-top:8px"><button class="btn gold" data-a="dlCopy">📋 Copy nội dung</button><button class="btn" data-a="dlTaoMoi" ${c.taoMoi?'disabled':''}>${c.taoMoi?'✨ AI đang viết…':'✨ Tạo mới mô tả'}</button></div>
- ${c.b2134?'':`<div class="zl135">📋 Bấm nút xanh là <b>bài viết đã được chép sẵn</b>. Khi Zalo mở, nếu ô <b>Nhập tin nhắn</b> còn trống: <b>nhấn giữ vào ô đó → chọn Dán</b> rồi bấm gửi ▶️</div>`}
+ ${c.b2134?'':`<div class="zl135">📲 Zalo hay báo <b>“Có lỗi xảy ra”</b> khi nhận hình kèm chữ, nên app gửi <b>hình trước</b> (Bước 1), rồi <b>bài viết sau</b> (Bước 2). Bài viết cũng đã <b>chép sẵn</b> để Dán.</div>`}
  <button class="btn full" style="margin-top:8px;background:#0068FF;color:#fff" data-a="dlShare" ${c.shDang?'disabled':''}>${dlNhanShare(c,n)}</button>
  ${c.b2134?`<div class="zl134"><b>✅ Bước 1 xong: đã gửi hình.</b><br>Zalo luôn bỏ chữ khi gửi kèm hình, nên mình gửi bài viết riêng nha 👇</div>
  <button class="btn full zl134b" data-a="dlShareChu">📝 Bước 2: Gửi bài viết qua Zalo</button>
@@ -3583,9 +3583,9 @@ A.dlTaoMoi=async()=>{const c=U.dlCt;if(!c||c.taoMoi)return;const bk=c.bk||c.it||
  finally{c.taoMoi=false;if(U.sheet==='dlCt')render()}};
 /* v53: Chia sẻ Zalo: gửi bài viết + tất cả hình nhà trong 1 lần */
 /* v121: Zalo iPhone báo "Có lỗi xảy ra" khi nhận nhiều hình gốc nặng (vài MB/hình, có hình webp) → đổi hình về JPEG cạnh dài tối đa 1600px trước khi gửi */
-async function dlNhe(b){try{if(!b||!/^image\//.test(b.type||'image/'))return null;const bm=await createImageBitmap(b);const k=Math.min(1,1600/Math.max(bm.width,bm.height));
+async function dlNhe(b){try{if(!b||!/^image\//.test(b.type||'image/'))return null;const bm=await createImageBitmap(b);const k=Math.min(1,1280/Math.max(bm.width,bm.height));
  const cv=document.createElement('canvas');cv.width=Math.round(bm.width*k);cv.height=Math.round(bm.height*k);cv.getContext('2d').drawImage(bm,0,0,cv.width,cv.height);try{bm.close()}catch(e){}
- const o=await new Promise(ok=>cv.toBlob(ok,'image/jpeg',0.85));return o&&o.size?o:null}catch(e){return null}}
+ const o=await new Promise(ok=>cv.toBlob(ok,'image/jpeg',0.8));return o&&o.size?o:null}catch(e){return null}}
 async function dlChuanBi(c){if(c.shf&&c.shf.length)return c.shf;const bk=c.bk||c.it||{};
  const list=(bk.images||[]).map((im,i)=>({im,i})).filter(x=>!c.hn||c.hn[x.i]!==false).slice(0,30);if(!list.length)return [];
  c.shDang=true;render();const files=[];const ten=String(bk.id||'nha').slice(0,20);
@@ -3606,7 +3606,7 @@ A.dlShare=async()=>{const c=U.dlCt;if(!c||c.shDang)return;const bk=c.bk||c.it||{
  const daCo=!!(c.shf&&c.shf.length);const f=await dlChuanBi(c);
  if(!f.length){if(navigator.share){navigator.share({text}).catch(()=>{})}else copy(text);return}
  if(!dlCoChiaSeTep(f)){f.forEach((x,k)=>setTimeout(()=>dlLuu(x,x.name),k*400));toast('Máy chưa hỗ trợ gửi nhiều hình: đã tải '+f.length+' hình về máy và chép sẵn bài viết');return}
- const coChu=!c.boChu135&&(c.shi||0)===0;const kq=await dlGuiDot(c,'shi',coChu?text:'',!daCo);if(kq==='loi'&&coChu)c.boChu135=true; /* v121: chỉ gửi hình, bài viết đã chép sẵn để dán (Zalo hay lỗi khi gửi hình kèm chữ dài) */
+ const coChu=false; /* v149: Zalo lỗi khi nhận hình kèm chữ → chỉ gửi hình */const kq=await dlGuiDot(c,'shi',coChu?text:'',!daCo);if(kq==='loi'&&coChu)c.boChu135=true; /* v121: chỉ gửi hình, bài viết đã chép sẵn để dán (Zalo hay lỗi khi gửi hình kèm chữ dài) */
  if(kq==='cho')toast('✅ '+f.length+' hình đã sẵn sàng. Bấm nút xanh lần nữa để mở Zalo nhé');
  else if(kq==='con')toast('Đã gửi '+c.shi+'/'+f.length+' hình. Bấm nút xanh để gửi tiếp vào cùng chỗ nhé');
  else if(kq==='xong'){c.b2134=true;render();toast('✅ Đã gửi hình. Bấm nút “Bước 2: Gửi bài viết” để gửi chữ nhé',6000);setTimeout(()=>{const b=document.querySelector('.zl134b');b&&b.scrollIntoView({block:'center',behavior:'smooth'})},150)}};
